@@ -1,0 +1,140 @@
+Ajouter:
+  commandes:
+    AFFICHER: '\bafficher\b'
+    LIRE: '\blire\b'
+    ATTENDRE: '\battendre\b'
+    UTILISER: '\butiliser\b'
+
+  methode_moteur:
+    AVANCER: '\bavancer\b'
+    RECULER: '\breculer\b'
+    ARRETER: '\barreter\b'
+    TOURNER_DROITE: '\bdroite\b'
+    TOURNER_GAUCHE: '\bgauche\b'
+
+  arithmetique:
+    PLUS: '\+'
+    POW: '\^'
+    MUL: '\*'
+    MOINS: '-'
+    DIV: '\/'
+    DIV_ENTIERE: '\/\/'
+    MOD: '%'
+
+  CONSTANTE: '\bconst\b'
+  VAR: '\bvar\b'
+
+
+  assignements:
+    ASSIGNEMENT: '='
+    PLUS_ASSIGNEMENT: '\+='
+    POW_ASSIGNEMENT: '\^='
+    MUL_ASSIGNEMENT: '\*='
+    MOINS_ASSIGNEMENT: '-='
+    DIV_ASSIGNEMENT: '\/='
+    DIV_ENTIERE_ASSIGNEMENT : '\/\/='
+    MOD_ASSIGNEMENT : '[%]='
+
+
+  # fonction
+  FONCTION: '\bfonction\b'
+  RETOURNER: '\bretourner\b'
+  FLECHE: '->'
+
+  GET: 'get'
+  SET: 'set'
+
+  # structure
+  STRUCTURE: '\bstructure\b'
+
+  blocs:
+    SI: '\bsi\b'
+    SINON: '\bsinon\b'
+
+    # bloc pour
+    POUR: '\bpour\b'
+    REPETER: '\brepeter\b'
+    TROIS_POINTS: '\.\.\.'
+    BOND: '\bbond\b'
+    DANS: '\bdans\b'
+
+    # bloc tant que
+    TANT_QUE: '\btant que\b'
+    FAIRE: '\bfaire\b'
+
+  SORTIR: '\bsortir\b'
+
+  CONTINUER: '\bcontinuer\b'
+
+
+  # fin
+  FIN: '\bfin\b'
+
+
+  type_de_donnees:
+    ENTIER: '\d+'
+    DECIMAL: '\d+\.\d+|\d+\.(?!\.)|(?<!\.)\.\d+'
+    TEXTE: "\".*?\"|'.*?'"
+    BOOLEEN: '\bvrai\b|\bfaux\b'
+    NUL: '\bnul\b'
+
+  nom_type_de_donnees:
+    NOM_ENTIER: '\bentier\b'
+    NOM_DECIMAL: '\bdecimal\b'
+    NOM_TEXTE: '\btexte\b'
+    NOM_BOOLEEN: '\bbooleen\b'
+    NOM_LISTE: '\bliste\b'
+    NOM_FONCTION: '\bfonctionType\b'
+    NOM_NUL: '\bnulType\b'
+    NOM_NOMBRE: '\bnombre\b'
+    NOM_ITERABLE: '\biterable\b'
+    NOM_TOUT: '\btout\b'
+
+
+  comparaison:
+    EGAL: '=='
+    PAS_EGAL: '!='
+    PLUS_GRAND: '>'
+    PLUS_PETIT: '<'
+    PLUS_GRAND_EGAL: '>='
+    PLUS_PETIT_EGAL: '<='
+
+  porte_logique:
+    ET: '\bet\b'
+    OU: '\bou\b'
+    PAS: '\bpas\b'
+
+  # separateur
+  PARENT_OUV: '[(]'
+  PARENT_FERM: '[)]'
+
+  # iterateur
+  CROCHET_OUV: '\['
+  CROCHET_FERM: '\]'
+
+  # liste
+  LISTE_OUV: '[{]'
+  LISTE_FERM: '[}]'
+
+  # sous-categorie
+  # le point indique aussi un nombre decimal
+  POINT: '\.'
+  VIRGULE: '[,]'
+  DEUX_POINTS: '[:]'
+  POINT_VIRGULE: '[;]'
+  PIPE: '[|]'
+  NOM_VARIABLE: '(\p{L}+(\d+)*(\p{L})*\.?)+'
+
+Ignorer:
+  - '\s+'
+
+
+
+
+
+
+
+
+
+
+

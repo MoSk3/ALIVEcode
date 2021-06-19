@@ -2,18 +2,17 @@ package interpreteur.generateurs.ast;
 
 import java.util.*;
 
-import java.util.function.BiFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import interpreteur.as.ASErreur;
+import interpreteur.as.erreurs.ASErreur;
 import interpreteur.ast.Ast;
 import interpreteur.ast.buildingBlocs.Expression;
 import interpreteur.ast.buildingBlocs.Programme;
-import interpreteur.executeur.Executeur;
-import interpreteur.generateurs.lexer.regle.Regle;
+import interpreteur.generateurs.lexer.Regle;
 import interpreteur.tokens.Token;
+import interpreteur.utils.ArraysUtils;
 
 
 /**
@@ -98,7 +97,15 @@ public class AstGenerator {
             case 1 -> throw new ASErreur.ErreurSyntaxe(crochets + " crochet" + pluriel + " fermant" + pluriel + " ']' manquant" + pluriel);
         }
 
+    }
 
+    public static Expression<?> evalOneExpr(ArrayList<Object> expressions, Hashtable<String, Ast<?>> sous_ast) {
+        ArrayList<Expression<?>> result = eval(expressions, sous_ast);
+        if (result.size() != 1) {
+            throw new ASErreur.ErreurSyntaxe("Erreur ligne 106 dans AstGenerator");
+        } else {
+            return result.get(0);
+        }
     }
 
     public static ArrayList<Expression<?>> eval(ArrayList<Object> expressions, Hashtable<String, Ast<?>> sous_ast) {
@@ -160,6 +167,10 @@ public class AstGenerator {
 
                         if (expressionArray.get(debut) instanceof Token && expression.startsWith("expression")) {
                             continue next_expression;
+                        }
+                        if (expression.contains("!expression") && i > 0 && expressionNom.get(i - 1).equals("expression")) {
+                            i++;
+                            continue;
                         }
 
                         /*
@@ -256,7 +267,7 @@ public class AstGenerator {
             }
         }
 
-        Token[] token = expressionArray.stream().filter(expr -> expr instanceof Token).toArray(Token[]::new);
+        Token[] token = expressionArray.stream().filter(e -> e instanceof Token).toArray(Token[]::new);
 
         if (token.length > 0) {
             throw new ASErreur.ErreurSyntaxe("Expression ill\u00E9gale: '" + String.join(" ", Arrays.stream(token).map(Token::obtenirValeur).toArray(String[]::new)) + "'");
@@ -321,14 +332,14 @@ public class AstGenerator {
             programmesDict.put(remplacerCategoriesParMembre(programme), fonction); // remplace les categories par ses membres, s'il n'y a pas de categorie, ne modifie pas le pattern
         }
     }
-
+    int cptr = 0;
     protected void ajouterExpression(String pattern, Ast<?> fonction) {
 		/*
             importance : 0 = plus important
             si plusieurs expressions ont la même importance, la dernière ajoutée sera priorisée
 		 */
         String nouveauPattern = remplacerCategoriesParMembre(pattern);
-
+        fonction.setImportance(cptr++);
         expressionsDict.put(nouveauPattern, fonction);
     }
 
@@ -379,7 +390,7 @@ public class AstGenerator {
 
         String programme = obtenirProgramme(listToken);
         if (programme == null) {
-            throw new Error("Programme invalide");
+            throw new Error("Programme invalide: " + listToken);
         }
         //System.out.println("Programme trouv�: " + programme);
 
@@ -466,7 +477,12 @@ public class AstGenerator {
         return expressionsList;
     }
 
-
+    static protected void reset() {
+        expressionsDict.clear();
+        programmesDict.clear();
+        ordreExpressions.clear();
+        ordreProgrammes.clear();
+    }
 }
 
 

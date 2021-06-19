@@ -1,9 +1,10 @@
 package interpreteur.ast.buildingBlocs.programmes;
 
-import interpreteur.as.ASErreur;
-import interpreteur.as.ASObjet;
+import interpreteur.as.erreurs.ASErreur;
+import interpreteur.as.Objets.ASObjet;
 import interpreteur.ast.buildingBlocs.Expression;
 import interpreteur.ast.buildingBlocs.Programme;
+import interpreteur.ast.buildingBlocs.expressions.Type;
 import interpreteur.ast.buildingBlocs.expressions.ValeurConstante;
 import interpreteur.ast.buildingBlocs.expressions.Var;
 import interpreteur.data_manager.Data;
@@ -25,7 +26,7 @@ public class Lire extends Programme {
         if (Data.response.isEmpty()) {
             throw new ASErreur.StopGetInfo(new Data(Data.Id.GET).addParam("read").addParam(message.eval().getValue().toString()));
         } else {
-            ASObjet.VariableManager.ajouterVariable(new ASObjet.Variable(nomVar, new ASObjet.Texte(Data.response.pop()), false));
+            ASObjet.VariableManager.ajouterVariable(new ASObjet.Variable(nomVar, new ASObjet.Texte(Data.response.pop()), new Type("tout")));
         }
         return null;
     }

@@ -4,10 +4,11 @@ import interpreteur.executeur.Coordonnee;
 import interpreteur.tokens.Token;
 
 import javax.lang.model.type.NullType;
+import java.io.Serializable;
 import java.net.FileNameMap;
 import java.util.List;
 
-public abstract class Programme {
+public abstract class Programme implements Serializable {
     private int numLigne = -1;
     /**
      * INDIQUE LA FIN DU PROGRAMME
@@ -43,6 +44,6 @@ public abstract class Programme {
 
     @Override
     public String toString() {
-        return super.toString();
+        return "vide";
     }
 }

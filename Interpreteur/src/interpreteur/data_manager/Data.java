@@ -39,6 +39,7 @@ public class Data extends JSONObject {
         SET_CAR_SPEED(Categorie.SET),
 
         CONSEIL(Categorie.TIPS),
+        AVERTISSEMENT(Categorie.TIPS),
         ;
 
         private final int id;

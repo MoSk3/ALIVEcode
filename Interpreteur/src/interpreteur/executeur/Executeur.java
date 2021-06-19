@@ -2,22 +2,15 @@ package interpreteur.executeur;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.function.Consumer;
 
-import javax.swing.text.BadLocationException;
-
-// import application.InterfaceJavaSimplifier;
-import interpreteur.as.ASErreur;
-import interpreteur.as.ASObjet;
-import interpreteur.as.ASObjet.FonctionManager;
-import interpreteur.as.ASObjet.VariableManager;
-import interpreteur.as.ASErreur.*;
+import interpreteur.as.Objets.ASObjet.FonctionManager;
+import interpreteur.as.Objets.ASObjet.VariableManager;
+import interpreteur.as.erreurs.ASErreur.*;
 import interpreteur.as.ASLexer;
-// import interpreteur.as.ASLinter;
+import interpreteur.as.experimental.ASAstExperimental;
 import interpreteur.as.modules.ASModule;
 import interpreteur.as.ASAst;
 import interpreteur.ast.buildingBlocs.Programme;
-import interpreteur.ast.buildingBlocs.programmes.Afficher;
 import interpreteur.data_manager.Data;
 import interpreteur.data_manager.DataVoiture;
 import interpreteur.tokens.Token;
@@ -93,17 +86,14 @@ public class Executeur {
     public Executeur() {
     }
 
-    public Executeur(ASLexer lexer, ASAst ast) {
+    public Executeur(ASLexer lexer) {
         Executeur.lexer = lexer;
-        Executeur.ast = ast;
     }
-
 
     // methode utilisee a chaque fois qu'une info doit etre afficher par le langage
     public static void ecrire(String texte) {
-        System.out.println(texte);
+        //System.out.println(texte);
     }
-
 
     public static void printCompiledCode(String code) {
         int nbTab = 0;
@@ -174,10 +164,14 @@ public class Executeur {
     }
 
     /**
-     * @return le parser utilise par l'interpreteur (voir ASParser)
+     * @return le parser utilise par l'interpreteur (voir ASAst)
      */
     public static ASAst getAst() {
         return Executeur.ast;
+    }
+
+    public static void setAst(ASAst ast) {
+        Executeur.ast = ast;
     }
 
     /**
@@ -215,6 +209,9 @@ public class Executeur {
      * @return la nouvelle coordonne actuelle
      */
     public static String finScope() {
+        if (coordCompileTime.size() == 1) {
+            throw new ErreurFermeture("main", "");
+        }
         coordCompileTime.remove(coordCompileTime.size() - 1);
         return coordCompileTime.get(coordCompileTime.size() - 1).getCoordAsString();
     }
@@ -284,9 +281,8 @@ public class Executeur {
      *                          Indique si l'on souhaite forcer la compilation du code, <br>
      *                          (le code sera alors compile meme s'il est identique au code precedemment compile)
      *                          </li>
-     * @throws BadLocationException
      */
-    public static String compiler(String[] lignes, boolean compilationForcee) throws BadLocationException {
+    public static String compiler(String[] lignes, boolean compilationForcee) {
         /*
          * Cette condition est remplie si l'array de lignes de codes mises en parametres est identique
          * a l'array des dernieres lignes de code compilees
@@ -300,7 +296,9 @@ public class Executeur {
             return "[]";
         } else {
             // Si le code est different ou que la compilation est forcee, compiler les lignes
-            return compiler(PreCompiler.formaterLignes(lignes));
+            //System.out.println(Arrays.toString(PreCompiler.preCompile(lignes)));
+            lignes = PreCompiler.preCompile(lignes, "\nafficher '[ex\u00E9cution termin\u00e9e]'");
+            return compiler(lignes, null);
         }
     }
 
@@ -314,10 +312,15 @@ public class Executeur {
      *               <li>
      *               Represente les lignes de code a compiler, une ligne se finit par un <code>\n</code>
      *               </li>
-     * @throws BadLocationException
      */
-    private static String compiler(String[] lignes) {
-        reset();
+    private static String compiler(String[] lignes, Hashtable<String, Hashtable<String, Programme>> coordCompileDict) {
+        if (coordCompileDict == null) {
+            coordCompileDict = Executeur.coordCompileDict;
+            ArrayList<Coordonnee> coordCompileTime = Executeur.coordCompileTime;
+        } else {
+
+        }
+
         // sert au calcul du temps qu'a pris le code pour etre compile
         LocalDateTime before = LocalDateTime.now();
 
@@ -377,17 +380,18 @@ public class Executeur {
                  */
 
 
-                Programme ligneParsed = lineToken.isEmpty() ? new Programme() {
-                    @Override
-                    public Object execute() {
-                        return null;
-                    }
+                Programme ligneParsed;
 
-                    @Override
-                    public String toString() {
-                        return "vide";
-                    }
-                } : ast.parse(lineToken);
+                if (lineToken.isEmpty()) {
+                    ligneParsed = new Programme() {
+                        @Override
+                        public Object execute() {
+                            return null;
+                        }
+                    };
+                } else {
+                    ligneParsed = ast.parse(lineToken);
+                }
 
                 ligneParsed.setNumLigne(i);
 
@@ -408,6 +412,7 @@ public class Executeur {
             } catch (ErreurAliveScript err) {
                 canExecute = false;
                 compilationActive = false;
+                err.afficher(i + 1);
                 return "[" + err.getAsData(i + 1) + "]";
 
             }
@@ -434,6 +439,7 @@ public class Executeur {
         } catch (ErreurAliveScript err) {
             canExecute = false;
             compilationActive = false;
+            err.afficher(lignes.length);
             return "[" + err.getAsData(lignes.length) + "]";
 
         }
@@ -499,6 +505,7 @@ public class Executeur {
                 // on l'affiche et on arrete l'execution du programme
                 datas.add(e.getAsData());
                 arreterExecution();
+                e.afficher();
                 resultat = null;
                 break;
 
@@ -526,7 +533,7 @@ public class Executeur {
         // sert au calcul du temps qu'a pris le code pour etre execute
         LocalDateTime before = LocalDateTime.now();
 
-        if (obtenirCoordCompileDict().get("main").isEmpty()){
+        if (obtenirCoordCompileDict().get("main").isEmpty()) {
             return "[]";
         }
 
@@ -543,10 +550,9 @@ public class Executeur {
         if (coordRunTime.getCoordAsString() == null || !executionActive) {
             System.out.println("execution " + (executionActive ? "done" : "interruped") + " in " +
                     (LocalDateTime.now().toLocalTime().toNanoOfDay() - before.toLocalTime().toNanoOfDay()) / Math.pow(10, 9) + " seconds\n");
-            System.out.println(datas);
+            //System.out.println(datas);
             // boolean servant a indique que l'execution est terminee
             executionActive = false;
-
             reset();
         }
         datas.clear();
@@ -573,23 +579,23 @@ public class Executeur {
 
         // remet la coordonnee d'execution au debut du programme
         coordRunTime.setCoord(debutCoord.getCoordAsString());
+        //if (ast instanceof ASAstExperimental) {
+        //    ast = new ASAst();
+        //}
     }
 
     public static void main(String[] args) {
         String[] lines = new String[]{
-
-                "afficher 3++--",
+                "utiliser \"experimental\"",
+                "var a: texte += 'salut'",
                 "afficher a"
         };
-        try {
-            System.out.println(compiler(lines, true));
-            //printCompileDict();
-            executerMain(false);
-            //System.out.println(compiler(lines, false));
-            //executerMain(false);
-        } catch (BadLocationException e) {
-            e.printStackTrace();
-        }
+
+        System.out.println(compiler(lines, true));
+        printCompileDict();
+        //executerMain(false);
+        //System.out.println(compiler(lines, false));
+        //executerMain(false);
     }
 }
 

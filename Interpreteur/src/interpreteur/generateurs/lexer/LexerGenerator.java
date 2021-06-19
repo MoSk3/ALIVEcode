@@ -1,19 +1,12 @@
 package interpreteur.generateurs.lexer;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import javax.swing.text.BadLocationException;
-
-import interpreteur.generateurs.lexer.regle.Regle;
 import interpreteur.tokens.Token;
 
 
@@ -21,20 +14,20 @@ import interpreteur.tokens.Token;
  * @author Mathis Laroche
  */
 
-/**
+/*
  * 
- * Les explications vont �tre rajout� quand j'aurai la motivation de les �crire XD
+ * Les explications vont être rajoutées quand j'aurai la motivation de les écrire XD
  *
  */
 
 
 public class LexerGenerator {
-    private ArrayList<Regle> reglesAjoutees = new ArrayList<>();
-    private final ArrayList<Regle> reglesIgnorees = new ArrayList<>();
+    static private ArrayList<Regle> reglesAjoutees = new ArrayList<>();
+    static private final ArrayList<Regle> reglesIgnorees = new ArrayList<>();
      
     public LexerGenerator(){
     }
-
+    /*
     protected void chargerRegles(File configGrammaire){
         try {
             Scanner grammaire = new Scanner(configGrammaire);
@@ -91,34 +84,35 @@ public class LexerGenerator {
             e.printStackTrace();
         }
     }
+    */
 
     protected void ajouterRegle(String nom, String pattern, String categorie){
-        this.reglesAjoutees.add(new Regle(nom, pattern, categorie));
+        reglesAjoutees.add(new Regle(nom, pattern, categorie));
     }
 
     protected void sortRegle(){
-    	ArrayList<Regle> nomVars = this.reglesAjoutees.stream().filter(r -> r.getNom().equals("NOM_VARIABLE")).collect(Collectors.toCollection(ArrayList::new));
-    	this.reglesAjoutees = this.reglesAjoutees.stream().filter(r -> ! r.getNom().equals("NOM_VARIABLE")).collect(Collectors.toCollection(ArrayList::new));
+    	ArrayList<Regle> nomVars = reglesAjoutees.stream().filter(r -> r.getNom().equals("NOM_VARIABLE")).collect(Collectors.toCollection(ArrayList::new));
+    	reglesAjoutees = reglesAjoutees.stream().filter(r -> ! r.getNom().equals("NOM_VARIABLE")).collect(Collectors.toCollection(ArrayList::new));
     	
     	Comparator<Regle> longueurRegle = (o1, o2) -> o2.getPattern().length() - o1.getPattern().length();
     	
-        this.reglesAjoutees.sort(longueurRegle);
+        reglesAjoutees.sort(longueurRegle);
         nomVars.sort(longueurRegle);
         
-        this.reglesAjoutees.addAll(nomVars);
+        reglesAjoutees.addAll(nomVars);
         // this.reglesAjoutees.forEach(r -> System.out.println(r.getNom() + "  " + r.getPattern()));
     }
 
     protected void ignorerRegle(String pattern){
-        this.reglesIgnorees.add(new Regle(pattern));
+        reglesIgnorees.add(new Regle(pattern));
     }
 
     public ArrayList<Regle> getReglesAjoutees(){
-        return this.reglesAjoutees;
+        return reglesAjoutees;
     }
 
     public ArrayList<Regle> getReglesIgnorees(){
-        return this.reglesIgnorees;
+        return reglesIgnorees;
     }
 
 
@@ -127,7 +121,7 @@ public class LexerGenerator {
         List<Token> tokenList = new ArrayList<>();
 
         int idx = 0;
-        int debut = 0;
+        int debut;
 
         while (idx < s.length()){
             

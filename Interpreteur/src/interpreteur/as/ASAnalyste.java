@@ -1,7 +1,7 @@
 package interpreteur.as;
 
 /**
- *  Cette classe permet d'analyser le code afin de donner des conseils détaillés et offrir des outils pour plus facilement comprendre
+ *  Cette classe permet d'analyser le code afin de donner des conseils dÃ©taillÃ©s et offrir des outils pour plus facilement comprendre
  *  le fonctionnement du code
  *  
  *  @author Mathis Laroche

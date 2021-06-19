@@ -26,7 +26,7 @@ public class BoucleTantQue extends Boucle {
 
     @Override
     public NullType execute() {
-        if (((Boolean) condition.eval().getValue() && !sortir)) {
+        if (condition.eval().boolValue() && !sortir) {
             if (isBoucleFaire)
                 Executeur.obtenirCoordRunTime().recommencerLeBlocActuel();
             else

@@ -1,4 +1,4 @@
-package interpreteur.generateurs.lexer.regle;
+package interpreteur.generateurs.lexer;
 
 import interpreteur.tokens.Token;
 
@@ -54,5 +54,14 @@ public class Regle {
 
     public static ArrayList<String> getMembreCategorie(String nomCategorie){
         return categories.get(nomCategorie);
+    }
+
+    @Override
+    public String toString() {
+        return "Regle{" +
+                "nom='" + nom + '\'' +
+                ", pattern='" + pattern + '\'' +
+                ", categorie='" + categorie + '\'' +
+                '}';
     }
 }

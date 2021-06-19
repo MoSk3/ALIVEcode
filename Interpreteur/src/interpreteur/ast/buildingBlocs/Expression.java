@@ -2,10 +2,12 @@ package interpreteur.ast.buildingBlocs;
 
 
 
-import interpreteur.as.ASObjet;
+import interpreteur.as.Objets.ASObjet;
+
+import java.io.Serializable;
 
 
-public interface Expression<T extends ASObjet<?>> {
+public interface Expression<T extends ASObjet<?>> extends Serializable {
 
     /**
      *

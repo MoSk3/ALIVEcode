@@ -1,7 +1,7 @@
 package interpreteur.as.modules;
 
-import interpreteur.as.ASObjet;
-
+import interpreteur.as.Objets.ASObjet;
+import interpreteur.ast.buildingBlocs.expressions.Type;
 
 
 public class ModuleMath extends ASModule {
@@ -9,8 +9,8 @@ public class ModuleMath extends ASModule {
     public static void charger() {
         ajouterModule("Math", new ASObjet.Fonction[]{
                 new ASObjet.Fonction("sin", new ASObjet.Fonction.Parametre[]{
-                        new ASObjet.Fonction.Parametre("decimal|entier", "x", null)
-                }, "decimal") {
+                        new ASObjet.Fonction.Parametre(new Type("nombre"), "x", null)
+                }, new Type("decimal")) {
                     @Override
                     public ASObjet<?> executer() {
                         double angle = ((Number) this.getValeurParam("x").getValue()).doubleValue();
@@ -19,8 +19,8 @@ public class ModuleMath extends ASModule {
                 },
 
                 new ASObjet.Fonction("cos", new ASObjet.Fonction.Parametre[]{
-                        new ASObjet.Fonction.Parametre("decimal|entier", "x", null)
-                }, "decimal") {
+                        new ASObjet.Fonction.Parametre(new Type("nombre"), "x", null)
+                }, new Type("decimal")) {
                     @Override
                     public ASObjet<?> executer() {
                         double angle = ((Number) this.getValeurParam("x").getValue()).doubleValue();
@@ -29,8 +29,8 @@ public class ModuleMath extends ASModule {
                 },
 
                 new ASObjet.Fonction("tan", new ASObjet.Fonction.Parametre[]{
-                        new ASObjet.Fonction.Parametre("decimal|entier", "x", null)
-                }, "decimal") {
+                        new ASObjet.Fonction.Parametre(new Type("nombre"), "x", null)
+                }, new Type("decimal")) {
                     @Override
                     public ASObjet<?> executer() {
                         double angle = ((Number) this.getValeurParam("x").getValue()).doubleValue();
@@ -39,8 +39,8 @@ public class ModuleMath extends ASModule {
                 },
 
                 new ASObjet.Fonction("abs", new ASObjet.Fonction.Parametre[]{
-                        new ASObjet.Fonction.Parametre("decimal|entier", "x", null)
-                }, "decimal") {
+                        new ASObjet.Fonction.Parametre(new Type("nombre"), "x", null)
+                }, new Type("nombre")) {
                     @Override
                     public ASObjet<?> executer() {
                         return new Decimal(Math.abs(((Number) this.getValeurParam("x").getValue()).doubleValue()));
@@ -48,9 +48,9 @@ public class ModuleMath extends ASModule {
                 },
 
                 new ASObjet.Fonction("arrondir", new ASObjet.Fonction.Parametre[]{
-                        new ASObjet.Fonction.Parametre("decimal|entier", "n", null),
-                        new ASObjet.Fonction.Parametre("entier", "nbSignificatifs", new ASObjet.Entier(0)),
-                }, "decimal") {
+                        new ASObjet.Fonction.Parametre(new Type("nombre"), "n", null),
+                        new ASObjet.Fonction.Parametre(new Type("entier"), "nbSignificatifs", new ASObjet.Entier(0)),
+                }, new Type("nombre")) {
                     @Override
                     public ASObjet<?> executer() {
                         double n = ((Number) this.getValeurParam("n").getValue()).doubleValue();

@@ -1,6 +1,6 @@
 package interpreteur.ast.buildingBlocs.programmes;
 
-import interpreteur.as.ASObjet;
+import interpreteur.as.Objets.ASObjet;
 import interpreteur.ast.buildingBlocs.Programme;
 import interpreteur.ast.buildingBlocs.expressions.Argument;
 import interpreteur.ast.buildingBlocs.expressions.Var;
@@ -24,21 +24,29 @@ public class CreerFonction extends Programme {
         this.var = var;
         this.args = Arrays.asList(args);
         this.typeRetour = typeRetour;
+        declareParams();
+    }
+
+    private void declareParams() {
+        String scope = "fonc_" + ASObjet.FonctionManager.ajouterDansStructure(this.var.getNom());
+        for (Argument arg: this.args) {
+            ASObjet.Fonction.Parametre param = arg.eval();
+            ASObjet.VariableManager.ajouterVariable(new ASObjet.Variable(param.getNom(), param.getValeurParDefaut(), param.getType()), scope);
+        }
     }
 
 
     @Override
     public NullType execute() {
         ASObjet.FonctionManager.ajouterFonction(
-                new ASObjet.Fonction(var.getNom(), args.stream().map(Argument::eval).toArray(ASObjet.Fonction.Parametre[]::new), typeRetour == null ? null : typeRetour.getNom())
+                new ASObjet.Fonction(var.getNom(), args.stream().map(Argument::eval).toArray(ASObjet.Fonction.Parametre[]::new), this.typeRetour)
         );
         return null;
     }
 
     @Override
     public Coordonnee prochaineCoord(Coordonnee coord, List<Token> ligne) {
-        return new Coordonnee(Executeur.nouveauScope("fonc_" +
-                (ASObjet.FonctionManager.obtenirStructure().isBlank() ? "" : ASObjet.FonctionManager.obtenirStructure() + ".") + ligne.get(1).obtenirValeur()));
+        return new Coordonnee(Executeur.nouveauScope("fonc_" +  ASObjet.FonctionManager.ajouterDansStructure(this.var.getNom())));
     }
 
     @Override

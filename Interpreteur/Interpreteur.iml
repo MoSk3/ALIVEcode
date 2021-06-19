@@ -27,5 +27,7 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="snakeyaml-1.28-javadoc" level="application" />
+    <orderEntry type="library" name="snakeyaml-1.28" level="project" />
   </component>
 </module>

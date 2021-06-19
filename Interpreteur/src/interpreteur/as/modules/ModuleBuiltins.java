@@ -1,7 +1,7 @@
 package interpreteur.as.modules;
 
-import interpreteur.as.ASErreur;
-import interpreteur.as.ASObjet;
+import interpreteur.as.Objets.ASObjet;
+import interpreteur.ast.buildingBlocs.expressions.Type;
 
 import java.util.*;
 
@@ -21,7 +21,9 @@ public class ModuleBuiltins {
              * 		@return -> si "choix" est de type liste: un element aleatoirement choisi dans la liste
              * 				-> si "choix" est de type texte: une lettre aleatoirement choisi dans le texte
              */
-            new ASObjet.Fonction("aleatoire", new ASObjet.Fonction.Parametre[]{new ASObjet.Fonction.Parametre("liste|texte", "choix", null)}, null) {
+            new ASObjet.Fonction("aleatoire", new ASObjet.Fonction.Parametre[]{
+                    new ASObjet.Fonction.Parametre(new Type("iterable"), "choix", null)
+            }, new Type("tout")) {
                 @Override
                 public ASObjet<?> executer() {
                     if (this.getParamsValeursDict().get("choix") instanceof Liste) {
@@ -45,18 +47,35 @@ public class ModuleBuiltins {
              *
              * 		@return le nom du type de l'objet passe en parametre dans un "texte"
              */
-            new ASObjet.Fonction("typeDe", new ASObjet.Fonction.Parametre[]{new ASObjet.Fonction.Parametre(null, "objet", null)}, "texte") {
+            new ASObjet.Fonction("typeDe", new ASObjet.Fonction.Parametre[]{new ASObjet.Fonction.Parametre(null, "element", null)}, new Type("texte")) {
                 @Override
                 public ASObjet<?> executer() {
-                    return new Texte(this.getParamsValeursDict().get("objet").obtenirNomType());
+                    return new Texte(this.getParamsValeursDict().get("element").obtenirNomType());
+                }
+            },
+
+            new ASObjet.Fonction("booleen", new ASObjet.Fonction.Parametre[]{
+                    new ASObjet.Fonction.Parametre(null, "element", null)
+            }, new Type("booleen")) {
+                @Override
+                public ASObjet<?> executer() {
+                    return new Booleen(this.getParamsValeursDict().get("element").boolValue());
                 }
             },
 
 
-            new ASObjet.Fonction("info", new ASObjet.Fonction.Parametre[]{new ASObjet.Fonction.Parametre(null, "objet", null)}, null) {
+            /*
+             * affiche le commentaire entre les symboles
+             * (-:
+             *
+             * :-)
+             * dans la fonction passée en paramètre
+             *
+             */
+            new ASObjet.Fonction("info", new ASObjet.Fonction.Parametre[]{new ASObjet.Fonction.Parametre(null, "element", null)}, new Type("tout")) {
                 @Override
                 public ASObjet<?> executer() {
-                    return this.getParamsValeursDict().get("objet");
+                    return this.getParamsValeursDict().get("element");
                 }
             }
     );

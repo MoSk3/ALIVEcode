@@ -1,6 +1,6 @@
 package interpreteur.ast.buildingBlocs.expressions;
 
-import interpreteur.as.ASObjet;
+import interpreteur.as.Objets.ASObjet;
 import interpreteur.ast.buildingBlocs.Expression;
 
 import java.util.function.BiFunction;
@@ -32,6 +32,20 @@ public class BinComp implements Expression<ASObjet.Booleen> {
 
     public enum Comparateur {
         /**
+         * Gere x == y
+         */
+        EGAL((gauche, droite) -> {
+            return new ASObjet.Booleen(gauche.getValue().equals(droite.getValue()));
+        }),
+
+        /**
+         * Gere x != y
+         */
+        PAS_EGAL((gauche, droite) -> {
+            return new ASObjet.Booleen(!gauche.getValue().equals(droite.getValue()));
+        }),
+
+        /**
          * Gere x > y
          */
         PLUS_GRAND((gauche, droite) -> {
@@ -43,21 +57,6 @@ public class BinComp implements Expression<ASObjet.Booleen> {
          */
         PLUS_PETIT((gauche, droite) -> {
             return new ASObjet.Booleen(((Number) gauche.getValue()).doubleValue() < ((Number) droite.getValue()).doubleValue());
-        }),
-
-
-        /**
-         * Gere x == y
-         */
-        EGAL((gauche, droite) -> {
-            return new ASObjet.Booleen(((Number) gauche.getValue()).doubleValue() == ((Number) droite.getValue()).doubleValue());
-        }),
-
-        /**
-         * Gere x != y
-         */
-        PAS_EGAL((gauche, droite) -> {
-            return new ASObjet.Booleen(((Number) gauche.getValue()).doubleValue() != ((Number) droite.getValue()).doubleValue());
         }),
 
         /**

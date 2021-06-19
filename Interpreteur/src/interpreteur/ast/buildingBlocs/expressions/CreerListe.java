@@ -1,6 +1,6 @@
 package interpreteur.ast.buildingBlocs.expressions;
 
-import interpreteur.as.ASObjet;
+import interpreteur.as.Objets.ASObjet;
 import interpreteur.ast.buildingBlocs.Expression;
 
 import java.util.ArrayList;

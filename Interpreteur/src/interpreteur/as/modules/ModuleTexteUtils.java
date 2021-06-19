@@ -1,7 +1,8 @@
 package interpreteur.as.modules;
 
-import interpreteur.as.ASErreur;
-import interpreteur.as.ASObjet;
+import interpreteur.as.erreurs.ASErreur;
+import interpreteur.as.Objets.ASObjet;
+import interpreteur.ast.buildingBlocs.expressions.Type;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -12,40 +13,40 @@ public class ModuleTexteUtils extends ASModule {
 
     public static List<ASObjet.Fonction> fonctions = Arrays.asList(
 
+            new ASObjet.Fonction("texte", new ASObjet.Fonction.Parametre[]{
+                    new ASObjet.Fonction.Parametre(null, "element", null)
+            }, new Type("texte")) {
+                @Override
+                public Texte executer() {
+                    return new Texte(this.getValeurParam("element").toString());
+                }
+            },
+
             new ASObjet.Fonction("maj", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre("texte", "element", null)
-            }, "texte") {
+                    new ASObjet.Fonction.Parametre(new Type("texte"), "txt", null)
+            }, new Type("texte")) {
                 @Override
                 public ASObjet.Texte executer() {
-                    return new Texte(this.getParamsValeursDict().get("element").getValue().toString().toUpperCase());
+                    return new Texte(this.getParamsValeursDict().get("txt").getValue().toString().toUpperCase());
                 }
             },
 
             new ASObjet.Fonction("minus", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre("texte", "element", null)
-            }, "texte") {
+                    new ASObjet.Fonction.Parametre(new Type("texte"), "txt", null)
+            }, new Type("texte")) {
                 @Override
                 public ASObjet.Texte executer() {
-                    return new Texte(this.getParamsValeursDict().get("element").getValue().toString().toLowerCase());
-                }
-            },
-
-            new ASObjet.Fonction("minus", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre("texte", "element", null)
-            }, "texte") {
-                @Override
-                public ASObjet.Texte executer() {
-                    return new Texte(this.getParamsValeursDict().get("element").getValue().toString().toLowerCase());
+                    return new Texte(this.getParamsValeursDict().get("txt").getValue().toString().toLowerCase());
                 }
             },
 
             new ASObjet.Fonction("estNumerique", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre("texte", "element", null)
-            }, "booleen") {
+                    new ASObjet.Fonction.Parametre(new Type("texte"), "txt", null)
+            }, new Type("booleen")) {
                 @Override
                 public ASObjet.Booleen executer() {
                     try {
-                        Integer.parseInt(this.getParamsValeursDict().get("element").getValue().toString());
+                        Integer.parseInt(this.getParamsValeursDict().get("txt").getValue().toString());
                         return new Booleen(true);
                     } catch (NumberFormatException ignored) {
                     }
@@ -68,12 +69,12 @@ public class ModuleTexteUtils extends ASModule {
              * 		@return un texte où les {} sont remplacés par les valeurs dans la liste
              */
             new ASObjet.Fonction("format", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre("texte", "t", null),
-                    new ASObjet.Fonction.Parametre("liste", "valeurs", null)
-            }, "texte") {
+                    new ASObjet.Fonction.Parametre(new Type("texte"), "txt", null),
+                    new ASObjet.Fonction.Parametre(new Type("liste"), "valeurs", null)
+            }, new Type("texte")) {
                 @Override
                 public ASObjet<?> executer() {
-                    String texte = ((Texte) this.getValeurParam("t")).getValue();
+                    String texte = ((Texte) this.getValeurParam("txt")).getValue();
                     Iterator<ASObjet<?>> valeurs = ((Liste) this.getValeurParam("valeurs")).getValue().iterator();
 
                     while (texte.contains("{}")) {
