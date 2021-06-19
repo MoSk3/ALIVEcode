@@ -1,0 +1,83 @@
+{% include "base.html" %} {% include "playground/base.html" %} {% load static %}
+
+<div id='main-div' class="container-fluid" style="position: relative; max-width: 100%;">
+    <div class="row h-100">
+        <div class="col-6" style="resize: both; padding:0; display: flex; flex-flow: column;">
+            <div style="flex: 0 1 70px; background-color: #013677; border: none;">
+                <div id="go-back-button" class="btn btn-primary"
+                    onclick="window.location=`{% url 'home:switch_to_bloc_interface' challengeId=challenge.id %}`">
+                    Programmation en blocs
+                </div>
+                <button type="button" id="btn-book" class="btn" data-toggle="modal" data-target="#modal">
+                    <i class="fas fa-book-open fa-2x" style="color: white;"></i>
+                </button>
+                <button type="button" id="btn-hint" class="btn" data-toggle="modal" data-target="#modal-hint">
+                    <i class="fas fa-question-circle fa-2x" style="color: white;"></i>
+                </button>
+                {% if creator %}
+                <input type="text" id="input-challenge-name" value="{{ challenge.name }}" style="margin-left: 5px;">
+                <div id="status-modify-div" class="btn">
+                    <label id="saving-status" style="color:white">Niveau sauvegardé ✔</label>
+                    <button type="button" id="btn-modify" ­­ class="btn btn-primary" data-toggle="modal"
+                        data-target="#edit-modal">
+                        <i class="fas fa-cog fa-2x"></i>
+                    </button>
+                </div>
+                {% else %}
+                <label id="label-challenge-name" style="color:white; margin-left: 5px;">{{challenge.name}}</label>
+                {% endif %}
+            </div>
+
+
+            {% include "modules/line_interface.html" %}
+
+
+        </div>
+        <div class="col-6" style="resize: both">
+            <div class="row" id="simulation-row" style="height:60%;">
+                {% include "modules/simulation.html" %}
+            </div>
+            <div class="row" style="height:40%">
+                <div style="padding: 0;" class="col">
+                    {% include "modules/cmd.html" %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="edit-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title w-100 text-center" id="exampleModalLabel">Options du niveau</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <label>Accès du niveau :</label>
+                <select name="acces" id="liste-acces">
+                    <option value="PU">Public</option>
+                    <option value="UN">Non réprtorié</option>
+                    <option value="RE">Restreint</option>
+                    <option value="PR">Privé</option>
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="edit-level-button" class="btn btn-primary new-section"
+                    data-dismiss="modal">Confirmer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/level_executor.js' %}"></script>
+
+<!-- JSON des informations sur le niveau présentement sélectionné -->
+{{ challenge.specific_challenge.level|json_script:"leveldata" }}
+<script>
+    const url = "{% url 'home:save_challenge' challengeId=challenge.id %}"
+    const creator = "{{ creator }}"
+    $('#liste-acces').val("{{challenge.access}}")
+</script>

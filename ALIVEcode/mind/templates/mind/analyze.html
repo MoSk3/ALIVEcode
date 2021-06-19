@@ -1,0 +1,215 @@
+{% include 'base.html' %}
+{% load static %}
+
+<div class="container-fluid">
+
+    {% if amc is not None %}
+    {{ serializedData|json_script:"serializedData" }}
+    <link rel="stylesheet" href="{% static 'css/analyze/charts.css' %}">
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="{% static 'js/analyze/chart.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/analyze/data_receiver.js' %}"></script>
+
+    <h1>Analyze des données</h1>
+    <button class="btn btn-secondary" onclick='location.href="{% url "mind:analyze_disconnect" %}"'>Se
+        déconnecter</button>
+
+    {% for datasheet in amc.dataSheets.all %}
+    <div class="container-fluid" datasheetId="{{ datasheet.id }}">
+        <div class="chart-div" id="chart-div-{{ datasheet.id }}" style='width: 900px; height: 600px;''></div>
+        <strong><label>Attention average: <span id="attention-average-{{ datasheet.id }}"></span></label></strong>
+        <br><br>
+        {% if amc.currentDataSheet == datasheet %}
+        <button class="btn-record">Stop recording</button>
+        {% else %}
+        <button class="btn-record">Start recording</button>
+        {% endif %}
+        <button class="btn-clear">Clear datasheet</button>
+        <button class="btn-delete">Delete datasheet</button>
+    </div>
+    <br>
+    {% endfor %}
+    <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#newDataSheetModal">
+        New DataSheet
+    </button>
+</div>
+
+<div id="live-view">
+    <br>
+    <h1>Live Feed</h1>
+    <div id="chart-live"></div>
+</div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="newDataSheetModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Create a DataSheet</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form action="" method="POST">
+                {% csrf_token %}
+                <h1>Create a new DataSheet</h1>
+                <br>
+                {% if messages %}
+                {% for message in messages %}
+                {% if message.tags == ' success'%} <div class="alert alert-success">{{message}}</div>
+        {% elif message.tags == 'error'%}
+        <div class="alert alert-error">{{message}}</div>
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+        <div class="form-group">
+            <label>Name of the datasheet</label><br>
+            {{ form.name }}
+        </div>
+        <div class="form-group">
+            <label>Description of the datasheet</label><br>
+            {{ form.description }}
+        </div>
+        <br>
+        <button type="submit" id="button-submit" class="btn btn-primary">Create DataSheet</button>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+    </div>
+</div>
+</div>
+</div>
+
+<script>
+    $(document).ready(() => {
+        let fields = $('input, textarea, select')
+        fields.addClass('form-control')
+        fields.attr('required')
+        fields[1].placeholder = "Nom d'affichage"
+        fields[2].placeholder = "Description d'une longueure maximale de 500 caractères"
+
+        $('.btn-delete').click(function () {
+            let datasheetId = $(this).closest('.container-fluid').attr('datasheetId')
+
+            data = new FormData()
+            data.append('id', datasheetId)
+
+            const request = new Request(
+                "analyze/delete",
+                { headers: { 'X-CSRFToken': csrftoken } }
+            );
+            fetch(request, {
+                method: 'POST',
+                mode: 'same-origin',  // Do not send CSRF token to another domain.
+                body: data
+            }).then(function (response) {
+                // RESPONSE
+                location.reload()
+            });
+        });
+
+        $('.btn-clear').click(function () {
+            let datasheetId = $(this).closest('.container-fluid').attr('datasheetId')
+
+            data = new FormData()
+            data.append('id', datasheetId)
+
+            const request = new Request(
+                "analyze/clear",
+                { headers: { 'X-CSRFToken': csrftoken } }
+            );
+            fetch(request, {
+                method: 'POST',
+                mode: 'same-origin',  // Do not send CSRF token to another domain.
+                body: data
+            }).then(function (response) {
+                // RESPONSE
+                location.reload()
+            });
+        });
+
+        $('.btn-record').click(function () {
+            let clicked = $(this)
+            let datasheetId = $(this).closest('.container-fluid').attr('datasheetId')
+
+            data = new FormData()
+            data.append('id', datasheetId)
+
+            const request = new Request(
+                "analyze/record",
+                { headers: { 'X-CSRFToken': csrftoken } }
+            );
+            fetch(request, {
+                method: 'POST',
+                mode: 'same-origin',  // Do not send CSRF token to another domain.
+                body: data
+            }).then(function (response) {
+                // RESPONSE
+                if (response.status === 200) {
+                    return response.json()
+                }
+            }).then(response => {
+                if (response['status'] == 'success') {
+                    if (response['action'] == 'stop') {
+                        currentChart = null
+                        clicked.text('Start recording')
+                    } else if (response['action'] == 'start') {
+                        if (datasheetId in charts) {
+                            $(".btn-record:contains('Stop recording')").text('Start recording')
+                            currentChart = charts[datasheetId]
+                            clicked.text('Stop recording')
+                        }
+                    }
+                }
+            });
+        });
+    })
+</script>
+
+{% else %}
+<div id="connect-modal" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+    aria-hidden="true" style="color: black;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Connexion au casque</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="exampleFormControlInput1">Numéro d' identification du casque</label>
+                    <input id="id-field" class="form-control form-control-lg" type="text" placeholder="id" required>
+                    <br>
+                    <div>
+                        {% for msg in messages %}
+                        <div class="alert alert-danger" role="alert">
+                            {{ msg }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Configurer plus tard</button>
+                <button id="button-connect" type="button" class="btn btn-primary">
+                    Connexion
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(window).on('load', function () {
+        $('#connect-modal').modal('show');
+    })
+
+    $('#button-connect').click(() => {
+        location.href = "{% url 'mind:analyze' %}" + `?id=${$('#id-field').val()}`
+    })
+</script>
+{% endif %}

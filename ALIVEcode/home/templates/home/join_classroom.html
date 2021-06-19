@@ -1,0 +1,28 @@
+{% include "base.html" %}
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/form.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/maisonneuve_background.css' %}">
+
+<div id='main-div' class="container-fluid" style="position: relative; max-width: 100%;">
+    <form action="" method="POST">
+        {% csrf_token %}
+        <h1>Rejoindre une classe</h1>
+        <br>
+        {% if messages %}
+        {% for message in messages %}
+        {% if message.tags == 'success'%}
+        <div class="alert alert-success">{{message}}</div>
+        {% elif message.tags == 'error'%}
+        <div class="alert alert-danger">{{message}}</div>
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+        <div class="form-group">
+            <label>Code de la classe</label><br>
+            <input type="text" name="code" placeholder="123456" class="form-control" required>
+        </div>
+        <br>
+        <button type="submit" id="button-submit" class="btn btn-primary">Rejoindre la classe</button>
+    </form>
+</div>

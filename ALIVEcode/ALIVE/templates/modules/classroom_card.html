@@ -1,0 +1,29 @@
+{% load static %}
+{% load profile %}
+
+<div class="card card-flip">
+  <div class="card-front text-white">
+      <div class="card-body">
+        <h4>{{classroom.name}}</h4>
+        <i class="fas fa-angle-right fa-5x"></i>
+      </div>
+  </div>
+  <div class="card-back">
+      <div class="card-body">
+        {% if user|isStudent %}
+        <h6 class="card-subtitle mb-2 text-muted">Classe des élèves de {{ classroom.creator.user.get_display_name }}</h6>
+        {% endif %}
+        <span class="card-subtitle badge badge-primary">Matière</span>
+        <p>{{ classroom.get_subject_display }}</p>
+        <span class="card-subtitle badge badge-primary">Description</span>
+        <p class="card-text">
+          {% if classroom.description != "" %}
+          {{classroom.description}}
+          {% else %}
+          Classe de {{classroom.get_subject_display}}
+          {% endif %}
+        </p>
+        <button id="btn-details" class="badge badge-primary" onclick="location.href=`{% url 'home:enter_classroom' id=classroom.id %}`"><i class="fas fa-angle-right fa-4x"></i></button>
+      </div>
+  </div>
+</div>

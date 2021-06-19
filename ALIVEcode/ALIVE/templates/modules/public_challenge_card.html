@@ -1,0 +1,21 @@
+{% load static %}
+{% load profile %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/challenge.css' %}" />
+
+<div class="card card-flip">
+    <div class="card-front text-white">
+        <div class="card-body">
+            <h3>{{challenge.name}}</h3>
+            <h5>Créateur: {{challenge.creator.get_display_name }}</h5>
+        </div>
+    </div>
+    <div class="card-back">
+        <div class="card-body">
+            <button type="button" id="btn-modify"­­ class="btn" onclick='location.href="{% url "home:enter_challenge" challengeId=challenge.id %}"'>
+                <i class="fas fa-play fa-4x"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,80 @@
+{% include "base.html" %}
+{% load static %}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+<link rel="stylesheet" type="text/css" href="{% static 'css/quizChoices.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'css/espace_background.css' %}">
+
+<div class="container">
+    <div class="level">
+        <div id="quiz-choices-header" class="level-item">
+            <p class="title is-2">Liste des quiz disponibles</p>
+        </div>
+    </div>
+    <div id="listequiz" class="box">
+        {%for quiz in listquiz%}
+        {% if quiz.questions.count > 0 %}
+        <div id="{{quiz.id}}" class="card has-text-centered">
+            <div class="card-header">
+                <div class="card-header-title is-centered">
+                    <p class="title">{{quiz.name}}</p>
+                </div>
+            </div>
+            <div class="card-content">
+                <div class="content">
+                    Ce quiz contient {{quiz.questions.count}} questions
+                </div>
+                <div class="content">
+                    <button id="{{quiz.id}}" class="button join">Commencer le quiz</button>
+                </div>
+            </div>
+        </div>
+        <div class="modal">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+                <header class="modal-card-head has-text-centered">
+                    <p class="modal-card-title">Instructions</p>
+                    <button class="delete" aria-label="close"></button>
+                </header>
+                <section class="modal-card-body">
+                    <div class="content">
+                        <ul>
+                            <li>Vous devez rester bien concentré durant tout le quiz</li>
+                            <li>Vous avez une limite de temps pour répondre à chaque question</li>
+                            <li>Chaque bonne réponse vaut 10 points</li>
+                            <li>Il est impossible de retourner à la question précedente</li>
+                        </ul>
+                    </div>
+                </section>
+                <footer class="modal-card-foot is-justify-content-center ">
+                    <button id="{{quiz.id}}" class="button commencer">Commencer le quiz</button>
+                </footer>
+            </div>
+        </div>
+        {%endif%}
+        {%endfor%}
+    </div>
+</div>
+
+
+<script>
+    localStorage.clear()
+    var idQuiz
+    $(document).ready(() => {
+        $('.join').click(function () {
+            $('.modal').addClass('is-active')
+            idQuiz = this.id
+        });
+        $('.delete').click(function () {
+            $('.modal').removeClass('is-active')
+        });
+    })
+    $(document).ready(() => {
+            $('.commencer').click(function () {
+                window.location.href = '/playground/rep_quiz/' + idQuiz;
+                return false;
+            });
+        })
+
+
+</script>

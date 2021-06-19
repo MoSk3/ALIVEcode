@@ -1,0 +1,35 @@
+{% load learning %} {% load static %}
+
+<style>
+    .sim {
+        height: 75%;
+    }
+</style>
+
+<h3 class="title" id="activity-title">{{ activity.name }}
+    {% if activity_progression.get_nb_challenges > 0 %}
+    {{ activity_progression.get_nb_challenges_completed }}/{{ activity_progression.get_nb_challenges }}
+    {% endif %}
+</h3>
+
+
+
+
+{% if activity.content == "" and not activity.challenges.all %}
+<label style="color: gray;">Cette activité est vide</label>
+{% else %}
+{{ activity.content | safe }}
+{% endif %}
+
+
+{% for challenge_progression in activity_progression.challenge_progressions.all %}
+
+{% if challenge_progression.challenge|isType:'ALIVEChallenge' %}
+<div class="sim w-100">
+    {% with in_course=True %}
+    {% include 'modules/alive_challenge.html' %}
+    {% endwith %}
+</div>
+<br><br>
+{% endif %}
+{% endfor %}

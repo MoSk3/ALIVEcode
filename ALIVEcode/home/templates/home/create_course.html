@@ -1,0 +1,53 @@
+{% include "base.html" %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/form.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/maisonneuve_background.css' %}">
+
+<div id='main-div' class="container-fluid" style="position: relative; max-width: 100%;">
+    <form action="" method="POST">
+        {% csrf_token %}
+        <h1>Créer un cours</h1>
+        <br>
+        {% if messages %}
+        {% for message in messages %}
+        {% if message.tags == 'success'%}
+        <div class="alert alert-success">{{message}}</div>
+        {% elif message.tags == 'error'%}
+        <div class="alert alert-error">{{message}}</div>
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+        <div class="form-group">
+            <label>Nom du cours</label><br>
+            {{ form.name }}
+        </div>
+        <div class="form-group">
+            <label>Description du cours</label><br>
+            {{ form.description }}
+        </div>
+        <div class="form-group">
+            <label>Sujet du cours</label><br>
+            {{ form.subject }}
+        </div>
+        <div class="form-group">
+            <label>Difficultée du cours</label><br>
+            {{ form.difficulty }}
+        </div>
+        <div class="form-group">
+            <label>Accès (peut être changé plus tard)</label><br>
+            {{ form.access }}
+        </div>
+        <br>
+        <button type="submit" id="button-submit" class="btn btn-primary">Créer le cours</button>
+    </form>
+</div>
+
+<script>
+    $(document).ready(() => {
+        let fields = $('input, textarea, select')
+        fields.addClass('form-control')
+        fields.attr('required')
+        fields[2].placeholder = "Description d'une longueure maximale de 500 caractères"
+        fields[5].placeholder = "Privé"
+    })
+</script>

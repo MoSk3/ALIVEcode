@@ -1,0 +1,16 @@
+#live-view {
+    position: fixed;
+    width: 30rem;
+    border-left: black 1px solid;
+    border-top: black 1px solid;
+    height: 30rem;
+    bottom: 0;
+    right: 0;
+    background-color: white;
+    text-align: center;
+    border-top-left-radius: 5px;
+}
+
+#chart-live {
+    height: 25rem;
+}

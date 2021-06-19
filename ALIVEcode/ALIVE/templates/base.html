@@ -1,0 +1,129 @@
+{% block page_content %}
+{% load static %}
+{% load profile %}
+
+<link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+<link rel="stylesheet" href="{% static 'libraries/bootstrap.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="{% static 'libraries/jquery.js' %}"></script>
+<script src="{% static 'libraries/bootstrap.js' %}"></script>
+<script src="https://kit.fontawesome.com/a582160e6b.js" crossorigin="anonymous"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<nav id="nav-bar" class="navbar navbar-expand-xl navbar-light bg-light">
+    <a class="navbar-brand" style="cursor: pointer;" onclick="location.href=`${location.origin}`">
+        <img src="{% static 'images/LogoALIVE.png' %}" alt="" width="100" height="30" class="d-inline-block align-top">
+    </a>
+    <div class="collapse navbar-collapse order-3 order-lg-2" id="navbarNavDropdown">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'home:dashboard' %}">Dashboard</a>
+            </li>
+            {% comment %}
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'playground:index' %}">ALIVE PLAY</a>
+            </li>
+            {% endcomment %}
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'mind:index' %}">ALIVE Mind Controller</a>
+            </li>
+            {% comment %} <li class="nav-item active">
+                <a class="nav-link" href="#">ALIVE Augmented Perception</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="#">ALIVE Injection Prevention</a>
+            </li> {% endcomment %}
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'home:a_propos' %}">À propos de nous</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+                {% if user.is_authenticated %}
+                <label class="nav-link">Bonjour
+                    {% if user|isProfessor %}
+                    {{ user.professor.first_name }}
+                    {% else %}
+                    {{ user.student.name }}
+                    {% endif %}
+                </label>
+                {% else %}
+                <label class="nav-link">Vous n'êtes pas connecté, <a href="{% url 'home:login' %}">se
+                        connecter?</a></label>
+                {% endif %}
+
+            </li>
+        </ul>
+    </div>
+
+    <div class="d-flex flex-row order-2 order-lg-3">
+        <ul class="navbar-nav flex-row">
+            <li class="nav-item">
+                <div id="user" class="dropdown">
+                    <button type="button" class="btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                            viewBox="0 0 600 600" stroke="#0178bc" stroke-width="30" fill="none">
+
+                            <title>Abstract user icon</title>
+
+                            <circle cx="300" cy="300" r="265" />
+                            <circle cx="300" cy="230" r="115" />
+                            <path d="M106.81863443903,481.4 a205,205 1 0,1 386.36273112194,0" stroke-linecap="butt" />
+                        </svg>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right" id="userDropDown">
+                        {% if user.is_authenticated %}
+                        <a class="dropdown-item" href="{% url 'home:logout' %}">Déconnexion</a>
+                        {% else %}
+                        <a class="dropdown-item" href="{% url 'home:login' %}">Se connecter</a>
+                        <a class="dropdown-item" href="{% url 'home:register' %}">S'inscrire</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </li>
+
+        </ul>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</nav>
+
+
+<script>
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
+    const navbar = $('#nav-bar')
+
+    $(document).ready(() => {
+        if ($('#main-div').length > 0) {
+            let mainDiv = $('#main-div')
+
+            let resize = () => {
+                mainDiv.css('height', window.innerHeight - navbar.innerHeight())
+            }
+
+            resize()
+            $(window).resize(resize)
+        }
+    })
+
+</script>
+
+
+{% endblock %}

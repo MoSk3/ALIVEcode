@@ -1,0 +1,171 @@
+{% include "base.html" %}
+
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'css/maisonneuve_background.css' %}">
+
+<div class="header">
+    <h1>A.L.I.V.E.</h1>
+    <p id="typer" style="display: inline; min-height: 40px; min-width: 1px;"></p>
+    <label id="cursor">|</label>
+
+    <div id="arrow">
+        <svg onclick="location.href=`{% url 'home:dashboard' %}`" data-name="arrow" xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24">
+            <g data-name="Arrow Left">
+                <path style="fill: white;"
+                    d="M7.77,23.58l-2.24-2a0.5,0.5,0,0,1,0-.71L13.43,12,5.5,3.13a0.5,0.5,0,0,1,0-.71l2.24-2a0.5,0.5,0,0,1,.71,0L18.8,12,8.48,23.54A0.5,0.5,0,0,1,7.77,23.58Z" />
+            </g>
+        </svg>
+    </div>
+</div>
+
+<div class="container">
+    <div id="myBody" class="container-fluid">
+        <div class="card mb-3 w-100" onclick="location.href=`{% url 'playground:index' %}`">
+            <div class="row no-gutters">
+                <div class="col-md-4">
+                    <img src="{% static 'images/Voiture.gif' %}" class="card-img" alt="...">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h4 class="card-title">ALIVE PLAY</h4>
+                        <p class="card-text">Dans cette section, vous pourrez créer vos propres niveaux ou jouer les
+                            niveaux des autres utilisateurs!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card mb-3 w-100" onclick="location.href=`{% url 'mind:index' %}`">
+            <div class="row no-gutters">
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h4 class="card-title">ALIVE Mind Controller</h4>
+                        <p class="card-text">Dans cette activité, vous auriez la possibilité de controller une voiture à
+                            l'aide de votre pensée!</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <img src="{% static 'images/cloud.png' %}" class="card-img" alt="...">
+                </div>
+            </div>
+        </div>
+        <div class="card mb-3 w-100" onclick="location.href=`#`">
+            <div class="row no-gutters">
+                <div class="col-md-4">
+                    <img src="{% static 'images/Labyrinthe.jpg' %}" class="card-img" alt="...">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h4 class="card-title">Augmented Vehicle Perception</h4>
+                        <p class="card-text">En construction.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card mb-3 w-100" onclick="window.open('https://lrima.cmaisonneuve.qc.ca/', '_blank');">
+            <div class="row no-gutters">
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h4 class="card-title">Le laboratoire de recherche LRIMA</h4>
+                        <p class="card-text">Site officiel du laboratoire de recherche informatique de Maisonneuve
+                            LRIMA.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <img src="{% static 'images/LRIMA.png' %}" class="card-img" alt="...">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% include "modules/footer.html" %}
+<script>
+
+    $(document).ready(() => {
+
+        navbar.css('position', 'fixed')
+        var typer = $('#typer')
+        var cursor = $('#cursor')
+        let i = 0
+        function cursorUpdate() {
+            if (i % 2 == 0) cursor.show()
+            else cursor.hide()
+            i++
+        }
+
+        setInterval(cursorUpdate, 700)
+
+        function nextAnimationFrame() {
+            let removeIndex = 0
+            let interval = setInterval(() => {
+                if (typer.text().length >= 1) {
+                    if (typer.text().length == 1) {
+                        typer.html('&zwnj;')
+                        clearInterval(interval)
+                        setTimeout(writeWord, 1000)
+                    }
+                    else {
+                        typer.text(typer.text().substring(0, typer.text().length - 1))
+                    }
+                    removeIndex++
+                }
+            }, 30);
+        }
+
+        function writeWord() {
+            phraseIndex = (phraseIndex + 1) % phrases.length
+            let newPhrase = phrases[phraseIndex]
+
+            let letterIndex = 0
+            let interval = setInterval(() => {
+                if (letterIndex < newPhrase.length) {
+                    typer.text(typer.text() + newPhrase[letterIndex])
+                } else {
+                    clearInterval(interval)
+                    setTimeout(nextAnimationFrame, 5000)
+                }
+                letterIndex++
+            }, 50)
+        }
+
+        phrases = [
+            "Apprendre la programmation",
+            "Apprendre les concepts de l'IA",
+            "Apprendre en jouant",
+        ]
+
+        let phraseIndex = 0
+
+        typer.text(phrases[0])
+
+        setTimeout(nextAnimationFrame, 5000)
+
+
+        /*
+        $(window).scroll((e) => {
+            let yPos = $(window).scrollTop() + window.innerHeight
+            for (let card of $('.card')) {
+                let $card = $(card)
+                if ($card.css('opacity') == '0') {
+                    if (yPos >= $card.position().top) {
+                        $card.css({
+                            'opacity': '1',
+                            'transform': 'rotateY(0deg) rotateX(0deg)',
+                        })
+                        setTimeout(() => {
+                            $card.css({
+                                '- webkit - transition': 'all 0.2s ease',
+                                '-moz - transition': 'all 0.2s ease',
+                                '-o - transition': 'all 0.2s ease',
+                                'transition': 'all 0.2s ease',
+                            })
+                        })
+                    }
+                }
+            }
+        })
+        */
+    })
+
+</script>

@@ -1,0 +1,42 @@
+package interpreteur.ast.buildingBlocs.programmes;
+
+import interpreteur.as.ASObjet;
+import interpreteur.ast.buildingBlocs.Expression;
+import interpreteur.ast.buildingBlocs.Programme;
+import interpreteur.executeur.Coordonnee;
+import interpreteur.executeur.Executeur;
+import interpreteur.tokens.Token;
+
+import javax.lang.model.type.NullType;
+import java.util.List;
+
+public class Si extends Programme {
+    private final Expression<?> test;
+
+    public Si(Expression<?> test) {
+        this.test = test;
+    }
+
+    @Override
+    public NullType execute() {
+        ASObjet.Booleen result = (ASObjet.Booleen) test.eval();
+        if (result.getValue()) {
+            Executeur.obtenirCoordRunTime().nouveauBloc("si");
+        } else if (Executeur.leBlocExiste("sinon")) {
+            Executeur.obtenirCoordRunTime().nouveauBloc("sinon");
+        }
+        return null;
+    }
+
+    @Override
+    public Coordonnee prochaineCoord(Coordonnee coord, List<Token> ligne) {
+        return Executeur.obtenirCoordRunTime().nouveauBloc("si");
+    }
+
+    @Override
+    public String toString() {
+        return "Si{" +
+                "test=" + test +
+                '}';
+    }
+}

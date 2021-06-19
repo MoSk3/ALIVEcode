@@ -1,0 +1,482 @@
+{% include "base.html" %}
+{% include "playground/base.html" %}
+{% load static %}
+
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Rammetto+One&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/race/race.css' %}">
+
+<script src="{% static 'js/play_socket.js' %}"></script>
+<div class="container-fluid">
+    <div class="row">
+        <div id="page-title">
+            <h1 class="title-text">
+                COURSE DE VOITURE
+            </h1>
+        </div>
+    </div>
+    <div class="row">
+        <div id="amc-data" class="col-lg">
+            <div id="amc-data-header" class="container">
+                <h2>Données AMC</h2>
+                <button id="connecter-casque" type="button" class="btn">Connecter un casque</button>
+            </div>
+            <div id="amc-data-body" class="container">
+                <table class="table" style="color:black">
+                    <tbody>
+                        <tr>
+                            <td>Force du signal</td>
+                            <td>---</td>
+                        </tr>
+                        <tr>
+                            <td>Attention</td>
+                            <td>---</td>
+                        </tr>
+                        <tr>
+                            <td>Meditation</td>
+                            <td>---</td>
+                        </tr>
+                        <tr>
+                            <td>Delta</td>
+                            <td>---</td>
+                        </tr>
+                        <tr>
+                            <td>Theta</td>
+                            <td>---</td>
+                        </tr>
+                        <tr>
+                            <td>Alpha Faible</td>
+                            <td>---</td>
+                        </tr>
+                        <tr>
+                            <td>Alpha Haut</td>
+                            <td>---</td>
+                        </tr>
+                        <tr>
+                            <td>Beta Faible</td>
+                            <td>---</td>
+                        </tr>
+                        <tr>
+                            <td>Beta Haut</td>
+                            <td>---</td>
+                        </tr>
+                        <tr>
+                            <td>Gamma Faible</td>
+                            <td>---</td>
+                        </tr>
+                        <tr>
+                            <td>Gamma Haut</td>
+                            <td>---</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% include "modules/simulation.html" %}
+    </div>
+</div>
+
+{% include "modules/footer.html" %}
+
+<div id="connect-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+    aria-hidden="true" style="color: black;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Connexion au casque</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="exampleFormControlInput1">Numéro d'identification du casque</label>
+                    <input id="id-field" class="form-control form-control-lg" type="text" placeholder="id" required>
+                    <div class="invalid-feedback">
+                        Veuillez spécifiez un numéro d'identification valide.
+                    </div>
+                    <br>
+                    <label for="exampleFormControlInput1">Nom d'affichage</label>
+                    <input id="name-field" class="form-control form-control-lg" type="text" placeholder="nom" required>
+                    <div class="invalid-feedback">
+                        Veuillez spécifiez un numéro d'identification valide.
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Configurer plus tard</button>
+                <button id="button-connect" type="button" class="btn btn-primary">
+                    Connexion
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    hide_play_button()
+    // Fonction d'initialisation de la simulation
+    function init(s) {
+        class Player {
+
+            static players = []
+
+            constructor(amc_id, name = null, role = null) {
+                this.amc_id = amc_id
+                this.name = name
+                this.role = role
+                this.car = null
+                this.afk = false
+            }
+
+            static join(data) {
+                let pl
+
+                if (player != null && data['amc_id'] == player.amc_id) {
+                    modal.modal('hide')
+                    player.name = data['name']
+                    if (data['role'] == 'leader') {
+                        player.setLeader()
+                    }
+                    pl = player
+                }
+                else {
+                    pl = new Player(data['amc_id'], data['name'], data['role'])
+                }
+                Player.players.push(pl)
+
+                if (!raceStarted) {
+                    if (data['x'] != null && data['y'] != null) {
+                        pl.car = s.spawnCar(data['x'], data['y'], carWidth, carHeight)
+                    }
+                }
+                return pl
+            }
+
+            static get(amc_id) {
+                return Player.players.find(el => el.amc_id == amc_id)
+            }
+
+            setLeader() {
+                this.role = 'leader'
+                if (!raceStarted) buttonPressed = false
+                $('.container').prepend(
+                    `<div id="play-button">
+                                        <img src="{% static 'images/play_button.png' %}" alt="play-button">
+                                    </div>`
+                )
+                $('#play-button').click(function () {
+                    if (player.role == 'leader') {
+                        if (!buttonPressed) {
+                            buttonPressed = true
+                            let data = {
+                                'type': 'start_race'
+                            }
+                            socket.send(JSON.stringify(data))
+                            $(this).children('img').attr('src', '/static/images/pause_button.png')
+                        } else if (buttonPressed) {
+                            buttonPressed = false
+                            let data = {
+                                'type': 'end_race'
+                            }
+                            socket.send(JSON.stringify(data))
+                            $(this).children('img').attr('src', '/static/images/play_button.png')
+                        }
+                    }
+                })
+            }
+        }
+
+        var buttonPressed = false
+        var socket
+        var player
+        var raceStarted
+        var countdown = $('#countdown')
+        var countdownTime = 3
+        var carWidth = 150
+        var carHeight = 220
+        var playButton = $('#play-button')
+        var modal = $('#connect-modal')
+
+        modal.on('keypress', (e) => {
+            if (e.which == 13) $('#button-connect').click()
+        })
+
+        // Menu de connexion à un casque
+        // modal.modal('show')
+        $("#connecter-casque").click(function () {
+            modal.modal('show')
+        });
+
+        var loc = window.location
+        var wsStart = 'ws://'
+        if (loc.protocol == 'https:') wsStart = 'wss://'
+        var endpoint = wsStart + loc.host + loc.pathname + "/get"
+        console.log(endpoint)
+
+        // Ligne d'arrivée
+        s.spawnRect(0, 975, 2000, 50).onCollisionEnter((e) => {
+            if (e.collidingWith instanceof Car) {
+                let winner
+                for (const player of Player.players) {
+                    if (player.car == e.collidingWith) {
+                        winner = player
+                        break
+                    }
+                }
+                if (player != null && player.role == 'leader' && winner != null) {
+                    // Fin de partie
+                    data = {
+                        'type': 'end_race',
+                        'winner': winner.amc_id
+                    }
+                    socket.send(JSON.stringify(data))
+                }
+            }
+        })
+
+        // Set paramètres de la caméra
+        s.canvasCamera.setScale(2000)
+        s.canvasCamera.setBound(new Vector(0, 0), new Vector(0, 500))
+        s.canvasCamera.setScaleBound(0, 3000)
+
+        function StartCountDown() {
+            countdownTime = 3
+            CountDown()
+        }
+
+        function CountDown() {
+            let colors = [
+                'red',
+                'orange',
+                'yellow',
+                '#18ab02'
+            ]
+            if (countdownTime >= 0) {
+                countdown.text(countdownTime == 0 ? "GO" : countdownTime).css('color', colors[3 - countdownTime]).show().css('fontSize', '500%').css('textShadow', '10px 10px 0px black')
+                setTimeout(() => {
+                    countdown.css('fontSize', '5000%').css('textShadow', '40px 40px 0px black')
+                    countdown.hide()
+                    setTimeout(CountDown, 200)
+                }, 800)
+                countdownTime--
+            } else if (countdownTime == -1) {
+                raceStarted = true
+            }
+        }
+
+        // Quand clic sur bouton se connecter
+        $('#button-connect').click(function () {
+            const idField = modal.find('#id-field')
+            const tempId = idField.val()
+
+            // Vérifie si le amc_id est valide
+            /*if (!tempId.match(/^([A-Za-z0-9]{8})$/)) {
+                idField.addClass('is-invalid')
+                return
+            }*/
+            const nameField = modal.find('#name-field')
+            const name = nameField.val()
+
+            // Set loading modal
+            modal.find('input,button').prop("disabled", true)
+            $(this).prepend('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>')
+
+            player = new Player(tempId)
+
+            // Send tentative de connexion
+            data = {
+                'type': 'connect',
+                'amc_id': player.amc_id,
+                'name': name
+            }
+            socket.send(JSON.stringify(data))
+        })
+
+        // Reset placement des véhicules au début de la piste
+        function ResetCars() {
+            const length = Player.players.length
+            s.canvasCamera.setScale(2000 + 700 * Math.floor(length / 5))
+
+            let i = 0
+            const width = (s.canvasCamera.scale / 1.5) - carWidth - 50
+            const step = width / (length - 1)
+            for (const pl of Player.players) {
+                const xOffset = (length <= 1 ? 0 : (i * step - width / 2))
+                if (pl.car == null) {
+                    pl.car = s.spawnCar(xOffset, -800, carWidth, carHeight)
+                } else {
+                    pl.car.shape.setPos(new Vector(xOffset, -800))
+                }
+                pl.car.shape.onClick(() => {
+                    s.canvasCamera.setTarget(pl.car)
+                })
+                const textComponent = new TextObject(s, pl.name, 50, pl.car.shape.pos.x, pl.car.shape.pos.y - 130)
+                textComponent.color = 'white'
+                textComponent.setBackgroundColor('black')
+                s.addObjectToScene(textComponent, 101)
+                pl.car.shape.addChild(textComponent)
+                i++
+            }
+
+            // Si le client est un joueur
+            if (player != null && player.car != null) {
+                let car = player.car
+                s.canvasCamera.setTarget(car)
+
+                if (typeof update_interval !== 'undefined') clearInterval(update_interval)
+                update_interval = setInterval(() => {
+                    if (car.shape.previousPos == null) car.shape.previousPos = car.shape.pos.clone()
+                    if (car.shape.previousPos.clone().substract(car.shape.pos).length >= 1) {
+                        let data = {
+                            'type': 'update_pos',
+                            'x': car.shape.pos.x,
+                            'y': car.shape.pos.y,
+                            'amc_id': player.amc_id
+                        }
+                        socket.send(JSON.stringify(data))
+                    }
+                    car.shape.previousPos = car.shape.pos.clone()
+                }, 100)
+
+            }
+        }
+
+        function openSocket() {
+
+            socket = new WebSocket(endpoint)
+            socket.onopen = e => { }
+            socket.onclose = e => { }
+            socket.onmessage = e => {
+                console.log(e['data'])
+                let json = JSON.parse(e['data'])
+                let car
+
+                switch (json['type']) {
+                    case "connect_error":
+                        /*----     erreur de connexion au casque     ----*/
+
+                        modal.find('input').addClass('is-invalid')
+                        modal.find('.invalid-feedback').text(json['error'])
+                        modal.find('input,button').prop("disabled", false)
+                        modal.find('span').remove()
+                        player = null
+                        break
+                    case "player_join":
+                        /*----     nouveau joueur se connecte     ----*/
+                        raceStarted = json['race_started']
+                        if ('race_clients' in json)
+                            for (const plData of json['race_clients'])
+                                Player.join(plData)
+                        else
+                            Player.join(json['race_client'])
+
+                        if (!raceStarted) {
+                            ResetCars()
+                        }
+                        break
+                    case "player_leave": {
+                        /*----     joueur se déconnecte     ----*/
+
+                        if ('race_client' in json && 'amc_id' in json['race_client']) {
+                            const pl = Player.get(json['race_client']['amc_id'])
+                            if (pl != null) {
+                                if (pl.car != null) s.deleteCar(pl.car)
+                                if ('new_leader' in json) {
+                                    Player.get(json['new_leader']['amc_id']).setLeader()
+                                }
+                                Player.players = Player.players.filter(el => el != pl)
+                                if (!raceStarted) ResetCars()
+                            }
+                        }
+                        break;
+                    }
+                    case "update_pos":
+                        /*----     la position d'un joueur change     ----*/
+
+                        for (const plParsed of json['race_clients']) {
+                            if (!('amc_id' in plParsed) || !('x' in plParsed) || !('y' in plParsed))
+                                continue
+                            const pl = Player.get(plParsed['amc_id'])
+                            const x = plParsed['x']
+                            const y = plParsed['y']
+                            if (typeof x !== 'number') {
+                                alert(plParsed['x'])
+                            }
+                            if (typeof y !== 'number') {
+                                alert(plParsed['y'])
+                            }
+                            pl?.car?.shape?.setPos(new Vector(x, y), false)
+                        }
+                        break
+                    case "start_race":
+                        /*----     la course commence     ----*/
+
+                        StartCountDown()
+                        break
+                    case "end_race":
+                        /*----     la course est terminée     ----*/
+
+                        if (typeof update_interval !== 'undefined') clearInterval(update_interval)
+
+                        countdownTime = -2
+                        raceStarted = false
+                        if (player != null) {
+                            if (player.car != null) player.car.stop()
+                            if (player.role == 'leader') {
+                                buttonPressed = false
+                                $('#play-button').children('img').attr('src', '/static/images/play_button.png')
+                            }
+                        }
+                        if (json['winner'] != null) alert("the winner is : " + Player.get(json['winner']).name + "!")
+                        ResetCars()
+                        break;
+                    case "sensor":
+                        /*----     le joueur reçoit les données du casque     ----*/
+
+                        if (!player.afk) {
+                            if (player.car != null) {
+                                const car = player.car
+                                if (raceStarted) {
+                                    car.speed = Math.pow(json['sensor'][1], 1.2) / 100
+                                    car.forward()
+                                } else {
+                                    car.stop()
+                                }
+                            }
+                            // Affiche les données à droite
+                            let i = 0
+                            for (let td of $('td:odd')) {
+                                $(td).text(json['sensor'][i])
+                                i++
+                            }
+                        }
+                        break
+                }
+            }
+            socket.onerror = e => {
+                console.log("error:", e)
+            }
+        }
+
+        // Arrête d'update la voiture si la fenêtre n'est pas en utilisation
+        /*
+        $(window).blur(() => {
+            if (player != null && player.car instanceof Car) {
+                player.car.stop()
+                player.car.afk = true
+            }
+        })
+        */
+        // Recommence à update la voiture si la fenêtre redevient active
+        /*
+        $(window).focus(function () {
+            if (player != null && player.car instanceof Car) {
+                player.afk = false
+                if (raceStarted) player.car.forward()
+            }
+        });
+        */
+        // Ouverture de la connexion avec le serveur
+        openSocket()
+    }
+</script>
