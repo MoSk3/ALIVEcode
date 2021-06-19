@@ -67,7 +67,7 @@ public class ModuleBuiltins {
             /*
              * affiche le commentaire entre les symboles
              * (-:
-             *
+             *  -
              * :-)
              * dans la fonction passée en paramètre
              *
@@ -79,6 +79,8 @@ public class ModuleBuiltins {
                 }
             }
     );
-    public static List<ASObjet.Constante> constantes = Collections.emptyList();
+    public static List<ASObjet.Variable> variables = Collections.singletonList(
+            new ASObjet.Constante("finl", new ASObjet.Texte("\n"))
+    );
 
 }

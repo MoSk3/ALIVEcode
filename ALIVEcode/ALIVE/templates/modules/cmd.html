@@ -5,10 +5,16 @@
         height: 100%;
         background-color: #001b3d;
         color: #dbdbdb;
-        padding: 10px;
+        padding: 5px;
         overflow-y: auto;
         font-family: Arial, Helvetica, sans-serif;
         font-size: large;
+    }
+    #cmd pre {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: large;
+        color: #dbdbdb;
+        line-height: 2rem;
     }
     #cmd a {
         cursor: pointer;
@@ -17,6 +23,7 @@
 
 
 <div id="cmd">
+    <pre id="cmd-content"></pre>
 </div>
 
 {% load static %}

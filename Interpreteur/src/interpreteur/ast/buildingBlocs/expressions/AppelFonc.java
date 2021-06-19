@@ -18,7 +18,7 @@ public class AppelFonc implements Expression<ASObjet<?>> {
     public ASObjet<?> eval() {
         ASObjet<?> result = var.eval();
         if (!(result instanceof ASObjet.Fonction)) {
-            throw new ASErreur.ErreurAppelFonction("Un \u00E9l\u00E9ment de type '" + result.obtenirNomType() + "' ne peut pas être appel\u00E9");
+            throw new ASErreur.ErreurAppelFonction("Un \u00E9l\u00E9ment de type '" + result.obtenirNomType() + "' ne peut pas \u00EAtre appel\u00E9");
         }
         return ((ASObjet.Fonction) result).setParamPuisExecute(args.eval().getValue());
     }

@@ -72,14 +72,14 @@ public class ASModule {
         fonctionBuiltins.addAll(ModuleListeUtils.fonctions);
         fonctionBuiltins.addAll(ModuleNombreUtils.fonctions);
 
-        List<Constante> constantesBuiltins = new ArrayList<>(ModuleBuiltins.constantes);
-        constantesBuiltins.addAll(ModuleTexteUtils.constantes);
-        constantesBuiltins.addAll(ModuleListeUtils.constantes);
-        constantesBuiltins.addAll(ModuleNombreUtils.constantes);
+        List<Variable> variablesBuiltins = new ArrayList<>(ModuleBuiltins.variables);
+        variablesBuiltins.addAll(ModuleTexteUtils.constantes);
+        variablesBuiltins.addAll(ModuleListeUtils.constantes);
+        variablesBuiltins.addAll(ModuleNombreUtils.constantes);
 
         ajouterModule("builtins",
                 fonctionBuiltins.toArray(Fonction[]::new),
-                constantesBuiltins.toArray(Constante[]::new)
+                variablesBuiltins.toArray(Variable[]::new)
         );
 
         ModuleMath.charger();

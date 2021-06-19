@@ -1,4 +1,5 @@
-const cmd = $("#cmd");
+let $;
+const cmd = $("#cmd-content");
 let editor;
 
 const make_safe = (msg: string) => msg.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
@@ -28,22 +29,13 @@ function print_error(msg: string, line: number) {
     const errorTitle = linkToLine(`<u>${errorName} à la ligne #${line}</u>`, line);
 
     cmd.append(
-        `<span style="color: red">
-            ${errorTitle}:
-        </span>
-        <br>
-        → ${errorMsg}
-        <br>`
+        `<span style="color: red">${errorTitle}:</span><br>→ ${errorMsg}`
     )
     cmd[0].scrollTop = cmd[0].scrollHeight
 }
 
 function linkToLine(text: string, line: number) {
-    return `<a>
-            <span onclick="editor.gotoLine(${line}); editor.selection.selectLine()">
-                    ${text}
-            </span>
-            </a>`
+    return `<a><span onclick="editor.gotoLine(${line}); editor.selection.selectLine()">${text}<span></a>`
 }
 
 function print_end(interrupted: boolean) {

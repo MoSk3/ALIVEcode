@@ -388,6 +388,52 @@ public class ASAst extends AstGenerator {
         });
 
 
+        ajouterProgramme("NOM_VARIABLE expression~"
+                        + "{nom_type_de_donnees} expression~"
+                        + "NOM_VARIABLE",
+                new Ast<Programme>() {
+                    @Override
+                    public Programme apply(List<Object> p) {
+                        Hashtable<String, Ast<?>> astParams = new Hashtable<>();
+
+                        //astParams.put("expression DEUX_POINTS expression", new Ast<Argument>(8){
+                        //    @Override
+                        //    public Argument apply(List<Object> p) {
+                        //        assert p.get(0) instanceof Var : "gauche assignement doit être Var (source: appelFonction dans ASAst)";
+                        //
+                        //        return new Argument((Var) p.get(0), (Expression<?>) p.get(2), null);
+                        //    }
+                        //});
+                        Expression<?> contenu;
+                        CreerListe args;
+                        if (p.size() == 2) {
+                            contenu = (Expression<?>) p.get(1);
+
+                            args = contenu instanceof CreerListe.Enumeration ?
+                                    ((CreerListe.Enumeration) contenu).build() :
+                                    new CreerListe(contenu);
+                        } else {
+                            args = new CreerListe();
+                        }
+
+                        final Expression<?> nom = new Var(((Token) p.get(0)).obtenirValeur());
+
+                        return new Programme() {
+                            @Override
+                            public Object execute() {
+                                new AppelFonc(nom, args).eval();
+                                return null;
+                            }
+
+                            @Override
+                            public String toString() {
+                                return p.get(0).toString();
+                            }
+                        };
+                    }
+                });
+
+
         //<-----------------------------------Les blocs de code------------------------------------->
         ajouterProgramme("SI expression",
                 new Ast<Si>() {
@@ -533,11 +579,9 @@ public class ASAst extends AstGenerator {
                             String nom;
                             if (p.get(0) instanceof Var) {
                                 nom = ((Var) p.get(0)).getNom();
-                            }
-                            else if (p.get(2) instanceof Var) {
+                            } else if (p.get(2) instanceof Var) {
                                 nom = ((Var) p.get(2)).getNom();
-                            }
-                            else {
+                            } else {
                                 nom = p.get(0) instanceof Type ? ((Expression<?>) p.get(2)).eval().toString() : ((Expression<?>) p.get(0)).eval().toString();
                             }
 
@@ -596,7 +640,7 @@ public class ASAst extends AstGenerator {
                     @Override
                     public Expression<?> apply(List<Object> p) {
                         Expression<?> result = AstGenerator.evalOneExpr(new ArrayList<>(p.subList(1, p.size() - 1)), null);
-                        if (result instanceof CreerListe.Enumeration){
+                        if (result instanceof CreerListe.Enumeration) {
                             return ((CreerListe.Enumeration) result).build();
                         }
                         return result;
@@ -825,10 +869,14 @@ public class ASAst extends AstGenerator {
         });
 
 
-        ajouterExpression("expression VIRGULE expression",
+        ajouterExpression("expression VIRGULE expression~" +
+                        "expression VIRGULE",
                 new Ast<CreerListe.Enumeration>() {
                     @Override
                     public CreerListe.Enumeration apply(List<Object> p) {
+                        if (p.size() == 2) {
+                            return new CreerListe.Enumeration((Expression<?>) p.get(0));
+                        }
                         if (p.get(0) instanceof CreerListe.Enumeration) {
                             ((CreerListe.Enumeration) p.get(0)).add((Expression<?>) p.get(2));
                             return (CreerListe.Enumeration) p.get(0);

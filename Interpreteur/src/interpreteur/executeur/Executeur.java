@@ -283,6 +283,7 @@ public class Executeur {
      *                          </li>
      */
     public static String compiler(String[] lignes, boolean compilationForcee) {
+        reset();
         /*
          * Cette condition est remplie si l'array de lignes de codes mises en parametres est identique
          * a l'array des dernieres lignes de code compilees
@@ -586,14 +587,15 @@ public class Executeur {
 
     public static void main(String[] args) {
         String[] lines = new String[]{
-                "utiliser \"experimental\"",
-                "var a: texte += 'salut'",
-                "afficher a"
+                "fonction abc(e)",
+                "    afficher e",
+                "fin fonction",
+                "abc(3)"
         };
 
         System.out.println(compiler(lines, true));
-        printCompileDict();
-        //executerMain(false);
+        //printCompileDict();
+        executerMain(false);
         //System.out.println(compiler(lines, false));
         //executerMain(false);
     }

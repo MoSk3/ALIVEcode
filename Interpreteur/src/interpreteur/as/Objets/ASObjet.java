@@ -635,7 +635,7 @@ public interface ASObjet<T> {
              */
             public Parametre(Type type, String nom, ASObjet<?> valeurParDefaut) {
                 this.nom = nom;
-                this.type = type;
+                this.type = type == null ? new Type("tout"): type;
                 this.valeurParDefaut = valeurParDefaut;
             }
 

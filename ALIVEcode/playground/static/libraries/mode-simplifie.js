@@ -37,7 +37,7 @@ ace.define(
 		const CustomHighlightRules = function CustomHighlightRules() {
 			//this.$rules = new TextHighlightRules().getRules(); // Use Text's rules as a base
 			var identifierRe =
-				"[a-zA-Z\\$_\u00a1-\uffff][a-zA-Z\\d\\$_\u00a1-\uffff]*"
+				"[a-zA-Z_\\.\u00a1-\uffff][a-zA-Z\\d_\\.\u00a1-\uffff]*"
 			const reserved_words = {
 				boucles: [
 					"\\brepeter\\b",
@@ -183,7 +183,7 @@ ace.define(
 								return ["support.function.italic", "empty"]
 							else return ["support.function", "empty"]
 						},
-						regex: "(\\w+\\s*)(\\((?=.*\\)))",
+						regex: `(${identifierRe}\\s*)(\\((?=.*\\)))`,
 					},
 					{
 						token: "support.class",

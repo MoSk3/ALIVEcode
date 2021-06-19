@@ -22,7 +22,7 @@ public class ModuleNombreUtils extends ASModule {
                     try {
                         return new Entier(Integer.parseInt(valeur, base));
                     } catch (NumberFormatException ignored) {
-                        throw new ASErreur.ErreurType("impossible de convertir '" + valeur + "' en nombre entier de base '" + base + "'");
+                        throw new ASErreur.ErreurType("impossible de convertir '" + valeur + "' en nombre entier de base " + base);
                     }
                 }
             },
