@@ -1,6 +1,5 @@
 Ajouter:
   commandes:
-    AFFICHER: '\bafficher\b'
     LIRE: '\blire\b'
     ATTENDRE: '\battendre\b'
     UTILISER: '\butiliser\b'

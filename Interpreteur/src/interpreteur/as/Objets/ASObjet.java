@@ -450,10 +450,10 @@ public interface ASObjet<T> {
 
             if (paramsValeurs.size() < nonDefaultParams || paramsValeurs.size() > this.parametres.length) {
                 if (nonDefaultParams == this.parametres.length) {
-                    throw new ErreurAppelFonction(this.nom, "Le nombre de param\u00E8tres donn\u00E9es est '" + paramsValeurs.size() +
+                    throw new ErreurAppelFonction(this.nom, "Le nombre de param\u00E8tres donn\u00E9s est '" + paramsValeurs.size() +
                             "' alors que la fonction en prend '" + this.parametres.length + "'");
                 } else {
-                    throw new ErreurAppelFonction(this.nom, "Le nombre de param\u00E8tres donn\u00E9es est '" + paramsValeurs.size() +
+                    throw new ErreurAppelFonction(this.nom, "Le nombre de param\u00E8tres donn\u00E9s est '" + paramsValeurs.size() +
                             "' alors que la fonction en prend entre '" + nonDefaultParams + "' et '" + this.parametres.length + "'");
                 }
 

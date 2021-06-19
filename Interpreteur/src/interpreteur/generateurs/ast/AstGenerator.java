@@ -414,6 +414,9 @@ public class AstGenerator {
         finalLine.replaceAll(e -> e.equals("expression") ? expressionIt.hasNext() ? expressionIt.next() : null : programmeIt.hasNext() ? programmeIt.next() : null);
 
         //System.out.println(finalLine);
+        if (expressionIt.hasNext()) {
+            throw new ASErreur.ErreurSyntaxe("Syntaxe invalide, est-ce qu'il manque une virgule entre deux \u00E9l\u00E9ments?");
+        }
 
         return (Programme) programmesDict.get(programme).apply(finalLine);
     }

@@ -156,6 +156,10 @@ public class Executeur {
         }
     }
 
+    public static void addData(Data data) {
+        datas.add(data);
+    }
+
     /**
      * @return le lexer utilise par l'interpreteur (voir ASLexer)
      */

@@ -742,7 +742,7 @@ public class ASAst extends AstGenerator {
                             Expression<?> debut = null, fin = null;
                             int idxDeuxPoints = p.indexOf(deux_pointsToken);
                             // si debut dans sous section
-                            if (idxDeuxPoints > 3) {
+                            if (idxDeuxPoints > 2) {
                                 debut = AstGenerator.evalOneExpr(new ArrayList<>(p.subList(2, idxDeuxPoints)), null);
                             }
                             // si fin dans sous section

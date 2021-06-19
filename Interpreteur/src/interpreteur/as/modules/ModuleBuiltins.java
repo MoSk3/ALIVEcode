@@ -2,6 +2,8 @@ package interpreteur.as.modules;
 
 import interpreteur.as.Objets.ASObjet;
 import interpreteur.ast.buildingBlocs.expressions.Type;
+import interpreteur.data_manager.Data;
+import interpreteur.executeur.Executeur;
 
 import java.util.*;
 
@@ -10,6 +12,18 @@ public class ModuleBuiltins {
      * Module builtins: contient toutes les fonctions utiliser par defaut dans le langage
      */
     public static List<ASObjet.Fonction> fonctions = Arrays.asList(
+
+            new ASObjet.Fonction("afficher", new ASObjet.Fonction.Parametre[]{
+                    new ASObjet.Fonction.Parametre(new Type("tout"), "element", new ASObjet.Texte(""))
+            }, new Type("nulType")) {
+                @Override
+                public ASObjet<?> executer() {
+                    ASObjet<?> element = this.getValeurParam("element");
+                    Executeur.addData(new Data(Data.Id.AFFICHER).addParam(element.toString()));
+                    return new Nul();
+                }
+            },
+
             /*
              * aleatoire:
              * 		@param choix:
@@ -47,7 +61,9 @@ public class ModuleBuiltins {
              *
              * 		@return le nom du type de l'objet passe en parametre dans un "texte"
              */
-            new ASObjet.Fonction("typeDe", new ASObjet.Fonction.Parametre[]{new ASObjet.Fonction.Parametre(null, "element", null)}, new Type("texte")) {
+            new ASObjet.Fonction("typeDe", new ASObjet.Fonction.Parametre[]{
+                    new ASObjet.Fonction.Parametre(new Type("tout"), "element", null)
+            }, new Type("texte")) {
                 @Override
                 public ASObjet<?> executer() {
                     return new Texte(this.getParamsValeursDict().get("element").obtenirNomType());
@@ -55,7 +71,7 @@ public class ModuleBuiltins {
             },
 
             new ASObjet.Fonction("booleen", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(null, "element", null)
+                    new ASObjet.Fonction.Parametre(new Type("tout"), "element", null)
             }, new Type("booleen")) {
                 @Override
                 public ASObjet<?> executer() {
@@ -72,7 +88,9 @@ public class ModuleBuiltins {
              * dans la fonction passée en paramètre
              *
              */
-            new ASObjet.Fonction("info", new ASObjet.Fonction.Parametre[]{new ASObjet.Fonction.Parametre(null, "element", null)}, new Type("tout")) {
+            new ASObjet.Fonction("info", new ASObjet.Fonction.Parametre[]{
+                    new ASObjet.Fonction.Parametre(new Type("tout"), "element", null)
+            }, new Type("tout")) {
                 @Override
                 public ASObjet<?> executer() {
                     return this.getParamsValeursDict().get("element");

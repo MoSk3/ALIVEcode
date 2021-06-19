@@ -14,7 +14,9 @@ public class Type implements Expression<ASObjet<?>> {
     private String nom;
 
     public Type(String nom) {
-        this.nom = nom.replace("nombre", "entier|decimal").replace("iterable", "texte|liste");
+        this.nom = nom
+                .replace("nombre", "entier|decimal")
+                .replace("iterable", "texte|liste");
     }
 
     public String nom() {
@@ -41,7 +43,9 @@ public class Type implements Expression<ASObjet<?>> {
         if (type.equals("tout"))
             this.nom = "tout";
         else if (this.noMatch(type))
-            this.nom += "|" + type.replace("nombre", "entier|decimal").replace("iterable", "texte|liste");
+            this.nom += "|" + type
+                    .replace("nombre", "entier|decimal")
+                    .replace("iterable", "texte|liste");
     }
 
     public boolean noMatch(Object o) {
@@ -99,7 +103,8 @@ public class Type implements Expression<ASObjet<?>> {
         TypeBuiltin() {
             this.aliases = null;
         }
-        TypeBuiltin(TypeBuiltin ...alias) {
+
+        TypeBuiltin(TypeBuiltin... alias) {
             this.aliases = alias;
         }
 
@@ -112,24 +117,6 @@ public class Type implements Expression<ASObjet<?>> {
             return aliases == null ? super.toString() : ArraysUtils.join("|", aliases);
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }
