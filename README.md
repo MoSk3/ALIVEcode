@@ -26,47 +26,18 @@ Plateforme Web faite par le laboraoire LRIMa du collège Maisonneuve touchant pl
 # Installation
 - ### Setup de python
     **Version de python requise: 3.8.0 - 3.8.8**
-    Modules pip à installer
-    - ##### Django
+    - ##### Installation des librairies
       ```cmd
-      pip install django
+      pip install -r requirements.txt
       ```
-      ou
-      ```cmd
-      python -m pip install django
-      ```
-    - ##### Django Rest Framework
-      ```cmd
-      pip install djangorestframework
-      ```
-      ou
-      ```cmd
-      python -m pip install djangorestframework
-      ```
-    - ##### Channels 
-      ```cmd
-      pip install channels
-      ```
-      ou
-      ```cmd
-      python -m pip install channels
-      ```
-    - ##### Pillow
-      ```cmd
-      pip install pillow
-      ```
-      ou
-      ```cmd
-      python -m pip install pillow
-      ```
-    - ##### Pyjnius
+    - ##### Librairie Pyjnius
       Permet d'éxécuter du code java à partir de python
       
       Pyjnius requiert C++ build tools sur la machine:
       https://visualstudio.microsoft.com/fr/visual-cpp-build-tools/
       
       Pyjnius requiert un JDK (Java Development Kit)
-      La version 15.0.2 est préférée:
+      La version 15.0.2 est **fortement** recommandée:
       https://www.oracle.com/java/technologies/javase/jdk15-archive-downloads.html
      
       ```cmd
@@ -92,13 +63,28 @@ Plateforme Web faite par le laboraoire LRIMa du collège Maisonneuve touchant pl
        
       3. Si dans le message d'erreur on retrouve à quelque part PermissionError: [WinError 5] Accès refusé, il faut changer de place l'emplacement du JDK à un emplacement qui ne requiert pas de permissions windows. Exemple: (C:\Program Files\Java\jdk-15.0.2)  
       
-      4. Si le problème persiste, demandez à Enric ou Mathis.
+      4. Si le problème persiste, demandez à @MoSk3 ou @Ecoral360, ou postez une issue sur le repo.
 
+- ### Setup des fichiers
+  - ##### .env
+    1.  Copiez-collez le fichier *.env.example* et renommez le *.env*.
+    2.  Si vous ne possédez pas encore de secret key, ne touchez pas à la valeur *SECRET_KEY* et continuez de suivre le guide d'installation.
+    3.  Modifiez certaines valeurs au besoin.
+    
 # Premier Pas
 1. Démarrage du serveur localement
    ```cmd
    python manage.py runserver
    ```
+   - ### Erreur de SECRET_KEY
+     Si vous possédez une erreur comme quoi vous ne possédez pas de secret key, une secret key sera générée automatiquement. Copiez celle-ci, allez dans le .env et retirez la        ligne SECRET_KEY qui est en commentaire et collez la valeur à droite de **SECRET_KEY=**. La ligne devrait ressembler à:
+     
+     ```.env
+     SECRET_KEY=your-secret-key-goes-here
+     ```
+     Une fois fait, lancez à nouveau le site.
+   
+   **Si aucune erreur n'apparaît:**
    Allez sur un navigateur web moderne et essayer d'entrer dans la barre de recherche l'addresse suivante:  
     
    **localhost:8000**  
