@@ -7,6 +7,7 @@ import interpreteur.ast.buildingBlocs.expressions.CreerListe;
 import interpreteur.data_manager.Data;
 import interpreteur.executeur.Executeur;
 
+@Deprecated
 public class Afficher extends Programme {
     private final Expression<?> expr;
 

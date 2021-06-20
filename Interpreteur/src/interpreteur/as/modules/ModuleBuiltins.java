@@ -24,6 +24,17 @@ public class ModuleBuiltins {
                 }
             },
 
+            new ASObjet.Fonction("attendre", new ASObjet.Fonction.Parametre[]{
+                    new ASObjet.Fonction.Parametre(new Type("nombre"), "duree", new ASObjet.Entier(0))
+            }, new Type("nulType")) {
+                @Override
+                public ASObjet<?> executer() {
+                    ASObjet<?> duree = this.getValeurParam("duree");
+                    Executeur.addData(new Data(Data.Id.ATTENDRE).addParam(((Number) duree.getValue()).doubleValue()));
+                    return new Nul();
+                }
+            },
+
             /*
              * aleatoire:
              * 		@param choix:

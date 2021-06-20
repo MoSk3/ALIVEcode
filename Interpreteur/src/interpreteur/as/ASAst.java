@@ -77,13 +77,14 @@ public class ASAst extends AstGenerator {
                         return new Utiliser((Var) p.get(1));
                     }
                 });
-
+        /*
         ajouterProgramme("AFFICHER expression", new Ast<Afficher>() {
             @Override
             public Afficher apply(List<Object> p) {
                 return new Afficher((Expression<?>) p.get(1));
             }
         });
+         */
 
         ajouterProgramme("LIRE DANS expression",
                 new Ast<Lire>() {
@@ -97,13 +98,14 @@ public class ASAst extends AstGenerator {
                         return new Lire((Var) p.get(2), null);
                     }
                 });
-
+        /*
         ajouterProgramme("ATTENDRE expression", new Ast<Attendre>() {
             @Override
             public Attendre apply(List<Object> p) {
                 return new Attendre((Expression<?>) p.get(1));
             }
         });
+         */
 
         ajouterProgramme("CONSTANTE expression {assignements} expression~"
                         + "CONSTANTE expression DEUX_POINTS expression {assignements} expression~"
