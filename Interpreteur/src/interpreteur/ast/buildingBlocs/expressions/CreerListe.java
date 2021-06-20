@@ -1,6 +1,7 @@
 package interpreteur.ast.buildingBlocs.expressions;
 
 import interpreteur.as.Objets.ASObjet;
+import interpreteur.as.erreurs.ASErreur;
 import interpreteur.ast.buildingBlocs.Expression;
 
 import java.util.ArrayList;
@@ -131,10 +132,7 @@ public class CreerListe implements Expression<ASObjet.Liste> {
 
         @Override
         public ASObjet<?> eval() {
-            /*
-            TODO Lancer erreur
-             */
-            return null;
+            throw new ASErreur.ErreurSyntaxe("Syntaxe invalide. Est-ce qu'il manquerait un { au d\u00E9but et un } \u00E0 la fin de la liste?");
         }
     }
 }

@@ -37,7 +37,8 @@ ace.define(
 		const CustomHighlightRules = function CustomHighlightRules() {
 			//this.$rules = new TextHighlightRules().getRules(); // Use Text's rules as a base
 			var identifierRe =
-				"[a-zA-Z_\\.\u00a1-\uffff][a-zA-Z\\d_\\.\u00a1-\uffff]*"
+				"[a-zA-Z\\$_\u00a1-\uffff][a-zA-Z\\d\\$_\u00a1-\uffff]*"
+			const paramComment = `(\\{ *)(@)(${identifierRe})(.*?)(\\})`
 			const reserved_words = {
 				boucles: [
 					"\\brepeter\\b",
@@ -47,8 +48,9 @@ ace.define(
 					"\\bsi\\b",
 					"\\bsinon\\b",
 					"\\.\\.\\.",
+					"\\bbond\\b",
 					"\\bdans\\b",
-					"\\bconst\\b",
+					"\\bconst\\b"
 				],
 				fonctions: [
 					"\\bstructure\\b",
@@ -106,6 +108,7 @@ ace.define(
 					"\\bafficher\\b",
 					"\\battendre\\b",
 					"\\butiliser\\b",
+					"\\bvar\\b",
 				],
 				autres: ["\\bretourner\\b", "\\bsortir\\b", "\\bcontinuer\\b"],
 				datatypes: [
@@ -183,7 +186,7 @@ ace.define(
 								return ["support.function.italic", "empty"]
 							else return ["support.function", "empty"]
 						},
-						regex: `(${identifierRe}\\s*)(\\((?=.*\\)))`,
+						regex: "(\\w+\\s*)(\\((?=.*\\)))",
 					},
 					{
 						token: "support.class",
@@ -211,6 +214,11 @@ ace.define(
 						next: "multi_line_comment",
 					},
 					{
+						token: "comment.line.italic",
+						regex: /\(-:/,
+						next: "multi_line_documentation",
+					},
+					{
 						token: "keyword",
 						regex: "\\s+",
 					},
@@ -224,6 +232,29 @@ ace.define(
 					{
 						token: "comment.line",
 						regex: ".*",
+					},
+				],
+				multi_line_documentation: [
+					{
+						token: "comment.line.italic",
+						regex: /.*:-\)/,
+						next: "main",
+					},
+					{
+						token: (tiret, arobase, word) => {
+							return ["comment.line.italic", "empty", "constant.numeric.italic"]
+						},
+						regex: `( *- *)(@)(${identifierRe})`
+					},
+					{
+						token: (open, arobase, word, extra, close) => {
+							return ["empty", "empty", "constant.numeric.italic", "comment.line.italic", "empty"]
+						},
+						regex: paramComment,
+					},
+					{
+						token: "comment.line.italic",
+						regex: `.*?(?=(${paramComment})|$)`,
 					},
 				],
 				fonction_arguments: [
@@ -244,17 +275,10 @@ ace.define(
 			}
 		}
 		$(document).ready(() => {
-
 			const editor = ace.edit("line-interface")
 			editor.keyBinding.addKeyboardHandler(autocomplete, 0)
-			for (const command of Object.keys(editor.commands.commands)) {
-				console.log("| " + command)
-			}
 		})
 		oop.inherits(CustomHighlightRules, TextHighlightRules)
 		exports.CustomHighlightRules = CustomHighlightRules
 	}
-
-    
-
 )

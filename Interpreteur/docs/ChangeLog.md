@@ -6,6 +6,7 @@
 
 #### Version 1.1
 - ajout du support pour les caractères unicodes dans les noms de variables et les noms de fonctions
+- possible d'appeler une fonction sans parenthèse si elle est appelée seule sur une ligne
 
 
 

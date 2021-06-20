@@ -415,7 +415,7 @@ public class AstGenerator {
 
         //System.out.println(finalLine);
         if (expressionIt.hasNext()) {
-            throw new ASErreur.ErreurSyntaxe("Syntaxe invalide, est-ce qu'il manque une virgule entre deux \u00E9l\u00E9ments?");
+            throw new ASErreur.ErreurSyntaxe("Syntaxe invalide. Est-ce qu'il manque une virgule entre deux \u00E9l\u00E9ments?");
         }
 
         return (Programme) programmesDict.get(programme).apply(finalLine);

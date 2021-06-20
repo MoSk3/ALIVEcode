@@ -591,10 +591,12 @@ public class Executeur {
 
     public static void main(String[] args) {
         String[] lines = new String[]{
-                "fonction abc(e)",
-                "    afficher e",
+                "fonction executer(commande: fonctionType, arg: tout)",
+                "    retourner commande(arg)",
                 "fin fonction",
-                "abc(3)"
+                "si executer, afficher, \"hey\" == nul",
+                "    afficher nul",
+                "fin si",
         };
 
         System.out.println(compiler(lines, true));

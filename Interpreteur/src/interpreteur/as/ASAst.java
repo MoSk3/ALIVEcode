@@ -639,11 +639,10 @@ public class ASAst extends AstGenerator {
                 new Ast<Expression<?>>() {
                     @Override
                     public Expression<?> apply(List<Object> p) {
-                        Expression<?> result = AstGenerator.evalOneExpr(new ArrayList<>(p.subList(1, p.size() - 1)), null);
-                        if (result instanceof CreerListe.Enumeration) {
-                            return ((CreerListe.Enumeration) result).build();
-                        }
-                        return result;
+                        //if (result instanceof CreerListe.Enumeration) {
+                        //    return ((CreerListe.Enumeration) result).build();
+                        //}
+                        return AstGenerator.evalOneExpr(new ArrayList<>(p.subList(1, p.size() - 1)), null);
                     }
                 });
 
@@ -834,10 +833,10 @@ public class ASAst extends AstGenerator {
                 "expression PAS DANS expression", new Ast<BinComp>() {
             @Override
             public BinComp apply(List<Object> p) {
-                return new BinComp(
-                        (Expression<?>) p.get(0),
-                        p.size() == 3 ? BinComp.Comparateur.DANS : BinComp.Comparateur.PAS_DANS,
-                        (Expression<?>) p.get(2));
+                return p.size() == 3 ?
+                        new BinComp((Expression<?>) p.get(0), BinComp.Comparateur.DANS, (Expression<?>) p.get(2))
+                        :
+                        new BinComp((Expression<?>) p.get(0), BinComp.Comparateur.PAS_DANS, (Expression<?>) p.get(3));
             }
         });
 
@@ -875,13 +874,22 @@ public class ASAst extends AstGenerator {
                     @Override
                     public CreerListe.Enumeration apply(List<Object> p) {
                         if (p.size() == 2) {
-                            return new CreerListe.Enumeration((Expression<?>) p.get(0));
+                            if (p.get(0) instanceof CreerListe.Enumeration)
+                                return (CreerListe.Enumeration) p.get(0);
+                            else
+                                return new CreerListe.Enumeration((Expression<?>) p.get(0));
+                        }
+
+                        Expression<?> valeur = (Expression<?>) p.get(2);
+                        if (p.get(2) instanceof CreerListe.Enumeration) {
+                            valeur = ((CreerListe.Enumeration) valeur).build();
                         }
                         if (p.get(0) instanceof CreerListe.Enumeration) {
-                            ((CreerListe.Enumeration) p.get(0)).add((Expression<?>) p.get(2));
+                            ((CreerListe.Enumeration) p.get(0)).add(valeur);
                             return (CreerListe.Enumeration) p.get(0);
                         }
-                        return new CreerListe.Enumeration((Expression<?>) p.get(0), (Expression<?>) p.get(2));
+
+                        return new CreerListe.Enumeration((Expression<?>) p.get(0), valeur);
                     }
                 });
         setOrdreExpression();

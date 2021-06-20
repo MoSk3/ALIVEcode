@@ -35,6 +35,7 @@ public class BinComp implements Expression<ASObjet.Booleen> {
          * Gere x == y
          */
         EGAL((gauche, droite) -> {
+            if (gauche.getValue() == null && droite.getValue() == null) return new ASObjet.Booleen(true);
             return new ASObjet.Booleen(gauche.getValue().equals(droite.getValue()));
         }),
 
@@ -42,6 +43,7 @@ public class BinComp implements Expression<ASObjet.Booleen> {
          * Gere x != y
          */
         PAS_EGAL((gauche, droite) -> {
+            if (gauche.getValue() == null && droite.getValue() == null) return new ASObjet.Booleen(true);
             return new ASObjet.Booleen(!gauche.getValue().equals(droite.getValue()));
         }),
 
