@@ -1,6 +1,5 @@
 package interpreteur.ast.buildingBlocs.programmes;
 
-import interpreteur.as.ASObjet;
 import interpreteur.as.modules.ASModule;
 import interpreteur.ast.buildingBlocs.Programme;
 import interpreteur.ast.buildingBlocs.expressions.Var;

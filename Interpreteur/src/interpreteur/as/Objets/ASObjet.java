@@ -1,4 +1,4 @@
-package interpreteur.as;
+package interpreteur.as.Objets;
 
 
 import java.util.*;
@@ -8,11 +8,12 @@ import java.util.stream.Collectors;
 import javax.lang.model.type.NullType;
 
 import interpreteur.as.modules.ASModule;
+import interpreteur.ast.buildingBlocs.expressions.Type;
 import interpreteur.ast.buildingBlocs.programmes.Boucle;
 import interpreteur.executeur.Coordonnee;
 import interpreteur.executeur.Executeur;
 import interpreteur.tokens.Token;
-import interpreteur.as.ASErreur.*;
+import interpreteur.as.erreurs.ASErreur.*;
 
 
 /**
@@ -25,6 +26,8 @@ import interpreteur.as.ASErreur.*;
 public interface ASObjet<T> {
 
     T getValue();
+
+    boolean boolValue();
 
     String obtenirNomType();
 
@@ -61,17 +64,26 @@ public interface ASObjet<T> {
     }
 
     class VariableManager {
-        static final String scopeParDefaut = "<main>";
-        static Hashtable<String, Hashtable<String, Variable>> varDict = new Hashtable<>();
-        static Hashtable<String, Variable> constDict = new Hashtable<>();
-        static String currentScope = scopeParDefaut;
+        public static final String scopeParDefaut = "main";
+        public static Hashtable<String, Hashtable<String, Variable>> varDict = new Hashtable<>();
+        public static Hashtable<String, Variable> constDict = new Hashtable<>();
+        public static String currentScope = scopeParDefaut;
 
         public static void ajouterVariable(Variable variable) {
             String nom = FonctionManager.ajouterDansStructure(variable.nom);
             Variable nouv = VariableManager.varDict.get(VariableManager.currentScope).put(nom, variable);
-            if (nouv != null) {
-                throw new ErreurAssignement("La variable '" + nom + "' a deja ete initialisee");
-            }
+            // if (nouv != null) {
+            //     throw new ErreurAssignement("La variable '" + nom + "' a deja ete initialisee");
+            // }
+        }
+
+        public static void ajouterVariable(Variable variable, String scope) {
+            String nom = FonctionManager.ajouterDansStructure(variable.nom);
+            varDict.putIfAbsent(scope, new Hashtable<>());
+            Variable nouv = VariableManager.varDict.get(scope).put(nom, variable);
+            // if (nouv != null) {
+            //     throw new ErreurAssignement("La variable '" + nom + "' a deja ete initialisee");
+            // }
         }
 
         public static void ajouterConstante(Constante constante) {
@@ -80,9 +92,23 @@ public interface ASObjet<T> {
             VariableManager.varDict.get(VariableManager.currentScope).put(nom, constante);
         }
 
+        public static void ajouterConstante(Constante constante, String scope) {
+            String nom = FonctionManager.ajouterDansStructure(constante.obtenirNom());
+            VariableManager.constDict.put(nom, constante);
+            varDict.putIfAbsent(scope, new Hashtable<>());
+            VariableManager.varDict.get(scope).put(nom, constante);
+        }
+
         public static void initScope(String nomDuScope) {
             varDict.putIfAbsent(nomDuScope, new Hashtable<>());
             varDict.get(nomDuScope).putAll(constDict);
+        }
+
+        public static void initScope(String scope, String fromScope) {
+            varDict.putIfAbsent(scope, new Hashtable<>());
+            Hashtable<String, ASObjet.Variable> varFromScope = new Hashtable<>(varDict.get(fromScope));
+            varFromScope.replaceAll((name, var) -> new Variable(var.obtenirNom(), var.getValeur(), var.type).setReadOnly());
+            varDict.get(scope).putAll(varFromScope);
         }
 
         public static void changerScope(String nomDuScope) {
@@ -97,8 +123,17 @@ public interface ASObjet<T> {
             return VariableManager.varDict.get(VariableManager.currentScope).get(nom);
         }
 
+        public static Variable obtenirVariable(String nom, String nomScope) {
+            varDict.putIfAbsent(nomScope, new Hashtable<>());
+            return VariableManager.varDict.get(nomScope).get(nom);
+        }
+
         public static boolean estConstante(Variable var) {
             return constDict.containsValue(var);
+        }
+
+        public static boolean estConstante(String nom) {
+            return constDict.keySet().stream().anyMatch(varName -> varName.equals(nom));
         }
 
         public static boolean laVariableExiste(String nom) {
@@ -107,16 +142,15 @@ public interface ASObjet<T> {
 
         public static boolean nouvelleValeurValide(String nom, ASObjet<?> nouvelleValeur) {
             Variable var = VariableManager.varDict.get(VariableManager.currentScope).get(nom);
-            ASObjet<?> ancienneValeur = var.obtenirValeur();
 
-            if (ancienneValeur.getClass() != nouvelleValeur.getClass()) {
+            if (var.getType().noMatch(nouvelleValeur.obtenirNomType())) {
                 throw new ErreurAssignement("La variable '" +
                         nom +
-                        "' est fortement typee et de type '" +
-                        ancienneValeur.getClass().getName() +
-                        "'. Elle ne peut pas prendre une valeur de type '" +
-                        nouvelleValeur.getClass().getName() +
-                        "'.");
+                        "' est de type *" +
+                        var.obtenirNomType() +
+                        "*. Elle ne peut pas prendre une valeur de type *" +
+                        nouvelleValeur.obtenirNomType() +
+                        "*.");
             }
             return true;
         }
@@ -126,7 +160,10 @@ public interface ASObjet<T> {
         }
 
         public static void clearCurrentScope() {
-            VariableManager.varDict.get(VariableManager.currentScope).clear();
+            for (String varNom : VariableManager.varDict.get(VariableManager.currentScope).keySet()) {
+                if (!(estConstante(varNom)) && !varDict.get(currentScope).get(varNom).isReadOnly())
+                    VariableManager.varDict.get(VariableManager.currentScope).get(varNom).valeur = null;
+            }
         }
 
         public static void reset() {
@@ -146,34 +183,32 @@ public interface ASObjet<T> {
     }
 
     class Variable implements ASObjet<Object> {
-
         private final String nom;
-        private final boolean strongType;
-        private final String type;
+        private final Type type;
         private ASObjet<?> valeur;
+        private boolean readOnly = false;
 
         private Function<ASObjet<?>, ASObjet<?>> getter = null;
         private Function<ASObjet<?>, ASObjet<?>> setter = null;
 
 
-        public Variable(String nom, ASObjet<?> valeur, boolean strongType) {
-            this.type = "";
+        public Variable(String nom, ASObjet<?> valeur, Type type) {
+            this.type = type;
             this.nom = nom;
-            this.valeur = valeur instanceof Variable ? ((Variable) valeur).obtenirValeur() : valeur;
-            this.strongType = strongType;
+            this.valeur = valeur instanceof Variable ? ((Variable) valeur).getValeurApresGetter() : valeur;
         }
 
-        public static void creerOuChangerValeur(String nom, ASObjet<?> valeur, boolean strongType) {
+        public static void creerOuChangerValeur(String nom, ASObjet<?> valeur, Type type) {
             Variable var = VariableManager.obtenirVariable(nom);
             if (var != null) {
                 var.changerValeur(valeur);
             } else {
-                VariableManager.ajouterVariable(new Variable(nom, valeur, strongType));
+                VariableManager.ajouterVariable(new Variable(nom, valeur, type));
             }
         }
 
         public void changerValeur(ASObjet<?> valeur) {
-            if (!this.strongType || VariableManager.nouvelleValeurValide(this.nom, valeur)) {
+            if (VariableManager.nouvelleValeurValide(this.nom, valeur)) {
                 if (this.setter != null) {
                     this.valeur = this.setter.apply(valeur);
                 } else {
@@ -187,25 +222,12 @@ public interface ASObjet<T> {
             return this.nom;
         }
 
-        public ASObjet<?> obtenirValeur() {
-            if (this.valeur instanceof Variable) {
-                return this.obtenirValeur();
-            }
-            if (this.valeur == null) {
-                throw new ErreurAssignement("la variable '" + this.nom + "' a \u00E9t\u00E9 initialis\u00E9e, mais pas d\u00E9finie");
-            }
-            if (this.getter != null) {
-                return this.getter.apply(this.valeur);
-            }
-            return this.valeur;
+        public Type getType() {
+            return type;
         }
 
-        public boolean estFortementTypee() {
-            return this.strongType;
-        }
-
-        public String obtenirType() {
-            return this.type;
+        public boolean pasInitialisee() {
+            return this.valeur == null;
         }
 
         public Variable setGetter(Function<ASObjet<?>, ASObjet<?>> getter) {
@@ -218,16 +240,43 @@ public interface ASObjet<T> {
             return this;
         }
 
+        public Variable setReadOnly() {
+            this.setter = (valeur) -> {
+                throw new ErreurAssignement("Cette variable est en lecture seule: elle ne peut pas \u00EAtre modifi\u00E9");
+            };
+            this.readOnly = true;
+            return this;
+        }
+
+        public boolean isReadOnly() {
+            return readOnly;
+        }
+
         @Override
         public String toString() {
             return "Variable{" +
                     "nom='" + nom + '\'' +
-                    ", strongType=" + strongType +
                     ", type='" + type + '\'' +
                     ", valeur=" + valeur +
                     ", getter=" + getter +
                     ", setter=" + setter +
                     '}';
+        }
+
+
+        /* différentes manières de get la valeur stockée dans la variable */
+        public ASObjet<?> getValeur() {
+            return this.valeur;
+        }
+
+        public ASObjet<?> getValeurApresGetter() {
+            if (this.valeur == null) {
+                throw new ErreurAssignement("la variable " + this.nom + " est initialis\u00E9e, mais pas d\u00E9finie");
+            }
+            if (this.getter != null) {
+                return this.getter.apply(this.valeur);
+            }
+            return this.valeur;
         }
 
         @Override
@@ -242,20 +291,37 @@ public interface ASObjet<T> {
         }
 
         @Override
+        public boolean boolValue() {
+            return this.valeur.boolValue();
+        }
+
+        @Override
         public String obtenirNomType() {
-            return this.valeur.obtenirNomType();
+            return this.type.getNom();
         }
     }
 
     class Constante extends Variable {
 
         public Constante(String nom, ASObjet<?> valeur) {
-            super(nom, valeur, false);
+            super(nom, valeur, new Type("tout"));
+        }
+
+        @Override
+        public Variable setSetter(Function<ASObjet<?>, ASObjet<?>> setter) {
+            throw new ErreurAssignement("Impossible d'attribuer un setter \u00E0 une constante");
+        }
+
+        @Override
+        public Variable setGetter(Function<ASObjet<?>, ASObjet<?>> getter) {
+            throw new ErreurAssignement("Impossible d'attribuer un getter \u00E0 une constante");
         }
 
         @Override
         public void changerValeur(ASObjet<?> valeur) {
-            throw new ErreurAssignement("Il est impossible de changer la valeur d'une constante");
+            if (this.getValeur() != null)
+                throw new ErreurAssignement("Il est impossible de changer la valeur d'une constante");
+            super.changerValeur(valeur);
         }
     }
 
@@ -298,7 +364,7 @@ public interface ASObjet<T> {
     }
 
     class Fonction implements ASObjet<Object> {
-        private final List<String> typeRetour;
+        private final Type typeRetour;
         private final Parametre[] parametres; //String[] de forme {nomDuParam�tre, typeDuParam�tre (ou null s'il n'en poss�de pas)}
         private final String nom;
         private Hashtable<String, ASObjet<?>> parametres_appel = new Hashtable<>();  // Object[][] de forme {{nom_param, valeur}, {nom_param2, valeur2}}
@@ -321,10 +387,10 @@ public interface ASObjet<T> {
          *                   Mettre <b>null</b> si le type du retour n'a pas de type forcee
          *                   </li>
          */
-        public Fonction(String nom, String typeRetour) {
+        public Fonction(String nom, Type typeRetour) {
             this.nom = nom;
             this.scopeName = "fonc_";
-            this.typeRetour = typeRetour == null ? null : Arrays.asList(typeRetour.replaceAll(" ", "").split("\\|"));
+            this.typeRetour = typeRetour;
             this.parametres = new Parametre[0];
         }
 
@@ -345,18 +411,18 @@ public interface ASObjet<T> {
          *                   Mettre <b>null</b> si le type du retour n'a pas de type forcee
          *                   </li>
          */
-        public Fonction(String nom, Parametre[] parametres, String typeRetour) {
+        public Fonction(String nom, Parametre[] parametres, Type typeRetour) {
             this.nom = nom;
             this.scopeName = "fonc_";
             this.parametres = parametres;
-            this.typeRetour = typeRetour == null ? null : Arrays.asList(typeRetour.replaceAll(" ", "").split("\\|"));
+            this.typeRetour = typeRetour;
         }
 
         public String getNom() {
             return nom;
         }
 
-        public List<String> getTypeRetour() {
+        public Type getTypeRetour() {
             return this.typeRetour;
         }
 
@@ -384,19 +450,19 @@ public interface ASObjet<T> {
 
             if (paramsValeurs.size() < nonDefaultParams || paramsValeurs.size() > this.parametres.length) {
                 if (nonDefaultParams == this.parametres.length) {
-                    throw new ErreurAppelFonction(this.nom, "Le nombre de parametre donnees est '" + paramsValeurs.size() +
+                    throw new ErreurAppelFonction(this.nom, "Le nombre de param\u00E8tres donn\u00E9s est '" + paramsValeurs.size() +
                             "' alors que la fonction en prend '" + this.parametres.length + "'");
                 } else {
-                    throw new ErreurAppelFonction(this.nom, "Le nombre de parametre donnees est '" + paramsValeurs.size() +
+                    throw new ErreurAppelFonction(this.nom, "Le nombre de param\u00E8tres donn\u00E9s est '" + paramsValeurs.size() +
                             "' alors que la fonction en prend entre '" + nonDefaultParams + "' et '" + this.parametres.length + "'");
                 }
 
             }
             for (int i = 0; i < paramsValeurs.size(); i++) {
                 Parametre parametre = this.parametres[i];
-                if ((parametre.getType() != null) && !(parametre.getType()).contains(((ASObjet<?>) paramsValeurs.get(i)).obtenirNomType())) {
-                    throw new ErreurType("Le parametre '" + parametre.getNom() + "' est de type '" + parametre.getType() +
-                            "', mais l'argument passe est de type '" + ((ASObjet<?>) paramsValeurs.get(i)).obtenirNomType() + "'.");
+                if (parametre.getType().noMatch(((ASObjet<?>) paramsValeurs.get(i)).obtenirNomType())) {
+                    throw new ErreurType("Le param\u00E8tres '" + parametre.getNom() + "' est de type '" + parametre.getType().nom() +
+                            "', mais l'argument pass\u00E9 est de type '" + ((ASObjet<?>) paramsValeurs.get(i)).obtenirNomType() + "'.");
                 }
             }
 
@@ -447,7 +513,7 @@ public interface ASObjet<T> {
                     } else {
                         if (param.getValeurParDefaut() == null) {
                             throw new ErreurAppelFonction(this.nom, "l'argument: " + param.getNom() + " n'a pas reçu de valeur" +
-                                    "et ne possède aucune valeur par défaut");
+                                    "et ne poss\u00E8de aucune valeur par d\u00E9faut");
                         }
                         this.parametres_appel.putIfAbsent(param.getNom(), param.getValeurParDefaut());
                     }
@@ -457,7 +523,7 @@ public interface ASObjet<T> {
                     this.parametres_appel.computeIfAbsent(param.getNom(), (val) -> {
                         if (param.getValeurParDefaut() == null) {
                             throw new ErreurAppelFonction(this.nom, "l'argument: " + param.getNom() + " n'a pas reçu de valeur" +
-                                    "et ne possède aucune valeur par défaut");
+                                    "et ne poss\u00E8de aucune valeur par d\u00E9faut");
                         }
                         return param.getValeurParDefaut();
                     });
@@ -471,10 +537,10 @@ public interface ASObjet<T> {
             ASObjet<?> asValeur;
             String ancienScope = VariableManager.currentScope;
             VariableManager.changerScope(this.scopeName + this.nom);
-            VariableManager.initScope(this.scopeName + this.nom);
+            VariableManager.initScope(this.scopeName + this.nom, ancienScope);
 
             for (String param : this.parametres_appel.keySet()) {
-                VariableManager.ajouterVariable(new Variable(param, this.parametres_appel.get(param), false));
+                VariableManager.ajouterVariable(new Variable(param, this.parametres_appel.get(param), new Type("tout")));
             }
 
             Coordonnee ancienneCoord = Executeur.obtenirCoordRunTime().copy();
@@ -501,10 +567,9 @@ public interface ASObjet<T> {
 
             //System.out.println(this.typeRetour);
             //System.out.println(valeur);
-            if (this.typeRetour != null &&
-                    (asValeur == null || (!this.typeRetour.contains(asValeur.obtenirNomType()) && !(valeur instanceof Nul)))) {
+            if (asValeur == null || this.typeRetour.noMatch(asValeur.obtenirNomType())) {
                 throw new ErreurType("Le type retourner ' " + (asValeur == null ? "vide" : asValeur.obtenirNomType()) + " ' ne correspond pas "
-                        + "au type de retour pr\u00E9cis\u00E9 dans la d\u00E9claration de la fonction ' " + this.typeRetour + " '.");
+                        + "au type de retour pr\u00E9cis\u00E9 dans la d\u00E9claration de la fonction ' " + this.typeRetour.nom() + " '.");
 
             }
             return asValeur;
@@ -520,12 +585,17 @@ public interface ASObjet<T> {
                     String.join(", ", Arrays.stream(this.parametres).map(p -> p.getNom() + ": " + p.obtenirNomType())
                             .toArray(String[]::new)) +
                     ") " +
-                    "-> " + (this.typeRetour == null ? "tout" : String.join("|", this.typeRetour));
+                    "\u2192 " + this.typeRetour.nom();
         }
 
         @Override
         public Object getValue() {
             return this;
+        }
+
+        @Override
+        public boolean boolValue() {
+            return true;
         }
 
         @Override
@@ -538,7 +608,7 @@ public interface ASObjet<T> {
          */
         public static class Parametre implements ASObjet<Object> {
             private final String nom;
-            private final List<String> type;
+            private final Type type;
             private final ASObjet<?> valeurParDefaut;
 
             /**
@@ -563,9 +633,9 @@ public interface ASObjet<T> {
              *                        Mettre <b>null</b> pour rendre ce parametre obligatoire lors de l'appel de la fonction
              *                        </li>
              */
-            public Parametre(String type, String nom, ASObjet<?> valeurParDefaut) {
+            public Parametre(Type type, String nom, ASObjet<?> valeurParDefaut) {
                 this.nom = nom;
-                this.type = type == null ? null : Arrays.asList(type.replaceAll(" ", "").split("\\|"));
+                this.type = type == null ? new Type("tout"): type;
                 this.valeurParDefaut = valeurParDefaut;
             }
 
@@ -573,7 +643,7 @@ public interface ASObjet<T> {
                 return nom;
             }
 
-            public List<String> getType() {
+            public Type getType() {
                 return type;
             }
 
@@ -587,8 +657,13 @@ public interface ASObjet<T> {
             }
 
             @Override
+            public boolean boolValue() {
+                return false;
+            }
+
+            @Override
             public String obtenirNomType() {
-                return this.type == null ? "tout" : String.join("|", this.type);
+                return this.type.nom();
             }
 
             @Override
@@ -636,6 +711,11 @@ public interface ASObjet<T> {
         }
 
         @Override
+        public boolean boolValue() {
+            return this.valeur != 0;
+        }
+
+        @Override
         public String obtenirNomType() {
             return "entier";
         }
@@ -663,6 +743,11 @@ public interface ASObjet<T> {
         @Override
         public Double getValue() {
             return valeur;
+        }
+
+        @Override
+        public boolean boolValue() {
+            return this.valeur != 0;
         }
 
         @Override
@@ -697,6 +782,11 @@ public interface ASObjet<T> {
         }
 
         @Override
+        public boolean boolValue() {
+            return this.getValue();
+        }
+
+        @Override
         public String obtenirNomType() {
             return "booleen";
         }
@@ -718,8 +808,13 @@ public interface ASObjet<T> {
         }
 
         @Override
+        public boolean boolValue() {
+            return false;
+        }
+
+        @Override
         public String obtenirNomType() {
-            return "nul";
+            return "nulType";
         }
     }
 
@@ -752,6 +847,11 @@ public interface ASObjet<T> {
         @Override
         public String getValue() {
             return valeur;
+        }
+
+        @Override
+        public boolean boolValue() {
+            return !this.valeur.isEmpty();
         }
 
         @Override
@@ -872,6 +972,11 @@ public interface ASObjet<T> {
         @Override
         public ArrayList<ASObjet<?>> getValue() {
             return this.valeur;
+        }
+
+        @Override
+        public boolean boolValue() {
+            return !this.valeur.isEmpty();
         }
 
 

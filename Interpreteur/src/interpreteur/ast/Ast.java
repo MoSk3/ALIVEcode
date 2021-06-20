@@ -13,7 +13,7 @@ import interpreteur.tokens.Token;
 
 
 public abstract class Ast<T> implements Function<List<Object>, T>{
-    private final int importance;
+    private int importance;
     private final Hashtable<String, Ast<?>> sous_asts = new Hashtable<>();
 
     public Ast(){
@@ -23,7 +23,11 @@ public abstract class Ast<T> implements Function<List<Object>, T>{
     public Ast(int importance) {
         this.importance = importance;
     }
-    
+
+    public void setImportance(int importance) {
+        this.importance = importance;
+    }
+
     public Ast(Object[]... sous_asts) {
         this.importance = -1;
         for (Object[] sous_ast: sous_asts) {

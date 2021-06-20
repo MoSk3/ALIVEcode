@@ -1,6 +1,6 @@
 package interpreteur.ast.buildingBlocs.programmes;
 
-import interpreteur.as.ASObjet;
+import interpreteur.as.Objets.ASObjet;
 import interpreteur.ast.buildingBlocs.Programme;
 import interpreteur.ast.buildingBlocs.expressions.Type;
 import interpreteur.ast.buildingBlocs.expressions.Var;
@@ -19,24 +19,32 @@ public class CreerGetter extends Programme {
     public CreerGetter(Var var, Type type) {
         this.var = var;
         this.type = type;
+        this.addGetter();
     }
 
-    @Override
-    public Object execute() {
+    public Var getVar() {
+        return var;
+    }
+
+    public void addGetter() {
         ASObjet.Variable v = ASObjet.VariableManager.obtenirVariable(this.var.getNom());
 
         if (v == null) {
-            v = new ASObjet.Variable(this.var.getNom(), null,false);
-            ASObjet.VariableManager.ajouterVariable(v);
+            Assigner.addWaitingGetter(this);
+            return;
         }
 
         v.setGetter((var) -> {
             ASObjet.Fonction get = new ASObjet.Fonction(this.var.getNom(), new ASObjet.Fonction.Parametre[]{
                     new ASObjet.Fonction.Parametre(null, this.var.getNom(), null)
-            }, this.type == null ? null : this.type.getNom());
+            }, this.type);
             get.setScopeName("get_");
             return get.setParamPuisExecute(new ArrayList<>(Collections.singletonList(var)));
         });
+    }
+
+    @Override
+    public Object execute() {
         return null;
     }
 

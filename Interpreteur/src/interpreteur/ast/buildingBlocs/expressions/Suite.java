@@ -1,7 +1,7 @@
 package interpreteur.ast.buildingBlocs.expressions;
 
-import interpreteur.as.ASErreur;
-import interpreteur.as.ASObjet;
+import interpreteur.as.erreurs.ASErreur;
+import interpreteur.as.Objets.ASObjet;
 import interpreteur.ast.buildingBlocs.Expression;
 
 public class Suite implements Expression<ASObjet.Liste> {

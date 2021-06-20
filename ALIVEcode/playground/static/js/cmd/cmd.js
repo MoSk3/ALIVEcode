@@ -1,4 +1,5 @@
-var cmd = $("#cmd");
+var $;
+var cmd = $("#cmd-content");
 var editor;
 var make_safe = function (msg) { return msg.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); };
 function print_console(msg) {
@@ -21,11 +22,11 @@ function print_error(msg, line) {
     var errorMsg = msg.substr(msg.indexOf(":") + 1);
     //cmd.append(`<span style="color: red"><u><i>${heures}:${minutes}:${secondes}:</i></u> ${errorName}</span> à la ligne <strong>#${line} :<br></strong>"${msg}"<br>`)
     var errorTitle = linkToLine("<u>" + errorName + " \u00E0 la ligne #" + line + "</u>", line);
-    cmd.append("<span style=\"color: red\">\n            " + errorTitle + ":\n        </span>\n        <br>\n        \u2192 " + errorMsg + "\n        <br>");
+    cmd.append("<span style=\"color: red\">" + errorTitle + ":</span><br>\u2192 " + errorMsg);
     cmd[0].scrollTop = cmd[0].scrollHeight;
 }
 function linkToLine(text, line) {
-    return "<a>\n            <span onclick=\"editor.gotoLine(" + line + "); editor.selection.selectLine()\">\n                    " + text + "\n            </span>\n            </a>";
+    return "<a><span onclick=\"editor.gotoLine(" + line + "); editor.selection.selectLine()\">" + text + "<span></a>";
 }
 function print_end(interrupted) {
 }

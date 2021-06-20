@@ -1,11 +1,9 @@
 package interpreteur.ast.buildingBlocs.programmes;
 
-import interpreteur.as.ASObjet;
 import interpreteur.ast.buildingBlocs.Expression;
 import interpreteur.ast.buildingBlocs.Programme;
 import interpreteur.data_manager.Data;
 import interpreteur.data_manager.DataVoiture;
-import interpreteur.tokens.Token;
 
 
 public class MethodeMoteur extends Programme {
@@ -19,7 +17,7 @@ public class MethodeMoteur extends Programme {
 
     @Override
     public Object execute() {
-        Double valeur = this.valeur != null ? ((Number) this.valeur.eval().getValue()).doubleValue() : 0;
+        double valeur = this.valeur != null ? ((Number) this.valeur.eval().getValue()).doubleValue() : 0;
         double dodo = 0;
         DataVoiture.dataVoitureHasChanged();
 
@@ -39,11 +37,14 @@ public class MethodeMoteur extends Programme {
             case "ARRETER" -> // arreter avec moteur
                     Data.Id.ARRETER;
 
-            case "TOURNER_DROITE" -> Data.Id.TOURNER_DROITE;
-            case "TOURNER_GAUCHE" -> Data.Id.TOURNER_GAUCHE;
-
-            case "TOURNER" -> // tourner a droite avec moteur
-                    Data.Id.TOURNER;
+            case "TOURNER_DROITE" -> {
+                valeur = this.valeur != null ? valeur * -1 : -90;
+                yield Data.Id.TOURNER;
+            }
+            case "TOURNER_GAUCHE" -> {
+                valeur = this.valeur != null ? valeur : 90;
+                yield Data.Id.TOURNER;
+            }
 
             default -> throw new IllegalStateException("Unexpected value: " + nom);
         };

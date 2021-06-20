@@ -1,10 +1,9 @@
 package interpreteur.ast.buildingBlocs.expressions;
 
-import interpreteur.as.ASObjet;
+import interpreteur.as.Objets.ASObjet;
 import interpreteur.ast.buildingBlocs.Expression;
 import interpreteur.ast.buildingBlocs.programmes.Assigner;
 
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class UnaryOp implements Expression<ASObjet<?>> {
@@ -55,7 +54,7 @@ public class UnaryOp implements Expression<ASObjet<?>> {
             if (expr instanceof ASObjet.Variable) {
                 return new BinOp((Expression<?>) expr, BinOp.Operation.PLUS, new ValeurConstante(new ASObjet.Entier(1))).eval();
             }
-            new Assigner((Expression<?>) expr, new ValeurConstante(new ASObjet.Entier(1)), false, BinOp.Operation.PLUS).execute();
+            new Assigner((Expression<?>) expr, new ValeurConstante(new ASObjet.Entier(1)), false, BinOp.Operation.PLUS, null).execute();
             return ((Expression<?>) expr).eval();
         }),
 
@@ -63,7 +62,7 @@ public class UnaryOp implements Expression<ASObjet<?>> {
             if (expr instanceof ValeurConstante) {
                 return new BinOp((Expression<?>) expr, BinOp.Operation.MOINS, new ValeurConstante(new ASObjet.Entier(1))).eval();
             }
-            new Assigner((Expression<?>) expr, new ValeurConstante(new ASObjet.Entier(1)), false, BinOp.Operation.MOINS).execute();
+            new Assigner((Expression<?>) expr, new ValeurConstante(new ASObjet.Entier(1)), false, BinOp.Operation.MOINS, null).execute();
             return ((Expression<?>) expr).eval();
         }),
 
