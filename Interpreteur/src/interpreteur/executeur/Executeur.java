@@ -590,7 +590,7 @@ public class Executeur {
     }
 
     public static void main(String[] args) {
-        String[] lines = new String[]{
+        String[] lines = new String[]{ 
                 "fonction executer(commande: fonctionType, arg: tout)",
                 "    retourner commande(arg)",
                 "fin fonction",
