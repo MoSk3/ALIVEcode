@@ -418,18 +418,7 @@ public class ASAst extends AstGenerator {
 
                         final Expression<?> nom = new Var(((Token) p.get(0)).obtenirValeur());
 
-                        return new Programme() {
-                            @Override
-                            public Object execute() {
-                                new AppelFonc(nom, args).eval();
-                                return null;
-                            }
-
-                            @Override
-                            public String toString() {
-                                return p.get(0).toString();
-                            }
-                        };
+                        return Programme.evalExpression(new AppelFonc(nom, args), p.get(0).toString());
                     }
                 });
 
@@ -533,18 +522,7 @@ public class ASAst extends AstGenerator {
         ajouterProgramme("expression", new Ast<Programme>() {
             @Override
             public Programme apply(List<Object> p) {
-                return new Programme() {
-                    @Override
-                    public Object execute() {
-                        ((Expression<?>) p.get(0)).eval();
-                        return null;
-                    }
-
-                    @Override
-                    public String toString() {
-                        return p.get(0).toString();
-                    }
-                };
+                return Programme.evalExpression((Expression<?>) p.get(0), p.get(0).toString());
             }
         });
         setOrdreProgramme();

@@ -7,6 +7,7 @@ import javax.lang.model.type.NullType;
 import java.io.Serializable;
 import java.net.FileNameMap;
 import java.util.List;
+import java.util.function.Supplier;
 
 public abstract class Programme implements Serializable {
     private int numLigne = -1;
@@ -31,6 +32,20 @@ public abstract class Programme implements Serializable {
 
     public void setNumLigne(int numLigne) {
         this.numLigne = numLigne;
+    }
+
+    public static Programme evalExpression(Expression<?> expression, String toString) {
+        return new Programme() {
+            @Override
+            public Object execute() {
+                return expression.eval();
+            }
+
+            @Override
+            public String toString() {
+                return toString;
+            }
+        };
     }
 
     /**
