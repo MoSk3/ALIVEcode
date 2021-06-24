@@ -51,7 +51,7 @@ public class ASAst extends AstGenerator {
         });
 
         ajouterProgramme("UTILISER expression~"
-                        + "UTILISER expression LISTE_OUV expression LISTE_FERM",
+                        + "UTILISER expression BRACES_OUV expression BRACES_FERM",
                 new Ast<Utiliser>() {
                     @Override
                     public Utiliser apply(List<Object> p) {
@@ -652,8 +652,8 @@ public class ASAst extends AstGenerator {
                     }
                 });
 
-        ajouterExpression("LISTE_OUV #expression TROIS_POINTS #expression LISTE_FERM~"
-                        + "LISTE_OUV #expression TROIS_POINTS #expression BOND #expression LISTE_FERM",
+        ajouterExpression("BRACES_OUV #expression TROIS_POINTS #expression BRACES_FERM~"
+                        + "BRACES_OUV #expression TROIS_POINTS #expression BOND #expression BRACES_FERM",
                 new Ast<Suite>() {
                     /**
                      * {1...10} -> {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
@@ -685,8 +685,8 @@ public class ASAst extends AstGenerator {
                     }
                 });
 
-        ajouterExpression("LISTE_OUV LISTE_FERM~" +
-                        "LISTE_OUV #expression LISTE_FERM",
+        ajouterExpression("BRACES_OUV BRACES_FERM~" +
+                        "BRACES_OUV #expression BRACES_FERM",
                 new Ast<CreerListe>() {
                     @Override
                     public CreerListe apply(List<Object> p) {

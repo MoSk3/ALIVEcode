@@ -1,5 +1,7 @@
 package interpreteur.executeur;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Stream;
 
 public class PreCompiler {
@@ -9,9 +11,17 @@ public class PreCompiler {
     public final static String DOCUMENTATION_DEBUT = "(-:";
     public final static String DOCUMENTATION_FIN = ":-)";
 
+    public final static List<String> joinLines = Arrays.asList(
+            ",",
+            "(",
+            "{",
+            "["
+    );
+
 
     public static String[] preCompile(String[] lignes, String msgFin) {
-        String lignesFinales = "";
+        StringBuilder lignesFinales = new StringBuilder();
+
         boolean multiligne = false;
         boolean documentation = false;
         lignes = Stream.of(lignes).map(
@@ -44,11 +54,24 @@ public class PreCompiler {
                 ligne = ligne.substring(0, ligne.indexOf(DOCUMENTATION_DEBUT)).trim();
                 documentation = true;
             }
-            ligne = ligne.endsWith("\\") ? ligne.substring(0, ligne.indexOf("\\")) : ligne + "\n";
-            lignesFinales += ligne;
+            // the lastChar in the line
+            String lastChar = ligne.length() > 0 ? ligne.charAt(ligne.length() - 1) + "" : "";
+
+            // if the line ends with a ',' or '(' or '[' or '{', combine it with the next line
+            ligne = joinLines.contains(lastChar) ? ligne : ligne + "\n";
+
+            // if the line ends with '\', remove it and combine the line with the next line
+            ligne = lastChar.equals("\\") ? ligne.substring(0, ligne.lastIndexOf(lastChar)) : ligne;
+
+            // adds the line to the final lines
+            lignesFinales.append(ligne);
         }
-        lignesFinales += msgFin;
-        return Stream.of(lignesFinales.split("\n"))
+
+        // adds a line at the end
+        lignesFinales.append(msgFin);
+
+        // split newlines of the final String to transform it into a String[]
+        return Stream.of(lignesFinales.toString().split("\n"))
                 .map(ligne -> ligne.trim() + "\n")
                 .toArray(String[]::new);
     }

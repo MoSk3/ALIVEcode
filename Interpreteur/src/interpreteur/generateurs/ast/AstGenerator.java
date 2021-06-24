@@ -71,8 +71,8 @@ public class AstGenerator {
                 case "CROCHET_OUV" -> crochets++;
                 case "CROCHET_FERM" -> crochets--;
 
-                case "LISTE_OUV" -> braces++;
-                case "LISTE_FERM" -> braces--;
+                case "BRACES_OUV" -> braces++;
+                case "BRACES_FERM" -> braces--;
             }
         }
 
@@ -270,7 +270,7 @@ public class AstGenerator {
         Token[] token = expressionArray.stream().filter(e -> e instanceof Token).toArray(Token[]::new);
 
         if (token.length > 0) {
-            throw new ASErreur.ErreurSyntaxe("Expression ill\u00E9gale: '" + String.join(" ", Arrays.stream(token).map(Token::obtenirValeur).toArray(String[]::new)) + "'");
+            throw new ASErreur.ErreurSyntaxe("Expression ill\u00E9gale: " + String.join(" ", Arrays.stream(token).map(Token::obtenirValeur).toArray(String[]::new)));
         }
 
         //System.out.println(expressionArray);

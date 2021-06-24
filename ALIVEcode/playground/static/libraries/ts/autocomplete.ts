@@ -224,7 +224,7 @@ function autocomplete(data: any, hashId: number, keyString: string, keyCode: num
                 if (line[pos.column] === lastSymbol) closing = closing.substring(0, closing.length - 1)
 
                 execCommands(
-                    { command: "insertstring", args: `:\n ${" ".repeat(indentation(line))}\n${closing}` },
+                    { command: "insertstring", args: `:\n ${indentedString(line)}\n${indentedString(line, closing)}` },
                     { command: "golineup", args: { times: 1 } }
                 )
                 return { command: "gotolineend" }
@@ -235,7 +235,7 @@ function autocomplete(data: any, hashId: number, keyString: string, keyCode: num
                 if (line[pos.column] === lastSymbol) closing = closing.substring(0, closing.length - 1)
 
                 execCommands(
-                    { command: "insertstring", args: `:\n ${" ".repeat(indentation(line))}- \n${closing}` },
+                    { command: "insertstring", args: `:\n ${indentedString(line)}- \n${indentedString(line, closing)}` },
                     { command: "golineup", args: { times: 1 } }
                 )
                 return { command: "gotolineend" }
@@ -245,7 +245,7 @@ function autocomplete(data: any, hashId: number, keyString: string, keyCode: num
         // if the \n is pressed at the end of the line
         if (keyString === "\n" && line.trim() && pos.column >= line.trimRight().length) {
             if (lineStartWith(line, "-")) {
-                return { command: "insertstring", args: `\n${" ".repeat(indentation(line))}- ` }
+                return { command: "insertstring", args: `\n${indentedString(line)}- ` }
             }
             return closeBlock();
         }
@@ -261,7 +261,7 @@ function execCommands(...commands: command[]) {
     }
 }
 
-function insertIndentedString(line:string, text: string): command {
+function insertIndentedString(line: string, text: string): command {
     return { command: "insertstring", args: `${" ".repeat(indentation(line))}${text}` }
 }
 
@@ -311,6 +311,10 @@ function lineStartWith(line: string, start: string): boolean {
 function indentation(line: string): number {
     const tabSize = editor.session.$tabSize;
     return line.substring(0, line.indexOf(line.trimLeft()[0])).replace("\t", " ".repeat(tabSize)).length;
+}
+
+function indentedString(line: string, text: string = ""): string {
+    return `${" ".repeat(indentation(line))}${text}`
 }
 
 //#endregion

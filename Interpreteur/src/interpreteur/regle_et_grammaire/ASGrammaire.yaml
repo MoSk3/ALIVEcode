@@ -112,8 +112,8 @@ Ajouter:
   CROCHET_FERM: '\]'
 
   # liste
-  LISTE_OUV: '[{]'
-  LISTE_FERM: '[}]'
+  BRACES_OUV: '[{]'
+  BRACES_FERM: '[}]'
 
   # sous-categorie
   # le point indique aussi un nombre decimal
@@ -127,6 +127,8 @@ Ajouter:
 Ignorer:
   - '\s+'
   - '#.*'
+  - '\(:.*:\)'
+  - '\(-:.*:-\)'
 
 
 

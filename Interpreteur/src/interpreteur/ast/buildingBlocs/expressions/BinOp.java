@@ -67,8 +67,8 @@ public class BinOp implements Expression<ASObjet<?>> {
         MOINS((gauche, droite) -> {
 
             /* concat */
-            if (gauche instanceof ASObjet.Texte && droite instanceof ASObjet.Nombre) {
-                return new ASObjet.Texte(String.valueOf(gauche.getValue()) + droite.getValue());
+            if (gauche instanceof ASObjet.Texte && droite instanceof ASObjet.Texte) {
+                return new ASObjet.Texte(String.valueOf(gauche.getValue()).replace(((ASObjet.Texte) droite).getValue(), ""));
             }
 
             double result = ((Number) gauche.getValue()).doubleValue() - ((Number) droite.getValue()).doubleValue();
@@ -81,6 +81,10 @@ public class BinOp implements Expression<ASObjet<?>> {
          * Gere x * y
          */
         MUL((gauche, droite) -> {
+            /* concat */
+            if (gauche instanceof ASObjet.Texte && droite instanceof ASObjet.Entier) {
+                return new ASObjet.Texte(gauche.toString().repeat((Integer) droite.getValue()));
+            }
             double result = ((Number) gauche.getValue()).doubleValue() * ((Number) droite.getValue()).doubleValue();
             return gauche instanceof ASObjet.Entier && droite instanceof ASObjet.Entier ?
                     new ASObjet.Entier((int) result) :
