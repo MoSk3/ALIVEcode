@@ -109,10 +109,11 @@ public class ASAstExperimental extends ASAst {
                         + "CONSTANTE expression DEUX_POINTS expression {assignements} expression~"
                         + "VAR expression DEUX_POINTS expression {assignements} expression~"
                         + "VAR expression {assignements} expression~"
+                        + "expression DEUX_POINTS expression {assignements} expression~"
                         + "expression {assignements} expression",
-                new Ast<Assigner>() {
+                new Ast<Programme>() {
                     @Override
-                    public Assigner apply(List<Object> p) {
+                    public Programme apply(List<Object> p) {
                         /*
                          * TODO erreur si c'est pas une Var qui est passé comme expression à gauche de l'assignement
                          */
@@ -159,21 +160,14 @@ public class ASAstExperimental extends ASAst {
                                 p.set(idxValeur, ((CreerListe.Enumeration) p.get(idxValeur)).build());
 
                             // on retourne l'objet Assigner
-                            return new Assigner((Expression<?>) p.get(1), (Expression<?>) p.get(idxValeur), estConst, null, type);
+                            return new Declarer((Expression<?>) p.get(1), (Expression<?>) p.get(idxValeur), type, estConst);
 
                         }
-                        // si le premier mot n'est pas "const"
+                        // si le premier mot n'est pas "const" ou "var"
                         else {
                             // si un type est précisé
                             if (p.size() == 5) {
-                                idxValeur = 4;
-                                idxAssignement = 3;
-
-                                // si le type précisisé n'est pas un type
-                                if (!(p.get(2) instanceof Type))
-                                    throw new ErreurType("Dans une d\u00E9claration de constante, les deux points doivent \u00EAtre suivi d'un type valide");
-                                type = (Type) p.get(2);
-
+                                throw new ErreurType("Il est impossible de pr\u00E9ciser le type d'une variable ailleurs que dans sa d\u00E9claration");
                             } else {
                                 idxValeur = 2;
                                 idxAssignement = 1;
@@ -188,7 +182,7 @@ public class ASAstExperimental extends ASAst {
                             // on forme une liste avec la suite d'éléments
                             if (p.get(idxValeur) instanceof CreerListe.Enumeration)
                                 p.set(idxValeur, ((CreerListe.Enumeration) p.get(idxValeur)).build());
-                            return new Assigner((Expression<?>) p.get(0), (Expression<?>) p.get(idxValeur), false, op, type);
+                            return new Assigner((Expression<?>) p.get(0), (Expression<?>) p.get(idxValeur), false, op);
                         }
                     }
                 });

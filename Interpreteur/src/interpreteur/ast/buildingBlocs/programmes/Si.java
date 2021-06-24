@@ -32,6 +32,22 @@ public class Si extends Programme {
     }
 
     @Override
+    public String transpile(String language) {
+        return switch (language) {
+            case "java" -> {
+               yield "";
+            }
+            case "python" -> {
+                yield "a";
+            }
+            case "c++", "cpp" -> {
+                yield "b";
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + language);
+        };
+    }
+
+    @Override
     public String toString() {
         return "Si{" +
                 "test=" + test +

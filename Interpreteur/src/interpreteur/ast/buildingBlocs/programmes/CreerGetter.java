@@ -30,7 +30,7 @@ public class CreerGetter extends Programme {
         ASObjet.Variable v = ASObjet.VariableManager.obtenirVariable(this.var.getNom());
 
         if (v == null) {
-            Assigner.addWaitingGetter(this);
+            Declarer.addWaitingGetter(this);
             return;
         }
 

@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import javax.lang.model.type.NullType;
 
+import interpreteur.as.erreurs.ASErreur;
 import interpreteur.as.modules.ASModule;
 import interpreteur.ast.buildingBlocs.expressions.Type;
 import interpreteur.ast.buildingBlocs.programmes.Boucle;
@@ -271,7 +272,7 @@ public interface ASObjet<T> {
 
         public ASObjet<?> getValeurApresGetter() {
             if (this.valeur == null) {
-                throw new ErreurAssignement("la variable " + this.nom + " est initialis\u00E9e, mais pas d\u00E9finie");
+                throw new ErreurAssignement("La variable '" + nom + "' est utilis\u00E9e avant d'\u00EAtre d\u00E9clar\u00E9e");
             }
             if (this.getter != null) {
                 return this.getter.apply(this.valeur);
@@ -282,7 +283,7 @@ public interface ASObjet<T> {
         @Override
         public Object getValue() {
             if (this.valeur == null) {
-                throw new ErreurAssignement("la variable " + this.nom + " est initialis\u00E9e, mais pas d\u00E9finie");
+                throw new ErreurAssignement("La variable '" + nom + "' est utilis\u00E9e avant d'\u00EAtre d\u00E9clar\u00E9e");
             }
             if (this.getter != null) {
                 return this.getter.apply(this.valeur).getValue();
@@ -309,12 +310,12 @@ public interface ASObjet<T> {
 
         @Override
         public Variable setSetter(Function<ASObjet<?>, ASObjet<?>> setter) {
-            throw new ErreurAssignement("Impossible d'attribuer un setter \u00E0 une constante");
+            throw new ErreurAssignement("Les constantes ne peuvent pas avoir de setter");
         }
 
         @Override
         public Variable setGetter(Function<ASObjet<?>, ASObjet<?>> getter) {
-            throw new ErreurAssignement("Impossible d'attribuer un getter \u00E0 une constante");
+            throw new ErreurAssignement("Les constantes ne peuvent pas avoir de getter");
         }
 
         @Override

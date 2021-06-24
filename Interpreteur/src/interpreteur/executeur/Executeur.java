@@ -11,6 +11,7 @@ import interpreteur.as.experimental.ASAstExperimental;
 import interpreteur.as.modules.ASModule;
 import interpreteur.as.ASAst;
 import interpreteur.ast.buildingBlocs.Programme;
+import interpreteur.ast.buildingBlocs.programmes.Declarer;
 import interpreteur.data_manager.Data;
 import interpreteur.data_manager.DataVoiture;
 import interpreteur.tokens.Token;
@@ -585,6 +586,7 @@ public class Executeur {
         FonctionManager.reset();
         DataVoiture.reset();
 
+        Declarer.reset();
         // remet la coordonnee d'execution au debut du programme
         coordRunTime.setCoord(debutCoord.getCoordAsString());
         //if (ast instanceof ASAstExperimental) {

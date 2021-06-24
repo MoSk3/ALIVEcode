@@ -9,17 +9,16 @@ import interpreteur.ast.buildingBlocs.expressions.*;
 import java.util.HashSet;
 
 public class Assigner extends Programme {
-    private static final HashSet<CreerSetter> waitingSetters = new HashSet<>();
-    private static final HashSet<CreerGetter> waitingGetters = new HashSet<>();
+    //private static final HashSet<CreerSetter> waitingSetters = new HashSet<>();
+    //private static final HashSet<CreerGetter> waitingGetters = new HashSet<>();
 
     private final Expression<?> expr;
     private final Expression<?> valeur;
     private final boolean constante;
     private final BinOp.Operation op;
-    private final Type type;
     private final Var var;
 
-    public Assigner(Expression<?> expr, Expression<?> valeur, boolean constante, BinOp.Operation op, Type type) {
+    public Assigner(Expression<?> expr, Expression<?> valeur, boolean constante, BinOp.Operation op) {
         // get la variable
         if (expr instanceof Var) var = (Var) expr;
         else if (expr instanceof CreerListe.SousSection && ((CreerListe.SousSection) expr).getExpr() instanceof Var) {
@@ -33,22 +32,26 @@ public class Assigner extends Programme {
         this.expr = expr;
         this.valeur = valeur;
         if (constante && op != null) {
-            throw new ASErreur.ErreurAssignement("Il est impossible de modifier la valeur d'une variable constante");
+            throw new ASErreur.ErreurAssignement("Il est impossible de modifier la valeur d'une constante");
         }
         this.constante = constante;
         this.op = op;
-        this.type = type;
-        addVariable();
+        //addVariable();
     }
 
+    /*
     public static void addWaitingGetter(CreerGetter getter) {
         waitingGetters.add(getter);
     }
+    */
 
+    /*
     public static void addWaitingSetter(CreerSetter setter) {
         waitingSetters.add(setter);
     }
+    */
 
+    /*
     private void addVariable() {
 
         // get l'objet variable s'il existe
@@ -94,12 +97,16 @@ public class Assigner extends Programme {
             waitingSetters.remove(setter);
         }
     }
+    */
 
     @Override
     public Object execute() {
         ASObjet.Variable variable = ASObjet.VariableManager.obtenirVariable(var.getNom());
         ASObjet<?> valeur = this.valeur.eval();
-
+        if (variable == null) {
+            throw new ASErreur.ErreurAssignement("La variable " + var.getNom() + " n'a pas \u00E9t\u00E9 initialis\u00E9e." +
+                    "\nAvez-vous oubli\u00E9 de mettre 'var' devant la d\u00E9claration de la variable?");
+        }
 
         if (expr instanceof CreerListe.SousSection) {
             ASObjet.Liste listeInitial = (ASObjet.Liste) variable.getValeurApresGetter();
@@ -128,8 +135,8 @@ public class Assigner extends Programme {
             }
         }
 
-        if (variable.pasInitialisee() && op != null) {
-            throw new ASErreur.ErreurAssignement("La variable '" + var.getNom() + "' n'a pas \u00E8t\u00E8 d\u00E8clar\u00E8");
+        if (variable.pasInitialisee()) {
+            throw new ASErreur.ErreurAssignement("La variable '" + var.getNom() + "' est utilis\u00E9e avant d'\u00EAtre d\u00E9clar\u00E9e");
         }
 
         if (op != null) {

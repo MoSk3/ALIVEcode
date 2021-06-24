@@ -32,7 +32,7 @@ public class CreerSetter extends Programme {
         ASObjet.Variable v = ASObjet.VariableManager.obtenirVariable(this.var.getNom());
 
         if (v == null) {
-            Assigner.addWaitingSetter(this);
+            Declarer.addWaitingSetter(this);
             return;
         }
 

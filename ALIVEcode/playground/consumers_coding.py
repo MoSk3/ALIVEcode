@@ -140,7 +140,7 @@ def interpretorThread(client):
             'data': parsed
         })
         while client.response is None and client.thread_alive:
-            time.sleep(0.01)
+            time.sleep(0.1)
             pass
       
         #print("Client response:", client.response)
