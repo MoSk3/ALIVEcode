@@ -82,6 +82,9 @@ public class Executeur {
     private static boolean executionActive = false;
     private static boolean canExecute = false;
 
+    //debug mode
+    private static boolean debug = false;
+
 
     public Executeur() {
     }
@@ -92,7 +95,7 @@ public class Executeur {
 
     // methode utilisee a chaque fois qu'une info doit etre afficher par le langage
     public static void ecrire(String texte) {
-        //System.out.println(texte);
+        if (debug) System.out.println(texte);
     }
 
     public static void printCompiledCode(String code) {
@@ -594,11 +597,11 @@ public class Executeur {
                 "fonction executer(commande: fonctionType, arg: tout)",
                 "    retourner commande(arg)",
                 "fin fonction",
-                "si executer, afficher, \"hey\" == nul",
+                "si executer(afficher, \"hey\") == nul",
                 "    afficher nul",
                 "fin si",
         };
-
+        debug = true;
         System.out.println(compiler(lines, true));
         //printCompileDict();
         executerMain(false);

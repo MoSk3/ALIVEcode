@@ -126,6 +126,7 @@ Ajouter:
 
 Ignorer:
   - '\s+'
+  - '#.*'
 
 
 

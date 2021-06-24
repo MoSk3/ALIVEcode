@@ -3,7 +3,6 @@ package interpreteur.executeur;
 import java.util.stream.Stream;
 
 public class PreCompiler {
-    public final static String COMMENTAIRE = "#";
     public final static String MULTI_LIGNE_DEBUT = "(:";
     public final static String MULTI_LIGNE_FIN = ":)";
 
@@ -37,9 +36,6 @@ public class PreCompiler {
                     ligne = ligne.substring(ligne.indexOf(DOCUMENTATION_FIN) + DOCUMENTATION_FIN.length()).trim();
                 } else continue;
             }
-            if (ligne.contains(COMMENTAIRE)) {
-                ligne = ligne.substring(0, ligne.indexOf(COMMENTAIRE)).trim();
-            }
             if (ligne.contains(MULTI_LIGNE_DEBUT)) {
                 ligne = ligne.substring(0, ligne.indexOf(MULTI_LIGNE_DEBUT)).trim();
                 multiligne = true;
@@ -56,4 +52,23 @@ public class PreCompiler {
                 .map(ligne -> ligne.trim() + "\n")
                 .toArray(String[]::new);
     }
+
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
