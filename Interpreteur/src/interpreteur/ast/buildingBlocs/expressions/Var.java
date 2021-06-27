@@ -49,7 +49,7 @@ public class Var implements Expression<ASObjet<?>> {
             // return ASObjet.VariableManager.obtenirVariable(this.nom).getValeurApresGetter();
             return Scope.getCurrentScopeInstance().getVariable(nom).getValeurApresGetter();
         } catch (NullPointerException e) {
-            throw new ASErreur.ErreurVariableInconnue("Variable '" + this.nom + "' inconnue");
+            throw new ASErreur.ErreurVariableInconnue("La variable '" + this.nom + "' n'est pas d\u00E9clar\u00E9e dans ce scope.");
         }
     }
 }

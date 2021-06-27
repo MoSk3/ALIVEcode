@@ -20,8 +20,6 @@ public class BouclePour extends Boucle {
     private final Var var;
     private final Expression<?> objItere;
     private Iterator<ASObjet<?>> iteration = null;
-    private boolean declarerVar = false;
-    private boolean declarerConst = false;
     private Type typeVar = new Type("tout");
     private final Scope scope;
 
@@ -33,9 +31,12 @@ public class BouclePour extends Boucle {
     }
 
     public BouclePour setDeclarerVar(boolean estConst, Type typeVar) {
-        this.declarerVar = true;
-        this.declarerConst = estConst;
         this.typeVar = typeVar == null ? this.typeVar : typeVar;
+        if (estConst) {
+            scope.declarerVariable(new ASObjet.Constante(var.getNom(), null));
+        } else {
+            scope.declarerVariable(new ASObjet.Variable(var.getNom(), null, typeVar));
+        }
         return this;
     }
 
@@ -56,13 +57,9 @@ public class BouclePour extends Boucle {
         }
 
         if (iteration.hasNext() && !sortir) {
-            if (declarerVar) {
-                Scope.popCurrentScopeInstance();
-                Scope.pushCurrentScopeInstance(scope.makeScopeInstanceFromCurrentScope());
-                new Declarer(var, new ValeurConstante(iteration.next()), new Type("tout"), declarerConst).execute();
-            } else {
-                new Assigner(var, new ValeurConstante(iteration.next()), false, null).execute();
-            }
+            Scope.popCurrentScopeInstance();
+            Scope.pushCurrentScopeInstance(scope.makeScopeInstanceFromCurrentScope());
+            Scope.getCurrentScopeInstance().getVariable(var.getNom()).changerValeur(iteration.next());
             Executeur.obtenirCoordRunTime().nouveauBloc("pour");
 
         } else sortir();

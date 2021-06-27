@@ -152,7 +152,7 @@ public interface ASObjet<T> {
 
 
         public Variable(String nom, ASObjet<?> valeur, Type type) {
-            this.type = type;
+            this.type = type == null ? new Type("tout") : type;
             this.nom = nom;
             this.valeur = valeur instanceof Variable ? ((Variable) valeur).getValeurApresGetter() : valeur;
         }
@@ -272,6 +272,11 @@ public interface ASObjet<T> {
 
         public Constante(String nom, ASObjet<?> valeur) {
             super(nom, valeur, new Type("tout"));
+        }
+
+        @Override
+        public Variable clone() {
+            return new Constante(obtenirNom(), this.getValeur());
         }
 
         @Override

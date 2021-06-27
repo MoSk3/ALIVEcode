@@ -600,22 +600,10 @@ public class Executeur {
 
     public static void main(String[] args) {
         String[] lines = new String[]{
-                "fonction abc(msg: texte | entier = \"hey\")",
-                "    var a = 12",
-                "    ",
-                "    fonction f()",
-                "        msg += \" - \"",
-                "        afficher msg + a",
-                "    fin fonction",
-                "    f",
-                "    retourner f",
-                "fin fonction",
-                "",
-                "var g = abc(\"slalut!\")",
-                "var e = abc(\"bl\")",
-                "",
-                "g",
-                "e"
+                "repeter 3",
+                "    var i = 10",
+                "    afficher i",
+                "fin repeter"
         };
         debug = true;
         System.out.println(compiler(lines, true));
