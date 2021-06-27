@@ -1,6 +1,7 @@
 package interpreteur.ast.buildingBlocs.programmes;
 
 import interpreteur.as.Objets.ASObjet;
+import interpreteur.as.Objets.Scope;
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.ast.buildingBlocs.Expression;
 import interpreteur.ast.buildingBlocs.Programme;
@@ -42,7 +43,8 @@ public class Declarer extends Programme {
     private void addVariable() {
 
         // get l'objet variable s'il existe
-        ASObjet.Variable varObj = ASObjet.VariableManager.obtenirVariable(var.getNom(), var.getScope());
+        // ASObjet.Variable varObj = ASObjet.VariableManager.obtenirVariable(var.getNom(), var.getScope());
+        ASObjet.Variable varObj = Scope.getCurrentScope().getVariable(var.getNom());
 
         // si la variable existe déjà et que c'est une constante, lance une erreur, car on ne peut pas modifier une constante
         if (varObj != null)
@@ -50,11 +52,13 @@ public class Declarer extends Programme {
 
         // si le mot "const" est présent dans l'assignement de la variable
         if (constante) {
-            ASObjet.VariableManager.ajouterConstante(new ASObjet.Constante(var.getNom(), null), var.getScope());
+            Scope.getCurrentScope().declarerVariable(new ASObjet.Constante(var.getNom(), null));
+            //ASObjet.VariableManager.ajouterConstante(new ASObjet.Constante(var.getNom(), null), var.getScope());
 
         } else {
             // si la variable a été déclarée avec "var", on crée la variable
-            ASObjet.VariableManager.ajouterVariable(new ASObjet.Variable(var.getNom(), null, type), var.getScope());
+            Scope.getCurrentScope().declarerVariable(new ASObjet.Variable(var.getNom(), null, type));
+            //ASObjet.VariableManager.ajouterVariable(new ASObjet.Variable(var.getNom(), null, type), var.getScope());
         }
 
         // si des setters et des getters attendaient la déclaration de la variable pour pouvoir être attachée à celle-ci, on les attache
@@ -72,7 +76,8 @@ public class Declarer extends Programme {
 
     @Override
     public Object execute() {
-        ASObjet.Variable variable = ASObjet.VariableManager.obtenirVariable(var.getNom());
+        //ASObjet.Variable variable = ASObjet.VariableManager.obtenirVariable(var.getNom());
+        ASObjet.Variable variable = Scope.getCurrentScopeInstance().getVariable(var.getNom());
         ASObjet<?> valeur = this.valeur.eval();
 
         variable.changerValeur(valeur);

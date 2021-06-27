@@ -40,8 +40,8 @@ Ajouter:
   RETOURNER: '\bretourner\b'
   FLECHE: '->'
 
-  GET: 'get'
-  SET: 'set'
+  GET: '\bget\b'
+  SET: '\bset\b'
 
   # structure
   STRUCTURE: '\bstructure\b'

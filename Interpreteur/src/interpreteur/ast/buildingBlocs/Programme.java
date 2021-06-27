@@ -16,7 +16,8 @@ public abstract class Programme implements Serializable {
         return new Programme() {
             @Override
             public Object execute() {
-                return expression.eval();
+                expression.eval();
+                return null;
             }
 
             @Override

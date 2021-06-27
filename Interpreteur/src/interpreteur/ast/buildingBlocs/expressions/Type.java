@@ -1,5 +1,6 @@
 package interpreteur.ast.buildingBlocs.expressions;
 
+import interpreteur.as.Objets.Scope;
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.as.Objets.ASObjet;
 import interpreteur.ast.buildingBlocs.Expression;
@@ -73,7 +74,7 @@ public class Type implements Expression<ASObjet<?>> {
     @Override
     public ASObjet<?> eval() {
         ASObjet.Variable var;
-        if ((var = ASObjet.VariableManager.obtenirVariable(this.getNom())) != null) {
+        if ((var = Scope.getCurrentScopeInstance().getVariable(this.nom)) != null) {
             return var.getValeurApresGetter();
         }
         throw new ASErreur.ErreurType("Il est impossible d'\u00E9valuer le type '" + this.nom + "'");

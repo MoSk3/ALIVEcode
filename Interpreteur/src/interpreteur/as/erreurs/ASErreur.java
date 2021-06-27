@@ -135,6 +135,12 @@ public interface ASErreur {
         }
     }
 
+    class ErreurDeclaration extends ErreurAliveScript {
+        public ErreurDeclaration(String message) {
+            super(message, "ErreurDeclaration");
+        }
+    }
+
     class ErreurType extends ErreurAliveScript {
         public ErreurType(String message) {
             super(message, "ErreurType");

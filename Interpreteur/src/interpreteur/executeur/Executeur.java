@@ -4,10 +4,9 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import interpreteur.as.Objets.ASObjet.FonctionManager;
-import interpreteur.as.Objets.ASObjet.VariableManager;
+import interpreteur.as.Objets.Scope;
 import interpreteur.as.erreurs.ASErreur.*;
 import interpreteur.as.ASLexer;
-import interpreteur.as.experimental.ASAstExperimental;
 import interpreteur.as.modules.ASModule;
 import interpreteur.as.ASAst;
 import interpreteur.ast.buildingBlocs.Programme;
@@ -495,7 +494,7 @@ public class Executeur {
                 if (resultat instanceof Data) {
                     datas.add((Data) resultat);
 
-                } else if (resultat != null && !coordRunTime.getBlocActuel().equals("main")) {
+                } else if (resultat != null && !coordRunTime.getScope().equals("main")) {
                     // ne sera vrai que si l'on retourne d'une fonction
                     break;
                 }
@@ -531,7 +530,7 @@ public class Executeur {
             // on passe a la coordonnee suivante
             coordRunTime.plusUn();
         }
-        return (ligneParsed instanceof Programme.ProgrammeFin || !executionActive) ? datas.toString() : resultat;
+        return (ligneParsed instanceof Programme.ProgrammeFin || !executionActive || resultat == null) ? datas.toString() : resultat;
     }
 
     /**
@@ -549,6 +548,8 @@ public class Executeur {
         Object resultat;
 
         if (!resume) {
+            // créer scopeInstance globale
+            Scope.pushCurrentScopeInstance(Scope.getCurrentScope().makeScopeInstance(null));
             resultat = executerScope("main", null, null);
         } else resultat = resumeExecution();
 
@@ -579,10 +580,13 @@ public class Executeur {
      * reset tout a neuf pour la prochaine execution
      */
     private static void reset() {
+        Scope.resetAllScope();
+        // créer le scope global
+        Scope.makeNewCurrentScope();
+
         ASModule.init();
         // supprime les variables, fonctions et iterateurs de la memoire
         datas.clear();
-        VariableManager.reset();
         FonctionManager.reset();
         DataVoiture.reset();
 
@@ -595,18 +599,28 @@ public class Executeur {
     }
 
     public static void main(String[] args) {
-        String[] lines = new String[]{ 
-                "fonction executer(commande: fonctionType, arg: tout)",
-                "    retourner commande(arg)",
+        String[] lines = new String[]{
+                "fonction abc(msg: texte | entier = \"hey\")",
+                "    var a = 12",
+                "    ",
+                "    fonction f()",
+                "        msg += \" - \"",
+                "        afficher msg + a",
+                "    fin fonction",
+                "    f",
+                "    retourner f",
                 "fin fonction",
-                "si executer(afficher, \"hey\") == nul",
-                "    afficher nul",
-                "fin si",
+                "",
+                "var g = abc(\"slalut!\")",
+                "var e = abc(\"bl\")",
+                "",
+                "g",
+                "e"
         };
         debug = true;
         System.out.println(compiler(lines, true));
         //printCompileDict();
-        executerMain(false);
+        System.out.println(executerMain(false));
         //System.out.println(compiler(lines, false));
         //executerMain(false);
     }

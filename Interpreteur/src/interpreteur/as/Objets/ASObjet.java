@@ -9,12 +9,14 @@ import javax.lang.model.type.NullType;
 
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.as.modules.ASModule;
+//import interpreteur.ast.buildingBlocs.expressions.Type;
 import interpreteur.ast.buildingBlocs.expressions.Type;
 import interpreteur.ast.buildingBlocs.programmes.Boucle;
 import interpreteur.executeur.Coordonnee;
 import interpreteur.executeur.Executeur;
 import interpreteur.tokens.Token;
 import interpreteur.as.erreurs.ASErreur.*;
+import interpreteur.utils.ArraysUtils;
 
 
 /**
@@ -64,122 +66,78 @@ public interface ASObjet<T> {
         }
     }
 
-    class VariableManager {
-        public static final String scopeParDefaut = "main";
-        public static Hashtable<String, Hashtable<String, Variable>> varDict = new Hashtable<>();
-        public static Hashtable<String, Variable> constDict = new Hashtable<>();
-        public static String currentScope = scopeParDefaut;
+    class TypeManager {
+        public static List<ASType> typeDisponibles = new ArrayList<>();
 
-        public static void ajouterVariable(Variable variable) {
-            String nom = FonctionManager.ajouterDansStructure(variable.nom);
-            Variable nouv = VariableManager.varDict.get(VariableManager.currentScope).put(nom, variable);
-            // if (nouv != null) {
-            //     throw new ErreurAssignement("La variable '" + nom + "' a deja ete initialisee");
-            // }
+
+    }
+
+
+    class ASType implements ASObjet<Object> {
+        private ASTypeBuiltin categorie;
+        private Object[] args;
+
+        public ASType(ASTypeBuiltin categorie) {
+            this.categorie = categorie;
+            this.args = new Object[0];
         }
 
-        public static void ajouterVariable(Variable variable, String scope) {
-            String nom = FonctionManager.ajouterDansStructure(variable.nom);
-            varDict.putIfAbsent(scope, new Hashtable<>());
-            Variable nouv = VariableManager.varDict.get(scope).put(nom, variable);
-            // if (nouv != null) {
-            //     throw new ErreurAssignement("La variable '" + nom + "' a deja ete initialisee");
-            // }
+        public ASType(ASTypeBuiltin categorie, Object... args) {
+            this.categorie = categorie;
+            this.args = args;
         }
 
-        public static void ajouterConstante(Constante constante) {
-            String nom = FonctionManager.ajouterDansStructure(constante.obtenirNom());
-            VariableManager.constDict.put(nom, constante);
-            VariableManager.varDict.get(VariableManager.currentScope).put(nom, constante);
+        public void union(ASType type) {
+
         }
 
-        public static void ajouterConstante(Constante constante, String scope) {
-            String nom = FonctionManager.ajouterDansStructure(constante.obtenirNom());
-            VariableManager.constDict.put(nom, constante);
-            varDict.putIfAbsent(scope, new Hashtable<>());
-            VariableManager.varDict.get(scope).put(nom, constante);
+        @Override
+        public Object getValue() {
+            return null;
         }
 
-        public static void initScope(String nomDuScope) {
-            varDict.putIfAbsent(nomDuScope, new Hashtable<>());
-            varDict.get(nomDuScope).putAll(constDict);
+        @Override
+        public boolean boolValue() {
+            return false;
         }
 
-        public static void initScope(String scope, String fromScope) {
-            varDict.putIfAbsent(scope, new Hashtable<>());
-            Hashtable<String, ASObjet.Variable> varFromScope = new Hashtable<>(varDict.get(fromScope));
-            varFromScope.replaceAll((name, var) -> new Variable(var.obtenirNom(), var.getValeur(), var.type).setReadOnly());
-            varDict.get(scope).putAll(varFromScope);
+        @Override
+        public String obtenirNomType() {
+            return null;
         }
 
-        public static void changerScope(String nomDuScope) {
-            VariableManager.currentScope = Objects.requireNonNullElse(nomDuScope, scopeParDefaut);
-        }
+        enum ASTypeBuiltin {
+            tout,
+            entier,
+            decimal,
+            nombre(ASTypeBuiltin.entier, ASTypeBuiltin.decimal),
+            texte,
+            liste,
+            iterable(ASTypeBuiltin.texte, ASTypeBuiltin.liste),
+            booleen,
+            nulType,
+            fonctionType,
+            union,
+            litteral;
 
-        public static String getCurrentScope() {
-            return currentScope;
-        }
+            private final ASTypeBuiltin[] aliases;
 
-        public static Variable obtenirVariable(String nom) {
-            return VariableManager.varDict.get(VariableManager.currentScope).get(nom);
-        }
-
-        public static Variable obtenirVariable(String nom, String nomScope) {
-            varDict.putIfAbsent(nomScope, new Hashtable<>());
-            return VariableManager.varDict.get(nomScope).get(nom);
-        }
-
-        public static boolean estConstante(Variable var) {
-            return constDict.containsValue(var);
-        }
-
-        public static boolean estConstante(String nom) {
-            return constDict.keySet().stream().anyMatch(varName -> varName.equals(nom));
-        }
-
-        public static boolean laVariableExiste(String nom) {
-            return VariableManager.varDict.get(VariableManager.currentScope).containsKey(nom);
-        }
-
-        public static boolean nouvelleValeurValide(String nom, ASObjet<?> nouvelleValeur) {
-            Variable var = VariableManager.varDict.get(VariableManager.currentScope).get(nom);
-
-            if (var.getType().noMatch(nouvelleValeur.obtenirNomType())) {
-                throw new ErreurAssignement("La variable '" +
-                        nom +
-                        "' est de type *" +
-                        var.obtenirNomType() +
-                        "*. Elle ne peut pas prendre une valeur de type *" +
-                        nouvelleValeur.obtenirNomType() +
-                        "*.");
+            ASTypeBuiltin() {
+                this.aliases = null;
             }
-            return true;
-        }
 
-        public static void retirerVariable(String nom) {
-            VariableManager.varDict.get(VariableManager.currentScope).remove(nom);
-        }
-
-        public static void clearCurrentScope() {
-            for (String varNom : VariableManager.varDict.get(VariableManager.currentScope).keySet()) {
-                if (!(estConstante(varNom)) && !varDict.get(currentScope).get(varNom).isReadOnly())
-                    VariableManager.varDict.get(VariableManager.currentScope).get(varNom).valeur = null;
+            ASTypeBuiltin(ASTypeBuiltin... alias) {
+                this.aliases = alias;
             }
-        }
 
-        public static void reset() {
-            VariableManager.varDict = new Hashtable<>();
-            VariableManager.constDict = new Hashtable<>();
-            VariableManager.currentScope = VariableManager.scopeParDefaut;
-            VariableManager.varDict.putIfAbsent(scopeParDefaut, new Hashtable<>());
-        }
+            public ASTypeBuiltin[] getAliases() {
+                return aliases;
+            }
 
-        public static Hashtable<String, Hashtable<String, Variable>> getVarDict() {
-            return varDict;
-        }
-
-        public static Hashtable<String, Variable> getConstDict() {
-            return constDict;
+            @Override
+            public String toString() {
+                return aliases == null ? super.toString() : ArraysUtils.join("|", aliases);
+            }
         }
     }
 
@@ -199,24 +157,32 @@ public interface ASObjet<T> {
             this.valeur = valeur instanceof Variable ? ((Variable) valeur).getValeurApresGetter() : valeur;
         }
 
-        public static void creerOuChangerValeur(String nom, ASObjet<?> valeur, Type type) {
-            Variable var = VariableManager.obtenirVariable(nom);
-            if (var != null) {
-                var.changerValeur(valeur);
-            } else {
-                VariableManager.ajouterVariable(new Variable(nom, valeur, type));
+        private boolean nouvelleValeurValide(ASObjet<?> nouvelleValeur) {
+            if (getType().noMatch(nouvelleValeur.obtenirNomType())) {
+                throw new ErreurAssignement("La variable '" +
+                        nom +
+                        "' est de type *" +
+                        obtenirNomType() +
+                        "*. Elle ne peut pas prendre une valeur de type *" +
+                        nouvelleValeur.obtenirNomType() +
+                        "*.");
             }
+            return true;
         }
 
         public void changerValeur(ASObjet<?> valeur) {
-            if (VariableManager.nouvelleValeurValide(this.nom, valeur)) {
+            if (nouvelleValeurValide(valeur)) {
                 if (this.setter != null) {
                     this.valeur = this.setter.apply(valeur);
                 } else {
                     this.valeur = valeur;
                 }
-                VariableManager.varDict.get(VariableManager.currentScope).put(nom, this);
             }
+        }
+
+        @Override
+        public Variable clone() {
+            return new Variable(nom, this.valeur, this.type).setGetter(this.getter).setSetter(this.setter);
         }
 
         public String obtenirNom() {
@@ -243,7 +209,7 @@ public interface ASObjet<T> {
 
         public Variable setReadOnly() {
             this.setter = (valeur) -> {
-                throw new ErreurAssignement("Cette variable est en lecture seule: elle ne peut pas \u00EAtre modifi\u00E9");
+                throw new ErreurAssignement("Cette variable est en lecture seule: elle ne peut pas \u00EAtre modifi\u00E9e");
             };
             this.readOnly = true;
             return this;
@@ -333,7 +299,8 @@ public interface ASObjet<T> {
         // met la fonction dans le dictionnaire de fonction et cree enregistre la fonction dans une Variable
         // pour que le code puisse la retrouver plus tard
         public static void ajouterFonction(Fonction fonction) {
-            VariableManager.ajouterConstante(new Constante(fonction.getNom(), fonction));
+            Scope.getCurrentScope().declarerVariable(new Variable(fonction.getNom(), fonction, new Type(fonction.obtenirNomType())));
+            //VariableManager.ajouterConstante(new Constante(fonction.getNom(), fonction));
             //fonction.nom = ajouterDansStructure(fonction.getNom());
         }
 
@@ -358,8 +325,7 @@ public interface ASObjet<T> {
             FonctionManager.structure = "";
             for (Fonction fonction : ASModule.getModuleBuiltins().getFonctions()) ajouterFonction(fonction);
             for (Variable variable : ASModule.getModuleBuiltins().getVariables()) {
-                if (variable instanceof Constante) VariableManager.ajouterConstante((Constante) variable);
-                else VariableManager.ajouterVariable(variable);
+                Scope.getCurrentScope().declarerVariable(variable);
             }
         }
     }
@@ -534,46 +500,7 @@ public interface ASObjet<T> {
         }
 
         public ASObjet<?> executer() {
-            Object valeur;
-            ASObjet<?> asValeur;
-            String ancienScope = VariableManager.currentScope;
-            VariableManager.changerScope(this.scopeName + this.nom);
-            VariableManager.initScope(this.scopeName + this.nom, ancienScope);
-
-            for (String param : this.parametres_appel.keySet()) {
-                VariableManager.ajouterVariable(new Variable(param, this.parametres_appel.get(param), new Type("tout")));
-            }
-
-            Coordonnee ancienneCoord = Executeur.obtenirCoordRunTime().copy();
-
-            valeur = Executeur.executerScope(VariableManager.currentScope, null, coordReprise == null ? null : coordReprise.getCoordAsString());
-            if (valeur instanceof String) {
-                //System.out.println("valeur: " + valeur);
-                coordReprise = Executeur.obtenirCoordRunTime().copy();
-                Executeur.setCoordRunTime(ancienneCoord.getCoordAsString());
-                VariableManager.changerScope(ancienScope);
-                throw new StopSendData((String) valeur);
-
-            } else {
-                asValeur = (ASObjet<?>) valeur;
-            }
-
-            coordReprise = null;
-
-            Boucle.sortirScope(VariableManager.getCurrentScope());
-
-            Executeur.setCoordRunTime(ancienneCoord.getCoordAsString());
-            VariableManager.clearCurrentScope();
-            VariableManager.changerScope(ancienScope);
-
-            //System.out.println(this.typeRetour);
-            //System.out.println(valeur);
-            if (asValeur == null || this.typeRetour.noMatch(asValeur.obtenirNomType())) {
-                throw new ErreurType("Le type retourner ' " + (asValeur == null ? "vide" : asValeur.obtenirNomType()) + " ' ne correspond pas "
-                        + "au type de retour pr\u00E9cis\u00E9 dans la d\u00E9claration de la fonction ' " + this.typeRetour.nom() + " '.");
-
-            }
-            return asValeur;
+            return null;
         }
 
         public void setScopeName(String scopeName) {
@@ -636,7 +563,7 @@ public interface ASObjet<T> {
              */
             public Parametre(Type type, String nom, ASObjet<?> valeurParDefaut) {
                 this.nom = nom;
-                this.type = type == null ? new Type("tout"): type;
+                this.type = type == null ? new Type("tout") : type;
                 this.valeurParDefaut = valeurParDefaut;
             }
 

@@ -11,7 +11,6 @@ import interpreteur.as.Objets.ASObjet.Entier;
 import interpreteur.as.Objets.ASObjet.FonctionManager;
 import interpreteur.as.Objets.ASObjet.Nul;
 import interpreteur.as.Objets.ASObjet.Texte;
-import interpreteur.as.Objets.ASObjet.VariableManager;
 import interpreteur.as.experimental.ASAstExperimental;
 import interpreteur.ast.Ast;
 import interpreteur.ast.buildingBlocs.Programme;
@@ -36,7 +35,6 @@ import javax.lang.model.type.NullType;
 
 public class ASAst extends AstGenerator {
     public ASAst() {
-        VariableManager.varDict.putIfAbsent(VariableManager.scopeParDefaut, new Hashtable<>());
         ajouterProgrammes();
         ajouterExpressions();
     }
@@ -379,6 +377,8 @@ public class ASAst extends AstGenerator {
                 new Ast<Retourner>() {
                     @Override
                     public Retourner apply(List<Object> p) {
+                        if (p.size() > 1 && p.get(1) instanceof CreerListe.Enumeration)
+                            p.set(1, ((CreerListe.Enumeration) p.get(1)).build());
                         return new Retourner(p.size() > 1 ? (Expression<?>) p.get(1) : new ValeurConstante(new Nul()));
                     }
                 });
@@ -491,11 +491,19 @@ public class ASAst extends AstGenerator {
             }
         });
 
-        ajouterProgramme("POUR expression DANS expression",
+        ajouterProgramme("POUR expression DANS expression~"
+                        + "POUR VAR expression DANS expression~"
+                        + "POUR CONSTANTE expression DANS expression",
                 new Ast<BouclePour>(0) {
                     @Override
                     public BouclePour apply(List<Object> p) {
-                        return new BouclePour((Var) p.get(1), (Expression<?>) p.get(3));
+                        // boucle pour sans déclaration
+                        if (p.size() == 4) {
+                            return new BouclePour((Var) p.get(1), (Expression<?>) p.get(3));
+                        } else {
+                            boolean estConst = ((Token) p.get(1)).obtenirNom().equals("CONSTANTE");
+                            return new BouclePour((Var) p.get(2), (Expression<?>) p.get(4)).setDeclarerVar(estConst, null);
+                        }
                     }
                 });
 
@@ -572,6 +580,16 @@ public class ASAst extends AstGenerator {
                         }
                         ((Type) p.get(0)).union((Type) p.get(2));
                         return (Type) p.get(0);
+                    }
+                });
+
+        ajouterExpression("expression CROCHET_OUV #expression CROCHET_FERM~",
+                new Ast<CreerListe.SousSection>() {
+                    @Override
+                    public CreerListe.SousSection apply(List<Object> p) {
+                        // pas de deux points, forme val[idx]
+                        Expression<?> idx = AstGenerator.evalOneExpr(new ArrayList<>(p.subList(2, p.size() - 1)), null);
+                        return new CreerListe.SousSection.IndexSection((Expression<?>) p.get(0), idx);
                     }
                 });
 

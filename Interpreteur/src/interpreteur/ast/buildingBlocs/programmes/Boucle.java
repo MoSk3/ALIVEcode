@@ -22,7 +22,7 @@ public abstract class Boucle extends Programme {
 
     protected Boucle(String nomBoucle) {
         this.nomBoucle = nomBoucle;
-        boucles.getOrDefault(ASObjet.VariableManager.getCurrentScope(), new ArrayList<>()).add(this);
+        boucles.getOrDefault(Executeur.obtenirCoordRunTime().getCoordAsString(), new ArrayList<>()).add(this);
     }
 
     public String getNomBoucle() {

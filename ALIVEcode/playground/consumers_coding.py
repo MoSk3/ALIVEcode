@@ -101,7 +101,7 @@ class InterpreteurConsumer(AsyncWebsocketConsumer):
                         })
                         """
                         #print(f'Sent to robot id : {self.robot_id} : {robotData}')
-  
+
     async def disconnect(self, close_code):
         # print("disconnected", e)
         if hasattr(self, 'robot_id') and self.robot_id in clientsWithRobots:   
@@ -114,6 +114,7 @@ def interpretorThread(client):
     DataVoiture = autoclass('interpreteur.data_manager.DataVoiture')
     # Préparation à l'exécution du code
     #print(client.lines)
+    Executeur.debug = True
     erreurs = json.loads(Executeur.compiler(client.lines, False))
     print(erreurs)
     if erreurs != []:

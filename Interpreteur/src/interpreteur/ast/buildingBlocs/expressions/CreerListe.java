@@ -50,6 +50,9 @@ public class CreerListe implements Expression<ASObjet.Liste> {
 
             @Override
             public ASObjet<?> eval() {
+                if (Math.abs(getIdx()) > ((ASObjet.Iterable) this.expr.eval()).taille()) {
+                    throw new ASErreur.ErreurIndex("L'index " + getIdx() + " est hors de port\u00E9 (maximum " + (((ASObjet.Iterable) this.expr.eval()).taille() - 1) + ")");
+                }
                 return ((ASObjet.Iterable) this.expr.eval()).get(getIdx());
             }
 

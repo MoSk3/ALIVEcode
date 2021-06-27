@@ -71,6 +71,11 @@ public class BinOp implements Expression<ASObjet<?>> {
                 return new ASObjet.Texte(String.valueOf(gauche.getValue()).replace(((ASObjet.Texte) droite).getValue(), ""));
             }
 
+            /* remove */
+            if (gauche instanceof ASObjet.Liste) {
+                return new ASObjet.Liste(((ASObjet.Liste) gauche).getValue().stream().filter(element -> !element.getValue().equals(droite.getValue())).toArray(ASObjet[]::new));
+            }
+
             double result = ((Number) gauche.getValue()).doubleValue() - ((Number) droite.getValue()).doubleValue();
             return gauche instanceof ASObjet.Entier && droite instanceof ASObjet.Entier ?
                     new ASObjet.Entier((int) result) :
