@@ -53,4 +53,5 @@ jobs:
         python manage.py collectstatic --noinput
         python manage.py test
     - name: Copying the files into the development workspace
-      run: cp -a -r ./ ${{ secrets.SERVER_FILES_LOCATION }} 2>/dev/null || :
+      run: |
+        cp -a -r ./ ${{ secrets.SERVER_FILES_LOCATION }} 2>/dev/null || :
