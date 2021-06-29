@@ -1,6 +1,11 @@
 from django.contrib import admin
 
-from home.models import User, Professor, Student, Achievement
+from django.apps import apps
+User = apps.get_model('auth', 'User')
+Student = apps.get_model('home', 'Student')
+Professor = apps.get_model('home', 'Professor')
+Achievement = apps.get_model('home', 'Achievement')
+
 
 # Register your models here.
 @admin.register(Achievement)
