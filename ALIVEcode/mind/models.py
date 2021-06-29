@@ -1,6 +1,9 @@
 from django.db import models
 from rest_framework import serializers
 
+from django.conf import settings
+User = settings.AUTH_USER_MODEL
+
 # Create your models here.
 
 class JsTimestampField(serializers.Field):
@@ -14,7 +17,7 @@ class AMC(models.Model):
 
     currentDataSheet = models.ForeignKey("mind.DataSheet", blank=True, null=True, on_delete=models.SET_NULL)
 
-    linkedUser = models.ForeignKey("home.User", blank=True, null=True, on_delete=models.SET_NULL)
+    linkedUser = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
 
 class DataSheet(models.Model):
     name = models.CharField(blank=False, max_length=100)

@@ -12,7 +12,8 @@ from playground.consumers_iot import IOTConsumer
 from mind.consumers_pensee import PenseeConsumer, PenseeGetConsumer, AMCDataListener
 
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mysite.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ALIVE.settings')
+os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 
 application = ProtocolTypeRouter({
     "http": get_asgi_application(),
