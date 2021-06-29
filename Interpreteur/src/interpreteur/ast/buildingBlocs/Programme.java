@@ -4,10 +4,12 @@ import interpreteur.executeur.Coordonnee;
 import interpreteur.tokens.Token;
 
 import javax.lang.model.type.NullType;
+import java.io.Serializable;
 import java.net.FileNameMap;
 import java.util.List;
+import java.util.function.Supplier;
 
-public abstract class Programme {
+public abstract class Programme implements Serializable {
     private int numLigne = -1;
     /**
      * INDIQUE LA FIN DU PROGRAMME
@@ -32,6 +34,20 @@ public abstract class Programme {
         this.numLigne = numLigne;
     }
 
+    public static Programme evalExpression(Expression<?> expression, String toString) {
+        return new Programme() {
+            @Override
+            public Object execute() {
+                return expression.eval();
+            }
+
+            @Override
+            public String toString() {
+                return toString;
+            }
+        };
+    }
+
     /**
      *
      * appelé au runtime
@@ -43,6 +59,6 @@ public abstract class Programme {
 
     @Override
     public String toString() {
-        return super.toString();
+        return "vide";
     }
 }

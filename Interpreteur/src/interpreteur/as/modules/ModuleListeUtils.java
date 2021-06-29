@@ -1,7 +1,8 @@
 package interpreteur.as.modules;
 
-import interpreteur.as.ASErreur;
-import interpreteur.as.ASObjet;
+import interpreteur.as.erreurs.ASErreur;
+import interpreteur.as.Objets.ASObjet;
+import interpreteur.ast.buildingBlocs.expressions.Type;
 
 import java.util.*;
 
@@ -20,11 +21,11 @@ public class ModuleListeUtils extends ASModule {
              * 		@return une liste où chaque élément est la lettre du string passé en paramètre
              */
             new ASObjet.Fonction("sep", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre("texte", "t", null),
-            }, "liste") {
+                    new ASObjet.Fonction.Parametre(new Type("texte"), "txt", null),
+            }, new Type("liste")) {
                 @Override
                 public ASObjet<?> executer() {
-                    Texte texte = (Texte) this.getParamsValeursDict().get("t");
+                    Texte texte = (Texte) this.getParamsValeursDict().get("txt");
                     return new Liste(texte.arrayDeLettres());
                 }
             },
@@ -35,16 +36,16 @@ public class ModuleListeUtils extends ASModule {
              * 			-> type: lst
              * 			-> valeur par defaut: null (n'en a pas, il est donc obligatoire de lui en donner une lors de l'appel de la fonction)
              *
-             * 		@type_retour liste
+             * 		@type_retour iterable
              *
-             * 		@return une liste où chaque élément est inversé
+             * 		@return un iterable où chaque élément est inversé
              */
             new ASObjet.Fonction("inverser", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre("liste|texte", "element", null),
-            }, "liste") {
+                    new ASObjet.Fonction.Parametre(new Type("iterable"), "iter", null),
+            }, new Type("iterable")) {
                 @Override
                 public ASObjet<?> executer() {
-                    Iterable element = (Iterable) this.getValeurParam("element");
+                    Iterable element = (Iterable) this.getValeurParam("iter");
                     if (element instanceof Liste){
                         Liste newListe = new Liste();
                         for (int i = element.taille() - 1; i >= 0; i--) newListe.ajouterElement(element.get(i));
@@ -72,12 +73,12 @@ public class ModuleListeUtils extends ASModule {
              * 		@return la liste formee suite a l'application de la fonction sur chaque element de la liste
              */
             new ASObjet.Fonction("map", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre("fonction", "f", null),
-                    new ASObjet.Fonction.Parametre("liste", "l", null)
-            }, "liste") {
+                    new ASObjet.Fonction.Parametre(new Type("fonction"), "f", null),
+                    new ASObjet.Fonction.Parametre(new Type("liste"), "lst", null)
+            }, new Type("liste")) {
                 @Override
                 public ASObjet<?> executer() {
-                    Liste liste = (Liste) this.getParamsValeursDict().get("l");
+                    Liste liste = (Liste) this.getParamsValeursDict().get("lst");
                     Fonction f = (Fonction) this.getParamsValeursDict().get("f");
                     Liste nouvelleListe = new Liste();
                     for (ASObjet<?> element : liste.getValue()) {
@@ -103,12 +104,12 @@ public class ModuleListeUtils extends ASModule {
              * 		@return la liste formee des elements de la liste initiale pour lesquels la fonction f a retourne vrai
              */
             new ASObjet.Fonction("filtrer", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre("fonction", "f", null),
-                    new ASObjet.Fonction.Parametre("liste", "l", null)
-            }, "liste") {
+                    new ASObjet.Fonction.Parametre(new Type("fonction"), "f", null),
+                    new ASObjet.Fonction.Parametre(new Type("liste"), "lst", null)
+            }, new Type("liste")) {
                 @Override
                 public ASObjet<?> executer() {
-                    Liste liste = (Liste) this.getParamsValeursDict().get("l");
+                    Liste liste = (Liste) this.getParamsValeursDict().get("lst");
                     Fonction f = (Fonction) this.getParamsValeursDict().get("f");
                     Liste nouvelleListe = new Liste();
                     for (ASObjet<?> element : liste.getValue()) {
@@ -130,14 +131,14 @@ public class ModuleListeUtils extends ASModule {
              * 			-> type: texte
              * 			-> valeur par defaut: " "
              *
-             * 		@type_retour liste
+             * 		@type_retour texte
              *
              * 		@return le texte forme en joignant chaque elements de la liste initiale avec le separateur entre chaque element
              */
             new ASObjet.Fonction("joindre", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre("liste", "lst", null),
-                    new ASObjet.Fonction.Parametre("texte", "separateur", new ASObjet.Texte(""))
-            }, "liste") {
+                    new ASObjet.Fonction.Parametre(new Type("liste"), "lst", null),
+                    new ASObjet.Fonction.Parametre(new Type("texte"), "separateur", new ASObjet.Texte(""))
+            }, new Type("texte")) {
                 @Override
                 public ASObjet<?> executer() {
                     Liste liste = (Liste) this.getParamsValeursDict().get("lst");
@@ -152,8 +153,8 @@ public class ModuleListeUtils extends ASModule {
             },
 
             new ASObjet.Fonction("somme", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre("liste", "lst", null)
-            }, "decimal|entier") {
+                    new ASObjet.Fonction.Parametre(new Type("liste"), "lst", null)
+            }, new Type("nombre")) {
                 @Override
                 public ASObjet<?> executer() {
                     Liste liste = (Liste) this.getParamsValeursDict().get("lst");
@@ -163,8 +164,8 @@ public class ModuleListeUtils extends ASModule {
             },
 
             new ASObjet.Fonction("max", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre("liste", "lst", null)
-            }, "decimal|entier") {
+                    new ASObjet.Fonction.Parametre(new Type("liste"), "lst", null)
+            }, new Type("nombre")) {
                 @Override
                 public ASObjet<?> executer() {
                     Liste liste = (Liste) this.getParamsValeursDict().get("lst");
@@ -177,8 +178,8 @@ public class ModuleListeUtils extends ASModule {
             },
 
             new ASObjet.Fonction("min", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre("liste", "lst", null)
-            }, "decimal|entier") {
+                    new ASObjet.Fonction.Parametre(new Type("liste"), "lst", null)
+            }, new Type("nombre")) {
                 @Override
                 public ASObjet<?> executer() {
                     Liste liste = (Liste) this.getParamsValeursDict().get("lst");
@@ -194,9 +195,9 @@ public class ModuleListeUtils extends ASModule {
              * Agit comme un addAll
              */
             new ASObjet.Fonction("unir", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre("liste", "lst1", null),
-                    new ASObjet.Fonction.Parametre("liste", "lst2", null)
-            }, "decimal|entier") {
+                    new ASObjet.Fonction.Parametre(new Type("liste"), "lst1", null),
+                    new ASObjet.Fonction.Parametre(new Type("liste"), "lst2", null)
+            }, new Type("liste")) {
                 @Override
                 public ASObjet<?> executer() {
                     Liste liste1 = (Liste) this.getParamsValeursDict().get("lst1");
@@ -217,10 +218,12 @@ public class ModuleListeUtils extends ASModule {
              * 		@return -> si "choix" est de type liste: le nombre d'element dans la liste
              * 				-> si "choix" est de type texte: le nombre de caractere dans le texte
              */
-            new ASObjet.Fonction("tailleDe", new ASObjet.Fonction.Parametre[]{new ASObjet.Fonction.Parametre("liste|texte", "objet", null)}, "entier") {
+            new ASObjet.Fonction("tailleDe", new ASObjet.Fonction.Parametre[]{
+                    new ASObjet.Fonction.Parametre(new Type("iterable"), "iter", null)
+            }, new Type("entier")) {
                 @Override
                 public ASObjet<?> executer() {
-                    Object val = this.getParamsValeursDict().get("objet").getValue();
+                    Object val = this.getParamsValeursDict().get("iter").getValue();
                     return new Entier(val instanceof String ? val.toString().length() : ((ArrayList<?>) val).size());
                 }
             });

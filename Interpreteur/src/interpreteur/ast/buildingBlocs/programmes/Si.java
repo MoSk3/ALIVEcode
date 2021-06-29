@@ -1,6 +1,5 @@
 package interpreteur.ast.buildingBlocs.programmes;
 
-import interpreteur.as.ASObjet;
 import interpreteur.ast.buildingBlocs.Expression;
 import interpreteur.ast.buildingBlocs.Programme;
 import interpreteur.executeur.Coordonnee;
@@ -19,8 +18,7 @@ public class Si extends Programme {
 
     @Override
     public NullType execute() {
-        ASObjet.Booleen result = (ASObjet.Booleen) test.eval();
-        if (result.getValue()) {
+        if (test.eval().boolValue()) {
             Executeur.obtenirCoordRunTime().nouveauBloc("si");
         } else if (Executeur.leBlocExiste("sinon")) {
             Executeur.obtenirCoordRunTime().nouveauBloc("sinon");

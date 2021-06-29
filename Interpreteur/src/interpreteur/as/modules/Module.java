@@ -1,6 +1,6 @@
 package interpreteur.as.modules;
 
-import interpreteur.as.ASObjet.*;
+import interpreteur.as.Objets.ASObjet.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;

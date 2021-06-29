@@ -1,9 +1,10 @@
 package interpreteur.as.modules;
 
 
-import interpreteur.as.ASErreur;
-import interpreteur.as.ASObjet;
-import interpreteur.as.ASObjet.*;
+import interpreteur.as.erreurs.ASErreur;
+import interpreteur.as.Objets.ASObjet;
+import interpreteur.as.Objets.ASObjet.*;
+import interpreteur.ast.buildingBlocs.expressions.Type;
 import interpreteur.data_manager.Data;
 import interpreteur.data_manager.DataVoiture;
 import org.json.JSONObject;
@@ -62,7 +63,7 @@ public class ASModule {
     }
 
     /**
-     * methode o� sont definies tous les modules de base du langage
+     * methode où sont definies tous les modules de base du langage
      */
     protected static void chargerModules() {
 
@@ -71,27 +72,28 @@ public class ASModule {
         fonctionBuiltins.addAll(ModuleListeUtils.fonctions);
         fonctionBuiltins.addAll(ModuleNombreUtils.fonctions);
 
-        List<Constante> constantesBuiltins = new ArrayList<>(ModuleBuiltins.constantes);
-        constantesBuiltins.addAll(ModuleTexteUtils.constantes);
-        constantesBuiltins.addAll(ModuleListeUtils.constantes);
-        constantesBuiltins.addAll(ModuleNombreUtils.constantes);
+        List<Variable> variablesBuiltins = new ArrayList<>(ModuleBuiltins.variables);
+        variablesBuiltins.addAll(ModuleTexteUtils.constantes);
+        variablesBuiltins.addAll(ModuleListeUtils.constantes);
+        variablesBuiltins.addAll(ModuleNombreUtils.constantes);
 
         ajouterModule("builtins",
                 fonctionBuiltins.toArray(Fonction[]::new),
-                constantesBuiltins.toArray(Constante[]::new)
+                variablesBuiltins.toArray(Variable[]::new)
         );
 
-
         ModuleMath.charger();
+
+        ModuleAst.charger();
 
         ajouterModule("Iot", new Fonction[]{
                 new Fonction(
                         "envoyer",
                         new Fonction.Parametre[]{
-                                new Fonction.Parametre("entier", "id", null),
-                                new Fonction.Parametre("liste", "params", new Liste()),
+                                new Fonction.Parametre(new Type("entier"), "id", null),
+                                new Fonction.Parametre(new Type("liste"), "params", new Liste()),
                         },
-                        "nul"
+                        new Type("nulType")
                 ) {
                     @Override
                     public ASObjet<?> executer() {
@@ -124,33 +126,33 @@ public class ASModule {
 		 */
         ajouterModule("Voiture", new Fonction[]{
 
-                new Fonction("x", "decimal") {
+                new Fonction("x", new Type("decimal")) {
                     @Override
                     public ASObjet<?> executer() {
                         return new Decimal(((Number) getDataVoiture.apply("x")).doubleValue());
                     }
                 },
 
-                new Fonction("y", "decimal") {
+                new Fonction("y",  new Type("decimal")) {
                     @Override
                     public ASObjet<?> executer() {
                         return new Decimal(((Number) getDataVoiture.apply("y")).doubleValue());
                     }
                 },
 
-                new Fonction("getDistAvant", "decimal") {
+                new Fonction("getDistAvant",  new Type("decimal")) {
                     @Override
                     public ASObjet<?> executer() {
                         return new Decimal(((Number) getDataVoiture.apply("dA")).doubleValue());
                     }
                 },
-                new Fonction("getDistGauche", "decimal") {
+                new Fonction("getDistGauche",  new Type("decimal")) {
                     @Override
                     public ASObjet<?> executer() {
                         return new Decimal(((Number) getDataVoiture.apply("dG")).doubleValue());
                     }
                 },
-                new Fonction("getDistDroite", "decimal") {
+                new Fonction("getDistDroite",  new Type("decimal")) {
                     @Override
                     public ASObjet<?> executer() {
                         return new Decimal(((Number) getDataVoiture.apply("dD")).doubleValue());
@@ -158,9 +160,9 @@ public class ASModule {
                 },
 
                 new Fonction("rouler", new Fonction.Parametre[]{
-                        new Fonction.Parametre("entier", "vitesseGauche", null),
-                        new Fonction.Parametre("entier", "vitesseDroite", null)
-                }, "nul") {
+                        new Fonction.Parametre(new Type("entier"), "vitesseGauche", null),
+                        new Fonction.Parametre(new Type("entier"), "vitesseDroite", null)
+                },  new Type("nulType")) {
                     @Override
                     public ASObjet<?> executer() {
                         throw new ASErreur.StopSetInfo(new Data(Data.Id.ROULER)
@@ -170,14 +172,15 @@ public class ASModule {
                 }
 
         }, new Variable[]{
-                new Variable("vitesse", new Entier(10), false)
+                new Variable("vitesse", new Entier(10), new Type("tout"))
                         .setGetter((var) -> new Decimal(((Number) getDataVoiture.apply("speed")).doubleValue()))
                         .setSetter((valeur) -> {
                             throw new ASErreur.StopSetInfo(new Data(Data.Id.SET_CAR_SPEED).addParam(valeur));
                         }
                 ),
-                new Constante("distAvant", new Entier(10))
+                new Variable("distAvant", new Entier(10), new Type("tout"))
                         .setGetter((var) -> new Decimal(((Number) getDataVoiture.apply("dA")).doubleValue()))
+                        .setReadOnly()
         });
 
         /*
@@ -185,8 +188,8 @@ public class ASModule {
          */
         ajouterModule("IA", new Fonction[]{
                 new Fonction("moyenne", new Fonction.Parametre[]{
-                        new Fonction.Parametre("liste", "valeurs", null)
-                }, "decimal") {
+                        new Fonction.Parametre(new Type("liste"), "valeurs", null)
+                },  new Type("decimal")) {
                     @Override
                     public ASObjet<?> executer() {
                         Liste liste = (Liste) this.getValeurParam("valeurs");
@@ -205,6 +208,11 @@ public class ASModule {
     public static void utiliserModule(String nomModule) {
         if (nomModule.equals("builtins")) {
             new ASErreur.AlerteUtiliserBuiltins("Il est inutile d'utiliser builtins, puisqu'il est utilise par defaut");
+            return;
+        }
+
+        // module vide servant à charger les fonctionnalitées expérimentales
+        if (nomModule.equals("experimental")) {
             return;
         }
         Module module = getModule(nomModule);
@@ -232,7 +240,7 @@ public class ASModule {
         if (fctEtConstPasDansModule.size() > 0)
             throw new ASErreur.ErreurModule("Le module '" + nomModule + "' ne contient pas les fonctions ou les constantes: "
                     + fctEtConstPasDansModule.toString()
-                    .replaceAll("\\[|\\]", ""));
+                    .replaceAll("\\[|]", ""));
 
         module.utiliser(nomsFctEtConstDemandees);
     }

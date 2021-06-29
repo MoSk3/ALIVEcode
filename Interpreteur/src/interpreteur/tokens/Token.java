@@ -5,7 +5,7 @@ package interpreteur.tokens;
  * @author Mathis Laroche
  */
 
-import interpreteur.generateurs.lexer.regle.Regle;
+import interpreteur.generateurs.lexer.Regle;
 
 /**
  * 

@@ -1,7 +1,6 @@
 package interpreteur.ast.buildingBlocs.programmes;
 
-import interpreteur.as.ASErreur;
-import interpreteur.as.ASObjet;
+import interpreteur.as.Objets.ASObjet;
 import interpreteur.ast.buildingBlocs.Programme;
 import interpreteur.ast.buildingBlocs.expressions.Type;
 import interpreteur.ast.buildingBlocs.expressions.Var;
@@ -22,28 +21,32 @@ public class CreerSetter extends Programme {
         this.var = var;
         this.nomArg = nomArg;
         this.type = type;
+        this.addSetter();
     }
 
-    @Override
-    public Object execute() {
+    public Var getVar() {
+        return var;
+    }
+
+    public void addSetter() {
         ASObjet.Variable v = ASObjet.VariableManager.obtenirVariable(this.var.getNom());
 
         if (v == null) {
-            v = new ASObjet.Variable(this.var.getNom(), null,false);
-            ASObjet.VariableManager.ajouterVariable(v);
-        }
-
-        if (ASObjet.VariableManager.estConstante(v)){
-            throw new ASErreur.ErreurAssignement("Il est impossible de d\u00E9finir un setter pour une constante");
+            Assigner.addWaitingSetter(this);
+            return;
         }
 
         v.setSetter((valeur) -> {
             ASObjet.Fonction set = new ASObjet.Fonction(this.var.getNom(), new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(this.type == null ? null : this.type.getNom(), this.nomArg.getNom(), null)
-            }, null);
+                    new ASObjet.Fonction.Parametre(this.type, this.nomArg.getNom(), null)
+            }, this.type);
             set.setScopeName("set_");
             return set.setParamPuisExecute(new ArrayList<>(Collections.singletonList(valeur)));
         });
+    }
+
+    @Override
+    public Object execute() {
         return null;
     }
 

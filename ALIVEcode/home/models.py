@@ -2,9 +2,9 @@ from django.db import models
 
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import UserManager
-from django.contrib.contenttypes.models import ContentType
 
-import playground.models
+from django.conf import settings
+User = settings.AUTH_USER_MODEL
 
 
 class Achievement(models.Model):
@@ -14,7 +14,7 @@ class Achievement(models.Model):
         return self.name
         
 class Student(models.Model):
-    user = models.OneToOneField('home.user', on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     courses = models.ManyToManyField("playground.course")
 
     name = models.CharField(max_length=20)
@@ -38,7 +38,7 @@ class Student(models.Model):
         return f"{self.name}, {self.user}"
 
 class Professor(models.Model):
-    user = models.OneToOneField('home.user', on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     first_name = models.CharField(max_length=20)
     last_name  = models.CharField(max_length=25)

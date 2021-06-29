@@ -1,10 +1,9 @@
 package interpreteur.ast.buildingBlocs.expressions;
 
-import interpreteur.as.ASErreur;
-import interpreteur.as.ASObjet;
+import interpreteur.as.erreurs.ASErreur;
+import interpreteur.as.Objets.ASObjet;
 import interpreteur.ast.buildingBlocs.Expression;
 
-import java.util.ArrayList;
 import java.util.function.BiFunction;
 
 public class BinOp implements Expression<ASObjet<?>> {
@@ -52,7 +51,7 @@ public class BinOp implements Expression<ASObjet<?>> {
 
             /* concat */
             if (gauche instanceof ASObjet.Texte || droite instanceof ASObjet.Texte) {
-                return new ASObjet.Texte(String.valueOf(gauche.getValue()) + droite.getValue());
+                return new ASObjet.Texte(gauche.toString() + droite.toString());
             }
 
             /* add */

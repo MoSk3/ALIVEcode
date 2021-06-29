@@ -1,7 +1,9 @@
 package interpreteur.as.modules;
 
-import interpreteur.as.ASErreur;
-import interpreteur.as.ASObjet;
+import interpreteur.as.Objets.ASObjet;
+import interpreteur.ast.buildingBlocs.expressions.Type;
+import interpreteur.data_manager.Data;
+import interpreteur.executeur.Executeur;
 
 import java.util.*;
 
@@ -10,6 +12,18 @@ public class ModuleBuiltins {
      * Module builtins: contient toutes les fonctions utiliser par defaut dans le langage
      */
     public static List<ASObjet.Fonction> fonctions = Arrays.asList(
+
+            new ASObjet.Fonction("afficher", new ASObjet.Fonction.Parametre[]{
+                    new ASObjet.Fonction.Parametre(new Type("tout"), "element", new ASObjet.Texte(""))
+            }, new Type("nulType")) {
+                @Override
+                public ASObjet<?> executer() {
+                    ASObjet<?> element = this.getValeurParam("element");
+                    Executeur.addData(new Data(Data.Id.AFFICHER).addParam(element.toString()));
+                    return new Nul();
+                }
+            },
+
             /*
              * aleatoire:
              * 		@param choix:
@@ -21,7 +35,9 @@ public class ModuleBuiltins {
              * 		@return -> si "choix" est de type liste: un element aleatoirement choisi dans la liste
              * 				-> si "choix" est de type texte: une lettre aleatoirement choisi dans le texte
              */
-            new ASObjet.Fonction("aleatoire", new ASObjet.Fonction.Parametre[]{new ASObjet.Fonction.Parametre("liste|texte", "choix", null)}, null) {
+            new ASObjet.Fonction("aleatoire", new ASObjet.Fonction.Parametre[]{
+                    new ASObjet.Fonction.Parametre(new Type("iterable"), "choix", null)
+            }, new Type("tout")) {
                 @Override
                 public ASObjet<?> executer() {
                     if (this.getParamsValeursDict().get("choix") instanceof Liste) {
@@ -45,21 +61,44 @@ public class ModuleBuiltins {
              *
              * 		@return le nom du type de l'objet passe en parametre dans un "texte"
              */
-            new ASObjet.Fonction("typeDe", new ASObjet.Fonction.Parametre[]{new ASObjet.Fonction.Parametre(null, "objet", null)}, "texte") {
+            new ASObjet.Fonction("typeDe", new ASObjet.Fonction.Parametre[]{
+                    new ASObjet.Fonction.Parametre(new Type("tout"), "element", null)
+            }, new Type("texte")) {
                 @Override
                 public ASObjet<?> executer() {
-                    return new Texte(this.getParamsValeursDict().get("objet").obtenirNomType());
+                    return new Texte(this.getParamsValeursDict().get("element").obtenirNomType());
+                }
+            },
+
+            new ASObjet.Fonction("booleen", new ASObjet.Fonction.Parametre[]{
+                    new ASObjet.Fonction.Parametre(new Type("tout"), "element", null)
+            }, new Type("booleen")) {
+                @Override
+                public ASObjet<?> executer() {
+                    return new Booleen(this.getParamsValeursDict().get("element").boolValue());
                 }
             },
 
 
-            new ASObjet.Fonction("info", new ASObjet.Fonction.Parametre[]{new ASObjet.Fonction.Parametre(null, "objet", null)}, null) {
+            /*
+             * affiche le commentaire entre les symboles
+             * (-:
+             *  -
+             * :-)
+             * dans la fonction passée en paramètre
+             *
+             */
+            new ASObjet.Fonction("info", new ASObjet.Fonction.Parametre[]{
+                    new ASObjet.Fonction.Parametre(new Type("tout"), "element", null)
+            }, new Type("tout")) {
                 @Override
                 public ASObjet<?> executer() {
-                    return this.getParamsValeursDict().get("objet");
+                    return this.getParamsValeursDict().get("element");
                 }
             }
     );
-    public static List<ASObjet.Constante> constantes = Collections.emptyList();
+    public static List<ASObjet.Variable> variables = Collections.singletonList(
+            new ASObjet.Constante("finl", new ASObjet.Texte("\n"))
+    );
 
 }

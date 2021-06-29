@@ -1,0 +1,20 @@
+{
+	"onMultiLineComment": "format",
+	"onDocComment": "format",
+	"completeSymbol": "smart",
+	"completeBloc": "smart",
+
+	"symbolPairs": [
+		["\"", "\""],
+		["'", "'"],
+		["(", ")"],
+		["{", "}"],
+		["[", "]"]
+	],
+
+    "blocPairs": [
+        ["si", "fin si"],
+        ["fonction", "fin fonction"],
+        []
+    ]
+}

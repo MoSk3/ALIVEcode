@@ -1,4 +1,4 @@
-package interpreteur.as;
+package interpreteur.as.erreurs;
 
 import interpreteur.data_manager.Data;
 import interpreteur.executeur.Executeur;
@@ -29,7 +29,12 @@ public interface ASErreur {
 
         public void afficher() {
             int ligne = Executeur.getLineFromCoord(Executeur.obtenirCoordRunTime()) + 1;
-            Executeur.ecrire(this.nomErreur + " (à la ligne " + ligne
+            Executeur.ecrire(this.nomErreur + " (Ã  la ligne " + ligne
+                    + ") -> " + super.getMessage());
+        }
+
+        public void afficher(int ligne) {
+            Executeur.ecrire(this.nomErreur + " (Ã  la ligne " + ligne
                     + ") -> " + super.getMessage());
         }
 
@@ -79,17 +84,17 @@ public interface ASErreur {
     class ErreurFermeture extends ErreurAliveScript {
 
         public ErreurFermeture(String blocActuel) {
-            super("le bloc: '" + blocActuel + "' n'a pas été fermé.", "ErreurFermeture");
+            super("le bloc: '" + blocActuel + "' n'a pas Ã©tÃ© fermÃ©.", "ErreurFermeture");
         }
 
         public ErreurFermeture(String blocActuel, String mauvaiseFermeture) {
-            super("le bloc: '" + blocActuel + "' a été fermé avec '"
-                    + mauvaiseFermeture + "' alors qu'il ne peut pas être fermé.", "ErreurFermeture");
+            super("le bloc: '" + blocActuel + "' a Ã©tÃ© fermÃ© avec '"
+                    + mauvaiseFermeture + "' alors qu'il ne peut pas Ãªtre fermÃ©.", "ErreurFermeture");
         }
 
         public ErreurFermeture(String blocActuel, String mauvaiseFermeture, String bonneFermeture) {
-            super("le bloc: '" + blocActuel + "' a été fermé avec '"
-                    + mauvaiseFermeture + "' alors qu'il doit être fermé avec '" + bonneFermeture + "'.", "ErreurFermeture");
+            super("le bloc: '" + blocActuel + "' a Ã©tÃ© fermÃ© avec '"
+                    + mauvaiseFermeture + "' alors qu'il doit Ãªtre fermÃ© avec '" + bonneFermeture + "'.", "ErreurFermeture");
         }
     }
 
@@ -173,7 +178,7 @@ public interface ASErreur {
     }
 
 
-    //-------------------------  Erreur de mathématiques  -----------------------------//
+    //-------------------------  Erreur de mathÃ©matiques  -----------------------------//
 
     class ErreurArithmetique extends ErreurAliveScript {
         public ErreurArithmetique(String message) {
@@ -212,7 +217,7 @@ public interface ASErreur {
 
         public void afficher() {
             int ligne = Executeur.getLineFromCoord(Executeur.obtenirCoordRunTime()) + 1;
-            Executeur.ecrire("Durant l'execution à la ligne " + ligne
+            Executeur.ecrire("Durant l'execution Ã  la ligne " + ligne
                     + " -> " + this.getClass().getSimpleName() + " : " + this.message);
         }
     }
