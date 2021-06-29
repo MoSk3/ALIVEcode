@@ -1,7 +1,7 @@
-from channels.db import database_sync_to_async
-from home.models import User
-from django.contrib.auth.models import AnonymousUser
 from channels.auth import AuthMiddlewareStack
+
+from django.apps import apps
+User = apps.get_model('auth', 'User')
 
 """
 @database_sync_to_async
