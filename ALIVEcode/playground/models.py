@@ -1,102 +1,10 @@
 from django.db import models
-from asgiref.sync import sync_to_async, async_to_sync
-import uuid, json
+import uuid
+
+from django.conf import settings
+User = settings.AUTH_USER_MODEL
 
 # Modèle/SQLtable d'un challenge (vive django)
-
-"""
-class Room(models.Model):
-    name = models.CharField(max_length=150, unique=True)
-
-    is_active = models.BooleanField(default=True)
-    custom_users = models.ManyToManyField('playground.CustomUser', blank=True, related_name='rooms')
-
-    @classmethod
-    @sync_to_async
-    def get_or_create(cls, name):
-        room, created = cls.objects.get_or_create(name=name)
-        return (room, created)
-
-    @classmethod
-    @sync_to_async
-    def get_room(cls, name):
-        room = cls.objects.filter(name=name)
-        if room.exists():
-            return room
-
-    @sync_to_async
-    def add_user(self, custom_user):
-        self.custom_users.add(custom_user)
-
-    @sync_to_async
-    def create_and_add_user(self, **kwargs):
-        custom_user = CustomUser.objects.create(**kwargs)
-        async_to_sync(self.add_user)(custom_user)
-        return custom_user
-
-    @sync_to_async
-    def remove_user(self, custom_user):
-        self.custom_users.remove(custom_user)
-
-    @sync_to_async
-    def filter_users(self, **kwargs):
-        return self.custom_users.filter(**kwargs)
-
-    @sync_to_async
-    def activate(self):
-        self.activate = True
-        self.save()
-    
-    @sync_to_async
-    def deactivate(self):
-        self.activate = False
-        self.save()
-    """
-"""
-    @sync_to_async
-    def get_user(self, name):
-        custom_users = self.custom_users.filter(name = name)
-        if custom_users.exists():
-            return custom_users.first()
-        return None
-    """
-"""
-
-    @sync_to_async
-    def get_user_count(self, label: str = None):
-        if label == None:
-            return self.custom_users.count()
-        return self.custom_users.filter(label = label).count()
-        
-
-class CustomUser(models.Model):
-    user  = models.ForeignKey('home.user', on_delete=models.CASCADE)
-    
-    label = models.CharField(default="", max_length=100)
-    data  = models.TextField(default='{}', max_length=1000000)
-
-    def get_field(self, field):
-        parsed_data = self.get_parsed()
-        if parsed_data is None:
-            return None
-        return parsed_data.get(field)
-
-    def get_parsed(self):
-        try:
-            return json.loads(self.data)
-        except json.JSONDecodeError:
-            return None
-    
-    @sync_to_async
-    def dump(self, data):
-        try:
-            self.data = json.dumps(data)
-            self.save()
-            return True
-        except:
-            return False
-        
-"""
 
 class Challenge(models.Model):
     ACCESS = [
@@ -110,7 +18,7 @@ class Challenge(models.Model):
     """
     JE SAIS, PAS DE NULL, mais j'ai paniqué, on l'arrangera au prochain reset de la db
     """
-    creator = models.ForeignKey("home.user", on_delete=models.CASCADE, null=True)
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=30,default='(Sans nom)')
     desc = models.CharField(max_length=100,blank=True)
     hint = models.CharField(max_length=50,blank=True)
@@ -135,7 +43,7 @@ class ALIVEChallenge(models.Model):
 
 class ChallengeProgression(models.Model):
     challenge = models.ForeignKey(Challenge, on_delete=models.CASCADE)
-    user = models.ForeignKey("home.user", on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     state = models.CharField(max_length=20, choices=[
         ("ongoing", "🟡"),
         ("completed", "🟢")
@@ -184,7 +92,7 @@ class Level(models.Model):
         ("A", "Any")     # can be cleared with either the code or the block interface
     ]
 
-    creator = models.ForeignKey("home.user", on_delete=models.DO_NOTHING)
+    creator = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     creation_date = models.DateField()
     access = models.CharField(max_length=2, choices=ACCESS)
 
@@ -300,7 +208,7 @@ class Activity(models.Model):
 class ActivityProgression(models.Model):
     activity = models.ForeignKey(Activity, on_delete=models.CASCADE)
     challenge_progressions = models.ManyToManyField(ChallengeProgression, blank=True)
-    user = models.ForeignKey("home.user", on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     state = models.CharField(max_length=20, choices=[
         ("locked", "🔒"),
         ("unlocked", "🔓"),
@@ -379,7 +287,7 @@ class Reponse(models.Model):
 
 class Quiz(models.Model):
     id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, primary_key=True)
-    creator = models.ForeignKey("home.user", on_delete=models.DO_NOTHING)
+    creator = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     name = models.CharField(max_length=50)
     questions = models.ManyToManyField("playground.question")
 
