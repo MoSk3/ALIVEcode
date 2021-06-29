@@ -1,6 +1,7 @@
 package interpreteur.ast.buildingBlocs.expressions;
 
 import interpreteur.as.Objets.ASObjet;
+import interpreteur.as.erreurs.ASErreur;
 import interpreteur.ast.buildingBlocs.Expression;
 
 import java.util.function.BiFunction;
@@ -51,6 +52,9 @@ public class BinComp implements Expression<ASObjet.Booleen> {
          * Gere x > y
          */
         PLUS_GRAND((gauche, droite) -> {
+            if (!(gauche.getValue() instanceof Number || droite.getValue() instanceof Number)) {
+                throw new ASErreur.ErreurComparaison("Il est impossible de comparer autre chose que des nombres");
+            }
             return new ASObjet.Booleen(((Number) gauche.getValue()).doubleValue() > ((Number) droite.getValue()).doubleValue());
         }),
 
@@ -58,6 +62,9 @@ public class BinComp implements Expression<ASObjet.Booleen> {
          * Gere x < y
          */
         PLUS_PETIT((gauche, droite) -> {
+            if (!(gauche.getValue() instanceof Number || droite.getValue() instanceof Number)) {
+                throw new ASErreur.ErreurComparaison("Il est impossible de comparer autre chose que des nombres");
+            }
             return new ASObjet.Booleen(((Number) gauche.getValue()).doubleValue() < ((Number) droite.getValue()).doubleValue());
         }),
 
@@ -65,6 +72,9 @@ public class BinComp implements Expression<ASObjet.Booleen> {
          * Gere x >= y
          */
         PLUS_GRAND_EGAL((gauche, droite) -> {
+            if (!(gauche.getValue() instanceof Number || droite.getValue() instanceof Number)) {
+                throw new ASErreur.ErreurComparaison("Il est impossible de comparer autre chose que des nombres");
+            }
             return new ASObjet.Booleen(((Number) gauche.getValue()).doubleValue() >= ((Number) droite.getValue()).doubleValue());
         }),
 
@@ -72,14 +82,23 @@ public class BinComp implements Expression<ASObjet.Booleen> {
          * Gere x <= y
          */
         PLUS_PETIT_EGAL((gauche, droite) -> {
+            if (!(gauche.getValue() instanceof Number || droite.getValue() instanceof Number)) {
+                throw new ASErreur.ErreurComparaison("Il est impossible de comparer autre chose que des nombres");
+            }
             return new ASObjet.Booleen(((Number) gauche.getValue()).doubleValue() <= ((Number) droite.getValue()).doubleValue());
         }),
 
         DANS((gauche, droite) -> {
+            if (!(droite.getValue() instanceof ASObjet.Iterable)) {
+                throw new ASErreur.ErreurComparaison("L'op\u00E9rateur 'dans' ne s'applique que sur les \u00E9l\u00E9ments de type 'iterable'");
+            }
             return new ASObjet.Booleen(((ASObjet.Iterable) droite).contient(gauche));
         }),
 
         PAS_DANS((gauche, droite) -> {
+            if (!(droite.getValue() instanceof ASObjet.Iterable)) {
+                throw new ASErreur.ErreurComparaison("L'op\u00E9rateur 'dans' ne s'applique que sur les \u00E9l\u00E9ments de type 'iterable'");
+            }
             return new ASObjet.Booleen(!((ASObjet.Iterable) droite).contient(gauche));
         });
 
