@@ -150,7 +150,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = 'ALIVE/static_grab'
+STATIC_ROOT = '/var/www/ALIVEcode/static'
 
 STATICFILES_DIRS = [
     'ALIVE/static',
