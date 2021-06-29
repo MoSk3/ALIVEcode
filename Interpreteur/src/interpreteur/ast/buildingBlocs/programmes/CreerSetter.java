@@ -1,5 +1,6 @@
 package interpreteur.ast.buildingBlocs.programmes;
 
+import interpreteur.as.Objets.ASFonction;
 import interpreteur.as.Objets.ASObjet;
 import interpreteur.as.Objets.Scope;
 import interpreteur.ast.buildingBlocs.Programme;
@@ -17,12 +18,14 @@ public class CreerSetter extends Programme {
     private final Var var;
     private final Var nomArg;
     private final Type type;
+    private final Scope scope;
 
     public CreerSetter(Var var, Var nomArg, Type type) {
         this.var = var;
         this.nomArg = nomArg;
         this.type = type;
         this.addSetter();
+        this.scope = Scope.makeNewCurrentScope();
     }
 
     public Var getVar() {
@@ -38,11 +41,16 @@ public class CreerSetter extends Programme {
         }
 
         v.setSetter((valeur) -> {
-            ASObjet.Fonction set = new ASObjet.Fonction(this.var.getNom(), new ASObjet.Fonction.Parametre[]{
+            Scope scope = new Scope(this.scope);
+            scope.setParent(Scope.getCurrentScopeInstance());
+
+            ASFonction set = new ASFonction(this.var.getNom(), new ASObjet.Fonction.Parametre[]{
                     new ASObjet.Fonction.Parametre(this.type, this.nomArg.getNom(), null)
             }, this.type);
-            set.setScopeName("set_");
-            return set.setParamPuisExecute(new ArrayList<>(Collections.singletonList(valeur)));
+            set.setScope(this.scope);
+            set.setCoordBlocName("set_");
+
+            return set.makeInstance().executer(new ArrayList<>(Collections.singletonList(valeur)));
         });
     }
 

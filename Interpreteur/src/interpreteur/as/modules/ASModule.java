@@ -173,13 +173,13 @@ public class ASModule {
 
         }, new Variable[]{
                 new Variable("vitesse", new Entier(10), new Type("tout"))
-                        .setGetter((var) -> new Decimal(((Number) getDataVoiture.apply("speed")).doubleValue()))
+                        .setGetter(() -> new Decimal(((Number) getDataVoiture.apply("speed")).doubleValue()))
                         .setSetter((valeur) -> {
                             throw new ASErreur.StopSetInfo(new Data(Data.Id.SET_CAR_SPEED).addParam(valeur));
                         }
                 ),
                 new Variable("distAvant", new Entier(10), new Type("tout"))
-                        .setGetter((var) -> new Decimal(((Number) getDataVoiture.apply("dA")).doubleValue()))
+                        .setGetter(() -> new Decimal(((Number) getDataVoiture.apply("dA")).doubleValue()))
                         .setReadOnly()
         });
 

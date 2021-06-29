@@ -1,6 +1,8 @@
 package interpreteur.as.modules;
 
 import interpreteur.as.Objets.ASObjet;
+import interpreteur.as.Objets.Scope;
+import interpreteur.as.erreurs.ASErreur;
 import interpreteur.ast.buildingBlocs.expressions.Type;
 import interpreteur.data_manager.Data;
 import interpreteur.executeur.Executeur;
@@ -106,7 +108,22 @@ public class ModuleBuiltins {
                 public ASObjet<?> executer() {
                     return this.getParamsValeursDict().get("element");
                 }
+            },
+
+            new ASObjet.Fonction("getVar", new ASObjet.Fonction.Parametre[]{
+                    new ASObjet.Fonction.Parametre(new Type("texte"), "nomVariable", null)
+            }, new Type("tout")) {
+                @Override
+                public ASObjet<?> executer() {
+                    String nomVar = (String) this.getValeurParam("nomVariable").getValue();
+                    Variable var = Scope.getCurrentScopeInstance().getVariable(nomVar);
+                    if (var == null) {
+                        throw new ASErreur.ErreurVariableInconnue("La variable '" + nomVar + "' n'est pas d\u00E9clar\u00E9e dans ce scope.");
+                    }
+                    return var.getValeurApresGetter();
+                }
             }
+
     );
     public static List<ASObjet.Variable> variables = Collections.singletonList(
             new ASObjet.Constante("finl", new ASObjet.Texte("\n"))

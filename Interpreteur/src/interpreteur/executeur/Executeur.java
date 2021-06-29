@@ -600,10 +600,11 @@ public class Executeur {
 
     public static void main(String[] args) {
         String[] lines = new String[]{
-                "repeter 3",
-                "    var i = 10",
-                "    afficher i",
-                "fin repeter"
+                "fonction facto(n: entier) -> entier",
+                "    retourner n * facto(n - 1) si n <= 0 sinon 1",
+                "fin fonction",
+                "",
+                "afficher facto(5)"
         };
         debug = true;
         System.out.println(compiler(lines, true));

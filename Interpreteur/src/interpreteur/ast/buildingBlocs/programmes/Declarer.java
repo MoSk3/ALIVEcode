@@ -65,12 +65,12 @@ public class Declarer extends Programme {
         CreerGetter getter = waitingGetters.stream().filter(waitingGetter -> waitingGetter.getVar().equals(var)).findFirst().orElse(null);
         CreerSetter setter = waitingSetters.stream().filter(waitingSetter -> waitingSetter.getVar().equals(var)).findFirst().orElse(null);
         if (getter != null) {
-            waitingGetters.remove(getter);
             getter.addGetter();
+            waitingGetters.remove(getter);
         }
         if (setter != null) {
-            waitingSetters.remove(setter);
             setter.addSetter();
+            waitingSetters.remove(setter);
         }
     }
 

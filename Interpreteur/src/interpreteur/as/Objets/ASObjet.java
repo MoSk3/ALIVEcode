@@ -3,6 +3,7 @@ package interpreteur.as.Objets;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import javax.lang.model.type.NullType;
@@ -147,7 +148,7 @@ public interface ASObjet<T> {
         private ASObjet<?> valeur;
         private boolean readOnly = false;
 
-        private Function<ASObjet<?>, ASObjet<?>> getter = null;
+        private Supplier<ASObjet<?>> getter = null;
         private Function<ASObjet<?>, ASObjet<?>> setter = null;
 
 
@@ -197,7 +198,7 @@ public interface ASObjet<T> {
             return this.valeur == null;
         }
 
-        public Variable setGetter(Function<ASObjet<?>, ASObjet<?>> getter) {
+        public Variable setGetter(Supplier<ASObjet<?>> getter) {
             this.getter = getter;
             return this;
         }
@@ -241,7 +242,7 @@ public interface ASObjet<T> {
                 throw new ErreurAssignement("La variable '" + nom + "' est utilis\u00E9e avant d'\u00EAtre d\u00E9clar\u00E9e");
             }
             if (this.getter != null) {
-                return this.getter.apply(this.valeur);
+                return this.getter.get();
             }
             return this.valeur;
         }
@@ -252,7 +253,7 @@ public interface ASObjet<T> {
                 throw new ErreurAssignement("La variable '" + nom + "' est utilis\u00E9e avant d'\u00EAtre d\u00E9clar\u00E9e");
             }
             if (this.getter != null) {
-                return this.getter.apply(this.valeur).getValue();
+                return this.getter.get().getValue();
             }
             return this.valeur.getValue();
         }
@@ -285,7 +286,7 @@ public interface ASObjet<T> {
         }
 
         @Override
-        public Variable setGetter(Function<ASObjet<?>, ASObjet<?>> getter) {
+        public Variable setGetter(Supplier<ASObjet<?>> getter) {
             throw new ErreurAssignement("Les constantes ne peuvent pas avoir de getter");
         }
 
@@ -415,29 +416,27 @@ public interface ASObjet<T> {
          * @throws Error une erreur si un des tests n'est pas passe
          */
         public boolean testParams(ArrayList<?> paramsValeurs) {
-
             if (this.parametres.length == 0 && paramsValeurs.size() == 0) return false;
 
             int nonDefaultParams = (int) Arrays.stream(parametres).filter(param -> param.getValeurParDefaut() == null).count();
 
             if (paramsValeurs.size() < nonDefaultParams || paramsValeurs.size() > this.parametres.length) {
                 if (nonDefaultParams == this.parametres.length) {
-                    throw new ErreurAppelFonction(this.nom, "Le nombre de param\u00E8tres donn\u00E9s est '" + paramsValeurs.size() +
+                    throw new ASErreur.ErreurAppelFonction(this.nom, "Le nombre de param\u00E8tres donn\u00E9s est '" + paramsValeurs.size() +
                             "' alors que la fonction en prend '" + this.parametres.length + "'");
                 } else {
-                    throw new ErreurAppelFonction(this.nom, "Le nombre de param\u00E8tres donn\u00E9s est '" + paramsValeurs.size() +
+                    throw new ASErreur.ErreurAppelFonction(this.nom, "Le nombre de param\u00E8tres donn\u00E9s est '" + paramsValeurs.size() +
                             "' alors que la fonction en prend entre '" + nonDefaultParams + "' et '" + this.parametres.length + "'");
                 }
 
             }
             for (int i = 0; i < paramsValeurs.size(); i++) {
-                Parametre parametre = this.parametres[i];
+                Fonction.Parametre parametre = this.parametres[i];
                 if (parametre.getType().noMatch(((ASObjet<?>) paramsValeurs.get(i)).obtenirNomType())) {
-                    throw new ErreurType("Le param\u00E8tres '" + parametre.getNom() + "' est de type '" + parametre.getType().nom() +
+                    throw new ASErreur.ErreurType("Le param\u00E8tres '" + parametre.getNom() + "' est de type '" + parametre.getType().nom() +
                             "', mais l'argument pass\u00E9 est de type '" + ((ASObjet<?>) paramsValeurs.get(i)).obtenirNomType() + "'.");
                 }
             }
-
             return true;
 
             /*

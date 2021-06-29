@@ -54,7 +54,7 @@ public class Type implements Expression<ASObjet<?>> {
 
         if (o instanceof String) {
             List<String> type = Arrays.asList(((String) o).split("\\|"));
-            return this.getNom() != null && !type.contains("tout") && this.getNomAsList().stream().noneMatch(type::contains);
+            return this.getNom() != null && !type.contains("tout") && !type.contains("nulType") && this.getNomAsList().stream().noneMatch(type::contains);
         } else if (o instanceof Type) {
             List<String> type = ((Type) o).getNomAsList();
             return this.getNom() != null && type != null && this.getNomAsList().stream().noneMatch(type::contains);

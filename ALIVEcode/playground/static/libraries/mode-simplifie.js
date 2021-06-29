@@ -85,6 +85,7 @@ ace.define(
 
 					// nombre (entier + decimal)
 					"\\bbin\\b",
+					"\\bgetVar\\b",
 				],
 				fin_fonctions: [
 					"\\bfin fonction\\b",
@@ -122,6 +123,7 @@ ace.define(
 					"\\bnombre\\b",
 					"\\btout\\b",
 					"\\biterable\\b",
+					"\\brien\\b"
 				],
 				logiques: ["\\bet\\b", "\\bou\\b", "\\bpas\\b"],
 			}

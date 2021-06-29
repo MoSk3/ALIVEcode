@@ -107,6 +107,8 @@ public class ASAst extends AstGenerator {
 
         ajouterProgramme("CONSTANTE expression {assignements} expression~"
                         + "CONSTANTE expression DEUX_POINTS expression {assignements} expression~"
+                        + "VAR expression~"
+                        + "VAR expression DEUX_POINTS expression~"
                         + "VAR expression DEUX_POINTS expression {assignements} expression~"
                         + "VAR expression {assignements} expression~"
                         + "expression DEUX_POINTS expression {assignements} expression~"
@@ -127,7 +129,19 @@ public class ASAst extends AstGenerator {
                         // si le premier mot est "const" ou "var"
                         if (p.get(0) instanceof Token) {
                             boolean estConst = ((Token) p.get(0)).obtenirNom().equals("CONSTANTE");
+                            if (p.size() == 2) {
+                                return new Declarer((Expression<?>) p.get(1), new ValeurConstante(new Nul()), null, false);
+                            }
+                            if (p.size() == 4 && ((Token) p.get(2)).obtenirNom().equals("DEUX_POINTS")) {
+                                // si le type précisisé n'est pas un type
+                                if (!(p.get(3) instanceof Type))
+                                    throw new ErreurType("Dans une d\u00E9claration de " +
+                                            (estConst ? "constante" : "variable") +
+                                            ", les deux points doivent \u00EAtre suivi d'un type valide");
 
+                                type = (Type) p.get(3);
+                                return new Declarer((Expression<?>) p.get(1), new ValeurConstante(new Nul()), type, false);
+                            }
                             // si la précision du type est présente
                             if (p.size() == 6) {
                                 idxValeur = 5;
@@ -866,6 +880,14 @@ public class ASAst extends AstGenerator {
                 }
             }
         });
+
+        ajouterExpression("expression SI expression SINON expression",
+                new Ast<Ternary>() {
+                    @Override
+                    public Ternary apply(List<Object> p) {
+                        return new Ternary((Expression<?>) p.get(2), (Expression<?>) p.get(0), (Expression<?>) p.get(4));
+                    }
+                });
 
 
         ajouterExpression("expression VIRGULE expression~" +
