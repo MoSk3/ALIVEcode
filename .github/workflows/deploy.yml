@@ -1,0 +1,56 @@
+name: Deployment
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: self-hosted
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [3.8]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+      
+    - uses: syphar/restore-virtualenv@v1
+      id: cache-virtualenv
+      with:
+        requirement_files: requirements.txt
+        
+    - run: pip install --upgrade pip
+    - uses: syphar/restore-pip-download-cache@v1
+      if: steps.cache-virtualenv.outputs.cache-hit != 'true'
+
+      # the package installation will only be executed when the
+      # requirements-files have changed.
+      
+    - run: pip install -r requirements.txt
+      if: steps.cache-virtualenv.outputs.cache-hit != 'true'
+      
+    - name: Create .env file
+      uses: SpicyPizza/create-envfile@v1.1
+      with:
+        envkey_DEBUG: ${{ secrets.DEBUG }}
+        envkey_SECRET_KEY: ${{ secrets.SECRET_KEY }}
+        envkey_ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}
+        envkey_REDIS_SERVER: ${{ secrets.REDIS_SERVER }}
+        envkey_REDIS_HOST: ${{ secrets.REDIS_HOST }}
+        envkey_REDIS_PORT: ${{ secrets.REDIS_PORT }}
+        github_workspace: ${{ github.workspace }}
+    - name: Run Tests
+      run: |
+        cd ALIVEcode
+        python manage.py makemigrations
+        python manage.py migrate
+        python manage.py collectstatic --noinput
+        python manage.py test
+    - name: Copying the files into the development workspace
+      run: cp -a -r ./ /var/www/ALIVEcode/
