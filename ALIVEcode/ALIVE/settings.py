@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'channels',
     'playground',
     'home',
-    'mind'
+    'mind',
+    'iot'
 ]
 
 """ This is used for everything that includes hosting online games with groups (example: car racing) """
