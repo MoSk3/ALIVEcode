@@ -48,9 +48,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'channels',
-    'playground',
     'home',
-    'mind'
+    'playground',
+    'mind',
+    'iot'
 ]
 
 """ This is used for everything that includes hosting online games with groups (example: car racing) """

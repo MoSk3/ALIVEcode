@@ -1,7 +1,9 @@
 from django import template
 
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
 from django.apps import apps
-User = apps.get_model('auth', 'User')
 Student = apps.get_model('home', 'Student')
 Professor = apps.get_model('home', 'Professor')
 
