@@ -48,8 +48,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'channels',
-    'playground',
     'home',
+    'playground',
     'mind',
     'iot'
 ]
