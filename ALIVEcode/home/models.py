@@ -3,50 +3,6 @@ from django.db import models
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import UserManager
 
-from django.conf import settings
-UserRef = settings.AUTH_USER_MODEL
-
-
-class Achievement(models.Model):
-    name = models.CharField(max_length=100)
-    
-    def __str__(self):
-        return self.name
-        
-class Student(models.Model):
-    user = models.OneToOneField(UserRef, on_delete=models.CASCADE)
-    courses = models.ManyToManyField("playground.course")
-
-    name = models.CharField(max_length=20)
-
-    scholarity = models.CharField(max_length=2, choices=[
-        ("p1", "1ère année"),
-        ("p2", "2e année"),
-        ("p3", "3e année"),
-        ("p4", "4e année"),
-        ("p5", "5e année"),
-        ("p6", "6e année"),
-        ("s1", "secondaire 1"),
-        ("s2", "secondaire 2"),
-        ("s3", "secondaire 3"),
-        ("s4", "secondaire 4"),
-        ("s5", "secondaire 5"),
-        ("c", "cégep")
-    ])
-
-    def __str__(self):
-        return f"{self.name}, {self.user}"
-
-class Professor(models.Model):
-    user = models.OneToOneField(UserRef, on_delete=models.CASCADE)
-
-    first_name = models.CharField(max_length=20)
-    last_name  = models.CharField(max_length=25)
-
-    def __str__(self):
-        return f"{self.first_name} {self.last_name}, {self.user}"
-
-
 class User(AbstractBaseUser, BaseUserManager):
     email = models.EmailField(unique=True)
 
@@ -55,7 +11,7 @@ class User(AbstractBaseUser, BaseUserManager):
 
     photo = models.ImageField(null=True, blank=True)
     
-    achievements = models.ManyToManyField(Achievement, blank=True)
+    achievements = models.ManyToManyField('home.Achievement', blank=True)
 
     USERNAME_FIELD = 'email'
 
@@ -112,4 +68,44 @@ class User(AbstractBaseUser, BaseUserManager):
 
     def __str__(self):
         return f"{self.email}"
+
+
+class Achievement(models.Model):
+    name = models.CharField(max_length=100)
+    
+    def __str__(self):
+        return self.name
+        
+class Student(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    courses = models.ManyToManyField("playground.course")
+
+    name = models.CharField(max_length=20)
+
+    scholarity = models.CharField(max_length=2, choices=[
+        ("p1", "1ère année"),
+        ("p2", "2e année"),
+        ("p3", "3e année"),
+        ("p4", "4e année"),
+        ("p5", "5e année"),
+        ("p6", "6e année"),
+        ("s1", "secondaire 1"),
+        ("s2", "secondaire 2"),
+        ("s3", "secondaire 3"),
+        ("s4", "secondaire 4"),
+        ("s5", "secondaire 5"),
+        ("c", "cégep")
+    ])
+
+    def __str__(self):
+        return f"{self.name}, {self.user}"
+
+class Professor(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    first_name = models.CharField(max_length=20)
+    last_name  = models.CharField(max_length=25)
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}, {self.user}"
 

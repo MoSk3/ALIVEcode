@@ -25,10 +25,6 @@ loginPageUrl = '/login'
 def index(request: HttpRequest):
     return render(request, 'home/index.html')
 
-
-# ehtkrT
-
-
 def register(request: HttpRequest):
     if request.user.is_authenticated:
         return redirect('home:dashboard')

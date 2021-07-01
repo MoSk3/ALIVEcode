@@ -10,8 +10,8 @@ from asgiref.sync import sync_to_async, async_to_sync
 from datetime import date
 from random import randrange
 
-from django.apps import apps
-User = apps.get_model('auth', 'User')
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 # Connection du casque au serveur (par websocket)
 penseeClients = {}   
