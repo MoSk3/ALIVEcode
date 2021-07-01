@@ -38,6 +38,10 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost').split()
 
+ADMINS = [tuple(entry.split(':')) for entry in config('ADMINS', default='').split()]
+
+print(ADMINS)
+
 # Application definition
 
 INSTALLED_APPS = [
