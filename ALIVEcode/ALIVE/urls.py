@@ -29,4 +29,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('playground/', include(('playground.urls', 'playground'), namespace='playground')),
     path('mind/', include(('mind.urls', 'mind'), namespace='mind')),
+    path('iot/', include(('iot.urls', 'iot'), namespace='iot')),
 ]
