@@ -25,7 +25,9 @@ jobs:
       with:
         requirement_files: requirements.txt
         
-    - run: pip install --upgrade pip
+    - run: |
+        mkdir /var/www/ALIVEcode/AAAAAA
+        pip install --upgrade pip
     - uses: syphar/restore-pip-download-cache@v1
       if: steps.cache-virtualenv.outputs.cache-hit != 'true'
 
