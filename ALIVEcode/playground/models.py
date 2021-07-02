@@ -1,30 +1,31 @@
-from django.db import models
 import uuid
+from django.core import validators
+from django.db import models
+from django.utils.translation import gettext_lazy as _
+from django.core.validators import RegexValidator
 
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
-# Modèle/SQLtable d'un challenge (vive django)
+
+class ACCESS(models.TextChoices):
+    PUBLIC     = 'PU', _('Public')      # can be found via a search
+    UNLISTED   = 'UN', _('Unlisted')    # must be shared via a url
+    RESTRICTED = 'RE', _('Restricted')  # limited
+    PRIVATE    = 'PR', _('Private')     # only accessible to the creator
+
 
 class Challenge(models.Model):
-    ACCESS = [
-        ("PU", "Public"),    # can be found via a search
-        ("UN", "Unlisted"),  # must be shared via a url
-        ("RE", "Restrein"),  # limited to a Coursee
-        ("PR", "Private"),   # only accessible to the creator
-    ]
     id = models.UUIDField(default=uuid.uuid4, editable=False,
                           unique=True, primary_key=True)
-    """
-    JE SAIS, PAS DE NULL, mais j'ai paniqué, on l'arrangera au prochain reset de la db
-    """
-    creator = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    name = models.CharField(max_length=30,default='(Sans nom)')
-    desc = models.CharField(max_length=100,blank=True)
-    hint = models.CharField(max_length=50,blank=True)
+
+    creator  = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    name     = models.CharField(max_length=30,default='(Sans nom)')
+    desc     = models.CharField(max_length=100,blank=True)
+    hint     = models.CharField(max_length=50,blank=True)
     solution = models.CharField(max_length=150,blank=True)
     
-    access = models.CharField(max_length=2, choices=ACCESS, default="PR")
+    access = models.CharField(max_length=2, choices=ACCESS.choices, default=ACCESS.PRIVATE)
 
     def isType(self, typeToCheck):
         foreignKeyType = getattr(self, "specific_challenge").__class__
@@ -32,6 +33,7 @@ class Challenge(models.Model):
 
     def __str__(self):
         return f"{self.name} by {self.creator}"
+
 
 class ALIVEChallenge(models.Model):
     challenge = models.OneToOneField(Challenge, on_delete=models.CASCADE, related_name="specific_challenge")
@@ -59,6 +61,7 @@ class ChallengeProgression(models.Model):
     def __str__(self):
         return f"{self.challenge} of {self.user}"
 
+
 class ALIVEChallengeProgression(models.Model):
     challenge_progression = models.OneToOneField(ChallengeProgression, on_delete=models.CASCADE, related_name="alive_challenge_progression")
     code = models.TextField(blank=True)
@@ -75,17 +78,6 @@ class ALIVEChallengeProgression(models.Model):
 
 class Level(models.Model):
 
-    TAG = [
-
-    ]
-
-    ACCESS = [
-        ("PU", "Public"),    # can be found via a search
-        ("UN", "Unlisted"),  # must be shared via a url
-        ("RE", "Restrein"),  # limited to a Coursee
-        ("PR", "Private"),   # only accessible to the creator
-    ]
-
     RESOLUTION_MODES = [
         ("B", "Block"),  # must be cleared with the block interface
         ("C", "Code"),   # must be cleared with the code interface
@@ -94,7 +86,7 @@ class Level(models.Model):
 
     creator = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     creation_date = models.DateField()
-    access = models.CharField(max_length=2, choices=ACCESS)
+    access = models.CharField(max_length=2, choices=ACCESS.choices)
 
     description = models.TextField(blank=True)
 
@@ -177,7 +169,6 @@ class Section(models.Model):
 
     def __str__(self):
         return f"{self.name}, course: {self.course}"
-    
 
 
 class Activity(models.Model):
@@ -236,10 +227,8 @@ class ActivityProgression(models.Model):
                         if challenge.state == "completed"])
                     
     def __str__(self):
-        return f"{self.user}, {self.date}"
+        return f"{self.user}, {self.date}"  
 
-
-    
 
 class Classroom(models.Model):
     id = models.UUIDField(default=uuid.uuid4, editable=False,
@@ -269,21 +258,13 @@ class Classroom(models.Model):
         return f"{self.name}, {self.subject} by {self.creator}"
 
 
-"""
-@receiver(post_save, sender=Classroom)
-def save_classroom_handler(**kwargs):
-    classroom = kwargs['instance']
+class AliveScript(models.Model):
+    version = models.CharField(max_length=10, validators=[RegexValidator('')])
 
-
-class Reponse(models.Model):
-    id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, primary_key=True)
-    texte = models.CharField(max_length=200)
-    vf = models.BooleanField(default=False)
-    question = models.ForeignKey(Question, on_delete=models.DO_NOTHING)
-    for student in classroom.students.all():
-        print(student.email)
-        student.classrooms.add(classroom)
-"""
+    creator = models.ForeignKey(User, null=False, on_delete=models.CASCADE)
+    code = models.TextField(null=False, default="# Entrez votre code ci-dessous\n\n")
+    access = models.CharField(max_length=2, choices=ACCESS.choices, default=ACCESS.PRIVATE)
+    
 
 class Quiz(models.Model):
     id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, primary_key=True)
@@ -293,6 +274,7 @@ class Quiz(models.Model):
 
     def __str__(self):
         return f"{self.name} by {self.creator}"
+
 
 class Question(models.Model):
     id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, primary_key=True)
@@ -304,6 +286,7 @@ class Question(models.Model):
         ("45", "45 secondes")
     ], null=False, blank=False, default="30")
     answers = models.ManyToManyField("playground.response")
+
 
 class Response(models.Model):
     id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, primary_key=True)
