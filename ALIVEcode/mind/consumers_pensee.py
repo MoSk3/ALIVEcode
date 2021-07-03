@@ -5,12 +5,13 @@ from channels.exceptions import DenyConnection
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.exceptions import StopConsumer, DenyConnection
 from mind.models import AMC, DataPoint
-from home.models import User
 from ALIVE.websockets.Rooms import Room, RoomClient
 from asgiref.sync import sync_to_async, async_to_sync
 from datetime import date
 from random import randrange
-import abc
+
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 # Connection du casque au serveur (par websocket)
 penseeClients = {}   

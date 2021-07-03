@@ -1,7 +1,10 @@
 from django.contrib import admin
 
 from playground.models import Challenge, Level, Classroom, Course, Quiz, Question, Response, Section, Activity, Challenge, ALIVEChallenge, ChallengeProgression, ActivityProgression
-from home.models import User, Achievement
+from home.models import Achievement
+
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 # Register your models here.
 @admin.register(Challenge)

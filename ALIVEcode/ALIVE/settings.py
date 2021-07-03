@@ -10,13 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
-import os
 from pathlib import Path
 from django.core.management.utils import get_random_secret_key
 from decouple import config, UndefinedValueError
-
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ALIVE.settings")
-os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -42,6 +38,8 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost').split()
 
+ADMINS = [tuple(entry.split(':')) for entry in config('ADMINS', default='').split()]
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -52,9 +50,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'channels',
-    'playground',
     'home',
-    'mind'
+    'playground',
+    'mind',
+    'iot'
 ]
 
 """ This is used for everything that includes hosting online games with groups (example: car racing) """
@@ -102,7 +101,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 WSGI_APPLICATION = 'ALIVE.wsgi.application'
 ASGI_APPLICATION = 'ALIVE.asgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
@@ -155,7 +153,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = 'ALIVE/static_grab'
+STATIC_ROOT = '/var/www/ALIVEcode/static'
 
 STATICFILES_DIRS = [
     'ALIVE/static',

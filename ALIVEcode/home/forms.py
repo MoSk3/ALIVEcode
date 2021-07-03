@@ -1,7 +1,7 @@
 from django import forms
 
-from home.models import User, Professor, Student
-from playground.models import Classroom, Course
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 class StudentCreationForm(forms.ModelForm):
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)

@@ -1,21 +1,25 @@
 import os
 
-from channels.routing import ProtocolTypeRouter, URLRouter
 from django.core.asgi import get_asgi_application
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ALIVE.settings')
+os.environ.setdefault("DJANGO_ALLOW_ASYNC_UNSAFE", "true")
+
+django_asgi_app = get_asgi_application()
+
+from channels.routing import ProtocolTypeRouter, URLRouter
 from django.conf.urls import url
-from channels.security.websocket import AllowedHostsOriginValidator, OriginValidator
-import home.routing
+
 from ALIVE.middleware import QueryAuthMiddlewareStack
+
+import home.routing
 
 from playground.consumers_coding import InterpreteurConsumer, RobotConsumer
 from playground.consumers_iot import IOTConsumer
 from mind.consumers_pensee import PenseeConsumer, PenseeGetConsumer, AMCDataListener
 
-
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mysite.settings')
-
 application = ProtocolTypeRouter({
-    "http": get_asgi_application(),
+    "http": django_asgi_app,
     "websocket": QueryAuthMiddlewareStack(
         URLRouter(
             [

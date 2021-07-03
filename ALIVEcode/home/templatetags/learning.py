@@ -1,6 +1,6 @@
 from django import template
 from django.apps import apps
-from playground.models import ActivityProgression, Section, Activity, Challenge
+from playground.models import ActivityProgression, Activity, Challenge
 import json
 
 register = template.Library()

@@ -1,5 +1,11 @@
 from django import template
-from home.models import User, Student, Professor
+
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
+from django.apps import apps
+Student = apps.get_model('home', 'Student')
+Professor = apps.get_model('home', 'Professor')
 
 register = template.Library()
 
