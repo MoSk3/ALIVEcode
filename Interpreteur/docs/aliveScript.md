@@ -246,3 +246,28 @@
       - E = 2.718281828459045
 
 
+## Versioning
+> Légende:
+> - *italique* = nombre
+
+#### Alpha (a)
+- Utilisé pour désigner une version du langage où les nouvelles fonctionnalités sont en train d'être implémentéees (hautement instable)
+- v*Majeur*.*Mineur*-a.*Version*
+- ex: v1.2-a.3
+
+#### Béta (b)
+- Utilisé pour désigner une version du langage possédant toutes les nouvelles fonctionnalités de la nouvelle version (instable)
+- v*Majeur*.*Mineur*-b.*Version*
+- ex: v1.1-b.0
+
+#### Release candidate (rc)
+- Utilisé pour désigner une version *suffisamment* stable du langage, mais qui doit encore être rigoureusement testée avant d'être utilisée en production (stable)
+- v*Majeur*.*Mineur*-rc.*Version*
+- ex: v1.4-rc.1
+
+#### Version finale
+- Utilisé pour désigner une version finale du langage pouvant être utilisée en production (hautement stable)
+- v*Majeur*.*Mineur*.*Patch*
+- ex: v1.5.2
+
+

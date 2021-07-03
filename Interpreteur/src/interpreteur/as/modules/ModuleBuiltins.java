@@ -8,6 +8,9 @@ import interpreteur.data_manager.Data;
 import interpreteur.executeur.Executeur;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class ModuleBuiltins {
     /*
@@ -85,7 +88,7 @@ public class ModuleBuiltins {
 
             new ASObjet.Fonction("booleen", new ASObjet.Fonction.Parametre[]{
                     new ASObjet.Fonction.Parametre(new Type("tout"), "element", null)
-            }, new Type("booleen")) {
+            }, Type.TypeBuiltin.booleen.asType()) {
                 @Override
                 public ASObjet<?> executer() {
                     return new Booleen(this.getParamsValeursDict().get("element").boolValue());
@@ -102,7 +105,7 @@ public class ModuleBuiltins {
              *
              */
             new ASObjet.Fonction("info", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(new Type("tout"), "element", null)
+                    new ASObjet.Fonction.Parametre(Type.TypeBuiltin.tout.asType(), "element", null)
             }, new Type("tout")) {
                 @Override
                 public ASObjet<?> executer() {
@@ -111,7 +114,7 @@ public class ModuleBuiltins {
             },
 
             new ASObjet.Fonction("getVar", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(new Type("texte"), "nomVariable", null)
+                    new ASObjet.Fonction.Parametre(Type.TypeBuiltin.texte.asType(), "nomVariable", null)
             }, new Type("tout")) {
                 @Override
                 public ASObjet<?> executer() {
@@ -125,8 +128,32 @@ public class ModuleBuiltins {
             }
 
     );
-    public static List<ASObjet.Variable> variables = Collections.singletonList(
-            new ASObjet.Constante("finl", new ASObjet.Texte("\n"))
+
+    private static final Supplier<ASObjet<?>> getVarListe = () -> {
+        List<ASObjet.Variable> variableList = new ArrayList<>(Scope.getCurrentScopeInstance().getVariableStack());
+        return new ASObjet.Liste(variableList.stream().map(var -> new ASObjet.Texte(var.obtenirNom())).toArray(ASObjet.Texte[]::new));
+    };
+
+
+    public static List<ASObjet.Variable> variables = Arrays.asList(
+            new ASObjet.Constante("finl", new ASObjet.Texte("\n")),
+            new ASObjet.Variable("varListe", new ASObjet.Liste(), Type.TypeBuiltin.liste.asType()).setGetter(getVarListe).setReadOnly()
     );
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -87,7 +87,7 @@ public class Type implements Expression<ASObjet<?>> {
                 '}';
     }
 
-    enum TypeBuiltin {
+    public enum TypeBuiltin {
         tout,
         entier,
         decimal,
@@ -111,6 +111,10 @@ public class Type implements Expression<ASObjet<?>> {
 
         public TypeBuiltin[] getAliases() {
             return aliases;
+        }
+
+        public Type asType() {
+            return new Type(toString());
         }
 
         @Override
