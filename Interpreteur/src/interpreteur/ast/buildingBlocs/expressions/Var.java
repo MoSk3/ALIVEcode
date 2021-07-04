@@ -9,7 +9,7 @@ import interpreteur.executeur.Executeur;
 import java.util.Objects;
 
 public class Var implements Expression<ASObjet<?>> {
-    private final String nom;
+    private String nom;
 
     public Var(String nom) {
         this.nom = nom;
@@ -18,6 +18,10 @@ public class Var implements Expression<ASObjet<?>> {
 
     public String getNom() {
         return nom;
+    }
+
+    public void setNom(String nom) {
+        this.nom = nom;
     }
 
     @Override

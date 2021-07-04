@@ -33,6 +33,7 @@ Ajouter:
     DIV_ASSIGNEMENT: '\/='
     DIV_ENTIERE_ASSIGNEMENT : '\/\/='
     MOD_ASSIGNEMENT : '[%]='
+    PIPE_ASSIGNEMENT : '\|='
 
 
   # fonction

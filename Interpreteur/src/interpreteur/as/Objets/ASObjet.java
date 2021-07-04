@@ -154,7 +154,7 @@ public interface ASObjet<T> {
 
         public Variable(String nom, ASObjet<?> valeur, Type type) {
             this.type = type == null ? new Type("tout") : type;
-            this.nom = nom;
+            this.nom = FonctionManager.ajouterDansStructure(nom);
             this.valeur = valeur instanceof Variable ? ((Variable) valeur).getValeurApresGetter() : valeur;
         }
 
@@ -651,6 +651,19 @@ public interface ASObjet<T> {
         public String obtenirNomType() {
             return "entier";
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Entier)) return false;
+            Entier entier = (Entier) o;
+            return valeur == entier.valeur;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(valeur);
+        }
     }
 
     class Decimal implements Nombre {
@@ -685,6 +698,19 @@ public interface ASObjet<T> {
         @Override
         public String obtenirNomType() {
             return "decimal";
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Decimal)) return false;
+            Decimal decimal = (Decimal) o;
+            return Double.compare(decimal.valeur, valeur) == 0;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(valeur);
         }
     }
 
@@ -722,6 +748,19 @@ public interface ASObjet<T> {
         public String obtenirNomType() {
             return "booleen";
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Booleen)) return false;
+            Booleen booleen = (Booleen) o;
+            return valeur == booleen.valeur;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(valeur);
+        }
     }
 
     class Nul implements ASObjet<NullType> {
@@ -747,6 +786,11 @@ public interface ASObjet<T> {
         @Override
         public String obtenirNomType() {
             return "nulType";
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return obj instanceof ASObjet<?> && ((ASObjet<?>) obj).getValue() == null;
         }
     }
 
@@ -819,6 +863,19 @@ public interface ASObjet<T> {
         public String obtenirNomType() {
             return "texte";
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Texte)) return false;
+            Texte texte = (Texte) o;
+            return Objects.equals(valeur, texte.valeur);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(valeur);
+        }
     }
 
     class Liste implements Iterable {
@@ -829,6 +886,10 @@ public interface ASObjet<T> {
 
         public Liste(ASObjet<?>[] valeurs) {
             this.valeur = new ArrayList<>(Arrays.asList(valeurs));
+        }
+
+        public Liste(Liste liste) {
+            this.valeur = new ArrayList<>(liste.getValue());
         }
 
         public void ajouterElement(ASObjet<?> element) {
@@ -911,10 +972,22 @@ public interface ASObjet<T> {
             return !this.valeur.isEmpty();
         }
 
-
         @Override
         public String obtenirNomType() {
             return "liste";
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Liste)) return false;
+            Liste liste = (Liste) o;
+            return Objects.equals(valeur, liste.valeur);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(valeur);
         }
 
         public static class SousListe extends Liste {

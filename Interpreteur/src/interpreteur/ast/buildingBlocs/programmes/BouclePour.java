@@ -19,9 +19,9 @@ public class BouclePour extends Boucle {
     public static boolean sortir = false;
     private final Var var;
     private final Expression<?> objItere;
+    private final Scope scope;
     private Iterator<ASObjet<?>> iteration = null;
     private Type typeVar = new Type("tout");
-    private final Scope scope;
 
     public BouclePour(Var var, Expression<?> objItere) {
         super("pour");
@@ -59,7 +59,13 @@ public class BouclePour extends Boucle {
         if (iteration.hasNext() && !sortir) {
             Scope.popCurrentScopeInstance();
             Scope.pushCurrentScopeInstance(scope.makeScopeInstanceFromCurrentScope());
-            Scope.getCurrentScopeInstance().getVariable(var.getNom()).changerValeur(iteration.next());
+            ASObjet.Variable variable = Scope.getCurrentScopeInstance().getVariable(var.getNom());
+            if (variable == null) {
+                throw new ASErreur.ErreurVariableInconnue("La variable " + var.getNom() + " n'a pas \u00E9t\u00E9 initialis\u00E9e." +
+                        "\nAvez-vous oubli\u00E9 de mettre 'var' devant la d\u00E9claration de la variable?");
+            } else {
+                variable.changerValeur(iteration.next());
+            }
             Executeur.obtenirCoordRunTime().nouveauBloc("pour");
 
         } else sortir();

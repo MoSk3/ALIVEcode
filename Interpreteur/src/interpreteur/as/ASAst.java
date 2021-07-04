@@ -212,39 +212,17 @@ public class ASAst extends AstGenerator {
                     }
                 });
 
-        ajouterProgramme("STRUCTURE NOM_VARIABLE", new Ast<Programme>() {
+        ajouterProgramme("STRUCTURE NOM_VARIABLE", new Ast<CreerStructure>() {
             @Override
-            public Programme apply(List<Object> p) {
-                return new Programme() {
-                    @Override
-                    public Object execute() {
-                        FonctionManager.ajouterStructure(((Token) p.get(1)).obtenirValeur());
-                        return null;
-                    }
-
-                    @Override
-                    public String toString() {
-                        return "";
-                    }
-                };
+            public CreerStructure apply(List<Object> p) {
+                return new CreerStructure(((Token) p.get(1)).obtenirValeur());
             }
         });
 
-        ajouterProgramme("FIN STRUCTURE", new Ast<Programme>() {
+        ajouterProgramme("FIN STRUCTURE", new Ast<FinStructure>() {
             @Override
-            public Programme apply(List<Object> p) {
-                return new Programme() {
-                    @Override
-                    public Object execute() {
-                        FonctionManager.ajouterStructure(((Token) p.get(1)).obtenirValeur());
-                        return null;
-                    }
-
-                    @Override
-                    public String toString() {
-                        return "FinStructure";
-                    }
-                };
+            public FinStructure apply(List<Object> p) {
+                return new FinStructure();
             }
         });
 
@@ -313,7 +291,7 @@ public class ASAst extends AstGenerator {
                         new Object[]{"expression DEUX_POINTS expression ASSIGNEMENT expression~"
                                 + "expression ASSIGNEMENT expression~"
                                 + "expression DEUX_POINTS expression",
-                                new Ast<Argument>(11) {
+                                new Ast<Argument>(22) {
                                     @Override
                                     public Argument apply(List<Object> p) {
                                         Type type = new Type("tout");
@@ -424,7 +402,7 @@ public class ASAst extends AstGenerator {
                         //});
                         Expression<?> contenu;
                         CreerListe args;
-                        if (p.size() == 2) {
+                        if (p.size() == 2 && !(p.get(1) instanceof Expression.ExpressionVide)) {
                             contenu = (Expression<?>) p.get(1);
 
                             args = contenu instanceof CreerListe.Enumeration ?
@@ -572,41 +550,6 @@ public class ASAst extends AstGenerator {
                     }
                 });
 
-        ajouterExpression("expression PIPE expression",
-                new Ast<Expression<?>>() {
-                    @Override
-                    public Expression<?> apply(List<Object> p) {
-                        if (p.get(0) instanceof CreerListe.Enumeration) {
-                        }
-
-                        if (!(p.get(0) instanceof Type && p.get(2) instanceof Type)) {
-                            String nom;
-                            if (p.get(0) instanceof Var) {
-                                nom = ((Var) p.get(0)).getNom();
-                            } else if (p.get(2) instanceof Var) {
-                                nom = ((Var) p.get(2)).getNom();
-                            } else {
-                                nom = p.get(0) instanceof Type ? ((Expression<?>) p.get(2)).eval().toString() : ((Expression<?>) p.get(0)).eval().toString();
-                            }
-
-                            throw new ErreurType("Le symbole | doit s\u00E9parer deux types valides " +
-                                    "('" + nom + "' n'est pas un type valide)");
-                        }
-                        ((Type) p.get(0)).union((Type) p.get(2));
-                        return (Type) p.get(0);
-                    }
-                });
-
-        ajouterExpression("expression CROCHET_OUV #expression CROCHET_FERM~",
-                new Ast<CreerListe.SousSection>() {
-                    @Override
-                    public CreerListe.SousSection apply(List<Object> p) {
-                        // pas de deux points, forme val[idx]
-                        Expression<?> idx = AstGenerator.evalOneExpr(new ArrayList<>(p.subList(2, p.size() - 1)), null);
-                        return new CreerListe.SousSection.IndexSection((Expression<?>) p.get(0), idx);
-                    }
-                });
-
 
         //call fonction
         ajouterExpression("expression PARENT_OUV #expression PARENT_FERM~"
@@ -649,13 +592,14 @@ public class ASAst extends AstGenerator {
 
 
         ajouterExpression("PARENT_OUV #expression PARENT_FERM~"
-                        + "PARENT_OUV expression PARENT_FERM",
+                        + "PARENT_OUV expression PARENT_FERM~"
+                        + "PARENT_OUV PARENT_FERM",
                 new Ast<Expression<?>>() {
                     @Override
                     public Expression<?> apply(List<Object> p) {
-                        //if (result instanceof CreerListe.Enumeration) {
-                        //    return ((CreerListe.Enumeration) result).build();
-                        //}
+                        if (p.size() == 2) {
+                            return new Expression.ExpressionVide();
+                        }
                         return AstGenerator.evalOneExpr(new ArrayList<>(p.subList(1, p.size() - 1)), null);
                     }
                 });
@@ -842,6 +786,30 @@ public class ASAst extends AstGenerator {
                 return new BinOp((Expression<?>) p.get(0), BinOp.Operation.MOINS, (Expression<?>) p.get(2));
             }
         });
+
+        ajouterExpression("expression PIPE expression",
+                new Ast<Expression<?>>() {
+                    @Override
+                    public Expression<?> apply(List<Object> p) {
+                        if (!(p.get(0) instanceof Type && p.get(2) instanceof Type)) {
+                            //String nom;
+                            //if (p.get(0) instanceof Var) {
+                            //    nom = ((Var) p.get(0)).getNom();
+                            //} else if (p.get(2) instanceof Var) {
+                            //    nom = ((Var) p.get(2)).getNom();
+                            //} else {
+                            //    nom = p.get(0) instanceof Type ? ((Expression<?>) p.get(2)).eval().toString() : ((Expression<?>) p.get(0)).eval().toString();
+                            //}
+
+                            return new BinOp((Expression<?>) p.get(0), BinOp.Operation.PIPE, (Expression<?>) p.get(2));
+
+                            //throw new ErreurType("Le symbole | doit s\u00E9parer deux types valides " +
+                            //        "('" + nom + "' n'est pas un type valide)");
+                        }
+                        ((Type) p.get(0)).union((Type) p.get(2));
+                        return (Type) p.get(0);
+                    }
+                });
 
         ajouterExpression("expression DANS expression~" +
                 "expression PAS DANS expression", new Ast<BinComp>() {

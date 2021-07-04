@@ -89,14 +89,14 @@ public class BinComp implements Expression<ASObjet.Booleen> {
         }),
 
         DANS((gauche, droite) -> {
-            if (!(droite.getValue() instanceof ASObjet.Iterable)) {
+            if (!(droite instanceof ASObjet.Iterable)) {
                 throw new ASErreur.ErreurComparaison("L'op\u00E9rateur 'dans' ne s'applique que sur les \u00E9l\u00E9ments de type 'iterable'");
             }
             return new ASObjet.Booleen(((ASObjet.Iterable) droite).contient(gauche));
         }),
 
         PAS_DANS((gauche, droite) -> {
-            if (!(droite.getValue() instanceof ASObjet.Iterable)) {
+            if (!(droite instanceof ASObjet.Iterable)) {
                 throw new ASErreur.ErreurComparaison("L'op\u00E9rateur 'dans' ne s'applique que sur les \u00E9l\u00E9ments de type 'iterable'");
             }
             return new ASObjet.Booleen(!((ASObjet.Iterable) droite).contient(gauche));

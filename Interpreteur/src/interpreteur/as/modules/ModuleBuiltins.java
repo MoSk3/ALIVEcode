@@ -8,11 +8,28 @@ import interpreteur.data_manager.Data;
 import interpreteur.executeur.Executeur;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 public class ModuleBuiltins {
+
+
+    private static final Supplier<ASObjet<?>> getVarsLocales = () -> {
+        List<ASObjet.Variable> variableList = new ArrayList<>(Scope.getCurrentScopeInstance().getVariableStack());
+        return new ASObjet.Liste(variableList.stream().map(var -> new ASObjet.Texte(var.obtenirNom())).toArray(ASObjet.Texte[]::new));
+    };
+
+    private static final Supplier<ASObjet<?>> getVarsGlobales = () -> {
+        List<ASObjet.Variable> variableList = new ArrayList<>(Scope.getScopeInstanceStack().firstElement().getVariableStack());
+        return new ASObjet.Liste(variableList.stream().map(var -> new ASObjet.Texte(var.obtenirNom())).toArray(ASObjet.Texte[]::new));
+    };
+
+    private static final Supplier<ASObjet<?>> getVarListe = () -> {
+        HashSet<ASObjet.Variable> variables = new HashSet<>();
+        Scope.getScopeInstanceStack().forEach(scopeInstance -> variables.addAll(scopeInstance.getVariableStack()));
+        return new ASObjet.Liste(variables.stream().map(var -> new ASObjet.Texte(var.obtenirNom())).toArray(ASObjet.Texte[]::new));
+    };
+
+
     /*
      * Module builtins: contient toutes les fonctions utiliser par defaut dans le langage
      */
@@ -128,15 +145,10 @@ public class ModuleBuiltins {
             }
 
     );
-
-    private static final Supplier<ASObjet<?>> getVarListe = () -> {
-        List<ASObjet.Variable> variableList = new ArrayList<>(Scope.getCurrentScopeInstance().getVariableStack());
-        return new ASObjet.Liste(variableList.stream().map(var -> new ASObjet.Texte(var.obtenirNom())).toArray(ASObjet.Texte[]::new));
-    };
-
-
     public static List<ASObjet.Variable> variables = Arrays.asList(
             new ASObjet.Constante("finl", new ASObjet.Texte("\n")),
+            new ASObjet.Variable("varLocales", new ASObjet.Liste(), Type.TypeBuiltin.liste.asType()).setGetter(getVarsLocales).setReadOnly(),
+            new ASObjet.Variable("varGlobales", new ASObjet.Liste(), Type.TypeBuiltin.liste.asType()).setGetter(getVarsGlobales).setReadOnly(),
             new ASObjet.Variable("varListe", new ASObjet.Liste(), Type.TypeBuiltin.liste.asType()).setGetter(getVarListe).setReadOnly()
     );
 

@@ -21,6 +21,10 @@ public class CreerListe implements Expression<ASObjet.Liste> {
         return new ASObjet.Liste(exprs.stream().map(Expression::eval).toArray(ASObjet[]::new));
     }
 
+    public ArrayList<Expression<?>> getExprs() {
+        return exprs;
+    }
+
     @Override
     public String toString() {
         return "CreerListe{" +

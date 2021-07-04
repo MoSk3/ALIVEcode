@@ -40,6 +40,11 @@ public class Declarer extends Programme {
         waitingSetters.add(setter);
     }
 
+    public static void reset() {
+        waitingGetters.clear();
+        waitingSetters.clear();
+    }
+
     private void addVariable() {
 
         // get l'objet variable s'il existe
@@ -50,16 +55,13 @@ public class Declarer extends Programme {
         if (varObj != null)
             throw new ASErreur.ErreurAssignement("La variable '" + var.getNom() + "' a d\u00E9j\u00E0 \u00E9t\u00E9 d\u00E9clar\u00E9e");
 
-        // si le mot "const" est présent dans l'assignement de la variable
-        if (constante) {
-            Scope.getCurrentScope().declarerVariable(new ASObjet.Constante(var.getNom(), null));
-            //ASObjet.VariableManager.ajouterConstante(new ASObjet.Constante(var.getNom(), null), var.getScope());
+        // si le mot "const" est présent dans l'assignement de la variable, on crée la constante
+        // sinon si la variable a été déclarée avec "var", on crée la variable
+        varObj = constante ? new ASObjet.Constante(var.getNom(), null) : new ASObjet.Variable(var.getNom(), null, type);
 
-        } else {
-            // si la variable a été déclarée avec "var", on crée la variable
-            Scope.getCurrentScope().declarerVariable(new ASObjet.Variable(var.getNom(), null, type));
-            //ASObjet.VariableManager.ajouterVariable(new ASObjet.Variable(var.getNom(), null, type), var.getScope());
-        }
+        Scope.getCurrentScope().declarerVariable(varObj);
+
+        var.setNom(varObj.obtenirNom());
 
         // si des setters et des getters attendaient la déclaration de la variable pour pouvoir être attachée à celle-ci, on les attache
         CreerGetter getter = waitingGetters.stream().filter(waitingGetter -> waitingGetter.getVar().equals(var)).findFirst().orElse(null);
@@ -83,12 +85,6 @@ public class Declarer extends Programme {
         variable.changerValeur(valeur);
 
         return null;
-    }
-
-
-    public static void reset() {
-        waitingGetters.clear();
-        waitingSetters.clear();
     }
 
     @Override

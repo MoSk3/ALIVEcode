@@ -47,7 +47,7 @@ public class Assigner extends Programme {
 
         ASObjet<?> valeur = this.valeur.eval();
         if (variable == null) {
-            throw new ASErreur.ErreurAssignement("La variable " + var.getNom() + " n'a pas \u00E9t\u00E9 initialis\u00E9e." +
+            throw new ASErreur.ErreurVariableInconnue("La variable " + var.getNom() + " n'a pas \u00E9t\u00E9 initialis\u00E9e." +
                     "\nAvez-vous oubli\u00E9 de mettre 'var' devant la d\u00E9claration de la variable?");
         }
 
