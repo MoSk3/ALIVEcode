@@ -31,6 +31,9 @@ class IoTProject(models.Model):
     id = models.UUIDField(default=uuid.uuid4, editable=False,
                           unique=True, primary_key=True)
 
+    name = models.CharField(max_length=20)
+    description = models.CharField(max_length=100)
+
     creator = models.ForeignKey(User, null=False, on_delete=models.CASCADE, related_name="IoTProjects")
 
     # JSON representation of all the components
@@ -53,7 +56,7 @@ def route_validator(route: str):
     validators.validate_slug(route)
     if route.lower() == 'update':
         raise ValidationError(
-            _("%(route)s n'est pas une valeur"),
+            _("%(route)s est une route réservée"),
             params={'route': route},
         )
     
