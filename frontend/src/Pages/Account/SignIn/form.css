@@ -1,0 +1,31 @@
+body {
+    background-color: white
+}
+
+#main-div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+form {
+    border-radius: 20px;
+    background-color: var(--primary-color);
+    box-shadow: 0px 15px 30px rgb(160, 160, 160);
+    padding: 60px;
+    color: white;
+}
+
+a {
+    color: var(--pale-color);
+}
+
+#button-submit {
+    background-color: var(--third-color) !important;
+    border-style: none;
+}
+
+#button-submit:hover {
+    background-color:  var(--contrast-color) !important;
+}

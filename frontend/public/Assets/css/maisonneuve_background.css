@@ -1,0 +1,6 @@
+@import './main.css';
+
+body {
+    background-image: url('/static/images/backgroundImage4.png');
+    background-repeat: repeat;
+}

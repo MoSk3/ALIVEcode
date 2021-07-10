@@ -1,0 +1,73 @@
+nav {
+    z-index: 10;
+    width: 100%;
+    color: black;
+}
+
+.dropdown-toggle::after {
+    display: none !important;
+  }
+
+#user {
+    height: 40px;
+    width: 40px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.btn:focus,
+.btn:active {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+#user svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    -webkit-transition: all 0.2s linear;
+    -o-transition: all 0.2s linear;
+    transition: all 0.2s linear;
+}
+
+#userDropDown a {
+    color: black;
+    background-color: white;
+}
+
+#userDropDown a:hover {
+    color: rgb(0, 140, 255);
+}
+
+#user svg:hover {
+    stroke: #00a2ff;
+}
+
+#navbarNavDropdown li {
+    margin-right: 10px;
+
+}
+
+#navbarNavDropdown ul li:hover {
+    border-color: rgb(4, 175, 255);
+}
+
+#navbarNavDropdown a {
+    color: rgb(0, 0, 0);
+    -webkit-transition: all 0.2s linear;
+    -o-transition: all 0.2s linear;
+    transition: all 0.2s linear;
+}
+
+#navbarNavDropdown a:hover {
+    color: rgb(0, 140, 255);
+}
+
+@media (max-width:1199px) {
+    #userDropDown {
+        margin-top: 30px;
+    }
+}
+
