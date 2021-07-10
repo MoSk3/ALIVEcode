@@ -31,7 +31,7 @@ public class ModuleListeUtils extends ASModule {
             },
 
             /*
-             * inverser:
+             * inv: (inverser)
              * 		@param t:
              * 			-> type: lst
              * 			-> valeur par defaut: null (n'en a pas, il est donc obligatoire de lui en donner une lors de l'appel de la fonction)
@@ -40,13 +40,13 @@ public class ModuleListeUtils extends ASModule {
              *
              * 		@return un iterable où chaque élément est inversé
              */
-            new ASObjet.Fonction("inverser", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(new Type("iterable"), "iter", null),
+            new ASObjet.Fonction("inv", new ASObjet.Fonction.Parametre[]{
+                    new ASObjet.Fonction.Parametre(Type.TypeBuiltin.iterable.asType(), "iter", null),
             }, new Type("iterable")) {
                 @Override
                 public ASObjet<?> executer() {
                     Iterable element = (Iterable) this.getValeurParam("iter");
-                    if (element instanceof Liste){
+                    if (element instanceof Liste) {
                         Liste newListe = new Liste();
                         for (int i = element.taille() - 1; i >= 0; i--) newListe.ajouterElement(element.get(i));
                         return newListe;
@@ -170,7 +170,7 @@ public class ModuleListeUtils extends ASModule {
                 public ASObjet<?> executer() {
                     Liste liste = (Liste) this.getParamsValeursDict().get("lst");
                     OptionalDouble somme = liste.getValue().stream().mapToDouble(e -> ((Number) e.getValue()).doubleValue()).max();
-                    if (somme.isEmpty()){
+                    if (somme.isEmpty()) {
                         throw new ASErreur.ErreurComparaison("tous les \u00E9l\u00E9ments de la liste doivent être des nombres pour pouvoir obtenir le maximum");
                     }
                     return new Decimal(somme.getAsDouble());
@@ -184,7 +184,7 @@ public class ModuleListeUtils extends ASModule {
                 public ASObjet<?> executer() {
                     Liste liste = (Liste) this.getParamsValeursDict().get("lst");
                     OptionalDouble somme = liste.getValue().stream().mapToDouble(e -> ((Number) e.getValue()).doubleValue()).min();
-                    if (somme.isEmpty()){
+                    if (somme.isEmpty()) {
                         throw new ASErreur.ErreurComparaison("tous les \u00E9l\u00E9ments de la liste doivent être des nombres pour pouvoir obtenir le minimum");
                     }
                     return new Decimal(somme.getAsDouble());
@@ -219,19 +219,42 @@ public class ModuleListeUtils extends ASModule {
              * 				-> si "choix" est de type texte: le nombre de caractere dans le texte
              */
             new ASObjet.Fonction("tailleDe", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(new Type("iterable"), "iter", null)
+                    new ASObjet.Fonction.Parametre(Type.TypeBuiltin.iterable.asType(), "iter", null)
             }, new Type("entier")) {
                 @Override
                 public ASObjet<?> executer() {
                     Object val = this.getParamsValeursDict().get("iter").getValue();
                     return new Entier(val instanceof String ? val.toString().length() : ((ArrayList<?>) val).size());
                 }
+            },
+
+            new ASObjet.Fonction("indexDe", new ASObjet.Fonction.Parametre[]{
+                    new ASObjet.Fonction.Parametre(Type.TypeBuiltin.tout.asType(), "valeur", null),
+                    new ASObjet.Fonction.Parametre(Type.TypeBuiltin.liste.asType(), "lst", null)
+            }, new Type("entier")) {
+                @Override
+                public ASObjet<?> executer() {
+                    Liste lst = (Liste) this.getParamsValeursDict().get("lst");
+                    ASObjet<?> val = this.getParamsValeursDict().get("valeur");
+                    int idx = lst.getValue().indexOf(val);
+                    return idx != -1 ? new Entier(idx) : new Nul();
+                }
             });
-
-
-
-
 
 
     public static List<ASObjet.Constante> constantes = Collections.emptyList();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

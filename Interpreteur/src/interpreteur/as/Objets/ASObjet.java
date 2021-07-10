@@ -336,7 +336,7 @@ public interface ASObjet<T> {
         }
     }
 
-    class Fonction implements ASObjet<Object> {
+    abstract class Fonction implements ASObjet<Object> {
         private final Type typeRetour;
         private final Parametre[] parametres; //String[] de forme {nomDuParam�tre, typeDuParam�tre (ou null s'il n'en poss�de pas)}
         private final String nom;
@@ -503,9 +503,7 @@ public interface ASObjet<T> {
             return this.executer();
         }
 
-        public ASObjet<?> executer() {
-            return null;
-        }
+        abstract public ASObjet<?> executer();
 
         public void setScopeName(String scopeName) {
             this.scopeName = scopeName;

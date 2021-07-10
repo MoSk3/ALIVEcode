@@ -600,11 +600,16 @@ public class Executeur {
 
     public static void main(String[] args) {
         String[] lines = new String[]{
-                "fonction facto(n: entier) -> entier",
-                "    retourner n * facto(n - 1) si n <= 0 sinon 1",
-                "fin fonction",
+                "var d = {1...7}",
                 "",
-                "afficher facto(5)"
+                "",
+                "",
+                "afficher d",
+                "",
+                "",
+                "d[1:4] = {3}",
+                "",
+                "afficher d"
         };
         debug = true;
         System.out.println(compiler(lines, true));

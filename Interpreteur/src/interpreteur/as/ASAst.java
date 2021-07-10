@@ -111,7 +111,6 @@ public class ASAst extends AstGenerator {
                         + "VAR expression DEUX_POINTS expression~"
                         + "VAR expression DEUX_POINTS expression {assignements} expression~"
                         + "VAR expression {assignements} expression~"
-                        + "expression DEUX_POINTS expression {assignements} expression~"
                         + "expression {assignements} expression",
                 new Ast<Programme>() {
                     @Override
@@ -291,7 +290,7 @@ public class ASAst extends AstGenerator {
                         new Object[]{"expression DEUX_POINTS expression ASSIGNEMENT expression~"
                                 + "expression ASSIGNEMENT expression~"
                                 + "expression DEUX_POINTS expression",
-                                new Ast<Argument>(22) {
+                                new Ast<Argument>(19) {
                                     @Override
                                     public Argument apply(List<Object> p) {
                                         Type type = new Type("tout");
@@ -299,7 +298,7 @@ public class ASAst extends AstGenerator {
                                         Expression<?> valParDefaut = null;
 
                                         if (!(p.get(0) instanceof Var)) {
-                                            throw new ErreurSyntaxe("Une d\u00E9claration de fonction doit commencer par une variable");
+                                            throw new ErreurSyntaxe("Une d\u00E9claration de fonction doit commencer par une variable, pas par " + p.get(0));
                                         }
                                         var = (Var) p.get(0);
 
@@ -676,11 +675,11 @@ public class ASAst extends AstGenerator {
                     }
                 });
 
-        ajouterExpression("expression CROCHET_OUV #expression CROCHET_FERM~"
-                        + "expression CROCHET_OUV DEUX_POINTS CROCHET_FERM~"
+        ajouterExpression("expression CROCHET_OUV DEUX_POINTS CROCHET_FERM~"
                         + "expression CROCHET_OUV #expression DEUX_POINTS #expression CROCHET_FERM~"
                         + "expression CROCHET_OUV #expression DEUX_POINTS CROCHET_FERM~"
-                        + "expression CROCHET_OUV DEUX_POINTS #expression CROCHET_FERM",
+                        + "expression CROCHET_OUV DEUX_POINTS #expression CROCHET_FERM~"
+                        + "expression CROCHET_OUV #expression CROCHET_FERM",
                 new Ast<CreerListe.SousSection>() {
                     @Override
                     public CreerListe.SousSection apply(List<Object> p) {

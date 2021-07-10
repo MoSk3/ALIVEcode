@@ -97,7 +97,7 @@ public class ASModule {
                 ) {
                     @Override
                     public ASObjet<?> executer() {
-                        return super.executer();
+                        return null;
                     }
                 },
         }, new Constante[]{

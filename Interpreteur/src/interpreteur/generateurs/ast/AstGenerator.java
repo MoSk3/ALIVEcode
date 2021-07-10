@@ -181,7 +181,7 @@ public class AstGenerator {
                         String ferm = expressionKeys.get(expressionKeys.size() - 1);
 
 
-                        int premier_ouv = expressionNom.subList(0, expressionNom.size()).indexOf(ouv);
+                        int premier_ouv = expressionNom.indexOf(ouv);
 
                         int cptr = 0, idx = 0;
                         if (ouv.equals(ferm)) {

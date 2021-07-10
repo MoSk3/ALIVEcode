@@ -8,6 +8,7 @@ import interpreteur.executeur.Executeur;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.function.Function;
 
 public class ASFonction implements ASObjet<Object> {
 
@@ -128,6 +129,15 @@ public class ASFonction implements ASObjet<Object> {
 
     public FonctionInstance makeInstance() {
         return new FonctionInstance(this);
+    }
+
+    public FonctionInstance makeJavaInstance(Function<ArrayList<ASObjet<?>>, ASObjet<?>> executer) {
+        return new FonctionInstance(this) {
+            @Override
+            public ASObjet<?> executer(ArrayList<ASObjet<?>> paramsValeurs) {
+                return executer.apply(paramsValeurs);
+            }
+        };
     }
 
     @Override

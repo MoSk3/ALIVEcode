@@ -39,7 +39,9 @@ ace.define(
 			const identifierRe =
 				"[a-zA-Z\\$_\u00a1-\uffff][a-zA-Z\\d\\$_\u00a1-\uffff]*"
 			const paramComment = `(\\{ *)(@)(${identifierRe})(.*?)(\\})`
-			const operators = /[\+\-\*\/\|\\\%\^]/
+			const operators = /[\+\-\*\/\|\\\%\^]/;
+			const comparators = /[=><]/;
+			const typeAssignements = /:|(\b->\b)/;
 			const reserved_words = {
 				boucles: [
 					"\\brepeter\\b",
@@ -72,6 +74,7 @@ ace.define(
 					"\\bmin\\b",
 					"\\bunir\\b",
 					"\\bjoindre\\b",
+					"\\bindexDe\\b",
 
 					// iterable (liste + texte)
 					"\\binverser\\b",
@@ -153,7 +156,15 @@ ace.define(
 					},
 					{
 						token: "support.function",
+						regex: typeAssignements,
+					},
+					{
+						token: "support.function",
 						regex: operators,
+					},
+					{
+						token: "support.function",
+						regex: comparators,
 					},
 					{
 						token: "keyword.control",
