@@ -3,12 +3,13 @@ import axios from 'axios';
 import { useContext } from 'react';
 import { useAlert } from 'react-alert';
 import { FormSignInValues, SignInProps } from './signInTypes';
-import { Form, Button, Container } from 'react-bootstrap';
 import { useHistory } from 'react-router';
 import { UserContext } from '../../../UserContext';
 import { User } from '../../../Types/User';
-
-import './form.css';
+import FormContainer from '../../../Components/MainComponents/FormContainer/FormContainer';
+import { Form } from 'react-bootstrap';
+import Button from '../../../Components/MainComponents/Button/Button';
+import Link from '../../../Components/MainComponents/Link/Link';
 
 /** Reusable form component to handle header creation */
 const SignIn = (props: SignInProps) => {
@@ -39,38 +40,53 @@ const SignIn = (props: SignInProps) => {
 	};
 
 	return (
-		<Container fluid="sm">
+		<FormContainer title="Connexion">
 			<Form onSubmit={handleSubmit(onSignIn)}>
 				<Form.Group controlId="formBasicEmail">
-					<Form.Label>Email address</Form.Label>
+					<Form.Label>Adresse courriel</Form.Label>
 					<Form.Control
 						type="email"
+						autoComplete="on"
 						placeholder="Enter email"
-						{...register('email')}
+						{...register('email', { required: true })}
 					/>
-					<Form.Text className="text-muted">
-						We'll never share your email with anyone else.
-					</Form.Text>
+					{errors.email?.type === 'required' && "Une adresse courriel est requise"}
 				</Form.Group>
 
 				<Form.Group controlId="formBasicPassword">
 					<Form.Label>Password</Form.Label>
 					<Form.Control
 						type="password"
+						autoComplete="on"
 						placeholder="*****"
-						{...register('password')}
+						{...register('password', { required: true })}
 					/>
+					{errors.password?.type === 'required' && "Un mot de passe est requis"}
 				</Form.Group>
 				<Button variant="primary" type="submit">
-					Se connecter
+					Connexion
 				</Button>
+
+				<br /><br />
+
+				Vous n'avez pas de compte? <Link to="/signup">S'inscrire</Link>
 			</Form>
-		</Container>
+		</FormContainer>
 	);
 }
 
 export default SignIn;
 
+
+/*
+
+<div className={styles.main_div}>
+			<Container fluid="sm">
+
+			</Container>
+		</div>
+
+*/
 
 /*
 

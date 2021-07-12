@@ -6,6 +6,7 @@ import { UserContext } from './UserContext';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { User } from './Types/User';
 import axios from 'axios';
+import BackArrow from './Components/MainComponents/BackArrow/BackArrow';
 
 const App = () => {
 
@@ -14,7 +15,6 @@ const App = () => {
   const providerValue = useMemo(() => ({ user, setUser }), [user, setUser])
 
   useEffect(() => {
-    console.log("IIII")
     const getUser = async () => {
       const user: User = (await axios.get('/user/info/')).data;
       console.log(user)
@@ -22,10 +22,6 @@ const App = () => {
     }
     getUser();
   }, []);
-
-  useEffect(() => {
-    console.log("AAAAA")
-  })
 
   const handleLogout = useCallback(() => {
     localStorage.removeItem('access_token');
@@ -42,6 +38,7 @@ const App = () => {
           <section className="m-auto my-4">
             <RouterSwitch />
           </section>
+          <BackArrow />
         </UserContext.Provider>
       </Router>
     </div>

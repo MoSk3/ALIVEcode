@@ -1,13 +1,14 @@
 import { Switch, Route } from 'react-router-dom';
-import { RouterSwitchProps } from './routerSwitchTypes';
 import Dashboard from '../../Pages/Dashboard/Dashboard';
 import Home from '../../Pages/Home/Home';
 import { NotFound } from '../../Pages/Errors/NotFound/NotFound';
 import About from '../../Pages/About/About';
-import SignUp from '../../Pages/Account/SignUp/SignIn';
+import SignUp from '../../Pages/Account/SignUp/SignUp';
 import SignIn from '../../Pages/Account/SignIn/SignIn';
 import { useContext } from 'react';
 import { UserContext } from '../../UserContext';
+import SignUpMenu from '../../Pages/Account/SignUpMenu/SignUpMenu';
+import { USER_TYPES } from '../../Types/User';
 
 
 export const RouterSwitch = () => {
@@ -21,8 +22,11 @@ export const RouterSwitch = () => {
 
 			{/* Public only */}
 			{/* <Route path="/password-recovery" component={props.user ? Home : PasswordRecovery} /> */}
-			<Route path="/signup" component={user ? Home : SignUp} />
+			<Route path="/signup" component={user ? Home : SignUpMenu} />
 			<Route path="/signin" component={user ? Home : SignIn} />
+
+			<Route path="/signup-professor" component={() => <SignUp userType={USER_TYPES.PROFESSOR} />} />
+			<Route path="/signup-student" component={() => <SignUp userType={USER_TYPES.STUDENT} />} />
 
 			{/* All */}
 			<Route path="/about" component={About} />

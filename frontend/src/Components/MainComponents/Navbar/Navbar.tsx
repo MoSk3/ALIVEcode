@@ -6,16 +6,17 @@ import { Link } from 'react-router-dom';
 
 import './navbar.css';
 import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
+import Logo from '../../../assets/images/LogoALIVE.png';
 
 const ALIVENavbar = ({ handleLogout }: NavbarProps) => {
 	const { user } = useContext(UserContext);
 	const history = useHistory();
-	
+
 	return (
-		<Navbar bg="light" expand="lg">
+		<Navbar id="navbar" bg="light" expand="lg">
 			<Navbar.Brand>
 				<Link to="/">
-					<img src="Assets/images/LogoALIVE.png" alt="" width="100" height="30" className="d-inline-block align-top"></img>
+					<img src={Logo} alt="" width="100" height="30" className="d-inline-block align-top"></img>
 				</Link>
 			</Navbar.Brand>
 			<Navbar.Toggle aria-controls="basic-navbar-nav" />

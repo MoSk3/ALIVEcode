@@ -1,18 +1,22 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
 import './NotFound.css';
+import Link from '../../../Components/MainComponents/Link/Link';
+
+import VoitureGIF from "../../../assets/images/Voiture.gif";
+import FillContainer from '../../../Components/MainComponents/FillContainer/FillContainer';
 
 export const NotFound = () => {
-    return (
-        <section className="w-full m-auto  mt-8 ">
-            <h1 className="text-teal-900 text-5xl">404</h1>
-            <h2 className="text-teal-700 text-3xl">
-                Cette page n'existe pas, a été déplacée ou vous venez du futur.
-            </h2>
-            <Link to="/" className="text-blue-500 text-2xl">Retour à l'accueil.</Link>
-            <img
-                src="/Assets/logo-lrima.png" alt="Logo - LRIma" className="m-auto not-found-logo"
-            />
-        </section>
-    )
+	return (
+		<FillContainer style={{ textAlign: 'center' }} startAtTop centered>
+			<div>
+				<h1>Désolé.</h1>
+				<h2>Cette page n'existe pas.</h2>
+				<img
+					src={VoitureGIF} alt="Voiture ALIVE"
+				/>
+				<div>
+					<Link to="/" dark bold>Retour à l'accueil.</Link>
+				</div>
+			</div>
+		</FillContainer>
+	)
 }

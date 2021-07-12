@@ -3,6 +3,11 @@ export enum GRADES {
     SE_1
 }
 
+export enum USER_TYPES {
+    STUDENT = 0,
+    PROFESSOR = 1
+}
+
 export type Professor = { 
     first_name: string;
     last_name: string;
