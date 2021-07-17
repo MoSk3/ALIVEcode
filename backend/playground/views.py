@@ -7,18 +7,82 @@ from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 import json
+
 from playground.forms import QuizCreationForm, QuestionCreationForm, ReponseCreationForm
-from playground.models import Question, Quiz, Response
+from playground.models import Question, Quiz, Response as QuizResponse
+from .models import Challenge, Classroom
+
+from rest_framework.views import APIView
+from rest_framework import permissions
+from django.shortcuts import get_object_or_404
+from playground.serializers.classroom import ClassroomSerializer
+from authentication.serializers import StudentSerializer
+from rest_framework import viewsets, status, authentication
+from rest_framework.decorators import action, permission_classes, api_view
+from rest_framework.response import Response
+
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
+class ClassroomStudents(APIView):
+    #authentication_classes = [authentication.TokenAuthentication] <- Weird not working
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, format='json', pk=None):
+        queryset = request.user.getClassrooms()
+        classroom = get_object_or_404(queryset, pk=pk)
+        serializer = StudentSerializer(classroom.students, many=True)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+class ClassroomViewSet(viewsets.ViewSet):  
+
+    def list(self, request):
+        queryset = request.user.getClassrooms()
+        if queryset is None:
+            queryset = Classroom.objects.none()
+        serializer = ClassroomSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    # Detail is used to generate a route like so: /playground/users/:pk/get
+
+    def retrieve(self, request, pk=None):
+        try:
+            queryset = request.user.getClassrooms()
+            classroom = get_object_or_404(queryset, pk=pk)
+            serializer = ClassroomSerializer(classroom)
+            return Response(serializer.data)
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
-from .models import Challenge
+"""
+class ClassroomViewSet(viewsets.ViewSet):
+    """"""
+    A simple ViewSet for listing or retrieving users.
+    """"""
+    def list(self, request):
+        queryset = request.user.getClassrooms()
+        if queryset is None:
+            queryset = Classroom.objects.none()
+        serializer = ClassroomSerializer(queryset, many=True)
+        return Response(serializer.data)
 
+
+    def retrieve(self, request, pk=None):
+        try:
+            queryset = request.user.getClassrooms()
+            if queryset is None:
+                queryset = Classroom.objects.none()
+                classroom = get_object_or_404(queryset, pk=pk)
+                serializer = ClassroomSerializer(classroom)
+                return Response(serializer.data)
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+"""
 
 loginPage = '/login'
 
 # Create your views here.
-
-
 @login_required(login_url=loginPage)
 def index(request):
     return render(request, 'playground/index.html')
@@ -176,7 +240,7 @@ def updateQuestion(request,pk):
             for form in reponseForm:
                 form.save()
                 if 0 <= i < len(lstReponsesText) and lstReponsesText[i] != '':
-                    reponseAjoute=Response()
+                    reponseAjoute=QuizResponse()
                     reponseAjoute.text=lstReponsesText[i]
                     if 0 <= i < len(lstReponsesCorrect):
                         if lstReponsesCorrect[i] == 'on':

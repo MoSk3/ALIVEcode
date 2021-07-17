@@ -1,7 +1,13 @@
+from playground.views import ClassroomViewSet, ClassroomStudents
+from rest_framework.routers import DefaultRouter
 from playground.views import index, code, blocs, robot, testing, newQuiz, mesQuiz, deleteQuiz, updateQuiz, deleteQuestion, updateQuestion, repQuiz, quizChoices
-from django.urls import path, re_path
+from django.urls import path
 
-urlpatterns = [
+
+router = DefaultRouter()
+router.register(r'classrooms', ClassroomViewSet, basename='classroom')
+urlpatterns = router.urls + [
+    path('classrooms/<uuid:pk>/students', ClassroomStudents.as_view(), name="classroom_students"),
     path('', index, name='index'),
     path('code', code, name='code'),
     path('blocs', blocs, name='blocs'),
@@ -17,3 +23,5 @@ urlpatterns = [
     path('rep_quiz/<str:pk>', repQuiz, name='repQuiz'),
     path('quiz_choices', quizChoices, name='quizChoices')
 ]
+
+print(urlpatterns)

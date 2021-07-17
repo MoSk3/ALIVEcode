@@ -25,8 +25,7 @@ export class Classroom implements ClassroomInterface {
 
   static async loadAll(): Promise<Array<Classroom>> {
     const classrooms = (await axios.get('/playground/classrooms')).data;
-    console.log((await axios.get(`/playground/classrooms/${classrooms[0].id}/students`)).data)
-    return classrooms.map((obj: any) => Object.assign(Classroom.prototype, obj));
+    return classrooms.map((obj: any) => new Classroom(obj));
   }
 
   getSubjectDisplay = ():string => {

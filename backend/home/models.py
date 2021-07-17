@@ -90,6 +90,20 @@ class User(AbstractBaseUser):
             return self.student.name
         return ""
 
+    def getCourses(self):
+        if self.isProfessor():
+            return self.professor.courses
+        elif self.isStudent():
+            return self.student.courses
+        return None
+    
+    def getClassrooms(self):
+        if self.isProfessor():
+            return self.professor.classrooms.all()
+        elif self.isStudent():
+            return self.student.classrooms.all()
+        return None
+
     def isProperty(self, obj, propertyName: str) -> bool:
         foreignKeyType = getattr(type(obj), propertyName).field.related_model
         if foreignKeyType == Professor:
@@ -115,11 +129,11 @@ class Achievement(models.Model):
         
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    courses = models.ManyToManyField("playground.course")
+    courses = models.ManyToManyField("playground.course", blank=True)
 
     name = models.CharField(max_length=20)
 
-    scholarity = models.CharField(max_length=2, choices=[
+    SCHOLARITY_CHOICES = (
         ("p1", "1ère année"),
         ("p2", "2e année"),
         ("p3", "3e année"),
@@ -132,7 +146,9 @@ class Student(models.Model):
         ("s4", "secondaire 4"),
         ("s5", "secondaire 5"),
         ("c", "cégep")
-    ])
+    )
+
+    scholarity = models.CharField(max_length=2, choices=SCHOLARITY_CHOICES)
 
     def __str__(self):
         return f"{self.name}, {self.user}"
