@@ -27,9 +27,8 @@ const ALIVENavbar = ({ handleLogout }: NavbarProps) => {
 					<Nav.Link className="nav-link" onClick={() => history.push('/about')} >À propos</Nav.Link>
 				</Nav>
 				{user ? (
-					<label className="nav-link">Bonjour
-						{user.professor && `${user.professor.first_name}`}
-						{user.student && `${user.student?.name}`}
+					<label style={{marginBottom: '0'}} className="nav-link">
+						Bonjour, {user.getDisplayName()}
 					</label>
 				) : (
 					<label className="nav-link">Vous n'êtes pas connecté, <Link to={'/signin'}>se

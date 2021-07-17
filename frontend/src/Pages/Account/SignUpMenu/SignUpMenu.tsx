@@ -1,4 +1,4 @@
-import FillContainer from '../../../Components/MainComponents/FillContainer/FillContainer';
+import FillContainer from '../../../Components/MiscComponents/FillContainer/FillContainer';
 import { SignUpMenuProps } from './signUpMenuTypes';
 import SignUpCard from '../SignUpCard/SignUpCard';
 import { Row } from 'react-bootstrap';

@@ -8,7 +8,7 @@ import SignIn from '../../Pages/Account/SignIn/SignIn';
 import { useContext } from 'react';
 import { UserContext } from '../../UserContext';
 import SignUpMenu from '../../Pages/Account/SignUpMenu/SignUpMenu';
-import { USER_TYPES } from '../../Types/User';
+import { USER_TYPES } from '../../Types/userTypes';
 
 
 export const RouterSwitch = () => {
@@ -25,8 +25,8 @@ export const RouterSwitch = () => {
 			<Route path="/signup" component={user ? Home : SignUpMenu} />
 			<Route path="/signin" component={user ? Home : SignIn} />
 
-			<Route path="/signup-professor" component={() => <SignUp userType={USER_TYPES.PROFESSOR} />} />
-			<Route path="/signup-student" component={() => <SignUp userType={USER_TYPES.STUDENT} />} />
+			<Route path="/signup-professor" component={() => user ? <Home /> : <SignUp userType={USER_TYPES.PROFESSOR} />} />
+			<Route path="/signup-student" component={() => user ? <Home /> : <SignUp userType={USER_TYPES.STUDENT} />} />
 
 			{/* All */}
 			<Route path="/about" component={About} />

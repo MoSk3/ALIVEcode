@@ -1,4 +1,4 @@
-import { USER_TYPES, GRADES } from '../../../Types/User';
+import { USER_TYPES, GRADES } from '../../../Types/userTypes';
 
 export type SignUpProps = {
   userType: USER_TYPES;
@@ -12,7 +12,7 @@ export type FormSignUpValues = {
   student?: {
     name: string;
     scholarity: GRADES;
-  }
+  } | null;
 
   // Professor
   professor?: {

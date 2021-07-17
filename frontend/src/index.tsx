@@ -4,9 +4,6 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { transitions, positions, Provider as AlertProvider } from 'react-alert';
-import 'bootstrap';
-import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap/dist/js/bootstrap.js';
 import axios from 'axios';
 import { SERVER_URL } from './appConfigs';
 import AlertTemplate from 'react-alert-template-basic';
@@ -24,7 +21,7 @@ axios.interceptors.response.use(
   async error => {
     const originalRequest = error.config;
 
-    if (error.response && error.response.status === 401 && originalRequest.url === SERVER_URL + 'token/refresh/') {
+    if (error.response && error.response.status === 401 && originalRequest.url === SERVER_URL + 'api/token/refresh/') {
       window.location.href = '/login/';
       return Promise.reject(error);
     }
@@ -41,8 +38,8 @@ axios.interceptors.response.use(
 
         if (tokenParts.exp > now) {
           try {
-            const { newRefresh, access } = (await axios.post('/token/refresh/', { refresh })).data;
-
+            const { refresh: newRefresh, access } = (await axios.post('/api/token/refresh/', { refresh })).data;
+            
             localStorage.setItem('access_token', access);
             localStorage.setItem('refresh_token', newRefresh);
 

@@ -10,6 +10,7 @@ const BackArrow = ({ color }: BackArrowProps) => {
     <FontAwesomeIcon
       onClick={() => history.goBack()}
       style={{
+        cursor: 'pointer',
         position: 'fixed',
         bottom: '25px',
         left: '25px'

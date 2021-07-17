@@ -24,9 +24,11 @@ const Home = (props: HomeProps) => {
 				<TypeWriter
 					lines={[
 						"Apprendre la programmation",
-						"Apprendre les concepts de l'IA",
 						"Apprendre en jouant",
+						"Apprendre les concepts de l'IA",
 					]}
+					typeSpeed={80}
+					eraseSpeed={50}
 					shadow
 				/>
 

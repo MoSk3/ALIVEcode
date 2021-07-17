@@ -4,9 +4,11 @@ import { BrowserRouter as Router } from "react-router-dom";
 import ALIVENavbar from './Components/MainComponents/Navbar/Navbar';
 import { UserContext } from './UserContext';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { User } from './Types/User';
 import axios from 'axios';
 import BackArrow from './Components/MainComponents/BackArrow/BackArrow';
+import 'bootstrap';
+import 'bootstrap/dist/css/bootstrap.css';
+import { User } from './Models/User';
 
 const App = () => {
 
@@ -16,9 +18,9 @@ const App = () => {
 
   useEffect(() => {
     const getUser = async () => {
-      const user: User = (await axios.get('/user/info/')).data;
-      console.log(user)
-      setUser(user);
+      const loadedUser = await User.loadUser();
+      console.log(loadedUser)
+      setUser(loadedUser);
     }
     getUser();
   }, []);
