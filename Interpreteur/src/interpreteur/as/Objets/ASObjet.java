@@ -12,9 +12,7 @@ import interpreteur.as.erreurs.ASErreur;
 import interpreteur.as.modules.ASModule;
 //import interpreteur.ast.buildingBlocs.expressions.Type;
 import interpreteur.ast.buildingBlocs.expressions.Type;
-import interpreteur.ast.buildingBlocs.programmes.Boucle;
 import interpreteur.executeur.Coordonnee;
-import interpreteur.executeur.Executeur;
 import interpreteur.tokens.Token;
 import interpreteur.as.erreurs.ASErreur.*;
 import interpreteur.utils.ArraysUtils;
@@ -34,6 +32,42 @@ public interface ASObjet<T> {
     boolean boolValue();
 
     String obtenirNomType();
+
+    enum TypeBuiltin {
+        tout,
+        entier,
+        decimal,
+        nombre(TypeBuiltin.entier, TypeBuiltin.decimal),
+        texte,
+        liste,
+        iterable(TypeBuiltin.texte, TypeBuiltin.liste),
+        booleen,
+        nulType,
+        fonctionType;
+
+        private final TypeBuiltin[] aliases;
+
+        TypeBuiltin() {
+            this.aliases = null;
+        }
+
+        TypeBuiltin(TypeBuiltin... alias) {
+            this.aliases = alias;
+        }
+
+        public TypeBuiltin[] getAliases() {
+            return aliases;
+        }
+
+        public Type asType() {
+            return new Type(toString());
+        }
+
+        @Override
+        public String toString() {
+            return aliases == null ? super.toString() : ArraysUtils.join("|", aliases);
+        }
+    }
 
     interface Nombre extends ASObjet<Number> {
         @Override
@@ -67,80 +101,6 @@ public interface ASObjet<T> {
         }
     }
 
-    class TypeManager {
-        public static List<ASType> typeDisponibles = new ArrayList<>();
-
-
-    }
-
-
-    class ASType implements ASObjet<Object> {
-        private ASTypeBuiltin categorie;
-        private Object[] args;
-
-        public ASType(ASTypeBuiltin categorie) {
-            this.categorie = categorie;
-            this.args = new Object[0];
-        }
-
-        public ASType(ASTypeBuiltin categorie, Object... args) {
-            this.categorie = categorie;
-            this.args = args;
-        }
-
-        public void union(ASType type) {
-
-        }
-
-        @Override
-        public Object getValue() {
-            return null;
-        }
-
-        @Override
-        public boolean boolValue() {
-            return false;
-        }
-
-        @Override
-        public String obtenirNomType() {
-            return null;
-        }
-
-        enum ASTypeBuiltin {
-            tout,
-            entier,
-            decimal,
-            nombre(ASTypeBuiltin.entier, ASTypeBuiltin.decimal),
-            texte,
-            liste,
-            iterable(ASTypeBuiltin.texte, ASTypeBuiltin.liste),
-            booleen,
-            nulType,
-            fonctionType,
-            union,
-            litteral;
-
-            private final ASTypeBuiltin[] aliases;
-
-            ASTypeBuiltin() {
-                this.aliases = null;
-            }
-
-            ASTypeBuiltin(ASTypeBuiltin... alias) {
-                this.aliases = alias;
-            }
-
-            public ASTypeBuiltin[] getAliases() {
-                return aliases;
-            }
-
-            @Override
-            public String toString() {
-                return aliases == null ? super.toString() : ArraysUtils.join("|", aliases);
-            }
-        }
-    }
 
     class Variable implements ASObjet<Object> {
         private final String nom;
@@ -530,7 +490,7 @@ public interface ASObjet<T> {
 
         @Override
         public String obtenirNomType() {
-            return "fonctionType";
+            return TypeBuiltin.fonctionType.toString();
         }
 
         /**
@@ -859,7 +819,7 @@ public interface ASObjet<T> {
 
         @Override
         public String obtenirNomType() {
-            return "texte";
+            return TypeBuiltin.texte.toString();
         }
 
         @Override

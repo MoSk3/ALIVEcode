@@ -54,10 +54,15 @@ public class CreerListe implements Expression<ASObjet.Liste> {
 
             @Override
             public ASObjet<?> eval() {
-                if (Math.abs(getIdx()) > ((ASObjet.Iterable) this.expr.eval()).taille()) {
-                    throw new ASErreur.ErreurIndex("L'index " + getIdx() + " est hors de port\u00E9 (maximum " + (((ASObjet.Iterable) this.expr.eval()).taille() - 1) + ")");
+                ASObjet<?> evalExpr = this.expr.eval();
+                if (!(evalExpr instanceof ASObjet.Iterable)) {
+                    throw new ASErreur.ErreurType("L'op\u00E9ration d'index n'est pas d\u00E9finie pour " +
+                            "un \u00E9l\u00E9ment de type '" + evalExpr.obtenirNomType() + "'.");
                 }
-                return ((ASObjet.Iterable) this.expr.eval()).get(getIdx());
+                if (Math.abs(getIdx()) > ((ASObjet.Iterable) evalExpr).taille()) {
+                    throw new ASErreur.ErreurIndex("L'index " + getIdx() + " est hors de port\u00E9 (maximum " + (((ASObjet.Iterable) evalExpr).taille() - 1) + ")");
+                }
+                return ((ASObjet.Iterable) evalExpr).get(getIdx());
             }
 
             @Override
@@ -96,7 +101,12 @@ public class CreerListe implements Expression<ASObjet.Liste> {
 
             @Override
             public ASObjet<?> eval() {
-                return ((ASObjet.Iterable) this.expr.eval()).sousSection(getDebut(), getFin());
+                ASObjet<?> evalExpr = this.expr.eval();
+                if (!(evalExpr instanceof ASObjet.Iterable)) {
+                    throw new ASErreur.ErreurType("L'op\u00E9ration de coupe n'est pas d\u00E9finie pour " +
+                            "un \u00E9l\u00E9ment de type '" + evalExpr.obtenirNomType() + "'.");
+                }
+                return ((ASObjet.Iterable) evalExpr).sousSection(getDebut(), getFin());
             }
 
             @Override

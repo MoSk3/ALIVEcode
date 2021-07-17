@@ -87,41 +87,5 @@ public class Type implements Expression<ASObjet<?>> {
                 '}';
     }
 
-    public enum TypeBuiltin {
-        tout,
-        entier,
-        decimal,
-        nombre(TypeBuiltin.entier, TypeBuiltin.decimal),
-        texte,
-        liste,
-        iterable(TypeBuiltin.texte, TypeBuiltin.liste),
-        booleen,
-        nulType,
-        fonctionType;
-
-        private final TypeBuiltin[] aliases;
-
-        TypeBuiltin() {
-            this.aliases = null;
-        }
-
-        TypeBuiltin(TypeBuiltin... alias) {
-            this.aliases = alias;
-        }
-
-        public TypeBuiltin[] getAliases() {
-            return aliases;
-        }
-
-        public Type asType() {
-            return new Type(toString());
-        }
-
-        @Override
-        public String toString() {
-            return aliases == null ? super.toString() : ArraysUtils.join("|", aliases);
-        }
-    }
-
 
 }

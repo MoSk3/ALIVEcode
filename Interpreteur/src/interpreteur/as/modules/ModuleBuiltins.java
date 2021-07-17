@@ -105,7 +105,7 @@ public class ModuleBuiltins {
 
             new ASObjet.Fonction("booleen", new ASObjet.Fonction.Parametre[]{
                     new ASObjet.Fonction.Parametre(new Type("tout"), "element", null)
-            }, Type.TypeBuiltin.booleen.asType()) {
+            }, ASObjet.TypeBuiltin.booleen.asType()) {
                 @Override
                 public ASObjet<?> executer() {
                     return new Booleen(this.getParamsValeursDict().get("element").boolValue());
@@ -122,7 +122,7 @@ public class ModuleBuiltins {
              *
              */
             new ASObjet.Fonction("info", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(Type.TypeBuiltin.tout.asType(), "element", null)
+                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.tout.asType(), "element", null)
             }, new Type("tout")) {
                 @Override
                 public ASObjet<?> executer() {
@@ -131,7 +131,7 @@ public class ModuleBuiltins {
             },
 
             new ASObjet.Fonction("getVar", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(Type.TypeBuiltin.texte.asType(), "nomVariable", null)
+                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.texte.asType(), "nomVariable", null)
             }, new Type("tout")) {
                 @Override
                 public ASObjet<?> executer() {
@@ -147,9 +147,9 @@ public class ModuleBuiltins {
     );
     public static List<ASObjet.Variable> variables = Arrays.asList(
             new ASObjet.Constante("finl", new ASObjet.Texte("\n")),
-            new ASObjet.Variable("varLocales", new ASObjet.Liste(), Type.TypeBuiltin.liste.asType()).setGetter(getVarsLocales).setReadOnly(),
-            new ASObjet.Variable("varGlobales", new ASObjet.Liste(), Type.TypeBuiltin.liste.asType()).setGetter(getVarsGlobales).setReadOnly(),
-            new ASObjet.Variable("varListe", new ASObjet.Liste(), Type.TypeBuiltin.liste.asType()).setGetter(getVarListe).setReadOnly()
+            new ASObjet.Variable("varLocales", new ASObjet.Liste(), ASObjet.TypeBuiltin.liste.asType()).setGetter(getVarsLocales).setReadOnly(),
+            new ASObjet.Variable("varGlobales", new ASObjet.Liste(), ASObjet.TypeBuiltin.liste.asType()).setGetter(getVarsGlobales).setReadOnly(),
+            new ASObjet.Variable("varListe", new ASObjet.Liste(), ASObjet.TypeBuiltin.liste.asType()).setGetter(getVarListe).setReadOnly()
     );
 
 }

@@ -142,14 +142,15 @@ function closeSymbolPair(symbol: SymbolPair, keyString: string, goBackTimes: num
     const pos = getPos();
     const line = getLine(pos.row);
 
-    if (line[pos.column] === symbol.close) {
+    if (line[pos.column] === symbol.close && keyString === symbol.close) {
         return { command: "gotoright", args: { times: 1 } }
     }
-    // doesn't add the pair if the symbole is placed before a word or an opening symbol
+
+    // doesn't add the pair if the symbol is placed before a word or an opening symbol
     else if (
-        // does nothing if the symbol is added before or after a letter or an opening symbol
-        line[pos.column]?.match(/\p{L}+/u)
-        || line[pos.column]?.match(`|${patterns.symbolPairs.map(pair => "\\" + pair.open).join("|")}`)
+        // does nothing if the symbol is added before or after a letter or the opening symbol
+        line[pos.column]?.match(/\p{L}+|\d+/u)
+        || line[pos.column] === symbol.open
         || (line[pos.column - 1]?.match(/\p{L}+/u) && symbol.close === symbol.open)
 
         // does nothing if the symbole typed is the closing symbol and the closing symbol is not the same as the opening symbol

@@ -6,23 +6,54 @@ import interpreteur.ast.buildingBlocs.expressions.Type;
 
 public class ModuleDict extends ASModule {
 
-    ASFonction creer = new ASFonction("creer", new ASObjet.Fonction.Parametre[]{
+    String dictCode = """
+            fonction Dict.creer() -> fonctionType
+                var clefs = {}
+                var valeurs = {}
+                fonction dict(clef: texte, valeur: tout = nul) -> tout
+                    si clef dans clefs
+                        var idx = indexDe(clef, clefs)
+                        si valeur != nul
+                            valeurs[idx] = valeur
+                            retourner valeur
+                        sinon
+                            retourner valeurs[idx]
+                        fin si
+                    sinon
+                        si valeur != nul
+                            clefs += clef
+                            valeurs += valeur
+                            retourner {clef, valeur}
+                        sinon
+                            retourner nul
+                        fin si
+                    fin si
+                fin fonction
+                retourner dict
+            fin fonction
+            """;
 
-    }, Type.TypeBuiltin.fonctionType.asType()) {
+    ASFonction creer = new ASFonction("creer", ASObjet.TypeBuiltin.fonctionType.asType()) {
+        @Override
+        public FonctionInstance makeInstance() {
+            return makeJavaInstance((paramsValeur) -> {
 
+                return null;
+            });
+        }
     };
 
     public static void charger() {
         ajouterModule("Dict", new ASObjet.Fonction[]{
 
-            new ASObjet.Fonction("creer", new ASObjet.Fonction.Parametre[]{
+                new ASObjet.Fonction("creer", new ASObjet.Fonction.Parametre[]{
 
-            }, Type.TypeBuiltin.fonctionType.asType()) {
-                @Override
-                public ASObjet<?> executer() {
-                    return null;
+                }, ASObjet.TypeBuiltin.fonctionType.asType()) {
+                    @Override
+                    public ASObjet<?> executer() {
+                        return null;
+                    }
                 }
-            }
         });
     }
 }

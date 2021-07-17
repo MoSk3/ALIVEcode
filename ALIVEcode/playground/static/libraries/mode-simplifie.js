@@ -40,7 +40,7 @@ ace.define(
 				"[a-zA-Z\\$_\u00a1-\uffff][a-zA-Z\\d\\$_\u00a1-\uffff]*"
 			const paramComment = `(\\{ *)(@)(${identifierRe})(.*?)(\\})`
 			const operators = /[\+\-\*\/\|\\\%\^]/;
-			const comparators = /[=><]/;
+			const comparators = /[=><!]/;
 			const typeAssignements = /:|(\b->\b)/;
 			const reserved_words = {
 				boucles: [

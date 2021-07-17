@@ -41,7 +41,7 @@ public class ModuleListeUtils extends ASModule {
              * 		@return un iterable où chaque élément est inversé
              */
             new ASObjet.Fonction("inv", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(Type.TypeBuiltin.iterable.asType(), "iter", null),
+                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.iterable.asType(), "iter", null),
             }, new Type("iterable")) {
                 @Override
                 public ASObjet<?> executer() {
@@ -219,7 +219,7 @@ public class ModuleListeUtils extends ASModule {
              * 				-> si "choix" est de type texte: le nombre de caractere dans le texte
              */
             new ASObjet.Fonction("tailleDe", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(Type.TypeBuiltin.iterable.asType(), "iter", null)
+                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.iterable.asType(), "iter", null)
             }, new Type("entier")) {
                 @Override
                 public ASObjet<?> executer() {
@@ -229,8 +229,8 @@ public class ModuleListeUtils extends ASModule {
             },
 
             new ASObjet.Fonction("indexDe", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(Type.TypeBuiltin.tout.asType(), "valeur", null),
-                    new ASObjet.Fonction.Parametre(Type.TypeBuiltin.liste.asType(), "lst", null)
+                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.tout.asType(), "valeur", null),
+                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.liste.asType(), "lst", null)
             }, new Type("entier")) {
                 @Override
                 public ASObjet<?> executer() {

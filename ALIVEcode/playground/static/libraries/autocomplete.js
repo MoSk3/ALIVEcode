@@ -36,19 +36,19 @@ var patterns = {
     ]
 };
 function closeSymbolPair(symbol, keyString, goBackTimes) {
-    var _a, _b, _c;
+    var _a, _b;
     if (goBackTimes === void 0) { goBackTimes = 1; }
     var pos = getPos();
     var line = getLine(pos.row);
-    if (line[pos.column] === symbol.close) {
+    if (line[pos.column] === symbol.close && keyString === symbol.close) {
         return { command: "gotoright", args: { times: 1 } };
     }
-    // doesn't add the pair if the symbole is placed before a word or an opening symbol
+    // doesn't add the pair if the symbol is placed before a word or an opening symbol
     else if (
-    // does nothing if the symbol is added before or after a letter or an opening symbol
-    ((_a = line[pos.column]) === null || _a === void 0 ? void 0 : _a.match(/\p{L}+/u))
-        || ((_b = line[pos.column]) === null || _b === void 0 ? void 0 : _b.match("|" + patterns.symbolPairs.map(function (pair) { return "\\" + pair.open; }).join("|")))
-        || (((_c = line[pos.column - 1]) === null || _c === void 0 ? void 0 : _c.match(/\p{L}+/u)) && symbol.close === symbol.open)
+    // does nothing if the symbol is added before or after a letter or the opening symbol
+    ((_a = line[pos.column]) === null || _a === void 0 ? void 0 : _a.match(/\p{L}+|\d+/u))
+        || line[pos.column] === symbol.open
+        || (((_b = line[pos.column - 1]) === null || _b === void 0 ? void 0 : _b.match(/\p{L}+/u)) && symbol.close === symbol.open)
         // does nothing if the symbole typed is the closing symbol and the closing symbol is not the same as the opening symbol
         || (keyString === symbol.close && symbol.close !== symbol.open)
         // return before adding the pair if the symbol is the closing symbol
