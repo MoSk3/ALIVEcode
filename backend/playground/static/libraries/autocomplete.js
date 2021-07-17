@@ -123,6 +123,9 @@ function autocomplete(data, hashId, keyString, keyCode, e) {
             }
             return closeBlock();
         }
+        // if the \b is pressed
+        if (keyString === "\b") {
+        }
     }
 }
 //#region utils

@@ -250,6 +250,10 @@ function autocomplete(data: any, hashId: number, keyString: string, keyCode: num
             }
             return closeBlock();
         }
+        // if the \b is pressed
+        if (keyString === "\b") {
+            
+        }
     }
 }
 

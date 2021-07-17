@@ -49,7 +49,11 @@ public class CreerListe implements Expression<ASObjet.Liste> {
             }
 
             public int getIdx() {
-                return (Integer) idx.eval().getValue();
+                Object valueIdx = idx.eval().getValue();
+                if (!(valueIdx instanceof Integer)) {
+                    throw new ASErreur.ErreurIndex("Un index doit \u00EAtre un nombre entier");
+                }
+                return (Integer) valueIdx;
             }
 
             @Override
@@ -90,13 +94,24 @@ public class CreerListe implements Expression<ASObjet.Liste> {
             }
 
             public int getDebut() {
-                return this.debut != null ? (Integer) this.debut.eval().getValue() : 0;
+                if (debut == null) return 0;
+
+                Object valueDebut = debut.eval().getValue();
+                if (!(valueDebut instanceof Integer)) {
+                    throw new ASErreur.ErreurIndex("Une balise de d\u00E9but doit \u00EAtre un nombre entier");
+                }
+                return (Integer) valueDebut;
             }
 
             public int getFin() {
-                return this.fin != null ?
-                        (Integer) this.fin.eval().getValue() :
-                        ((ASObjet.Iterable) this.expr.eval()).taille();
+                if (fin == null) return ((ASObjet.Iterable) this.expr.eval()).taille();
+
+                Object valueFin = fin.eval().getValue();
+
+                if (!(valueFin instanceof Integer)) {
+                    throw new ASErreur.ErreurIndex("Une balise de fin doit \u00EAtre un nombre entier");
+                }
+                return (Integer) valueFin;
             }
 
             @Override
