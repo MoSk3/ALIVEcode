@@ -1,6 +1,6 @@
 import { ClassroomInterface, CLASSROOM_SUBJECTS } from '../../Types/Playground/classroomTypes';
 import { Professor, Student } from '../User';
-import axios from 'axios';
+import { loadAllObj } from '../utils';
 
 export class Classroom implements ClassroomInterface {
   public readonly id: string;
@@ -24,8 +24,10 @@ export class Classroom implements ClassroomInterface {
   }
 
   static async loadAll(): Promise<Array<Classroom>> {
-    const classrooms = (await axios.get('/playground/classrooms')).data;
-    return classrooms.map((obj: any) => new Classroom(obj));
+    //const classrooms = (await axios.get('/playground/classrooms')).data;
+    //console.log((await axios.get(`/playground/classrooms/${classrooms[0].id}/students`)).data)
+    console.log(await loadAllObj(`/playground/classrooms`, Classroom))
+    return await loadAllObj(`/playground/classrooms`, Classroom);
   }
 
   getSubjectDisplay = ():string => {
