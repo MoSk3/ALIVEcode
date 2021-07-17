@@ -1,4 +1,4 @@
-# ALIVEweb
+# ALIVEcode
 
 Plateforme Web faite par le laboraoire LRIMa du collège Maisonneuve touchant plusieurs facettes scientifiques.
 
