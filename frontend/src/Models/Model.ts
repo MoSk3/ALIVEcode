@@ -1,4 +1,5 @@
 import { Classroom } from './Playground/Classroom';
+import Course from './Playground/Course';
 import { Student } from "./User"
 import { loadObj } from "./utils"
 
@@ -29,6 +30,9 @@ export const Database = {
                     },
                     get students(): Promise<Student[]> {
                         return loadObj(`/playground/classrooms/${id}/students`, Student) as Promise<Student[]>
+                    },
+                    get courses(): Promise<Course[]> {
+                        return loadObj(`/playground/classrooms/${id}/courses`, Course) as Promise<Course[]>
                     }
                 }
             }

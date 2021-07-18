@@ -10,6 +10,7 @@ import json
 
 from playground.forms import QuizCreationForm, QuestionCreationForm, ReponseCreationForm
 from playground.models import Question, Quiz, Response as QuizResponse
+from playground.serializers.course import CourseSerializer
 from .models import Challenge, Classroom
 
 from rest_framework.views import APIView
@@ -32,6 +33,16 @@ class ClassroomStudents(APIView):
         queryset = request.user.getClassrooms()
         classroom = get_object_or_404(queryset, pk=pk)
         serializer = StudentSerializer(classroom.students, many=True)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+class ClassroomCourses(APIView):
+    #authentication_classes = [authentication.TokenAuthentication] <- Weird not working
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, format='json', pk=None):
+        queryset = request.user.getClassrooms()
+        classroom = get_object_or_404(queryset, pk=pk)
+        serializer = CourseSerializer(classroom.courses, many=True)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 class ClassroomViewSet(viewsets.ViewSet):  

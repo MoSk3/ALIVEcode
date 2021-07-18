@@ -1,3 +1,4 @@
+import Course from '../../Models/Playground/Course';
 import { Professor, Student } from '../../Models/User';
 
 export enum CLASSROOM_SUBJECTS {
@@ -14,6 +15,6 @@ export interface ClassroomInterface {
   subject: CLASSROOM_SUBJECTS;
   creator: Professor;
   students: Array<Student>;
-  courses: Array<any>;
+  courses: Array<Course>;
   code: string;
 }

@@ -29,12 +29,13 @@ const deepConstruct = (target: any, source: any, prototype?: Object) => {
                 console.log("source: " + sourceValue)
                 source[key] = source[key].map((obj: any) => deepConstruct(Object.create(objTarget), obj, objTarget.prototype))
             }
+            else source[key] = source[key].map((obj: any) => deepConstruct({}, obj))
         }
         else if (sourceValue instanceof Object) {
             if (target.dependencies[key] != null) {
                 source[key] = deepConstruct(target[key], sourceValue, target.dependencies[key].prototype);
             }
-            else source[key] = deepConstruct(target[key], sourceValue, target.dependencies[key].prototype);
+            else source[key] = deepConstruct(target[key], sourceValue);
         }
     }
     // Join `target` and modified `source`

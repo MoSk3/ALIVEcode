@@ -39,12 +39,16 @@ export class Classroom implements ClassroomInterface {
     return await Database.playground.classrooms.get(this.id).students;
   }
 
+  async getCourses() {
+    return await Database.playground.classrooms.get(this.id).courses;
+  }
+
   static async getClassrooms(...ids: string[]) {
     return await Database.playground.classrooms.collect(...ids);
   }
 
   getSubjectDisplay(): string {
-
+    this.getCourses().then(console.log)
     //loadObj(`/playground/classrooms/${this.id}/students`, Student).then(obj => console.log(obj))
     return this.subject;
   }
