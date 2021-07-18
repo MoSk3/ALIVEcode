@@ -1,5 +1,5 @@
 import { CourseInterface, COURSE_ACCESS, COURSE_DIFFICULTY, COURSE_SUBJECT } from '../../Types/Playground/courseType';
-import { Professor, User } from '../User';
+import { User } from '../User';
 
 class Course implements CourseInterface {
     public readonly id: string;

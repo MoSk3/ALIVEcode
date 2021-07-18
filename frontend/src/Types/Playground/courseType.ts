@@ -1,4 +1,4 @@
-import { Professor, User } from '../../Models/User';
+import { User } from '../../Models/User';
 
 export enum COURSE_SUBJECT {
   INFORMATIC = "in",
