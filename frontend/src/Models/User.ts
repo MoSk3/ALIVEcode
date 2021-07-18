@@ -3,6 +3,8 @@ import axios from 'axios';
 
 export class Professor implements ProfessorInterface {
 
+  public static dependencies = {}
+
   public first_name: string;
   public last_name: string;
 
@@ -17,6 +19,8 @@ export class Professor implements ProfessorInterface {
 }
 
 export class Student implements StudentInterface {
+
+  public static dependencies = {}
 
   public name: string;
   public grade: GRADES | undefined;
