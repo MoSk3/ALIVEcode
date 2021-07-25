@@ -163,6 +163,13 @@ public class Scope {
                     .orElse(parent == null ? null : parent.getVariable(nom));
         }
 
+        public ASObjet.Variable getVariable(ASObjet.Variable variable) {
+            return variableStack.stream()
+                    .filter(var -> var.equals(variable))
+                    .findFirst()
+                    .orElse(parent == null ? null : parent.getVariable(variable));
+        }
+
         @Override
         public String toString() {
             return "ScopeInstance{" +

@@ -47,7 +47,10 @@ public class CreerSetter extends Programme {
             ASFonction set = new ASFonction(this.var.getNom(), new ASObjet.Fonction.Parametre[]{
                     new ASObjet.Fonction.Parametre(this.type, this.nomArg.getNom(), null)
             }, this.type);
-            set.setScope(this.scope);
+
+            scope.declarerVariable(new ASObjet.Variable(this.nomArg.getNom(), null, this.type));
+
+            set.setScope(scope);
             set.setCoordBlocName("set_");
 
             return set.makeInstance().executer(new ArrayList<>(Collections.singletonList(valeur)));

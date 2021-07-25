@@ -600,16 +600,19 @@ public class Executeur {
 
     public static void main(String[] args) {
         String[] lines = new String[]{
-                "var d = {1...7}",
+                "fonction abc(p1, p2, p3)",
+                "    afficher p1 * p2 * p3",
+                "    fonction oo(msg: texte) -> rien",
+                "        afficher msg",
+                "    fin fonction",
+                "    retourner oo",
+                "fin fonction",
                 "",
                 "",
+                "abc 1, 2, 3 'salut'",
                 "",
-                "afficher d",
                 "",
-                "",
-                "d[1:4] = {3}",
-                "",
-                "afficher d"
+                "abc(1, 2, 3)"
         };
         debug = true;
         System.out.println(compiler(lines, true));

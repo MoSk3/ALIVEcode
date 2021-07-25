@@ -63,10 +63,12 @@ public class CreerListe implements Expression<ASObjet.Liste> {
                     throw new ASErreur.ErreurType("L'op\u00E9ration d'index n'est pas d\u00E9finie pour " +
                             "un \u00E9l\u00E9ment de type '" + evalExpr.obtenirNomType() + "'.");
                 }
-                if (Math.abs(getIdx()) > ((ASObjet.Iterable) evalExpr).taille()) {
-                    throw new ASErreur.ErreurIndex("L'index " + getIdx() + " est hors de port\u00E9 (maximum " + (((ASObjet.Iterable) evalExpr).taille() - 1) + ")");
+                int idx = getIdx();
+                if (Math.abs(idx < 0 ? idx + 1 : idx) >= ((ASObjet.Iterable) evalExpr).taille()) {
+                    int bound = (((ASObjet.Iterable) evalExpr).taille() - 1);
+                    throw new ASErreur.ErreurIndex("L'index " + idx + " est hors de port\u00E9 (entre " + -(bound + 1) + " et " + bound + ")");
                 }
-                return ((ASObjet.Iterable) evalExpr).get(getIdx());
+                return ((ASObjet.Iterable) evalExpr).get(idx);
             }
 
             @Override

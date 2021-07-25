@@ -75,6 +75,9 @@ ace.define(
 					"\\bunir\\b",
 					"\\bjoindre\\b",
 					"\\bindexDe\\b",
+					"\\bremplacer\\b",
+					"\\bremplacerRe\\b",
+					"\\bmatch\\b",
 
 					// iterable (liste + texte)
 					"\\binverser\\b",

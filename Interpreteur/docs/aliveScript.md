@@ -11,19 +11,35 @@
     `sur plusieurs`  
     `lignes`  
     `:)`
+- documentation:
+  - ouverture: `(-:`
+  - fermeture: `:-)`
+  - ex:
+    ```
+    (-:  
+    Cette fonction additionne deux nombres et retourne le résultat  
+    @param num1: le premier nombre  
+    @param num2: le deuxième nombre  
+    @retourne la somme deux deux nombres  
+    :-)
+    fonction additionner(num1: nombre, num2: nombre) -> nombre
+      retourner num1 + num2
+    fin fonction
+    ```
 
 
 #### i/o 
 - output:
   - commande ***`afficher`*** : <code>afficher *valeur*</code>
 - input:
-  - commande ***`lire dans`*** : <code>lire dans *var*</code>
+  - commande ***`lire dans`*** : <code>lire dans *variable*</code>
 
 
 #### Variables
 - Nom: 
-  - commence par une lettre (toutes les lettres unicodes)
+  - commence par une lettre (toutes les lettres unicodes) ou `_`
   - ensuite, autorise les lettres (toutes les lettres unicodes), les `.`, les `_` et les chiffres
+  - ex: `nom` `num1` `école` `e_12.ahn1` `additioner_deux_nombres` `test.num3`
 - [typage](#typage)
 
 - ##### Getter
@@ -35,8 +51,17 @@
   - utilité:
     > fonction appelée lorsque l'on veut obtenir la valeur d'une variable (par exemple pour l'afficher)
     > La valeur retournée par le get est la valeur obtenu lorsqu'on veut obtenir la valeur de la variable
-  - param: *le getter prend la variable comme paramètre, elle doit donc avoir une valeur avant que le getter soit appelé*
   - type retour: *le type retourné d'un getter doit être le même que le type de la variable* 
+  - ex:
+    ```
+    get abc
+      retourner 3
+    fin get
+
+    var abc = 10
+
+    afficher abc # 3
+    ```
 
 - ##### Setter
   - **LES CONSTANTES NE PEUVENT PAS AVOIR DE SETTER**
@@ -50,29 +75,43 @@
     > fonction appelée lorsque l'on assigne une valeur à la variable
     > La valeur retournée par le set est la valeur assignée à la variable
   - type param: *le type du param est* `tout` *s'il n'est pas précisé*
-  - type retour: *le type retourné d'un setter doit être le même que le type de la variable*
+  - type retour: *le type retourné d'un setter doit être le **même** que le type de la variable*
+  - ex:
+    ```
+    set abc(valeur)
+      retourner valeur * 2
+    fin get
+
+    var abc = 10
+
+    afficher abc # 20
+
+    abc = 2
+
+    afficher abc # 4
+    ```
 
 - ##### Déclaration:
   - variable:
-    - sans type: <code>*var* = *valeur*</code>
-    - avec type: <code>*var*: *type* = *valeur*</code>
+    - sans type: <code>var *variable* = *valeur*</code>
+    - avec type: <code>var *variable*: *type* = *valeur*</code>
   - constante:
-    - sans type: <code>const *var* = *valeur*</code>
-    - avec type: <code>const *var*: *type* = *valeur*</code>
+    - sans type: <code>const *variable* = *valeur*</code>
+    - avec type: <code>const *variable*: *type* = *valeur*</code>
 
 - ##### Assignement:
-  - assignement variable: <code>*var* = *valeur*</code>
+  - assignement variable: <code>*variable* = *valeur*</code>
   - assignement constante: <code>**ERREUR: IMPOSSIBLE DE RÉASSIGNER UNE CONSTANTE**</code>
-  - assignement variable avec opération arithmétique <code>*var* **[operation](#arithmétique)**= *valeur*</code>
-    - <code>*var* += *valeur*</code>
-    - <code>*var* -= *valeur*</code>
-    - <code>*var* *= *valeur*</code>
-    - <code>*var* /= *valeur*</code>
-    - <code>*var* %= *valeur*</code>
-    - <code>*var* ^= *valeur*</code>
-    - <code>*var* //= *valeur*</code> 
-  - incrément: <code>*var*++</code>
-  - décrément: <code>*var*--</code>
+  - assignement variable avec opération arithmétique <code>*variable* **[operation](#arithmétique)**= *valeur*</code>
+    - <code>*variable* += *valeur*</code>
+    - <code>*variable* -= *valeur*</code>
+    - <code>*variable* *= *valeur*</code>
+    - <code>*variable* /= *valeur*</code>
+    - <code>*variable* %= *valeur*</code>
+    - <code>*variable* ^= *valeur*</code>
+    - <code>*variable* //= *valeur*</code> 
+  - incrément: <code>*variable*++</code>
+  - décrément: <code>*variable*--</code>
 
 #### Arithmétique
 - addition:         `+`
@@ -122,7 +161,7 @@
 - ##### Typage:
   - variable ou paramètre: <code>*nom*: *type*</code>
   - constante: <code>const *nom*: *type*</code>
-  - retour fonction: <code>fonction *nom*() -> *type*</code>
+  - retour d'une fonction: <code>fonction *nom*() -> *type*</code>
   
 - ##### Types builtins:
   - `tout`
@@ -138,30 +177,37 @@
   
   - `iterable`:
     - `texte`: <code>"*texte*"</code> **OU** <code>'*texte*'</code>
-    - `liste`: <code>{*valeur1*, *valeur2*, *etc.*}</code>
+    - `liste`: <code>[*valeur1*, *valeur2*, *etc.*]</code>
   
   - `fonctionType` syntaxe: [fonction](#Fonction)
   - `nulType` syntaxe: `nul`
+  - `rien` syntaxe: `rien`
 
 
 
 #### Iterable (liste | texte)
 - ##### index:
-  - obtenir valeur à l'index: <code>*var*\[*index*]</code>
-  - assigner valeur à l'index: <code>*var*\[*index*] = *valeur*</code>
+  - obtenir valeur à l'index: <code>*variable*\[*index*]</code>
+  - assigner valeur à l'index: <code>*variable*\[*index*] = *valeur*</code>
   
 - ##### ranges:
-  - obtenir valeurs dans le range: <code>*var*\[*debut*:*fin*]</code>
-  - assigner valeurs dans le range: <code>*var*\[*debut*:*fin*] = *valeurIterable*</code>
+  - obtenir valeurs dans le range: <code>*variable*\[*debut*:*fin*]</code>
+  - assigner valeurs dans le range: <code>*variable*\[*debut*:*fin*] = *valeurIterable*</code>
   
 - ##### suites: 
-  - syntaxe: <code>{*debut* ... *fin*}</code> **OU** <code>{*debut* ... *fin* bond *valeurEntier*}</code>
+  - syntaxe: <code>[*debut* ... *fin*]</code> **OU** <code>[*debut* ... *fin* bond *valeurEntier*]</code>
   - nombre
+    - ex: 
+      - `[1 ... 7] == [1, 2, 3, 4, 5, 6, 7]`
+      - `[1 ... 7 bond 2] == [1, 3, 5, 7]`
   - lettres
+    - ex:
+      - `['e' ... 'm'] == ['e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm']`
+      - `['L' ... 'E' bond -1] == ["L", "K", "J", "I", "H", "G", "F", "E"]`
   
 - ##### opérateurs `dans` **ET** `pas dans`
-  - ex: <code>si *var* dans *valeurIterable*</code>
-  - ex: <code>si *var* pas dans *valeurIterable*</code>
+  - ex: <code>si *variable* dans *valeurIterable*</code>
+  - ex: <code>si *variable* pas dans *valeurIterable*</code>
 
 
 #### Control flow
@@ -185,7 +231,13 @@
     - fermeture: <code>tant que *condition*</code>
   
   - pour
-    - ouverture: <code>pour *var* dans *valeurIterable*</code>
+    - ouverture: 
+      - La variable itérée existe déjà:
+        - <code>pour *variable* dans *valeurIterable*</code>
+      - La variable itérée n'existe pas: 
+        - <code>pour var *variable* dans *valeurIterable*</code>
+      - La variable itérée n'existe pas **ET** c'est une constante: 
+        - <code>pour const *variable* dans *valeurIterable*</code>
     - fermeture: `fin pour`
 
 - ##### control flow
@@ -204,7 +256,7 @@
 - ##### Modules builtins:
   - builtins (n'a pas besoin d'être `utiliser`, car il est utilisé par défaut):
     - fonctions:
-      - <s>info</s>
+      - ~~info~~
       
       - aleatoire(choix: iterable) -> tout
       - typeDe(element: tout) -> texte
@@ -225,6 +277,9 @@
       - minus(txt: texte) -> texte
       - estNumerique(txt: texte) -> booleen
       - format(txt: texte, valeurs: liste) -> texte
+      - remplacer(txt: texte, pattern: texte, remplacement: texte) -> texte
+      - remplacerRe(txt: texte, pattern: texte, remplacement: texte) -> texte
+      - match(txt: texte, pattern: texte) -> booleen
       
       - texte(element: tout) -> texte
       - entier(txt: texte, base: entier = 10) -> entier

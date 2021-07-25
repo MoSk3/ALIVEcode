@@ -912,12 +912,15 @@ public interface ASObjet<T> {
 
         @Override
         public String toString() {
-            return "{" +
+            final char openingSymbol = '[';
+            final char closingSymbol = ']';
+
+            return openingSymbol +
                     String.join(", ", this.valeur
                             .stream()
                             .map(e -> e instanceof Texte ? '"' + e.toString() + '"' : e.toString())
                             .toArray(String[]::new))
-                    + "}";
+                    + closingSymbol;
         }
 
         @Override
