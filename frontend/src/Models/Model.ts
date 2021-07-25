@@ -13,7 +13,7 @@ interface Model {
 /** 
  * Level of abstraction to access the database from the frontend
  * @author: Mathis Laroche
- */ 
+ */
 export const Database = {
     /** All the models in playground */
     playground: {
@@ -31,12 +31,12 @@ export const Database = {
              *              > the {@link Classroom classroom} with the corresponding id  
              *          `more than one` id is passed:  
              *              > an {@link Array array} containing the {@link Classroom classrooms} with the corresponding id
-             */ 
+             */
             collect(...ids: string[]): Promise<Classroom | Classroom[]> {
                 if (ids.length === 0) throw new Error("You need to specify at least one id to collect");
 
                 else if (ids.length === 1) return loadObj(`/playground/classrooms/${ids[0]}`, Classroom) as Promise<Classroom>
-                
+
                 else return Promise.all(ids.map((id) => loadObj(`/playground/classrooms/${id}`, Classroom))) as Promise<Classroom[]>;
             },
             /**
@@ -68,11 +68,49 @@ export const Database = {
                     }
                 }
             }
+        },
+        courses: {
+            /** @returns an array of all the courses that the user created */
+            get all(): Promise<Course[]> {
+                return loadObj(`/playground/courses`, Course) as Promise<Course[]>
+            },
+            /** 
+             * Request one or more {@link Course course} object *that the user created* from the backend
+             * @param ids ids of the course that the user created and want to access
+             * @throws an error if the user doesn't pass any id
+             * @returns `one` id is passed:  
+             *              > the {@link Course course} with the corresponding id  
+             *          `more than one` id is passed:  
+             *              > an {@link Array array} containing the {@link Course courses} with the corresponding id
+             */
+            collect(...ids: string[]): Promise<Course | Course[]> {
+                if (ids.length === 0) throw new Error("You need to specify at least one id to collect");
+
+                else if (ids.length === 1) return loadObj(`/playground/courses/${ids[0]}`, Course) as Promise<Course>
+
+                else return Promise.all(ids.map((id) => loadObj(`/playground/courses/${id}`, Course))) as Promise<Course[]>;
+            },
+            /**
+             * This is an **intermediate operation** used to access a certain {@link Course course} 
+             * without doing a request to the server yet
+             * @param id the id of the {@link Course course} that you want to access
+             * @returns an object containing getters that will request certain field(s) from the {@link Course course}
+             * with the corresponding id
+             */
+            get(id: string) {
+                return {
+                    /** Is equivalent to {@link Database.playground.courses.collect Database.playground.courses.collect(id)} */
+                    get collect(): Promise<Course> {
+                        return loadObj(`/playground/courses/${id}`, Course) as Promise<Course>
+                    }
+                }
+            }
+        },
+        challenges: {
+
         }
     }
 }
-
-
 
 
 
