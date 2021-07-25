@@ -7,8 +7,12 @@ const StyledButton = styled.button`
   border: none;
   border-radius: 10px;
   color: white;
-  padding: 2px 2px;
+  padding: 5px 5px;
   transition: 0.2s;
+
+  &:hover {
+    background-color: var(--contrast-color);
+  }
 `
 
 const IconButton = (props: IconButtonProps) => {

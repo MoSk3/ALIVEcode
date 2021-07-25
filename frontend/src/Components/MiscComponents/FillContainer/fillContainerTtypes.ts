@@ -5,4 +5,5 @@ export type FillContainerProps = {
   className?: string;
   style?: any;
   startAtTop?: boolean;
+  relative?: boolean;
 }

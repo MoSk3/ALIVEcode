@@ -13,7 +13,8 @@ const BackArrow = ({ color }: BackArrowProps) => {
         cursor: 'pointer',
         position: 'fixed',
         bottom: '25px',
-        left: '25px'
+        left: '25px',
+        zIndex: 100
       }}
       icon={faArrowLeft}
       size="3x"

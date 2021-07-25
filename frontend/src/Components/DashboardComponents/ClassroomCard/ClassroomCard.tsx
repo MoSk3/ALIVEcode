@@ -6,8 +6,6 @@ import IconButton from '../IconButton/IconButton';
 import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Classroom } from '../../../Models/Playground/Classroom';
-import { loadObj } from '../../../Models/utils';
 
 
 const StyledDiv = styled.div` 
