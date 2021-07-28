@@ -5,7 +5,7 @@ type TypeLoadObj = <T extends Object>(url: string, target: Model & Function, bod
 
 export const loadObj: TypeLoadObj = async (url, target, body?) => {
     const data = (await axios.get(url)).data;
-    console.log(data)
+    console.trace(data)
     return Array.isArray(data) ?
         data.map((obj: any) => deepConstruct(Object.create(target), obj, target.prototype))
         :
