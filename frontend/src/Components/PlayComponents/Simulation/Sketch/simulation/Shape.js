@@ -73,12 +73,13 @@ export class Shape {
 	setImg(img) {
 		//if (!this.isRect()) throw new ShapeException('Cannot apply an image to a shape that is not a rectangle')
 		this.img = img
-		for (const [imgName, img] of Object.entries(this.s.dictImages)) {
+		// TODO: images saving
+		/*for (const [imgName, img] of Object.entries(this.s.dictImages)) {
 			if (img === this.img) {
 				this.imgName = imgName
 				break
 			}
-		}
+		}*/
 	}
 
 	setTexture(img, res = 1) {

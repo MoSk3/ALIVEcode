@@ -1,6 +1,6 @@
 import FillContainer from '../../Components/MiscComponents/FillContainer/FillContainer';
 import { ChallengeProps } from './challengeTypes';
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext, createRef, useRef } from 'react';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import { useAlert } from 'react-alert';
@@ -9,9 +9,10 @@ import { UserContext } from '../../UserContext';
 import Simulation from '../../Components/PlayComponents/Simulation/Simulation';
 import { Row, Col } from 'react-bootstrap';
 import styled from 'styled-components';
-import { faBookOpen, faCog, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import { faBookOpen, faCog, faPlayCircle, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import IconButton from '../../Components/DashboardComponents/IconButton/IconButton';
 import Cmd from '../../Components/PlayComponents/Cmd/Cmd';
+import ChallengeExecutor from './ChallengeExecutor';
 
 const StyledDiv = styled(FillContainer)`
   overflow-y: hidden;
@@ -25,7 +26,16 @@ const StyledDiv = styled(FillContainer)`
 const Challenge = (props: ChallengeProps) => {
   const alert = useAlert();
   const history = useHistory();
+
   const [challenge, setChallenge] = useState<any>();
+  const [content, setContent] = useState<string>('');
+
+  const playButton = useRef<HTMLButtonElement>(null);
+
+  const lineInterfaceContentChanges = (content: any) => {
+    setContent(content);
+  }
+
   const { user } = useContext(UserContext);
 
   useEffect(() => {
@@ -58,15 +68,16 @@ const Challenge = (props: ChallengeProps) => {
               ) : (
                 <label id="label-challenge-name" style={{ color: 'white', marginLeft: '5px' }}>{challenge.name}</label>
               )}
+              <IconButton icon={faPlayCircle} size="2x" ref={playButton} />
             </div>
 
-            <LineInterface />
+            <LineInterface content={content} handleChange={lineInterfaceContentChanges} />
 
           </Col>
 
           <Col md={6} style={{ resize: 'both', padding: '0' }}>
             <Row id="simulation-row" style={{ height: '60%' }}>
-              <Simulation />
+              <Simulation init={(s) => ChallengeExecutor(s, playButton.current, content)} />
             </Row>
             <Row style={{ height: '40%' }}>
                 <Cmd></Cmd>

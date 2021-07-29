@@ -12,6 +12,7 @@ import SmallCard from '../../Components/MainComponents/SmallCard/SmallCard';
 
 const Dashboard = (props: DashboardProps) => {
 	const { user } = useContext(UserContext);
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [classrooms, setClassrooms] = useState<Array<Classroom>>();
 
 	useEffect(() => {

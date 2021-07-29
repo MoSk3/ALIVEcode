@@ -1,6 +1,5 @@
 // La simulation utilse la library p5.js
 import { Shape } from './Shape';
-import { PhysicEngine } from '../physicEngine/physicEngine';
 import { FixedObject } from "./FixedObject";
 import { FixedTextObject } from "./FixedTextObject";
 import { Obstacle } from './Obstacle';
@@ -15,22 +14,20 @@ import { loadImages, loadSounds, images } from "./assets";
 import { editModeSection } from "./editMode";
 import { overlap } from './functions';
 import $ from "jquery";
+import { PhysicEngine } from '../physicEngine/physicEngine';
 
 export const sketch = (s) => {
     // #region Setup
-
-
+    
     let width;
     let height;
     let canvas;
     let jCanvas;
     let canvasDiv;
-    var init;
-    var editor;
 
     s.myCustomRedrawAccordingToNewPropsHandler = (props) => {
-        if (props.init) init = props.init;
-        if (props.editor) editor = props.editor;
+        if (props.init) s.init = props.init;
+        if (props.fullscreenDiv) s.fullscreenDiv = $(`#${props.fullscreenDiv}`);
     };
 
     s.preload = () => {
@@ -44,21 +41,17 @@ export const sketch = (s) => {
 
     s.setup = () => {
 
-        console.log("HERE")
+        console.log("SETUP")
 
         //************************** Setup Canvas **********************************
         
-        // TODO fullscreen div
         canvasDiv = $('#simulation-div');
-        /*if (!$('#fullscreen-div').length)
-            $('body').prepend('<div id="fullscreen-div"></div>');
-        s.fullscreenDiv = $('#fullscreen-div');
-        s.zoomButton = $('#zoom-button');*/
+        //s.zoomButton = $('#zoom-button');
 
-        // Fonctiion pour zoomer/dezoomer
+        // Fonction pour zoomer/dezoomer
         const zoom = () => {
             if (s.fullscreenDiv.css('display') === 'none') {
-                const previousParent = canvasDiv.parent();
+                //const previousParent = canvasDiv.parent();
                 s.fullscreenDiv.css('display', 'block');
                 canvasDiv.css('height', '100%');
                 canvasDiv.appendTo(s.fullscreenDiv);
@@ -192,10 +185,7 @@ export const sketch = (s) => {
             s.editModeSection = editModeSection;
             s.editModeSection(s);
         }
-        if (typeof init === 'function') {
-            s.init = init;
-            s.init(s);
-        }
+        if(s.init) s.init(s);
 
         s.maxFPS = 30;
         s.frameRate(60);
@@ -283,8 +273,9 @@ export const sketch = (s) => {
 
             s.mouseWasPressed = s.mouseIsPressed;
 
+            // TODO: save
             //Save
-            s.saveConditions();
+            //s.saveConditions();
 
             // TOUJOURS EN DERNIER DANS DRAW (si pas pause)
             s.pdt = Date.now();
@@ -718,7 +709,8 @@ export const sketch = (s) => {
         s.text("FPS: " + Math.round(fps), s.width / 10, s.height / 2 - size);
     };
 
-    s.saveConditions = () => {
+    // TODO: Move save conditions
+    /*s.saveConditions = () => {
         if (s.creator) {
             if (s.editorText !== editor.getValue()) {
                 s.levelHasChanged = true;
@@ -742,7 +734,7 @@ export const sketch = (s) => {
             if (!s.saving)
                 s.automaticSave();
         }
-    };
+    };*/
     // #endregion
 
     // #endregion
@@ -1108,12 +1100,14 @@ export const sketch = (s) => {
         s.clear();
         let json = JSON.parse(data, (key, value) => {
             if (value != null && typeof value === 'object' && Object.keys(value).length === 2 && "x" in value && "y" in value) {
+                // eslint-disable-next-line new-parens
                 let vec = Object.assign(new Vector, value);
                 vec.calculateLength();
                 return vec;
             }
             return value;
         });
+        // eslint-disable-next-line new-parens
         s.canvasCamera = Object.assign(new CanvasCamera, json["cam"]);
 
         for (const [z_index, shapes] of Object.entries(json["shapes"])) {
@@ -1205,8 +1199,9 @@ export const sketch = (s) => {
         s.shapes = json["shapes"];
         s.canvasCamera.setPos(s.car.shape.pos.clone(), false);
 
-        if (!s.progression)
-            editor.setValue(json["initial_code"].join("\n"));
+        // TODO: change this thing
+        /*if (!s.progression)
+            editor.setValue(json["initial_code"].join("\n"));*/
 
         return json;
     };

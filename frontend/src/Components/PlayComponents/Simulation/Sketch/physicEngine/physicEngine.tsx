@@ -7,6 +7,8 @@ function handleErrors(message: string) {
 	throw new Error(message)
 }
 
+console.log("IMPORT")
+
 /**
  * @author Félix Jobin
  * @translator Mathis Laroche
@@ -18,6 +20,7 @@ function handleErrors(message: string) {
  * All methods in this class are static, and since it's an abstract class, it cannot be instantiated.
  *
  */
+
 export const PhysicEngine: any = {
     s: null,
 

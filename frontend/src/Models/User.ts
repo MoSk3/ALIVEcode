@@ -1,7 +1,5 @@
 import { BackendUser, GRADES, ProfessorInterface, StudentInterface, UserInterface } from '../Types/userTypes';
 import axios from 'axios';
-import { Database } from './Model';
-import { Classroom } from './Playground/Classroom';
 
 export class Professor implements ProfessorInterface {
 

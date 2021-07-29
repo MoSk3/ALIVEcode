@@ -1,4 +1,4 @@
 
-export type SimulationTypes = {
-    
+export type SimulationProps = {
+  init: (s: any) => void;
 }

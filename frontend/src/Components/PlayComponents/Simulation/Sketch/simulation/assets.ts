@@ -1,16 +1,25 @@
-
+import Voiture from '../../../../../assets/images/Voiture.gif';
+import CarTop from '../../../../../assets/images/simulation/misc/VoitureDessus.png';
+import CarTopG from '../../../../../assets/images/simulation/misc/VoitureDessusG.png';
+import CarTopD  from '../../../../../assets/images/simulation/misc/VoitureDessusD.png';
+/*import  from '../../../../../assets/images/';
+import  from '../../../../../assets/images/';
+import  from '../../../../../assets/images/';
+import  from '../../../../../assets/images/';
+*/
 export const images: { [key: string]: any } = {};
 
 //export const dictImages: { [key: string]: any } = {};
 
+
 export const loadImages = (s: any) => {
-  /*images.carTop = s.loadImage('/static/images/simulation/misc/VoitureDessus.PNG')
-  images.carTopG = s.loadImage('/static/images/simulation/misc/VoitureDessusG.PNG')
-  images.carTopD = s.loadImage('/static/images/simulation/misc/VoitureDessusD.PNG')
-  images.animatedCar = s.loadImage('/static/images/Voiture.gif')
+  images.carTop = s.loadImage(CarTop)
+  images.carTopG = s.loadImage(CarTopG)
+  images.carTopD = s.loadImage(CarTopD)
+  images.animatedCar = s.loadImage(Voiture);
 
   // Outils pour edit
-  images.tools = s.loadImage('/static/images/simulation/editeur/tools.png')
+  /*images.tools = s.loadImage('/static/images/simulation/editeur/tools.png')
   images.trash = s.loadImage('/static/images/simulation/editeur/trash.png')
   images.trashOpen = s.loadImage('/static/images/simulation/editeur/trashOpen.png')
   images.undo = s.loadImage('/static/images/simulation/editeur/undo.png')
@@ -75,7 +84,7 @@ export const loadImages = (s: any) => {
   images.crackHole = s.loadImage('/static/images/simulation/decorations/holeCrack.png')
 
   images.gazon.delay(10000);
-  images.alien.delay(1000000000);
+  images.alien.delay(1000000000);*/
 
   /*
   dictImages.carTop = images.carTop;
