@@ -8,7 +8,7 @@ const StyledContainer = styled.div`
   position: absolute;
 `
 
-const FillContainer = ({ centered, startAtTop, children, style, className }: FillContainerProps) => {
+const FillContainer = ({ centered, startAtTop, children, style, className, relative, id }: FillContainerProps) => {
   const styledContainerRef = useRef<any>(null);
 
   const finalStyles = {
@@ -25,18 +25,24 @@ const FillContainer = ({ centered, startAtTop, children, style, className }: Fil
 
     const resizeDiv = () => {
       if (styledContainerRef !== null && styledContainerRef.current !== null) {
-        if (startAtTop) {
-          styledContainerRef.current.style.height = window.innerHeight + "px";
-        } else {
-          const navbar = document.getElementById('navbar');
-          if (navbar)
-            styledContainerRef.current.style.height = (window.innerHeight - navbar.clientHeight) + "px";
+        if (relative) {
+          styledContainerRef.current.style.height = styledContainerRef.current.parentNode.closest('div').clientHeight + "px";
+        }
+        else {
+          if (startAtTop) {
+            styledContainerRef.current.style.height = window.innerHeight + "px";
+          } else {
+            const navbar = document.getElementById('navbar');
+            if (navbar)
+              styledContainerRef.current.style.height = (window.innerHeight - navbar.clientHeight) + "px";
+          }
         }
       }
     }
 
     window.addEventListener('resize', resizeDiv)
-    resizeDiv();
+    resizeDiv()
+    setTimeout(resizeDiv, 50);
 
     return () => {
       window.removeEventListener('resize', resizeDiv);
@@ -44,7 +50,7 @@ const FillContainer = ({ centered, startAtTop, children, style, className }: Fil
   });
 
   return (
-    <StyledContainer className={className} style={finalStyles} ref={styledContainerRef}>
+    <StyledContainer id={id} className={className} style={finalStyles} ref={styledContainerRef}>
       {children}
     </StyledContainer>
   );

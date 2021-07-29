@@ -1,13 +1,13 @@
 import { ClassroomInterface, CLASSROOM_SUBJECTS } from '../../Types/Playground/classroomTypes';
 import { Database } from '../Model';
 import { Professor, Student } from '../User';
-
+import Course from './Course';
 
 export class Classroom implements ClassroomInterface {
 
   public static dependencies = {
     creator: Professor,
-    students: Student
+    students: Student,
   }
 
   public readonly id: string;
@@ -16,7 +16,7 @@ export class Classroom implements ClassroomInterface {
   public subject: CLASSROOM_SUBJECTS;
   public creator: Professor;
   public students: Student[];
-  public courses: any[];
+  public courses: Course[];
   public code: string;
 
   constructor({ id, name, description, subject, creator, students, courses, code }: ClassroomInterface) {
@@ -30,17 +30,16 @@ export class Classroom implements ClassroomInterface {
     this.code = code;
   }
 
-  static async loadAll(): Promise<Classroom[]> {
-    //return await loadObj(`/playground/classrooms`, Classroom) as Classroom[];
-    return await Database.playground.classrooms.all;
-  }
-
   async getStudents() {
-    return await Database.playground.classrooms.get(this.id).students;
+    if(this.students) return this.students;
+    this.students = await Database.playground.classrooms.get(this.id).students;
+    return this.students;
   }
 
   async getCourses() {
-    return await Database.playground.classrooms.get(this.id).courses;
+    if(this.courses) return this.courses;
+    this.courses = await Database.playground.classrooms.get(this.id).courses;
+    return this.courses;
   }
 
   static async getClassrooms(...ids: string[]) {
@@ -48,7 +47,6 @@ export class Classroom implements ClassroomInterface {
   }
 
   getSubjectDisplay(): string {
-    this.getCourses().then(console.log)
     //loadObj(`/playground/classrooms/${this.id}/students`, Student).then(obj => console.log(obj))
     return this.subject;
   }

@@ -8,18 +8,19 @@ import { useHistory } from 'react-router-dom';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import ClassroomCard from '../../Components/DashboardComponents/ClassroomCard/ClassroomCard';
 import { Classroom } from '../../Models/Playground/Classroom';
+import SmallCard from '../../Components/MainComponents/SmallCard/SmallCard';
 
 const Dashboard = (props: DashboardProps) => {
 	const { user } = useContext(UserContext);
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [classrooms, setClassrooms] = useState<Array<Classroom>>();
-	console.log(classrooms)
 
 	useEffect(() => {
 		const getClassrooms = async () => {
-			setClassrooms(await Classroom.loadAll());
+			//setClassrooms(await user?.getClassrooms());
 		}
 		getClassrooms();
-	}, [])
+	}, [user])
 
 	const history = useHistory();
 
@@ -36,7 +37,8 @@ const Dashboard = (props: DashboardProps) => {
 				title="Mes classes"
 				style={{ marginTop: '20px' }}
 				onIconClick={() => history.push('/playground/join-classroom')}
-				icon={faPlus}>
+				icon={faPlus}
+			>
 				{classrooms === undefined ? (
 					"Loading..."
 				) : (
@@ -44,6 +46,13 @@ const Dashboard = (props: DashboardProps) => {
 						<ClassroomCard key={idx} classroom={classroom} />
 					))
 				)}
+			</CardContainer>
+			<CardContainer
+				title="Niveaux"
+			>
+				<SmallCard>
+						test
+				</SmallCard>
 			</CardContainer>
 		</CenteredContainer>
 	)

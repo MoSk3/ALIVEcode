@@ -14,10 +14,10 @@ const HomeCard = ({ title, content, to, img, onClick }: HomeCardProps) => {
           <img src={img} className="card-img" alt="..."></img>
         </Col>
         <Col md={8}>
-          <Card.Body>
+          <div style={{padding: '25px', color: 'black'}}>
             <Card.Title as="h4">{title}</Card.Title>
             <Card.Text as="p">{content}</Card.Text>
-          </Card.Body>
+          </div>
         </Col>
       </Row>
     </Card>

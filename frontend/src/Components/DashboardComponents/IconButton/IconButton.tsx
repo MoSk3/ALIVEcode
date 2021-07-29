@@ -1,23 +1,28 @@
 import { IconButtonProps } from './iconButtonTypes';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React, { RefObject } from 'react';
 
 const StyledButton = styled.button`
   background-color: var(--third-color);
   border: none;
   border-radius: 10px;
   color: white;
-  padding: 2px 2px;
+  padding: 5px 5px;
   transition: 0.2s;
+
+  &:hover {
+    background-color: var(--contrast-color);
+  }
 `
 
-const IconButton = (props: IconButtonProps) => {
+const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>((props, ref) => {
 
   return (
-    <StyledButton>
+    <StyledButton ref={ref}>
       <FontAwesomeIcon fixedWidth {...props} />
     </StyledButton>
   );
-}
+});
 
 export default IconButton;

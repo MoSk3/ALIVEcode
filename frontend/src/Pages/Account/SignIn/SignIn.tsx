@@ -29,7 +29,7 @@ const SignIn = (props: SignInProps) => {
 			const user = await User.loadUser();
 			setUser(user);
 
-			history.push('/dashboard');
+			if(history.location.pathname === '/signin') history.push('/dashboard');
 			return alert.success("Vous êtes connecté!");
 
 		} catch (err) {

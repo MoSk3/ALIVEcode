@@ -2,7 +2,7 @@ import { SignUpProps, FormSignUpValues } from './signUpTypes';
 import { Button, Form, Col } from 'react-bootstrap';
 import { useAlert } from 'react-alert';
 import { useForm } from 'react-hook-form';
-import { GRADES, USER_TYPES } from '../../../Types/userTypes';
+import { USER_TYPES } from '../../../Types/userTypes';
 import FormContainer from '../../../Components/MiscComponents/FormContainer/FormContainer';
 import Link from '../../../Components/MainComponents/Link/Link';
 import axios from 'axios';

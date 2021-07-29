@@ -38,21 +38,23 @@ export class Student implements StudentInterface {
 
 export class User implements UserInterface {
 
+  public static dependencies = {}
+
   public email: string;
   public professor?: Professor;
   public student?: Student;
 
   constructor(backendUser: BackendUser) {
     this.email = backendUser.email;
-    if(backendUser.first_name && backendUser.last_name)
+    if (backendUser.first_name && backendUser.last_name)
       this.professor = new Professor(backendUser.first_name, backendUser.last_name);
-    else if(backendUser.name && backendUser.scholarity)
+    else if (backendUser.name && backendUser.scholarity)
       this.student = new Student(backendUser.name, backendUser.scholarity);
   }
 
   public getDisplayName() {
-    if(this.professor) return this.professor.getDisplayName();
-    if(this.student) return this.student.getDisplayName();
+    if (this.professor) return this.professor.getDisplayName();
+    if (this.student) return this.student.getDisplayName();
     return this.email;
   }
 
@@ -60,9 +62,16 @@ export class User implements UserInterface {
     const backendUser: BackendUser = (await axios.get('/api/user/info/')).data;
     try {
       return new User(backendUser);
-    } catch(err) {
+    } catch (err) {
       return null;
     }
   }
 
+  // LE CODE MAUDIT :
+  /*
+  async getClassrooms(): Promise<Classroom[]> {
+    //return await loadObj(`/playground/classrooms`, Classroom) as Classroom[];
+    return await Database.playground.classrooms.all;
+  }
+  */
 }
