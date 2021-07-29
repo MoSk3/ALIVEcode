@@ -2,7 +2,7 @@ import './NotFound.css';
 import Link from '../../../Components/MainComponents/Link/Link';
 
 import VoitureGIF from "../../../assets/images/Voiture.gif";
-import FillContainer from '../../../Components/MainComponents/FillContainer/FillContainer';
+import FillContainer from '../../../Components/MiscComponents/FillContainer/FillContainer';
 
 export const NotFound = () => {
 	return (

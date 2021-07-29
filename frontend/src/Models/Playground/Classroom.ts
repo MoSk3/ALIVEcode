@@ -1,38 +1,53 @@
 import { ClassroomInterface, CLASSROOM_SUBJECTS } from '../../Types/Playground/classroomTypes';
+import { Database } from '../Model';
 import { Professor, Student } from '../User';
-import axios from 'axios';
-import { loadAllObj } from '../utils';
+import Course from './Course';
 
 export class Classroom implements ClassroomInterface {
+
+  public static dependencies = {
+    creator: Professor,
+    students: Student,
+  }
+
   public readonly id: string;
   public name: string;
   public description: string;
   public subject: CLASSROOM_SUBJECTS;
   public creator: Professor;
   public students: Student[];
-  public courses: any[];
+  public courses: Course[];
   public code: string;
 
-  constructor({id, name, description, subject, creator, students, courses, code} : ClassroomInterface) {
+  constructor({ id, name, description, subject, creator, students, courses, code }: ClassroomInterface) {
     this.id = id;
     this.name = name;
     this.description = description;
     this.subject = subject;
-    this.creator = Object.setPrototypeOf(creator, Professor.prototype);
+    this.creator = creator;
     this.students = students;
     this.courses = courses;
     this.code = code;
   }
 
-  static async loadAll(): Promise<Array<Classroom>> {
-    //const classrooms = (await axios.get('/playground/classrooms')).data;
-    //console.log((await axios.get(`/playground/classrooms/${classrooms[0].id}/students`)).data)
-    console.log(await loadAllObj(`/playground/classrooms/`, Classroom))
-    return await loadAllObj(`/playground/classrooms/`, Classroom);
+  async getStudents() {
+    if(this.students) return this.students;
+    this.students = await Database.playground.classrooms.get(this.id).students;
+    return this.students;
   }
 
-  getSubjectDisplay = ():string => {
+  async getCourses() {
+    if(this.courses) return this.courses;
+    this.courses = await Database.playground.classrooms.get(this.id).courses;
+    return this.courses;
+  }
+
+  static async getClassrooms(...ids: string[]) {
+    return await Database.playground.classrooms.collect(...ids);
+  }
+
+  getSubjectDisplay(): string {
+    //loadObj(`/playground/classrooms/${this.id}/students`, Student).then(obj => console.log(obj))
     return this.subject;
   }
-
 }

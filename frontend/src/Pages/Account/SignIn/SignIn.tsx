@@ -5,11 +5,11 @@ import { useAlert } from 'react-alert';
 import { FormSignInValues, SignInProps } from './signInTypes';
 import { useHistory } from 'react-router';
 import { UserContext } from '../../../UserContext';
-import { User } from '../../../Types/User';
-import FormContainer from '../../../Components/MainComponents/FormContainer/FormContainer';
+import FormContainer from '../../../Components/MiscComponents/FormContainer/FormContainer';
 import { Form } from 'react-bootstrap';
 import Button from '../../../Components/MainComponents/Button/Button';
 import Link from '../../../Components/MainComponents/Link/Link';
+import { User } from '../../../Models/User';
 
 /** Reusable form component to handle header creation */
 const SignIn = (props: SignInProps) => {
@@ -21,16 +21,15 @@ const SignIn = (props: SignInProps) => {
 
 	const onSignIn = async (formValues: FormSignInValues) => {
 		try {
-			const { access, refresh } = (await axios.post('/token/obtain/', formValues)).data;
+			const { access, refresh } = (await axios.post('/api/token/obtain/', formValues)).data;
 			axios.defaults.headers['Authorization'] = "JWT " + access;
 			localStorage.setItem('access_token', access);
 			localStorage.setItem('refresh_token', refresh);
 
-			const user: User = (await axios.get('/user/info/')).data;
-			console.log(user)
+			const user = await User.loadUser();
 			setUser(user);
 
-			history.push('/dashboard');
+			if(history.location.pathname === '/signin') history.push('/dashboard');
 			return alert.success("Vous êtes connecté!");
 
 		} catch (err) {

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from playground.models import Challenge, Level, Classroom, Course, Quiz, Question, Response, Section, Activity, Challenge, ALIVEChallenge, ChallengeProgression, ActivityProgression
+from playground.models import Challenge, Classroom, Course, Quiz, Question, Response, Section, Activity, Challenge, ALIVEChallenge, ChallengeProgression, ActivityProgression
 from home.models import Achievement
 
 from django.contrib.auth import get_user_model
@@ -10,10 +10,6 @@ User = get_user_model()
 @admin.register(Challenge)
 class ChallengeAdmin(admin.ModelAdmin):
     list_display = ("name", "creator")
-
-@admin.register(Level)
-class LevelAdmin(admin.ModelAdmin):
-    pass
 
 @admin.register(Classroom)
 class ClassroomAdmin(admin.ModelAdmin):

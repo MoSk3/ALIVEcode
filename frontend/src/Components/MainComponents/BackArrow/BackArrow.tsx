@@ -10,9 +10,11 @@ const BackArrow = ({ color }: BackArrowProps) => {
     <FontAwesomeIcon
       onClick={() => history.goBack()}
       style={{
+        cursor: 'pointer',
         position: 'fixed',
         bottom: '25px',
-        left: '25px'
+        left: '25px',
+        zIndex: 100
       }}
       icon={faArrowLeft}
       size="3x"

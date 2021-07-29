@@ -8,7 +8,8 @@ import SignIn from '../../Pages/Account/SignIn/SignIn';
 import { useContext } from 'react';
 import { UserContext } from '../../UserContext';
 import SignUpMenu from '../../Pages/Account/SignUpMenu/SignUpMenu';
-import { USER_TYPES } from '../../Types/User';
+import { USER_TYPES } from '../../Types/userTypes';
+import Challenge from '../../Pages/Challenge/Challenge';
 
 
 export const RouterSwitch = () => {
@@ -17,7 +18,7 @@ export const RouterSwitch = () => {
 	return (
 		<Switch>
 			{/* Private only */}
-			<Route path="/dashboard" component={user ? Dashboard : Home} />
+			<Route path="/dashboard" component={user ? Dashboard : SignIn} />
 
 
 			{/* Public only */}
@@ -25,8 +26,10 @@ export const RouterSwitch = () => {
 			<Route path="/signup" component={user ? Home : SignUpMenu} />
 			<Route path="/signin" component={user ? Home : SignIn} />
 
-			<Route path="/signup-professor" component={() => <SignUp userType={USER_TYPES.PROFESSOR} />} />
-			<Route path="/signup-student" component={() => <SignUp userType={USER_TYPES.STUDENT} />} />
+			<Route path="/signup-professor" component={() => user ? <Home /> : <SignUp userType={USER_TYPES.PROFESSOR} />} />
+			<Route path="/signup-student" component={() => user ? <Home /> : <SignUp userType={USER_TYPES.STUDENT} />} />
+
+			<Route path="/challenge/:challengeId" component={user ? Challenge : SignIn} />
 
 			{/* All */}
 			<Route path="/about" component={About} />

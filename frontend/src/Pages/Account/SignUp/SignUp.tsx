@@ -2,25 +2,31 @@ import { SignUpProps, FormSignUpValues } from './signUpTypes';
 import { Button, Form, Col } from 'react-bootstrap';
 import { useAlert } from 'react-alert';
 import { useForm } from 'react-hook-form';
-import { USER_TYPES } from '../../../Types/User';
-import FormContainer from '../../../Components/MainComponents/FormContainer/FormContainer';
+import { USER_TYPES } from '../../../Types/userTypes';
+import FormContainer from '../../../Components/MiscComponents/FormContainer/FormContainer';
 import Link from '../../../Components/MainComponents/Link/Link';
+import axios from 'axios';
+import { useContext } from 'react';
+import { UserContext } from '../../../UserContext';
 
 const SignUp = ({ userType }: SignUpProps) => {
+	const { setUser } = useContext(UserContext);
 	const { register, handleSubmit, formState: { errors } } = useForm();
 	const alert = useAlert();
 
 	const onSignIn = async (formValues: FormSignUpValues) => {
 		try {
 
-			console.log(formValues);
+			const { user } = (await axios.post('/api/user/create/', formValues)).data;
+			console.log(user)
 
-			/*
-			const { access, refresh } = (await axios.post('/token/obtain/', formValues)).data;
+			const { access, refresh } = (await axios.post('/api/token/obtain/', { email: formValues.email, password: formValues.password })).data;
 			axios.defaults.headers['Authorization'] = "JWT " + access;
 			localStorage.setItem('access_token', access);
 			localStorage.setItem('refresh_token', refresh);
-			*/
+			console.log(access, refresh);
+
+			setUser(user);
 		} catch (err) {
 			console.error(err);
 			return alert.error("Une erreur est survenue");

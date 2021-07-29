@@ -1,6 +1,6 @@
 import uuid
-from django.core import validators
 from django.db import models
+from django.db.models.fields import related
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import RegexValidator
 
@@ -75,45 +75,32 @@ class ALIVEChallengeProgression(models.Model):
     def __str__(self):
         return f"{self.challenge_progression}"
 
+class Classroom(models.Model):
+    id = models.UUIDField(default=uuid.uuid4, editable=False,
+                          unique=True, primary_key=True)
 
-class Level(models.Model):
+    creator = models.ForeignKey(
+        "home.professor", on_delete=models.CASCADE, related_name='classrooms')
 
-    RESOLUTION_MODES = [
-        ("B", "Block"),  # must be cleared with the block interface
-        ("C", "Code"),   # must be cleared with the code interface
-        ("A", "Any")     # can be cleared with either the code or the block interface
-    ]
+    students = models.ManyToManyField("home.student", blank=True, related_name='classrooms')
 
-    creator = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-    creation_date = models.DateField()
-    access = models.CharField(max_length=2, choices=ACCESS.choices)
+    courses = models.ManyToManyField("playground.course", blank=True)
 
-    description = models.TextField(blank=True)
+    code = models.CharField(max_length=6, unique=True)
+    
+    name = models.CharField(default="Nouvelle classe", max_length=100)
 
-    resolution_mode = models.CharField(max_length=1, choices=RESOLUTION_MODES)
+    description = models.TextField(null=True, blank=True, max_length=500)
 
-    starting_code = models.TextField(default="")
-    starting_code_frozen = models.BooleanField(default=False)
+    subject = models.CharField(max_length=2, choices=[
+        ("in", "Informatique"),
+        ("ai", "Intelligence Artificielle"),
+        ("ma", "Mathématiques"),
+        ("sc", "Sciences")
+    ], null=False, blank=False)
 
-    difficulty = models.CharField(max_length=1, choices=[
-        ("1", "débutant"),
-        ("2", "facile"),
-        ("3", "intermédiaire"),
-        ("4", "avancé"),
-        ("5", "difficile"),
-        ("6", "expert")
-    ])
-
-    tags = models.CharField(max_length=20)
-
-    hints = None  # list of TextFields
-
-    creator_solution = models.TextField(blank=True)
-
-    player_solutions = None  # { Profil: TextField }
-
-    layout = models.TextField(default="{}")  # layout of the level in a JSON format
-
+    def __str__(self):
+        return f"{self.name}, {self.subject} by {self.creator}"
 
 class Course(models.Model):
     id = models.UUIDField(default=uuid.uuid4, editable=False,
@@ -230,34 +217,6 @@ class ActivityProgression(models.Model):
         return f"{self.user}, {self.date}"  
 
 
-class Classroom(models.Model):
-    id = models.UUIDField(default=uuid.uuid4, editable=False,
-                          unique=True, primary_key=True)
-
-    creator = models.ForeignKey(
-        "home.professor", on_delete=models.CASCADE, related_name='professor')
-
-    students = models.ManyToManyField("home.student", blank=True)
-
-    courses = models.ManyToManyField("playground.course", blank=True)
-
-    code = models.CharField(max_length=6, unique=True)
-    
-    name = models.CharField(default="Nouvelle classe", max_length=100)
-
-    description = models.TextField(null=True, blank=True, max_length=500)
-
-    subject = models.CharField(max_length=2, choices=[
-        ("in", "Informatique"),
-        ("ai", "Intelligence Artificielle"),
-        ("ma", "Mathématiques"),
-        ("sc", "Sciences")
-    ], null=False, blank=False)
-
-    def __str__(self):
-        return f"{self.name}, {self.subject} by {self.creator}"
-
-
 class AliveScript(models.Model):
     version = models.CharField(max_length=10, validators=[RegexValidator('')])
 
@@ -292,3 +251,43 @@ class Response(models.Model):
     id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, primary_key=True)
     text = models.CharField(max_length=200)
     correct = models.BooleanField(default=False)
+
+"""
+class Level(models.Model):
+
+    RESOLUTION_MODES = [
+        ("B", "Block"),  # must be cleared with the block interface
+        ("C", "Code"),   # must be cleared with the code interface
+        ("A", "Any")     # can be cleared with either the code or the block interface
+    ]
+
+    creator = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    creation_date = models.DateField()
+    access = models.CharField(max_length=2, choices=ACCESS.choices)
+
+    description = models.TextField(blank=True)
+
+    resolution_mode = models.CharField(max_length=1, choices=RESOLUTION_MODES)
+
+    starting_code = models.TextField(default="")
+    starting_code_frozen = models.BooleanField(default=False)
+
+    difficulty = models.CharField(max_length=1, choices=[
+        ("1", "débutant"),
+        ("2", "facile"),
+        ("3", "intermédiaire"),
+        ("4", "avancé"),
+        ("5", "difficile"),
+        ("6", "expert")
+    ])
+
+    tags = models.CharField(max_length=20)
+
+    hints = None  # list of TextFields
+
+    creator_solution = models.TextField(blank=True)
+
+    player_solutions = None  # { Profil: TextField }
+
+    layout = models.TextField(default="{}")  # layout of the level in a JSON format
+"""
