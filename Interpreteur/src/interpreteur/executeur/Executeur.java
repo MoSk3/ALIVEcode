@@ -291,6 +291,7 @@ public class Executeur {
      */
     public static String compiler(String[] lignes, boolean compilationForcee) {
         reset();
+
         /*
          * Cette condition est remplie si l'array de lignes de codes mises en parametres est identique
          * a l'array des dernieres lignes de code compilees
@@ -354,7 +355,6 @@ public class Executeur {
         //	compilationActive = false;
         //	return false;
         //}
-
         coordCompileTime.add(debutCoord);
         /*
          *  ajoute le scope "main" au dictionnaire de coordonnee

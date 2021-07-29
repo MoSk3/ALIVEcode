@@ -393,6 +393,14 @@ public class ASAst extends AstGenerator {
                     }
                 });
 
+        ajouterProgramme("SINON SI expression",
+                new Ast<SinonSi>() {
+                    @Override
+                    public SinonSi apply(List<Object> p) {
+                        return new SinonSi((Expression<?>) p.get(2));
+                    }
+                });
+
 
         ajouterProgramme("SINON",
                 new Ast<Sinon>(0) {

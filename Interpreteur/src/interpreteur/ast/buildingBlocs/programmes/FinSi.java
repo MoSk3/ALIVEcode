@@ -19,7 +19,7 @@ public class FinSi extends Programme {
     @Override
     public Coordonnee prochaineCoord(Coordonnee coord, List<Token> ligne) {
         String blocActuel = Executeur.obtenirCoordRunTime().getBlocActuel().replaceAll("_", " ");
-        if (!blocActuel.equals("si") && !blocActuel.equals("sinon")) {
+        if (!blocActuel.equals("si") && !blocActuel.equals("sinon") && !blocActuel.startsWith("sinon si")) {
             throw new ASErreur.ErreurFermeture(blocActuel,
                     "fin si", "fin " + blocActuel);
         }
