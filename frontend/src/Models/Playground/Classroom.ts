@@ -43,6 +43,7 @@ export class Classroom implements ClassroomInterface {
   }
 
   static async getClassrooms(...ids: string[]) {
+    await Database.playground.classrooms.ofCurrentUser; // get all the classrooms of the current user
     return await Database.playground.classrooms.collect(...ids);
   }
 

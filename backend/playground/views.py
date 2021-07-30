@@ -48,6 +48,13 @@ class ClassroomCourses(APIView):
 class ClassroomViewSet(viewsets.ViewSet):  
 
     def list(self, request):
+        """
+        {
+            body: {
+                filter: 
+            }
+        }
+        """
         queryset = request.user.getClassrooms()
         if queryset is None:
             queryset = Classroom.objects.none()
