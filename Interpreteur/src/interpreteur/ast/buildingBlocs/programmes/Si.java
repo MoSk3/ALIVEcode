@@ -20,6 +20,8 @@ public class Si extends Programme {
     public NullType execute() {
         if (test.eval().boolValue()) {
             Executeur.obtenirCoordRunTime().nouveauBloc("si");
+        } else if (Executeur.leBlocExiste("sinon_si_1")) {
+            Executeur.obtenirCoordRunTime().nouveauBloc("sinon_si_1");
         } else if (Executeur.leBlocExiste("sinon")) {
             Executeur.obtenirCoordRunTime().nouveauBloc("sinon");
         }
@@ -29,6 +31,22 @@ public class Si extends Programme {
     @Override
     public Coordonnee prochaineCoord(Coordonnee coord, List<Token> ligne) {
         return Executeur.obtenirCoordRunTime().nouveauBloc("si");
+    }
+
+    @Override
+    public String transpile(String language) {
+        return switch (language) {
+            case "java" -> {
+               yield "";
+            }
+            case "python" -> {
+                yield "a";
+            }
+            case "c++", "cpp" -> {
+                yield "b";
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + language);
+        };
     }
 
     @Override

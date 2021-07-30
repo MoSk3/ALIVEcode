@@ -5,7 +5,6 @@ import { Shape } from "../../Components/PlayComponents/Simulation/Sketch/simulat
 import { Vector } from "../../Components/PlayComponents/Simulation/Sketch/simulation/Vector";
 import openPlaySocket from "./PlaySocket";
 import $ from 'jquery';
-import { Executor } from '../../Models/Executor/Executor';
 import { PlayExecutor } from '../../Models/Executor/PlayExecutor';
 import { PlaySocket } from './PlaySocket';
 import { User } from '../../Models/User';

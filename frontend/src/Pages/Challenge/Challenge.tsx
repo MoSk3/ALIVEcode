@@ -1,6 +1,6 @@
 import FillContainer from '../../Components/MiscComponents/FillContainer/FillContainer';
 import { ChallengeProps } from './challengeTypes';
-import { useEffect, useState, useContext, createRef, useRef } from 'react';
+import { useEffect, useState, useContext, useRef } from 'react';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import { useAlert } from 'react-alert';

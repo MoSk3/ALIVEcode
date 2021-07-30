@@ -1,0 +1,82 @@
+"""
+    Tout ce qui ce trouve entre ces symboles (""") est un commentaire
+
+    Explications:
+    1. tout ce qui se retrouve sous la section [Programme] est considere comme un programme 
+    2. tout ce qui se retrouve sous la section [Expression] est considéré comme une expression
+    3. Définition (programme et expression):
+        ex: AFFICHER -> AFFICHER expression
+
+        3.1 Nom du programme/expression a ajouter (en majuscule, remplacer les espaces par des _) (ex: AFFICHER)
+        3.2 Symbole '->'
+        3.3 Structure du programme/expression 
+    
+    4. Que ce soit pour un programme ou pour une expression, chaque definition doit etre separe par un retour a la ligne
+
+    5. les regles qui se retrouve sous la section [Structure] indique comment reparer la fin d'un bout de code:
+        6.1 FIN_LIGNE indique la fin d'une ligne
+        6.2 DEBUT_BLOC indique le dÃ©but d'un bloc de code
+        6.3 FIN_BLOC indique la fin d'un bloc de code
+    
+    6. il est possible de regrouper certaines regles dans une meme categorie. Pour ce faire, il suffit de mettre:
+        ex: categorie1 {
+            regle1 -> pattern1
+            regle2 -> pattern2
+            regle3 -> pattern3
+            ...
+            }
+            categorie2 {
+            regle1 -> pattern1
+            regle2 -> pattern2
+            regle3 -> pattern3
+            ...
+            }
+        rassembler les regles dans des categories est OPTIONNEL.
+
+        ATTENTION:
+        il 'est pas recommander de nommer une categorie 'expression'
+	
+	7. Section [Style] (pour ajouter des styles):
+		8.1 écrire le nom de la catégorie/le nom de la regle	-> 		nom de la classe dans le fichier LinterSyle.css
+		
+"""
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

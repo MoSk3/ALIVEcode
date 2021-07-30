@@ -15,7 +15,7 @@ public class ModuleTexteUtils extends ASModule {
 
             new ASObjet.Fonction("texte", new ASObjet.Fonction.Parametre[]{
                     new ASObjet.Fonction.Parametre(null, "element", null)
-            }, new Type("texte")) {
+            }, ASObjet.TypeBuiltin.texte.asType()) {
                 @Override
                 public Texte executer() {
                     return new Texte(this.getValeurParam("element").toString());
@@ -23,8 +23,8 @@ public class ModuleTexteUtils extends ASModule {
             },
 
             new ASObjet.Fonction("maj", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(new Type("texte"), "txt", null)
-            }, new Type("texte")) {
+                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.texte.asType(), "txt", null)
+            }, ASObjet.TypeBuiltin.texte.asType()) {
                 @Override
                 public ASObjet.Texte executer() {
                     return new Texte(this.getParamsValeursDict().get("txt").getValue().toString().toUpperCase());
@@ -32,7 +32,7 @@ public class ModuleTexteUtils extends ASModule {
             },
 
             new ASObjet.Fonction("minus", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(new Type("texte"), "txt", null)
+                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.texte.asType(), "txt", null)
             }, new Type("texte")) {
                 @Override
                 public ASObjet.Texte executer() {
@@ -40,9 +40,49 @@ public class ModuleTexteUtils extends ASModule {
                 }
             },
 
+            new ASObjet.Fonction("remplacer", new ASObjet.Fonction.Parametre[]{
+                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.texte.asType(), "txt", null),
+                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.texte.asType(), "sequence", null),
+                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.texte.asType(), "remplacement", null)
+            }, ASObjet.TypeBuiltin.texte.asType()) {
+                @Override
+                public ASObjet.Texte executer() {
+                    String txt = this.getParamsValeursDict().get("txt").getValue().toString();
+                    String pattern = this.getParamsValeursDict().get("sequence").getValue().toString();
+                    String remplacement = this.getParamsValeursDict().get("remplacement").getValue().toString();
+                    return new Texte(txt.replace(pattern, remplacement));
+                }
+            },
+
+            new ASObjet.Fonction("remplacerRe", new ASObjet.Fonction.Parametre[]{
+                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.texte.asType(), "txt", null),
+                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.texte.asType(), "pattern", null),
+                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.texte.asType(), "remplacement", null)
+            }, ASObjet.TypeBuiltin.texte.asType()) {
+                @Override
+                public ASObjet.Texte executer() {
+                    String txt = this.getParamsValeursDict().get("txt").getValue().toString();
+                    String pattern = this.getParamsValeursDict().get("pattern").getValue().toString();
+                    String remplacement = this.getParamsValeursDict().get("remplacement").getValue().toString();
+                    return new Texte(txt.replaceAll(pattern, remplacement));
+                }
+            },
+
+            new ASObjet.Fonction("match", new ASObjet.Fonction.Parametre[]{
+                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.texte.asType(), "txt", null),
+                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.texte.asType(), "pattern", null)
+            }, ASObjet.TypeBuiltin.booleen.asType()) {
+                @Override
+                public ASObjet.Booleen executer() {
+                    String txt = this.getParamsValeursDict().get("txt").getValue().toString();
+                    String pattern = this.getParamsValeursDict().get("pattern").getValue().toString();
+                    return new Booleen(txt.matches(pattern));
+                }
+            },
+
             new ASObjet.Fonction("estNumerique", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(new Type("texte"), "txt", null)
-            }, new Type("booleen")) {
+                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.texte.asType(), "txt", null)
+            }, ASObjet.TypeBuiltin.booleen.asType()) {
                 @Override
                 public ASObjet.Booleen executer() {
                     try {
@@ -69,9 +109,9 @@ public class ModuleTexteUtils extends ASModule {
              * 		@return un texte où les {} sont remplacés par les valeurs dans la liste
              */
             new ASObjet.Fonction("format", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(new Type("texte"), "txt", null),
-                    new ASObjet.Fonction.Parametre(new Type("liste"), "valeurs", null)
-            }, new Type("texte")) {
+                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.texte.asType(), "txt", null),
+                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.liste.asType(), "valeurs", null)
+            }, ASObjet.TypeBuiltin.texte.asType()) {
                 @Override
                 public ASObjet<?> executer() {
                     String texte = ((Texte) this.getValeurParam("txt")).getValue();

@@ -23,6 +23,15 @@
 
 ### Version 2
 
+- changement dans les fonctions
+  - opérateur ... pour ajouter un nombre x de paramètres (spread operator en js)
+  - ex:
+    ```python
+    fonction abc(param1, ...autres)
+        afficher typeDe(autres) # liste
+    fin fonction
+    ```
+
 - nouveau mot clef `inclure`
     - permet d'accéder à du code situé dans d'autres fichiers 
     

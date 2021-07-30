@@ -1,7 +1,7 @@
 import { IconButtonProps } from './iconButtonTypes';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { RefObject } from 'react';
+import React from 'react';
 
 const StyledButton = styled.button`
   background-color: var(--third-color);

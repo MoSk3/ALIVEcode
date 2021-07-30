@@ -1,5 +1,6 @@
 package interpreteur.ast.buildingBlocs.programmes;
 
+import interpreteur.as.Objets.Scope;
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.as.Objets.ASObjet;
 import interpreteur.ast.buildingBlocs.Programme;
@@ -10,6 +11,10 @@ import interpreteur.tokens.Token;
 import java.util.List;
 
 public class FinGet extends Programme {
+
+    public FinGet() {
+        Scope.popCurrentScope();
+    }
 
     @Override
     public ASObjet.Nul execute() {

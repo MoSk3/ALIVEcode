@@ -36,19 +36,19 @@ var patterns = {
     ]
 };
 function closeSymbolPair(symbol, keyString, goBackTimes) {
-    var _a, _b, _c;
+    var _a, _b;
     if (goBackTimes === void 0) { goBackTimes = 1; }
     var pos = getPos();
     var line = getLine(pos.row);
-    if (line[pos.column] === symbol.close) {
+    if (line[pos.column] === symbol.close && keyString === symbol.close) {
         return { command: "gotoright", args: { times: 1 } };
     }
-    // doesn't add the pair if the symbole is placed before a word or an opening symbol
+    // doesn't add the pair if the symbol is placed before a word or an opening symbol
     else if (
-    // does nothing if the symbol is added before or after a letter or an opening symbol
-    ((_a = line[pos.column]) === null || _a === void 0 ? void 0 : _a.match(/\p{L}+/u))
-        || ((_b = line[pos.column]) === null || _b === void 0 ? void 0 : _b.match("|" + patterns.symbolPairs.map(function (pair) { return "\\" + pair.open; }).join("|")))
-        || (((_c = line[pos.column - 1]) === null || _c === void 0 ? void 0 : _c.match(/\p{L}+/u)) && symbol.close === symbol.open)
+    // does nothing if the symbol is added before or after a letter or the opening symbol
+    ((_a = line[pos.column]) === null || _a === void 0 ? void 0 : _a.match(/\p{L}+|\d+/u))
+        || line[pos.column] === symbol.open
+        || (((_b = line[pos.column - 1]) === null || _b === void 0 ? void 0 : _b.match(/\p{L}+/u)) && symbol.close === symbol.open)
         // does nothing if the symbole typed is the closing symbol and the closing symbol is not the same as the opening symbol
         || (keyString === symbol.close && symbol.close !== symbol.open)
         // return before adding the pair if the symbol is the closing symbol
@@ -104,7 +104,7 @@ function autocomplete(data, hashId, keyString, keyCode, e) {
                 // if the line already has the last symbol of the comment at the end, don't add it
                 if (line[pos.column] === lastSymbol)
                     closing = closing.substring(0, closing.length - 1);
-                execCommands({ command: "insertstring", args: ":\n " + " ".repeat(indentation(line)) + "\n" + closing }, { command: "golineup", args: { times: 1 } });
+                execCommands({ command: "insertstring", args: ":\n " + indentedString(line) + "\n" + indentedString(line, closing) }, { command: "golineup", args: { times: 1 } });
                 return { command: "gotolineend" };
             }
             else if (line.substring(pos.column - (documentation.open.length - 1), pos.column) + ":" === documentation.open) {
@@ -112,16 +112,19 @@ function autocomplete(data, hashId, keyString, keyCode, e) {
                 // if the line already has the last symbol of the comment at the end, don't add it
                 if (line[pos.column] === lastSymbol)
                     closing = closing.substring(0, closing.length - 1);
-                execCommands({ command: "insertstring", args: ":\n " + " ".repeat(indentation(line)) + "- \n" + closing }, { command: "golineup", args: { times: 1 } });
+                execCommands({ command: "insertstring", args: ":\n " + indentedString(line) + "- \n" + indentedString(line, closing) }, { command: "golineup", args: { times: 1 } });
                 return { command: "gotolineend" };
             }
         }
         // if the \n is pressed at the end of the line
         if (keyString === "\n" && line.trim() && pos.column >= line.trimRight().length) {
             if (lineStartWith(line, "-")) {
-                return { command: "insertstring", args: "\n" + " ".repeat(indentation(line)) + "- " };
+                return { command: "insertstring", args: "\n" + indentedString(line) + "- " };
             }
             return closeBlock();
+        }
+        // if the \b is pressed
+        if (keyString === "\b") {
         }
     }
 }
@@ -181,5 +184,9 @@ function lineStartWith(line, start) {
 function indentation(line) {
     var tabSize = editor.session.$tabSize;
     return line.substring(0, line.indexOf(line.trimLeft()[0])).replace("\t", " ".repeat(tabSize)).length;
+}
+function indentedString(line, text) {
+    if (text === void 0) { text = ""; }
+    return "" + " ".repeat(indentation(line)) + text;
 }
 //#endregion

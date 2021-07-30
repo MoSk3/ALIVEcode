@@ -1,6 +1,8 @@
 package interpreteur.as.modules;
 
 import interpreteur.as.Objets.ASObjet.*;
+import interpreteur.as.Objets.Scope;
+import interpreteur.ast.buildingBlocs.expressions.Type;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,8 +28,7 @@ public class Module {
             FonctionManager.ajouterFonction(fonction);
         }
         for (Variable variable : variables) {
-            if (variable instanceof Constante) VariableManager.ajouterConstante((Constante) variable);
-            else VariableManager.ajouterVariable(variable);
+            Scope.getCurrentScope().declarerVariable(variable);
         }
         FonctionManager.retirerStructure();
     }
@@ -39,8 +40,7 @@ public class Module {
         }
         for (Variable variable : variables) {
             if (nomMethodes.contains(variable.obtenirNom())){
-                if (variable instanceof Constante) VariableManager.ajouterConstante((Constante) variable);
-                else VariableManager.ajouterVariable(variable);
+                Scope.getCurrentScope().declarerVariable(variable);
             }
         }
     }

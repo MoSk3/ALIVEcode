@@ -7,4 +7,5 @@ Bugs
 - \[❌] les variables ne se transmettent pas dans les scopes inférieurs
 - \[❌] dans un splice, le premier argument \(celui avant le : ) est ignoré
 - \[❌] les getter ne marchent pas pour une raison obscure
+- \[❌] les commentaires multi-lignes et de documentation sont détectés même dans les string
   

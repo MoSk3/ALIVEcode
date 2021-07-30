@@ -4,8 +4,8 @@ import Model from './Model';
 type TypeLoadObj = <T extends Object>(url: string, target: Model & Function, body?: Object) => Promise<T[] | T>
 
 export const loadObj: TypeLoadObj = async (url, target, body?) => {
-    const data = (await axios.get(url)).data;
-    console.trace(data)
+    const data = (await axios.get(url, body)).data;
+    console.log(data)
     return Array.isArray(data) ?
         data.map((obj: any) => deepConstruct(Object.create(target), obj, target.prototype))
         :

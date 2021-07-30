@@ -1,6 +1,8 @@
 package interpreteur.ast.buildingBlocs.programmes;
 
+import interpreteur.as.Objets.ASFonction;
 import interpreteur.as.Objets.ASObjet;
+import interpreteur.as.Objets.Scope;
 import interpreteur.ast.buildingBlocs.Programme;
 import interpreteur.ast.buildingBlocs.expressions.Type;
 import interpreteur.ast.buildingBlocs.expressions.Var;
@@ -15,11 +17,13 @@ import java.util.List;
 public class CreerGetter extends Programme {
     private final Var var;
     private final Type type;
+    private final Scope scope;
 
     public CreerGetter(Var var, Type type) {
         this.var = var;
         this.type = type;
         this.addGetter();
+        this.scope = Scope.makeNewCurrentScope();
     }
 
     public Var getVar() {
@@ -27,19 +31,21 @@ public class CreerGetter extends Programme {
     }
 
     public void addGetter() {
-        ASObjet.Variable v = ASObjet.VariableManager.obtenirVariable(this.var.getNom());
+        ASObjet.Variable v = Scope.getCurrentScope().getVariable(var.getNom());
 
         if (v == null) {
-            Assigner.addWaitingGetter(this);
+            Declarer.addWaitingGetter(this);
             return;
         }
 
-        v.setGetter((var) -> {
-            ASObjet.Fonction get = new ASObjet.Fonction(this.var.getNom(), new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(null, this.var.getNom(), null)
-            }, this.type);
-            get.setScopeName("get_");
-            return get.setParamPuisExecute(new ArrayList<>(Collections.singletonList(var)));
+        v.setGetter(() -> {
+            Scope scope = new Scope(this.scope);
+            scope.setParent(Scope.getCurrentScopeInstance());
+
+            ASFonction get = new ASFonction(this.var.getNom(), this.type);
+            get.setScope(scope);
+            get.setCoordBlocName("get_");
+            return get.makeInstance().executer(new ArrayList<>());
         });
     }
 

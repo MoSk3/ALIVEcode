@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const StyledDiv = styled.div` 
   margin: auto;
   border-radius: 25px;

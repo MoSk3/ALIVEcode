@@ -36,9 +36,12 @@ ace.define(
 
 		const CustomHighlightRules = function CustomHighlightRules() {
 			//this.$rules = new TextHighlightRules().getRules(); // Use Text's rules as a base
-			var identifierRe =
+			const identifierRe =
 				"[a-zA-Z\\$_\u00a1-\uffff][a-zA-Z\\d\\$_\u00a1-\uffff]*"
 			const paramComment = `(\\{ *)(@)(${identifierRe})(.*?)(\\})`
+			const operators = /[\+\-\*\/\|\\\%\^]/;
+			const comparators = /[=><!]/;
+			const typeAssignements = /:|(\b->\b)/;
 			const reserved_words = {
 				boucles: [
 					"\\brepeter\\b",
@@ -50,7 +53,7 @@ ace.define(
 					"\\.\\.\\.",
 					"\\bbond\\b",
 					"\\bdans\\b",
-					"\\bconst\\b"
+					"\\bconst\\b",
 				],
 				fonctions: [
 					"\\bstructure\\b",
@@ -71,6 +74,10 @@ ace.define(
 					"\\bmin\\b",
 					"\\bunir\\b",
 					"\\bjoindre\\b",
+					"\\bindexDe\\b",
+					"\\bremplacer\\b",
+					"\\bremplacerRe\\b",
+					"\\bmatch\\b",
 
 					// iterable (liste + texte)
 					"\\binverser\\b",
@@ -85,6 +92,11 @@ ace.define(
 
 					// nombre (entier + decimal)
 					"\\bbin\\b",
+					"\\bgetVar\\b",
+
+					"\\bvarListe\\b",
+					"\\bvarLocales\\b",
+					"\\bvarGlobales\\b",
 				],
 				fin_fonctions: [
 					"\\bfin fonction\\b",
@@ -122,6 +134,7 @@ ace.define(
 					"\\bnombre\\b",
 					"\\btout\\b",
 					"\\biterable\\b",
+					"\\brien\\b",
 				],
 				logiques: ["\\bet\\b", "\\bou\\b", "\\bpas\\b"],
 			}
@@ -143,6 +156,18 @@ ace.define(
 						token: "support.function",
 						regex: reserved_words["fonctions"].join("|"),
 						next: "fonction_arguments",
+					},
+					{
+						token: "support.function",
+						regex: typeAssignements,
+					},
+					{
+						token: "support.function",
+						regex: operators,
+					},
+					{
+						token: "support.function",
+						regex: comparators,
 					},
 					{
 						token: "keyword.control",
@@ -242,13 +267,23 @@ ace.define(
 					},
 					{
 						token: (tiret, arobase, word) => {
-							return ["comment.line.italic", "empty", "constant.numeric.italic"]
+							return [
+								"comment.line.italic",
+								"empty",
+								"constant.numeric.italic",
+							]
 						},
-						regex: `( *- *)(@)(${identifierRe})`
+						regex: `( *- *)(@)(${identifierRe})`,
 					},
 					{
 						token: (open, arobase, word, extra, close) => {
-							return ["empty", "empty", "constant.numeric.italic", "comment.line.italic", "empty"]
+							return [
+								"empty",
+								"empty",
+								"constant.numeric.italic",
+								"comment.line.italic",
+								"empty",
+							]
 						},
 						regex: paramComment,
 					},

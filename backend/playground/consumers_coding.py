@@ -9,8 +9,12 @@ from asgiref.sync import async_to_sync
 #os.environ['JDK_HOME'] = 'C:/Users/Poste/.jdks/openjdk-15.0.1'
 #os.environ['JAVA_HOME'] = '/usr/java/oracle/jdk-15.0.1'
 import jnius_config
+<<<<<<< HEAD
 jnius_config.set_classpath('../Interpreteur/out/production/Interpreteur/artifacts/Interpreteur_jar/Interpreteur.jar')
 
+=======
+jnius_config.set_classpath('../Interpreteur/out/artifacts/Interpreteur_jar/Interpreteur.jar')
+>>>>>>> 2a6e066d4d79312f59f48245380b4eb83c90777e
 from jnius import autoclass
 clientsWithRobots = {}
 # Websocket pour l'interpréteur du site
@@ -101,7 +105,7 @@ class InterpreteurConsumer(AsyncWebsocketConsumer):
                         })
                         """
                         #print(f'Sent to robot id : {self.robot_id} : {robotData}')
-  
+
     async def disconnect(self, close_code):
         # print("disconnected", e)
         if hasattr(self, 'robot_id') and self.robot_id in clientsWithRobots:   
@@ -114,6 +118,7 @@ def interpretorThread(client):
     DataVoiture = autoclass('interpreteur.data_manager.DataVoiture')
     # Préparation à l'exécution du code
     #print(client.lines)
+    Executeur.debug = True
     erreurs = json.loads(Executeur.compiler(client.lines, False))
     print(erreurs)
     if erreurs != []:
