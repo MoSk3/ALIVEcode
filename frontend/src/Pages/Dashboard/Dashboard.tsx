@@ -9,6 +9,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import ClassroomCard from '../../Components/DashboardComponents/ClassroomCard/ClassroomCard';
 import { Classroom } from '../../Models/Playground/Classroom';
 import SmallCard from '../../Components/MainComponents/SmallCard/SmallCard';
+import { Database } from '../../Models/Model';
 
 const Dashboard = (props: DashboardProps) => {
 	const { user } = useContext(UserContext);
@@ -17,7 +18,7 @@ const Dashboard = (props: DashboardProps) => {
 
 	useEffect(() => {
 		const getClassrooms = async () => {
-			//setClassrooms(await user?.getClassrooms());
+			setClassrooms(await Database.playground.classrooms.ofCurrentUser);
 		}
 		getClassrooms();
 	}, [user])

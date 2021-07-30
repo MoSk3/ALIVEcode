@@ -39,6 +39,9 @@ export const Database = {
 
                 else return Promise.all(ids.map((id) => loadObj(`/playground/classrooms/${id}`, Classroom))) as Promise<Classroom[]>;
             },
+            get ofCurrentUser(): Promise<Classroom[]> {
+                return loadObj(`/playground/classrooms`, Classroom) as Promise<Classroom[]>
+            },
             /**
              * This is an **intermediate operation** used to access a certain {@link Classroom classroom} 
              * without doing a request to the server yet
