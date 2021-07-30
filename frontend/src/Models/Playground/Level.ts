@@ -1,34 +1,51 @@
 import { COURSE_ACCESS } from '../../Types/Playground/courseType';
+import { Layout } from '../../Components/PlayComponents/Simulation/Sketch/simulation/ts/typesSimulation';
 
 
-export interface Level {
-    id: string;
-    creator: string;
-    name: string;
-    description: string;
-
-    hint: string[];
-    solution: string;
-
-    access: COURSE_ACCESS;
-
-    type: "SimulationLevel" | "CodeLevel" | "AiLevel";
+export class Level {
+    constructor(
+        public id: string,
+        public creator: string,
+        public name: string,
+        public description: string,
+        public hint: string[],
+        public access: COURSE_ACCESS,
+        public type?: SimulationLevel | CodeLevel | AiLevel
+    ) {
+        
+    }
 }
 
-const mySimLevel: SimulationLevel = {
+export class CodeLevel {
+    constructor(
+        public initialCode: string[],
+        public tests: string[]
+    ) {}
+}
+
+export class AiLevel {
+    constructor(
+        public initialCode: string[]
+    ) {}
+}
+
+export class SimulationLevel {
+    constructor(
+        public layout: Layout,
+        public initialCode: string[]
+    ) {}
+
+}
+
+const mySimLevel: Level = {
     id: '',
     creator: '',
     name: '',
     description: '',
     hint: [],
-    solution: '',
     access: COURSE_ACCESS.PU,
-    type: "SimulationLevel",
+    //new SimulationLevel({}, []),
 }
 
-
-export interface SimulationLevel extends Level {
-    
-}
 
 
