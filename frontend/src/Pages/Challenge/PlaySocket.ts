@@ -1,15 +1,23 @@
-interface PlaySocket extends WebSocket {
+interface PlaySocketDeclaration extends WebSocket {
   compile_callback: (data: any) => void;
   robot_connect_callback: (data: any) => void;
   robot_callback: (data: any) => void;
 }
 
-const openPlaySocket = () => {
+export interface PlaySocket {
+  compile: (lines: Array<string>, callback?: (data: any) => void) => void;
+  stopCompile: () => void;
+  response: (resp?: Array<any>) => void;
+  robotConnect: (id: string, callback: (data: any) => void) => void;
+  onRobotReceive: (callback: (data: any) => void) => void;
+}
+
+const openPlaySocket = (): PlaySocket => {
   let wsStart = (window.location.protocol === 'https:') ? 'wss://' : 'ws://'
   let endpoint = wsStart + window.location.hostname + ':8000/playground'
   let socket: WebSocket = new WebSocket(endpoint)
   
-  const playSocketConstructor = (socket: PlaySocket) => {
+  const playSocketConstructor = (socket: PlaySocketDeclaration) => {
     socket.compile_callback = () => { }
     socket.robot_connect_callback = () => { }
     socket.robot_callback = () => { }
@@ -115,7 +123,7 @@ const openPlaySocket = () => {
       onRobotReceive
     }
   }
-  return playSocketConstructor(socket as PlaySocket);
+  return playSocketConstructor(socket as PlaySocketDeclaration);
 }
 
 export default openPlaySocket;

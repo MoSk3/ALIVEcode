@@ -1,16 +1,16 @@
-import threading, os, asyncio, json, time
+import threading, json, time
 from backend.functions import get_cookie
 from django.contrib.auth import get_user_model
 from channels.generic.websocket import AsyncWebsocketConsumer
-from channels.db import database_sync_to_async
-from channels.exceptions import StopConsumer, DenyConnection
+from channels.exceptions import DenyConnection
 from asgiref.sync import async_to_sync
 # Management des connections par websockets (pas ceux de la course avec la pensée,
-# voir pensee_consument pour ça)
+# voir pensee_consumers pour ça)
 #os.environ['JDK_HOME'] = 'C:/Users/Poste/.jdks/openjdk-15.0.1'
-os.environ['JAVA_HOME'] = '/usr/java/oracle/jdk-15.0.1'
+#os.environ['JAVA_HOME'] = '/usr/java/oracle/jdk-15.0.1'
 import jnius_config
 jnius_config.set_classpath('../Interpreteur/out/production/Interpreteur/artifacts/Interpreteur_jar/Interpreteur.jar')
+
 from jnius import autoclass
 clientsWithRobots = {}
 # Websocket pour l'interpréteur du site
@@ -267,41 +267,3 @@ def convertNumberToBytes(num: int, my_bytes: bytearray):
         my_bytes.append(1)
         my_bytes.append(absNum)
     #return my_bytes.decode('ISO-8859-1')
-
-"""
-def convertJSONToBytes(json: list):
-    my_bytes = bytearray('[', encoding='ISO-8859-1')
-    for cmd in json:
-        val = -1
-        cmdId = cmd['id']
-        if cmdId in intToBytesCmds:
-            id = intToBytesCmds[cmdId]
-        elif cmdId == 104 or cmdId == 105:
-            id = intToBytesCmds[103]
-            val = 90 if cmdId == 104 else -90
-        else:
-            continue
-        my_bytes.append(ord('{'))
-        my_bytes.append(ord(id))
-        cmdP = cmd['p']
-        if val == -1 and len(cmdP) > 0:
-            num = int(cmdP[0]) if type(cmdP[0]) == str else cmdP[0]
-            if num >= 256:
-                #cmdP[0].to_bytes(4, byteorder="big", signed=True)
-                my_bytes.append((num >> 24) % 256)
-                my_bytes.append((num >> 16) % 256)
-                my_bytes.append((num >> 8 ) % 256)
-                my_bytes.append( num        % 256)
-                print((num >> 24) % 256)
-                print((num >> 16) % 256)
-                print((num >> 8 ) % 256)
-                print( num        % 256)
-                #val = num.to_bytes(2, byteorder="little", signed=True).decode("ascii")
-            else:
-                val = num
-        if val != -1:
-            my_bytes.append(val)
-        my_bytes.append(ord('}'))
-    my_bytes.append(ord(']'))
-    return my_bytes.decode('ISO-8859-1')
-"""

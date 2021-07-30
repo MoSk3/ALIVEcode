@@ -10,7 +10,7 @@ const StyledDiv = styled.div`
 	flex: 1 1 auto;
 `
 
-const LineInterface = ({ handleChange, content: value }: LineInterfaceProps) => {
+const LineInterface = ({ handleChange }: LineInterfaceProps) => {
 
 	return (
 		<StyledDiv>
@@ -18,7 +18,6 @@ const LineInterface = ({ handleChange, content: value }: LineInterfaceProps) => 
 				style={{position: 'relative', width: '100%', height: '100%' }}
 				mode="javascript"
 				theme="monokai"
-				value={value}
 				onChange={handleChange}
 				name="UNIQUE_ID_OF_DIV"
 				editorProps={{ $blockScrolling: true }}

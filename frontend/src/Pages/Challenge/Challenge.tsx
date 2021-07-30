@@ -12,7 +12,7 @@ import styled from 'styled-components';
 import { faBookOpen, faCog, faPlayCircle, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import IconButton from '../../Components/DashboardComponents/IconButton/IconButton';
 import Cmd from '../../Components/PlayComponents/Cmd/Cmd';
-import ChallengeExecutor from './ChallengeExecutor';
+import ChallengeExecutor from './ChallengeExecutorNew';
 
 const StyledDiv = styled(FillContainer)`
   overflow-y: hidden;
@@ -28,12 +28,13 @@ const Challenge = (props: ChallengeProps) => {
   const history = useHistory();
 
   const [challenge, setChallenge] = useState<any>();
-  const [content, setContent] = useState<string>('');
 
   const playButton = useRef<HTMLButtonElement>(null);
+  
+  const [executor, setExecutor] = useState<ChallengeExecutor>();
 
   const lineInterfaceContentChanges = (content: any) => {
-    setContent(content);
+    if(executor) executor.lineInterfaceContent = content;
   }
 
   const { user } = useContext(UserContext);
@@ -50,6 +51,11 @@ const Challenge = (props: ChallengeProps) => {
     loadChallenge();
   }, [props.match.params.challengeId, alert, history]);
 
+  useEffect(() => {
+    if(!playButton.current) return;
+    setExecutor(new ChallengeExecutor(undefined, "alllo", playButton.current));
+  }, []);
+
   return (
       <StyledDiv>
         <Row style={{height: '100%'}}>
@@ -57,7 +63,7 @@ const Challenge = (props: ChallengeProps) => {
             <div style={{ flex: '0 1 70px', backgroundColor: '#013677', border: 'none' }}>
               <IconButton icon={faBookOpen} size="2x" />
               <IconButton icon={faQuestionCircle} size="2x" />
-              {user?.professor === challenge?.creator ? (
+              {(user?.professor && user?.professor === challenge?.creator) ? (
                 <>
                   <input type="text" id="input-challenge-name" value={challenge?.name} style={{ marginLeft: '5px' }} />
                   <div id="status-modify-div" style={{display: "inline"}}>
@@ -66,18 +72,18 @@ const Challenge = (props: ChallengeProps) => {
                   </div>
                 </>
               ) : (
-                <label id="label-challenge-name" style={{ color: 'white', marginLeft: '5px' }}>{challenge.name}</label>
+                <label id="label-challenge-name" style={{ color: 'white', marginLeft: '5px' }}>{challenge ? challenge.name : "Sans nom"}</label>
               )}
               <IconButton icon={faPlayCircle} size="2x" ref={playButton} />
             </div>
 
-            <LineInterface content={content} handleChange={lineInterfaceContentChanges} />
+            <LineInterface handleChange={lineInterfaceContentChanges} />
 
           </Col>
 
           <Col md={6} style={{ resize: 'both', padding: '0' }}>
             <Row id="simulation-row" style={{ height: '60%' }}>
-              <Simulation init={(s) => ChallengeExecutor(s, playButton.current, content)} />
+              {executor && <Simulation init={(s) => executor.init(s)} />}
             </Row>
             <Row style={{ height: '40%' }}>
                 <Cmd></Cmd>
