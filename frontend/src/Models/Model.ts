@@ -106,7 +106,7 @@ export const Database = {
                 }
             }
         },
-        challenges: {
+        levels: {
 
         }
     }

@@ -717,9 +717,9 @@ export const sketch = (s) => {
                 s.editorText = editor.getValue();
             }
 
-            if (s.levelName !== $("#input-challenge-name").val()) {
+            if (s.levelName !== $("#input-level-name").val()) {
                 s.levelHasChanged = true;
-                s.levelName = $("#input-challenge-name").val();
+                s.levelName = $("#input-level-name").val();
             }
 
             if (s.levelAccess !== $('#liste-acces').val()) {
@@ -1078,7 +1078,7 @@ export const sketch = (s) => {
                 const data = {
                     'csrfmiddlewaretoken': csrftoken,
                     'level_data': s.save,
-                    'challengeName': s.levelName,
+                    'levelName': s.levelName,
                     'levelAccess': s.levelAccess
                 };
                 $.ajax({

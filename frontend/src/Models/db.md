@@ -8,14 +8,14 @@
   - Course
     - Section
       - Activity
-  - Challenge
-  - CodeChallenge
+  - Level
+  - CodeLevel
   - AliveScript
   - Quiz
   - Question
   - Response
   - ##### Progressions:
-    - ChallengeProgression
+    - LevelProgression
     - ActivityProgression
 
 - #### Mind

@@ -1,21 +1,21 @@
 {% load static %}
 {% load profile %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/challenge.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'css/level.css' %}" />
 
-<div id='challenge{{challenge.id}}' class="card card-flip">
+<div id='level{{level.id}}' class="card card-flip">
     <div class="card-front text-white">
         <div class="card-body">
-            <h3>{{challenge.name}}</h3>
+            <h3>{{level.name}}</h3>
         </div>
     </div>
     <div class="card-back">
         <div class="card-body">
             <button type="button" id="btn-modify" ­­ class="btn"
-                onclick='location.href="{% url "home:enter_challenge" challengeId=challenge.id %}"'>
+                onclick='location.href="{% url "home:enter_level" levelId=level.id %}"'>
                 <i class="fas fa-play fa-4x"></i>
             </button>
             <button type="button" id="btn-delete" class="btn btn-danger" data-toggle="modal"
-                data-target="#delete-modal{{challenge.id}}">
+                data-target="#delete-modal{{level.id}}">
                 <i class="fas fa-trash-alt fa-4x"></i>
             </button>
         </div>
@@ -27,7 +27,7 @@
 
 
 
-<div class="modal fade delete-challenge-modal" id="delete-modal{{challenge.id}}" tabindex="-1" role="dialog"
+<div class="modal fade delete-level-modal" id="delete-modal{{level.id}}" tabindex="-1" role="dialog"
     aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
@@ -40,7 +40,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-dismiss="modal">Annuler</button>
-                <button type="button" id="delete-level-button{{challenge.id}}" class="btn btn-danger new-section"
+                <button type="button" id="delete-level-button{{level.id}}" class="btn btn-danger new-section"
                     data-dismiss="modal">Supprimer</button>
             </div>
         </div>
@@ -48,11 +48,11 @@
 </div>
 
 <script>
-    deleteButton = $('#delete-level-button{{challenge.id}}')
+    deleteButton = $('#delete-level-button{{level.id}}')
     deleteButton.click(() => {
         $.ajax({
             type: "POST",
-            url: "{% url 'home:delete_challenge' challengeId=challenge.id %}",
+            url: "{% url 'home:delete_level' levelId=level.id %}",
             data: {
                 'csrfmiddlewaretoken': csrftoken,
             },

@@ -1,4 +1,3 @@
-
 {% load static %} {% load base %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/playground_base.css' %}">
 
@@ -28,12 +27,12 @@
                 </button>
                 <div class="collapse" id="collapseHint">
                     <div class="card card-body">
-                        <span>{{ challenge.hint|format_breakline }}</span>
+                        <span>{{ level.hint|format_breakline }}</span>
                     </div>
                 </div>
                 <div class="collapse" id="collapseSolution">
                     <div id="solution" class="card card-body">
-                        <code>{{ challenge.solution|format_breakline }}</code>
+                        <code>{{ level.solution|format_breakline }}</code>
                     </div>
                 </div>
             </div>

@@ -1,4 +1,4 @@
-from playground.models import Challenge, Quiz, Question, Response, Classroom, Course
+from playground.models import Level, Quiz, Question, Response, Classroom, Course
 from django import forms
 
 class QuizCreationForm(forms.ModelForm):
@@ -42,8 +42,8 @@ class CourseCreationForm(forms.ModelForm):
         fields = ['name', 'description', 'subject', 'difficulty', 'access']
         
         
-class ChallengeCreationForm(forms.ModelForm):
+class LevelCreationForm(forms.ModelForm):
 
     class Meta:
-        model = Challenge
+        model = Level
         fields = ['name', 'desc', 'hint', 'access']

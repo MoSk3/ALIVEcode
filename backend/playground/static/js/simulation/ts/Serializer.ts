@@ -37,8 +37,8 @@ class Serializer {
         return 
     }
 
-    static deserialize(challenge: SerializedLevel) {
-        const layout = challenge.layout;
+    static deserialize(level: SerializedLevel) {
+        const layout = level.layout;
         if (layout) {
             for (const className of Object.keys(layout)) {
 

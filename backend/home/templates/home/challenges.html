@@ -2,19 +2,20 @@
 {% include 'base.html' %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/maisonneuve_background.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'css/challenge.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'css/level.css' %}" />
 
 <div id='main-div' class="container-fluid">
     <div id="transparent-div-header" class="container-fluid row justify-content-center">
         <h1>Mes niveaux</h1>
     </div>
     <div id="list-levels" class="row">
-        {% if challenges.all|length == 0 %}
-        <label>Vous n'avez pas de niveau existant.<a id="new-level-link" href="{% url 'home:create_challenge' %}"> Créer un niveau?</a></label>
+        {% if levels.all|length == 0 %}
+        <label>Vous n'avez pas de niveau existant.<a id="new-level-link" href="{% url 'home:create_level' %}"> Créer un
+                niveau?</a></label>
         {% else %}
-        {% for challenge in challenges.all %}
+        {% for level in levels.all %}
         <div class="col-sm">
-            {% include "modules/challenge_card.html" %}
+            {% include "modules/level_card.html" %}
         </div>
         {% endfor %}
         {% endif %}

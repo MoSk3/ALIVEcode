@@ -10,9 +10,8 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from home.forms import StudentCreationForm, ProfessorCreationForm
-from playground.forms import ChallengeCreationForm, ClassroomCreationForm, CourseCreationForm
-from playground.models import ActivityProgression, Challenge, Classroom, Course, Activity, Section, \
-    ChallengeProgression, ALIVEChallenge, ALIVEChallengeProgression
+from playground.forms import LevelCreationForm, ClassroomCreationForm, CourseCreationForm
+from playground.models import ActivityProgression, Level, Classroom, Course, Activity, Section, LevelProgression, SimulationLevel, SimulationLevelProgression
 from home.models import Professor, Student, User
 from datetime import datetime
 
@@ -357,23 +356,23 @@ def enter_activity(request: HttpRequest, id, sectionName, activityName) -> HttpR
         return HttpResponse(
             'Tu ne peux pas accéder à cette activité encore, car tu n\'as pas fini l\'activité précédente!')
 
-    for challenge in activity.challenges.all():
-        if not progression.challenge_progressions.filter(challenge=challenge).exists():
-            challenge_prog = ChallengeProgression.objects.create(
-                challenge=challenge, user=request.user, date=datetime.now())
+    for level in activity.levels.all():
+        if not progression.level_progressions.filter(level=level).exists():
+            level_prog = LevelProgression.objects.create(
+                level=level, user=request.user, date=datetime.now())
 
-            if ALIVEChallenge.objects.filter(challenge=challenge).exists():
-                level_dict = json.loads(challenge.specific_challenge.level)
+            if SimulationLevel.objects.filter(level=level).exists():
+                level_dict = json.loads(level.type.level)
                 initial_code = "\n".join(level_dict["initial_code"])
-                ALIVEChallengeProgression.objects.create(
-                    challenge_progression=challenge_prog,
+                SimulationLevelProgression.objects.create(
+                    level_progression=level_prog,
                     code=initial_code)
 
-                progression.challenge_progressions.add(challenge_prog)
+                progression.level_progressions.add(level_prog)
 
-    for prog_challenge in progression.challenge_progressions.all()[:]:
-        if not activity.challenges.filter(specific_challenge=prog_challenge.challenge.specific_challenge).exists():
-            prog_challenge.delete()
+    for prog_level in progression.level_progressions.all()[:]:
+        if not activity.levels.filter(type=prog_level.level.type).exists():
+            prog_level.delete()
 
     context = {
         'activity': activity,
@@ -387,7 +386,7 @@ def enter_activity(request: HttpRequest, id, sectionName, activityName) -> HttpR
 
 
 @login_required(login_url=loginPageUrl)
-def save_code(request: HttpRequest, id, sectionName, activityName, challengeId) -> HttpResponse:
+def save_code(request: HttpRequest, id, sectionName, activityName, levelId) -> HttpResponse:
     if not request.is_ajax():
         return redirect('home:dashboard')
 
@@ -414,8 +413,8 @@ def save_code(request: HttpRequest, id, sectionName, activityName, challengeId) 
     progression = ActivityProgression.objects.get(
         activity=activity, user=request.user)
 
-    progression.challenge_progressions.get(challenge=Challenge.objects.get(
-        id=challengeId)).alive_challenge_progression.update_code(request.POST.get("code"))
+    progression.level_progressions.get(level=Level.objects.get(
+        id=levelId)).alive_level_progression.update_code(request.POST.get("code"))
 
     progression.update_completion()
 
@@ -429,7 +428,7 @@ def save_code(request: HttpRequest, id, sectionName, activityName, challengeId) 
 
 
 @login_required(login_url=loginPageUrl)
-def challenge_success(request: HttpRequest, id, sectionName, activityName, challengeId) -> HttpResponse:
+def level_success(request: HttpRequest, id, sectionName, activityName, levelId) -> HttpResponse:
     if not request.is_ajax():
         return redirect('home:dashboard')
 
@@ -455,13 +454,13 @@ def challenge_success(request: HttpRequest, id, sectionName, activityName, chall
 
     progression: ActivityProgression = ActivityProgression.objects.get(
         activity=activity, user=request.user)
-    challenge_prog: ChallengeProgression = progression.challenge_progressions.get(
-        challenge=Challenge.objects.get(id=challengeId))
+    level_prog: LevelProgression = progression.level_progressions.get(
+        level=Level.objects.get(id=levelId))
 
-    challenge_prog.state = "completed"
-    challenge_prog.alive_challenge_progression.solutions = json.dumps(
-        json.loads(challenge_prog.alive_challenge_progression.solutions).append(challenge_prog.alive_challenge_progression.code))
-    challenge_prog.save(force_update=True)
+    level_prog.state = "completed"
+    level_prog.alive_level_progression.solutions = json.dumps(
+        json.loads(level_prog.alive_level_progression.solutions).append(level_prog.alive_level_progression.code))
+    level_prog.save(force_update=True)
 
     progression.update_completion()
 
@@ -469,7 +468,7 @@ def challenge_success(request: HttpRequest, id, sectionName, activityName, chall
 
     context = {
         'activityUnlock': activityUnlock.id if activityUnlock is not None else None,
-        'html': f"{activity.name} {progression.get_nb_challenges_completed()}/{progression.get_nb_challenges()}"
+        'html': f"{activity.name} {progression.get_nb_levels_completed()}/{progression.get_nb_levels()}"
     }
 
     return JsonResponse(context)
@@ -502,133 +501,133 @@ def unlock_next_activity(course: Course, activity: Activity, user: User) -> Unio
 
 
 @login_required(login_url=loginPageUrl)
-def challenges(request: HttpRequest) -> HttpResponse:
-    return render(request, 'home/challenges.html', {
-        "challenges": Challenge.objects.filter(creator=request.user)
+def levels(request: HttpRequest) -> HttpResponse:
+    return render(request, 'home/levels.html', {
+        "levels": Level.objects.filter(creator=request.user)
     })
 
 
 @login_required(login_url=loginPageUrl)
-def public_challenges(request: HttpRequest) -> HttpResponse:
-    return render(request, 'home/public_challenges.html', {
-        "challenges": Challenge.objects.filter(access="PU")
+def public_levels(request: HttpRequest) -> HttpResponse:
+    return render(request, 'home/public_levels.html', {
+        "levels": Level.objects.filter(access="PU")
     })
 
 
 @login_required(login_url=loginPageUrl)
-def enter_challenge(request: HttpRequest, challengeId) -> HttpResponse:
+def enter_level(request: HttpRequest, levelId) -> HttpResponse:
     try:
-        challenge: Challenge = Challenge.objects.get(id=challengeId)
-    except Challenge.DoesNotExist:
+        level: Level = Level.objects.get(id=levelId)
+    except Level.DoesNotExist:
         return redirect('home:dashboard')
 
     creator = 0
-    if request.user == challenge.creator:
+    if request.user == level.creator:
         creator = 1
-    elif challenge.access == "PR":
+    elif level.access == "PR":
         return redirectToPreviousPage(request)
 
     return render(request, "playground/code.html", {
-        'challenge': challenge,
+        'level': level,
         'creator': creator
     })
 
 
 @login_required(login_url=loginPageUrl)
-def create_challenge(request: HttpRequest) -> HttpResponseRedirect:
-    challenge = Challenge.objects.create(creator=request.user)
-    aliveChallenge = ALIVEChallenge.objects.create(challenge=challenge)
-    return redirect('home:enter_challenge', challengeId=challenge.id)
+def create_level(request: HttpRequest) -> HttpResponseRedirect:
+    level = Level.objects.create(creator=request.user)
+    aliveLevel = SimulationLevel.objects.create(level=level)
+    return redirect('home:enter_level', levelId=level.id)
     """
     if request.method == 'POST':
-        challenge = Challenge.objects.create(creator=request.user, name=request.POST['nameChallenge'])   
-        aliveChallenge = ALIVEChallenge.objects.create(challenge=challenge)
+        level = Level.objects.create(creator=request.user, name=request.POST['nameLevel'])   
+        aliveLevel = ALIVELevel.objects.create(level=level)
         return HttpResponse()
     return HttpResponse('')
     """
     """
-    form = ChallengeCreationForm()
+    form = LevelCreationForm()
 
     if request.method == 'POST':
-        form = ChallengeCreationForm(request.POST)
+        form = LevelCreationForm(request.POST)
         if form.is_valid():
-            challenge = form.save(commit=False)
-            challenge.creator = request.user
-            challenge.save()
-            return redirect('home:enter_course', challenge.id)
-    return render(request, "home/create_challenge.html", {
+            level = form.save(commit=False)
+            level.creator = request.user
+            level.save()
+            return redirect('home:enter_course', level.id)
+    return render(request, "home/create_level.html", {
         'form': form
     })
     """
 
 
 @login_required(login_url=loginPageUrl)
-def save_challenge(request: HttpRequest, challengeId) -> HttpResponse:
+def save_level(request: HttpRequest, levelId) -> HttpResponse:
     if not request.is_ajax() or request.method != "POST":
         return redirect('home:dashboard')
     try:
-        challenge: Challenge = Challenge.objects.get(id=challengeId, creator=request.user)
-    except Challenge.DoesNotExist:
-        return HttpResponse('error challenge does not exist')
+        level: Level = Level.objects.get(id=levelId, creator=request.user)
+    except Level.DoesNotExist:
+        return HttpResponse('error level does not exist')
 
-    aliveChallenge = challenge.specific_challenge
+    aliveLevel = level.type
 
     level = request.POST.get("level_data")
     if level is None:
         return HttpResponse('error level is none')
 
-    challengeName = request.POST.get("challengeName")
-    if challengeName is None or challengeName == "":
-        challengeName = "Sans nom"
+    levelName = request.POST.get("levelName")
+    if levelName is None or levelName == "":
+        levelName = "Sans nom"
 
     levelAccess = request.POST.get("levelAccess")
     if levelAccess is None:
         return HttpResponse('error levelAccess is none')
 
-    aliveChallenge.level = level
-    aliveChallenge.save(force_update=True)
+    aliveLevel.level = level
+    aliveLevel.save(force_update=True)
 
-    challenge.name = challengeName
-    challenge.access = levelAccess
-    challenge.save()
+    level.name = levelName
+    level.access = levelAccess
+    level.save()
 
     return HttpResponse('success')
 
 
 @login_required(login_url=loginPageUrl)
-def delete_challenge(request: HttpRequest, challengeId) -> HttpResponse:
+def delete_level(request: HttpRequest, levelId) -> HttpResponse:
     try:
-        challenge: Challenge = Challenge.objects.get(id=challengeId, creator=request.user)
-        challenge.delete()
+        level: Level = Level.objects.get(id=levelId, creator=request.user)
+        level.delete()
         return HttpResponse('success')
-    except Challenge.DoesNotExist:
-        return HttpResponse('error challenge does not exist')
+    except Level.DoesNotExist:
+        return HttpResponse('error level does not exist')
 
 
 @login_required(login_url=loginPageUrl)
-def switch_to_bloc_interface(request: HttpRequest, challengeId) -> HttpResponse:
+def switch_to_bloc_interface(request: HttpRequest, levelId) -> HttpResponse:
     try:
-        challenge: Challenge = Challenge.objects.get(id=challengeId)
-    except Challenge.DoesNotExist:
+        level: Level = Level.objects.get(id=levelId)
+    except Level.DoesNotExist:
         return redirect('home:dashboard')
 
-    if request.user != challenge.creator and challenge.access == "PR":
+    if request.user != level.creator and level.access == "PR":
         return redirectToPreviousPage(request)
 
-    return render(request, "playground/blocs.html", {"challenge": challenge})
+    return render(request, "playground/blocs.html", {"level": level})
 
 
 @login_required(login_url=loginPageUrl)
-def switch_to_code_interface(request: HttpRequest, challengeId) -> HttpResponse:
+def switch_to_code_interface(request: HttpRequest, levelId) -> HttpResponse:
     if request.is_ajax() and request.method == "POST":
         try:
-            challenge = Challenge.objects.get(id=challengeId)
-        except Challenge.DoesNotExist:
+            level = Level.objects.get(id=levelId)
+        except Level.DoesNotExist:
             pass
 
-        return render_to_string("modules/line_interface.html", {"challenge": challenge or None})
+        return render_to_string("modules/line_interface.html", {"level": level or None})
     else:
-        return redirect('home:enter_challenge', challengeId=challengeId)
+        return redirect('home:enter_level', levelId=levelId)
 
 
 

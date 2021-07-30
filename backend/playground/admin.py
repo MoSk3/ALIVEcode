@@ -1,14 +1,14 @@
 from django.contrib import admin
 
-from playground.models import Challenge, Classroom, Course, Quiz, Question, Response, Section, Activity, Challenge, ALIVEChallenge, ChallengeProgression, ActivityProgression
+from playground.models import Level, Classroom, Course, Quiz, Question, Response, Section, Activity, Level, SimulationLevel, LevelProgression, ActivityProgression
 from home.models import Achievement
 
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
 # Register your models here.
-@admin.register(Challenge)
-class ChallengeAdmin(admin.ModelAdmin):
+@admin.register(Level)
+class LevelAdmin(admin.ModelAdmin):
     list_display = ("name", "creator")
 
 @admin.register(Classroom)
@@ -29,12 +29,12 @@ class ActivityAdmin(admin.ModelAdmin):
     list_filter = ("section",)
 
 @admin.register(ActivityProgression)
-class ActivityProgression(admin.ModelAdmin):
+class ActivityProgressionAdmin(admin.ModelAdmin):
     list_display = ("user",)
 
-@admin.register(ALIVEChallenge)
-class ALIVEChallenge(admin.ModelAdmin):
-    list_display = ("challenge",)
+@admin.register(SimulationLevel)
+class SimulationLevelAdmin(admin.ModelAdmin):
+    list_display = ("level",)
 
 @admin.register(Quiz)
 class QuizAdmin(admin.ModelAdmin):
@@ -48,6 +48,6 @@ class QuestionAdmin(admin.ModelAdmin):
 class ResponseAdmin(admin.ModelAdmin):
     list_display = ("text",)
 
-@admin.register(ChallengeProgression)
-class ChallengeProgressionAdmin(admin.ModelAdmin):
+@admin.register(LevelProgression)
+class LevelProgressionAdmin(admin.ModelAdmin):
     list_display = ("user",)

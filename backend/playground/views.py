@@ -11,7 +11,7 @@ import json
 from playground.forms import QuizCreationForm, QuestionCreationForm, ReponseCreationForm
 from playground.models import Question, Quiz, Response as QuizResponse
 from playground.serializers.course import CourseSerializer
-from .models import Challenge, Classroom
+from .models import Level, Classroom
 
 from rest_framework.views import APIView
 from rest_framework import permissions
@@ -100,48 +100,48 @@ def index(request):
 
 @login_required(login_url=loginPage)
 def code(request):
-    challenge = None
+    level = None
     """
     if request.method == 'GET':
         if 'lvl' in request.GET:
-            challenge = Challenge.objects.get(id=request.GET['lvl'])
-    if challenge is None:
+            level = Level.objects.get(id=request.GET['lvl'])
+    if level is None:
         return render(request, 'playground/code.html')
     """
     return render(request, 'playground/code.html')
 
 @login_required(login_url=loginPage)
 def blocs(request):
-    challenge = None
+    level = None
     """
     if request.method == 'GET':
         if 'lvl' in request.GET:
-            challenge = Challenge.objects.get(id=request.GET['lvl'])
-    if challenge is None:
+            level = Level.objects.get(id=request.GET['lvl'])
+    if level is None:
         return render(request, 'playground/blocs.html')
     """
     return render(request, 'playground/blocs.html')
 """
 @login_required(login_url=loginPage)
 def nextLevel(request):
-    nextChallenge = None
+    nextLevel = None
     if request.method != 'POST':
         return render(request, 'playground/blocs.html')
     if 'lvl' in request.POST:
         try:
-            challenge = Challenge.objects.get(id=request.POST['lvl'])
-            if challenge.num + 1 < Challenge.objects.all().count():  
-                nextChallenge = Challenge.objects.get(num=(challenge.num+1))
+            level = Level.objects.get(id=request.POST['lvl'])
+            if level.num + 1 < Level.objects.all().count():  
+                nextLevel = Level.objects.get(num=(level.num+1))
             else:
-                nextChallenge = challenge
+                nextLevel = level
         except:
-            nextChallenge = Challenge.objects.get(num=0)
+            nextLevel = Level.objects.get(num=0)
     else:
-        nextChallenge = Challenge.objects.get(num=0)
-    print("USER COMPLETED THE LEVEL " + str(challenge.num + 1))
+        nextLevel = Level.objects.get(num=0)
+    print("USER COMPLETED THE LEVEL " + str(level.num + 1))
     return render(request, 'playground/nextLevel.html', {
-        'lvl': nextChallenge,
-        'next': serializers.serialize('json', [nextChallenge], ensure_ascii=False),
+        'lvl': nextLevel,
+        'next': serializers.serialize('json', [nextLevel], ensure_ascii=False),
     })
 """
 def pensee(request):

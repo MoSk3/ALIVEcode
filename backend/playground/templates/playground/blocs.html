@@ -61,9 +61,9 @@
 
 
 <!-- JSON des informations sur le niveau présentement sélectionné -->
-{{ challenge.specific_challenge.level|json_script:"leveldata" }}
+{{ level.specific_level.level|json_script:"leveldata" }}
 <script>
-    const url = "{% url 'home:save_challenge' challengeId=challenge.id %}"
+    const url = "{% url 'home:save_level' levelId=level.id %}"
     const creator = {{ creator }}
-    $('#liste-acces').val("{{challenge.access}}")
+    $('#liste-acces').val("{{level.access}}")
 </script>

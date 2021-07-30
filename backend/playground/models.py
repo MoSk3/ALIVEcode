@@ -15,7 +15,7 @@ class ACCESS(models.TextChoices):
     PRIVATE    = 'PR', _('Private')     # only accessible to the creator
 
 
-class Challenge(models.Model):
+class Level(models.Model):
     id = models.UUIDField(default=uuid.uuid4, editable=False,
                           unique=True, primary_key=True)
 
@@ -28,23 +28,24 @@ class Challenge(models.Model):
     access = models.CharField(max_length=2, choices=ACCESS.choices, default=ACCESS.PRIVATE)
 
     def isType(self, typeToCheck):
-        foreignKeyType = getattr(self, "specific_challenge").__class__
+        foreignKeyType = getattr(self, "type").__class__
         return foreignKeyType == typeToCheck
 
     def __str__(self):
         return f"{self.name} by {self.creator}"
 
 
-class ALIVEChallenge(models.Model):
-    challenge = models.OneToOneField(Challenge, on_delete=models.CASCADE, related_name="specific_challenge")
-    level = models.TextField(default='{"initial-code":[]}')
+class SimulationLevel(models.Model):
+    level = models.OneToOneField(Level, on_delete=models.CASCADE, related_name="type")
+    layout = models.TextField(default='{}')
+    code = models.TextField(default='[]')
 
     def __str__(self):
-        return f"{self.challenge}"
+        return f"{self.level}"
 
 
-class ChallengeProgression(models.Model):
-    challenge = models.ForeignKey(Challenge, on_delete=models.CASCADE)
+class LevelProgression(models.Model):
+    level = models.ForeignKey(Level, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     state = models.CharField(max_length=20, choices=[
         ("ongoing", "🟡"),
@@ -59,21 +60,21 @@ class ChallengeProgression(models.Model):
         return self.code
 
     def __str__(self):
-        return f"{self.challenge} of {self.user}"
+        return f"{self.level} of {self.user}"
 
 
-class ALIVEChallengeProgression(models.Model):
-    challenge_progression = models.OneToOneField(ChallengeProgression, on_delete=models.CASCADE, related_name="alive_challenge_progression")
+class SimulationLevelProgression(models.Model):
+    level_progression = models.OneToOneField(LevelProgression, on_delete=models.CASCADE, related_name="alive_level_progression")
     code = models.TextField(blank=True)
     solutions = models.TextField(default="[]")
     
     def update_code(self, code):
         self.code = code
         self.save(force_update=True)
-        self.challenge_progression.update()
+        self.level_progression.update()
     
     def __str__(self):
-        return f"{self.challenge_progression}"
+        return f"{self.level_progression}"
 
 class Classroom(models.Model):
     id = models.UUIDField(default=uuid.uuid4, editable=False,
@@ -169,7 +170,7 @@ class Activity(models.Model):
 
     content = models.TextField(default="", blank=True)
 
-    challenges = models.ManyToManyField(Challenge, blank=True)
+    levels = models.ManyToManyField(Level, blank=True)
     
     starting_state = models.CharField(max_length=20, choices=[
         ("locked", "🔒"),
@@ -185,7 +186,7 @@ class Activity(models.Model):
 
 class ActivityProgression(models.Model):
     activity = models.ForeignKey(Activity, on_delete=models.CASCADE)
-    challenge_progressions = models.ManyToManyField(ChallengeProgression, blank=True)
+    level_progressions = models.ManyToManyField(LevelProgression, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     state = models.CharField(max_length=20, choices=[
         ("locked", "🔒"),
@@ -200,18 +201,18 @@ class ActivityProgression(models.Model):
     date = models.DateTimeField(auto_created=True)
     
     def update_completion(self):
-        self.completion = self.get_nb_challenges_completed() / self.get_nb_challenges() if self.get_nb_challenges() > 0 else 0.0
+        self.completion = self.get_nb_levels_completed() / self.get_nb_levels() if self.get_nb_levels() > 0 else 0.0
         self.save(force_update=True)
             
     def completion_as_pourcentage(self):
         return self.completion * 100
     
-    def get_nb_challenges(self):
-        return len(self.challenge_progressions.all())
+    def get_nb_levels(self):
+        return len(self.level_progressions.all())
     
-    def get_nb_challenges_completed(self):
-        return len([challenge for challenge in self.challenge_progressions.all() 
-                        if challenge.state == "completed"])
+    def get_nb_levels_completed(self):
+        return len([level for level in self.level_progressions.all() 
+                        if level.state == "completed"])
                     
     def __str__(self):
         return f"{self.user}, {self.date}"  

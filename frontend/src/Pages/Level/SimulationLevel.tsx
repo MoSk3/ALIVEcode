@@ -1,5 +1,5 @@
 import FillContainer from '../../Components/MiscComponents/FillContainer/FillContainer';
-import { ChallengeProps } from './challengeTypes';
+import { LevelProps } from './simulationLevelTypes';
 import { useEffect, useState, useContext, useRef } from 'react';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
@@ -12,7 +12,7 @@ import styled from 'styled-components';
 import { faBookOpen, faCog, faPlayCircle, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import IconButton from '../../Components/DashboardComponents/IconButton/IconButton';
 import Cmd from '../../Components/PlayComponents/Cmd/Cmd';
-import ChallengeExecutor from './ChallengeExecutorNew';
+import SimulationLevelExecutor from './SimulationLevelExecutor';
 
 const StyledDiv = styled(FillContainer)`
   overflow-y: hidden;
@@ -23,15 +23,15 @@ const StyledDiv = styled(FillContainer)`
   }
 `
 
-const Challenge = (props: ChallengeProps) => {
+const Level = (props: LevelProps) => {
   const alert = useAlert();
   const history = useHistory();
 
-  const [challenge, setChallenge] = useState<any>();
+  const [level, setLevel] = useState<any>();
 
   const playButton = useRef<HTMLButtonElement>(null);
   
-  const [executor, setExecutor] = useState<ChallengeExecutor>();
+  const [executor, setExecutor] = useState<SimulationLevelExecutor>();
 
   const lineInterfaceContentChanges = (content: any) => {
     if(executor) executor.lineInterfaceContent = content;
@@ -40,20 +40,20 @@ const Challenge = (props: ChallengeProps) => {
   const { user } = useContext(UserContext);
 
   useEffect(() => {
-    const loadChallenge = async () => {
+    const loadLevel = async () => {
       try {
-        setChallenge((await axios.get(`/playground/challenges/${props.match.params.challengeId}`)).data)
+        setLevel((await axios.get(`/playground/levels/${props.match.params.levelId}`)).data)
       } catch (err) {
         alert.error('Niveau introuvable');
         //history.push('/');
       }
     }
-    loadChallenge();
-  }, [props.match.params.challengeId, alert, history]);
+    loadLevel();
+  }, [props.match.params.levelId, alert, history]);
 
   useEffect(() => {
     if(!playButton.current) return;
-    setExecutor(new ChallengeExecutor(undefined, "alllo", playButton.current));
+    setExecutor(new SimulationLevelExecutor(undefined, "alllo", playButton.current));
   }, []);
 
   return (
@@ -63,16 +63,16 @@ const Challenge = (props: ChallengeProps) => {
             <div style={{ flex: '0 1 70px', backgroundColor: '#013677', border: 'none' }}>
               <IconButton icon={faBookOpen} size="2x" />
               <IconButton icon={faQuestionCircle} size="2x" />
-              {(user?.professor && user?.professor === challenge?.creator) ? (
+              {(user?.professor && user?.professor === level?.creator) ? (
                 <>
-                  <input type="text" id="input-challenge-name" value={challenge?.name} style={{ marginLeft: '5px' }} />
+                  <input type="text" id="input-level-name" value={level?.name} style={{ marginLeft: '5px' }} />
                   <div id="status-modify-div" style={{display: "inline"}}>
                     <label style={{ color: 'white' }}>Niveau sauvegardé ✔</label>
                     <IconButton icon={faCog} size="2x" />
                   </div>
                 </>
               ) : (
-                <label id="label-challenge-name" style={{ color: 'white', marginLeft: '5px' }}>{challenge ? challenge.name : "Sans nom"}</label>
+                <label id="label-level-name" style={{ color: 'white', marginLeft: '5px' }}>{level ? level.name : "Sans nom"}</label>
               )}
               <IconButton icon={faPlayCircle} size="2x" ref={playButton} />
             </div>
@@ -94,7 +94,7 @@ const Challenge = (props: ChallengeProps) => {
   )
 }
 
-export default Challenge;
+export default Level;
 
 
 /*
@@ -104,7 +104,7 @@ export default Challenge;
         <div className="col-6" style="resize: both; padding:0; display: flex; flex-flow: column;">
             <div style="flex: 0 1 70px; background-color: #013677; border: none;">
                 <div id="go-back-button" className="btn btn-primary"
-                    onclick="window.location=`{% url 'home:switch_to_bloc_interface' challengeId=challenge.id %}`">
+                    onclick="window.location=`{% url 'home:switch_to_bloc_interface' levelId=level.id %}`">
                     Programmation en blocs
                 </div>
                 <button type="button" id="btn-book" className="btn" data-toggle="modal" data-target="#modal">
@@ -114,7 +114,7 @@ export default Challenge;
                     <i className="fas fa-question-circle fa-2x" style="color: white;"></i>
                 </button>
                 {% if creator %}
-                <input type="text" id="input-challenge-name" value="{{ challenge.name }}" style="margin-left: 5px;">
+                <input type="text" id="input-level-name" value="{{ level.name }}" style="margin-left: 5px;">
                 <div id="status-modify-div" className="btn">
                     <label id="saving-status" style="color:white">Niveau sauvegardé ✔</label>
                     <button type="button" id="btn-modify" ­­ className="btn btn-primary" data-toggle="modal"
@@ -123,7 +123,7 @@ export default Challenge;
                     </button>
                 </div>
                 {% else %}
-                <label id="label-challenge-name" style="color:white; margin-left: 5px;">{{challenge.name}}</label>
+                <label id="label-level-name" style="color:white; margin-left: 5px;">{{level.name}}</label>
                 {% endif %}
             </div>
 

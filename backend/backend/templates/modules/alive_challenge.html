@@ -1,4 +1,4 @@
-{% include "playground/base.html" with challenge=challenge_progression.challenge %} {% load static %} {% load learning %}
+{% include "playground/base.html" with level=level_progression.level %} {% load static %} {% load learning %}
 
 <div id='main-div' class="container-fluid" style="position: relative; max-width: 100%;">
     <div class="row h-100">
@@ -13,8 +13,8 @@
                 <button type="button" id="btn-hint" class="btn" data-toggle="modal" data-target="#modal-hint">
                     <i class="fas fa-question-circle fa-2x" style="color: white;"></i>
                 </button>
-                <label id="label-challenge-name"
-                    style="color:white; margin-left: 5px;">{{challenge_progression.challenge.name}}</label>
+                <label id="label-level-name"
+                    style="color:white; margin-left: 5px;">{{level_progression.level.name}}</label>
             </div>
             {% include "modules/line_interface.html" %}
         </div>
@@ -35,16 +35,16 @@
 
 <!-- JSON des informations sur le niveau présentement sélectionné -->
 
-{{ challenge_progression.challenge.specific_challenge.level|json_script:"leveldata" }}
+{{ level_progression.level.specific_level.level|json_script:"leveldata" }}
 
 <script id="destination-url" type="application/json">
-"{% url 'home:save_code' id=activity.section.course.id sectionName=activity.section.name activityName=activity.name challengeId=challenge_progression.challenge.id %}"
+"{% url 'home:save_code' id=activity.section.course.id sectionName=activity.section.name activityName=activity.name levelId=level_progression.level.id %}"
 </script>
 
 <script>
     const progression = true
     $(document).ready(() => {
-        editor.setValue('{{ challenge_progression.alive_challenge_progression.code|escapejs }}')
+        editor.setValue('{{ level_progression.alive_level_progression.code|escapejs }}')
         let code = editor.getValue();
         setInterval(() => {
             if (code == editor.getValue()) return;

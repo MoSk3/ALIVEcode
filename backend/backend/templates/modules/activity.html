@@ -7,27 +7,27 @@
 </style>
 
 <h3 class="title" id="activity-title">{{ activity.name }}
-    {% if activity_progression.get_nb_challenges > 0 %}
-    {{ activity_progression.get_nb_challenges_completed }}/{{ activity_progression.get_nb_challenges }}
+    {% if activity_progression.get_nb_levels > 0 %}
+    {{ activity_progression.get_nb_levels_completed }}/{{ activity_progression.get_nb_levels }}
     {% endif %}
 </h3>
 
 
 
 
-{% if activity.content == "" and not activity.challenges.all %}
+{% if activity.content == "" and not activity.levels.all %}
 <label style="color: gray;">Cette activité est vide</label>
 {% else %}
 {{ activity.content | safe }}
 {% endif %}
 
 
-{% for challenge_progression in activity_progression.challenge_progressions.all %}
+{% for level_progression in activity_progression.level_progressions.all %}
 
-{% if challenge_progression.challenge|isType:'ALIVEChallenge' %}
+{% if level_progression.level|isType:'ALIVELevel' %}
 <div class="sim w-100">
     {% with in_course=True %}
-    {% include 'modules/alive_challenge.html' %}
+    {% include 'modules/alive_level.html' %}
     {% endwith %}
 </div>
 <br><br>

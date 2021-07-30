@@ -1,6 +1,6 @@
 from django import template
 from django.apps import apps
-from playground.models import ActivityProgression, Activity, Challenge
+from playground.models import ActivityProgression, Activity, Level
 import json
 
 register = template.Library()
@@ -14,9 +14,9 @@ def to_dict(val: str) -> dict:
     return json.loads(val)
 
 @register.filter(name='isType')
-def isType(challenge: Challenge, typeStr: str) -> bool:
+def isType(level: Level, typeStr: str) -> bool:
     foreignKeyType = apps.get_model('playground', typeStr)
-    return challenge.isType(foreignKeyType)
+    return level.isType(foreignKeyType)
 
 @register.filter(name='get_progression')
 def get_progression(activity,user):

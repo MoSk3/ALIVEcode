@@ -110,7 +110,7 @@ function init(s) {
     if (s.creator) {
         s.spawnEditorButton()
         s.editorText = editor.getValue()
-        s.levelName = $("#input-challenge-name").val()
+        s.levelName = $("#input-level-name").val()
         s.levelAccess = $('#liste-acces').val()
     }
     s.spawnRobotConnectButton()

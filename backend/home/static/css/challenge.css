@@ -106,29 +106,29 @@
     transform: rotateY(0deg);
   }
 
-/*Modale pour supprimer un challenge*/
+/*Modale pour supprimer un level*/
 
-.delete-challenge-modal .modal-header{
+.delete-level-modal .modal-header{
     background-color: var(--contrast-color);
     color: white;
 }
 
-.delete-challenge-modal .btn {
+.delete-level-modal .btn {
     border-radius: 10px;
     font-size: 20px;
     padding: 20px;
     border-style: none;
 }
 
-.delete-challenge-modal .btn:hover {
+.delete-level-modal .btn:hover {
     background-color: var(--contrast-color);
 }
 
-.delete-challenge-modal .btn-primary {
+.delete-level-modal .btn-primary {
     background-color: var(--third-color);
 }
 
-.delete-challenge-modal .modal-footer {
+.delete-level-modal .modal-footer {
     margin: auto;
 }
 

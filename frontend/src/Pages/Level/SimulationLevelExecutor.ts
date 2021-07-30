@@ -12,7 +12,7 @@ import { User } from '../../Models/User';
 // TODO: robotConnected
 const robotConnected = false;
 
-class ChallengeExecutor implements PlayExecutor {
+class SimulationLevelExecutor implements PlayExecutor {
 
   public s: any;
   public playButton: JQuery;
@@ -477,4 +477,4 @@ class ChallengeExecutor implements PlayExecutor {
   }
 }
 
-export default ChallengeExecutor;
+export default SimulationLevelExecutor;

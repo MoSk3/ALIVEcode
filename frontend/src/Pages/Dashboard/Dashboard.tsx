@@ -67,7 +67,7 @@ export default Dashboard;
 {% load profile %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/maisonneuve_background.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'css/challenge.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'css/level.css' %}" />
 
 <div id='main-div' class="container-fluid">
 		<div class="row row-bonjour justify-content-center" style="text-align: center;">
@@ -117,7 +117,7 @@ export default Dashboard;
 				<div class="niveaux-body container-fluid">
 						<div id="buttons" class="row justify-content-center">
 								<div>
-										<div id="button1" class="menu-button" onclick='location.href="{% url "home:challenges" %}"'>
+										<div id="button1" class="menu-button" onclick='location.href="{% url "home:levels" %}"'>
 												<div class="padded-button">
 														<div class="logo-button">
 																<div style='background-image: url(" {% static "images/icons/my_levels.png" %} ");'>
@@ -130,7 +130,7 @@ export default Dashboard;
 										</div>
 								</div>
 								<div>
-										<div id="button1" class="menu-button" onclick='location.href="{% url "home:create_challenge" %}"'>
+										<div id="button1" class="menu-button" onclick='location.href="{% url "home:create_level" %}"'>
 												<div class="padded-button">
 														<div class="logo-button">
 																<div style='background-image: url(" {% static "images/icons/sandboxblanc.png" %} ");'>
@@ -143,7 +143,7 @@ export default Dashboard;
 										</div>
 								</div>
 								<div>
-										<div id="button1" class="menu-button" onclick='location.href="{% url "home:public_challenges" %}"'>
+										<div id="button1" class="menu-button" onclick='location.href="{% url "home:public_levels" %}"'>
 												<div class="padded-button">
 														<div class="logo-button">
 																<div style='background-image: url(" {% static "images/Voiture.gif" %} ");'></div>

@@ -9,7 +9,7 @@ import { useContext } from 'react';
 import { UserContext } from '../../UserContext';
 import SignUpMenu from '../../Pages/Account/SignUpMenu/SignUpMenu';
 import { USER_TYPES } from '../../Types/userTypes';
-import Challenge from '../../Pages/Challenge/Challenge';
+import Level from '../../Pages/Level/SimulationLevel';
 
 
 export const RouterSwitch = () => {
@@ -29,7 +29,7 @@ export const RouterSwitch = () => {
 			<Route path="/signup-professor" component={() => user ? <Home /> : <SignUp userType={USER_TYPES.PROFESSOR} />} />
 			<Route path="/signup-student" component={() => user ? <Home /> : <SignUp userType={USER_TYPES.STUDENT} />} />
 
-			<Route path="/challenge/:challengeId" component={user ? Challenge : SignIn} />
+			<Route path="/level/:levelId" component={user ? Level : SignIn} />
 
 			{/* All */}
 			<Route path="/about" component={About} />

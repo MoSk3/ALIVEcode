@@ -24,18 +24,18 @@ urlpatterns = [
     path('course/<uuid:id>/edit', home.views.edit_course, name='edit_course'),
     path('course/<uuid:id>/edit/<sectionName>', home.views.create_section, name='create_section'),
     path('course/<uuid:id>/<sectionName>/<activityName>', home.views.enter_activity, name='enter_activity'),
-    path('course/<uuid:id>/<sectionName>/<activityName>/<uuid:challengeId>', home.views.save_code, name='save_code'),
+    path('course/<uuid:id>/<sectionName>/<activityName>/<uuid:levelId>', home.views.save_code, name='save_code'),
     
-    path('challenges', home.views.challenges, name='challenges'),
-    path('public_challenges', home.views.public_challenges, name='public_challenges'),
-    path('challenge/<uuid:challengeId>', home.views.enter_challenge, name='enter_challenge'),
-    path('challenge/<uuid:challengeId>/bloc', home.views.switch_to_bloc_interface, name='switch_to_bloc_interface'),
-    path('challenge/<uuid:challengeId>/code', home.views.switch_to_code_interface, name='switch_to_code_interface'),
-    path('challenge/<uuid:challengeId>/save', home.views.save_challenge, name='save_challenge'),
-    path('challenge/<uuid:challengeId>/delete', home.views.delete_challenge, name='delete_challenge'),
-    path('challenge/create', home.views.create_challenge, name='create_challenge'),
+    path('levels', home.views.levels, name='levels'),
+    path('public_levels', home.views.public_levels, name='public_levels'),
+    path('level/<uuid:levelId>', home.views.enter_level, name='enter_level'),
+    path('level/<uuid:levelId>/bloc', home.views.switch_to_bloc_interface, name='switch_to_bloc_interface'),
+    path('level/<uuid:levelId>/code', home.views.switch_to_code_interface, name='switch_to_code_interface'),
+    path('level/<uuid:levelId>/save', home.views.save_level, name='save_level'),
+    path('level/<uuid:levelId>/delete', home.views.delete_level, name='delete_level'),
+    path('level/create', home.views.create_level, name='create_level'),
     
-    path('course/<uuid:id>/<sectionName>/<activityName>/<uuid:challengeId>/success', home.views.challenge_success, name='challenge_success'),
+    path('course/<uuid:id>/<sectionName>/<activityName>/<uuid:levelId>/success', home.views.level_success, name='level_success'),
     
     
     path('aliveScriptBook', home.views.aliveScript_book_presentation, name="aliveScript_book_presentation"),
