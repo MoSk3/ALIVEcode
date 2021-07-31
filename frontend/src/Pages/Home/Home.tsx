@@ -12,10 +12,13 @@ import Cloud from '../../assets/images/cloud.png';
 import Maze from '../../assets/images/Labyrinthe.jpg';
 import LRIMA from '../../assets/images/LRIMA.png';
 import TypeWriter from '../../Components/MiscComponents/TypeWriter/TypeWriter';
+import useRoutes from '../../state/hooks/useRoutes';
 
 const Home = (props: HomeProps) => {
 
 	const history = useHistory();
+
+	const { auth_routes } = useRoutes();
 
 	return (
 		<>
@@ -33,7 +36,7 @@ const Home = (props: HomeProps) => {
 				/>
 
 				<div id="arrow">
-					<svg onClick={() => history.push('/dashboard')} data-name="arrow" xmlns="http://www.w3.org/2000/svg"
+					<svg onClick={() => history.push(auth_routes.dashboard.path)} data-name="arrow" xmlns="http://www.w3.org/2000/svg"
 						viewBox="0 0 24 24">
 						<g data-name="Arrow Left">
 							<path style={{ fill: "white" }}

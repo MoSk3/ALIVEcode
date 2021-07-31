@@ -107,7 +107,7 @@ const SignUp = ({ userType }: SignUpProps) => {
 
 				<br /><br />
 
-				Vous avez déjà un compte? <Link to="/signin">Se connecter</Link>
+				Vous avez déjà un compte? <Link pale to="/signin">Se connecter</Link>
 			</Form>
 		</FormContainer>
 	);

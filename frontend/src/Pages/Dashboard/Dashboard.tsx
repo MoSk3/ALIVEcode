@@ -16,7 +16,6 @@ import Puzzle from '../../assets/images/icons/puzzle.png'
 import Sandbox from '../../assets/images/icons/sandboxblanc.png'
 import Voiture from '../../assets/images/Voiture.gif'
 import { Row } from 'react-bootstrap';
-import { Level } from '../../Models/Playground/Level';
 
 const Dashboard = (props: DashboardProps) => {
 	const { user } = useContext(UserContext);

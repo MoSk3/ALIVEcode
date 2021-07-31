@@ -109,10 +109,11 @@ const ClassroomCard = ({ classroom }: ClassRoomCardProps) => {
               `Classe de ${classroom.getSubjectDisplay()}`
             )}
           </p>
-
-          <button id="btn-details" className="badge badge-primary" onClick={() => history.push(`/classroom/${classroom.id}`)}>
-            <IconButton icon={faAngleRight} size="4x" width={100} />
-          </button>
+          <IconButton
+            onClick={() => history.push(`/classroom/${classroom.id}`)} 
+            icon={faAngleRight} 
+            size="4x" width={100} 
+          />
         </div>
       </div>
     </div>

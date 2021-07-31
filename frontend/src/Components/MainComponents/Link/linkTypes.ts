@@ -1,6 +1,7 @@
 
 export type StyledLinkProps = {
   dark?: boolean;
+  pale?: boolean;
   bold?: boolean;
   block?: boolean;
 }

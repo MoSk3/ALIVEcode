@@ -20,14 +20,19 @@ const Link = ({ to, className, children, style, dark, bold, block, onClick }: Li
 }
 
 export default styled(Link)`
-  color: ${(props: StyledLinkProps) => props.dark ? "var(--contrast-color)" : "var(--primary-color)"};
-  transition: 0.2s;
+  color: ${(props: StyledLinkProps) => {
+    if(props.dark) return "var(--contrast-color)";
+    console.log(props.pale)
+    if(props.pale) return "var(--pale-color)";
+    else return "var(--primary-color)";
+  }};
+  transition: 0.3s;
   cursor: pointer;
   font-weight: ${(props: StyledLinkProps) => props.bold ? "bold" : ""};
   display: ${(props: StyledLinkProps) => props.block ? "block" : "inline"};
 
   &:hover {
-    color: var(--primary-color);
+    color: #0059ac;
     text-decoration-line: underline;
   }
 `;

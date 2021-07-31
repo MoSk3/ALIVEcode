@@ -68,7 +68,7 @@ const SignIn = (props: SignInProps) => {
 
 				<br /><br />
 
-				Vous n'avez pas de compte? <Link to="/signup">S'inscrire</Link>
+				Vous n'avez pas de compte? <Link pale to="/signup">S'inscrire</Link>
 			</Form>
 		</FormContainer>
 	);

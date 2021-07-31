@@ -4,10 +4,12 @@ import Link from '../../../Components/MainComponents/Link/Link';
 import VoitureGIF from "../../../assets/images/Voiture.gif";
 import FillContainer from '../../../Components/MiscComponents/FillContainer/FillContainer';
 import { useHistory } from 'react-router';
+import useRoutes from '../../../state/hooks/useRoutes';
 
 export const NotFound = () => {
 
 	const history = useHistory();
+	const { public_routes } = useRoutes();
 
 	return (
 		<FillContainer style={{ textAlign: 'center' }} startAtTop centered>
@@ -21,7 +23,7 @@ export const NotFound = () => {
 					<Link onClick={() => history.goBack()} dark bold>Retour en arrière.</Link>
 					<br />
 					<br />
-					<Link to="/" bold>Retour à la page d'accueil.</Link>
+					<Link to={public_routes.home.path} bold>Retour à la page d'accueil.</Link>
 				</div>
 			</div>
 		</FillContainer>
