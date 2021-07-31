@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
@@ -7,6 +7,10 @@ import { transitions, positions, Provider as AlertProvider } from 'react-alert';
 import axios from 'axios';
 import { SERVER_URL } from './appConfigs';
 import AlertTemplate from 'react-alert-template-basic';
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
+import HttpAPI from 'i18next-http-backend';
+import LanguageDetector from 'i18next-browser-languagedetector';
 
 axios.defaults.baseURL = SERVER_URL;
 axios.defaults.timeout = 5000;
@@ -39,7 +43,7 @@ axios.interceptors.response.use(
         if (tokenParts.exp > now) {
           try {
             const { refresh: newRefresh, access } = (await axios.post('/api/token/refresh/', { refresh })).data;
-            
+
             localStorage.setItem('access_token', access);
             localStorage.setItem('refresh_token', newRefresh);
 
@@ -68,12 +72,42 @@ const alertOptions = {
   transition: transitions.FADE
 }
 
+
+i18n
+  .use(initReactI18next) // passes i18n down to react-i18next
+  .use(LanguageDetector)
+  .use(HttpAPI)
+  .init({
+    supportedLngs: ['en', 'fr'],
+    fallbackLng: 'en',
+    detection: {
+      order: ['querystring', 'path', 'cookie', 'localStorage', 'sessionStorage', 'navigator', 'htmlTag', 'subdomain'],
+      caches: ['cookie']
+    },
+    interpolation: {
+      escapeValue: false
+    },
+    backend: {
+      loadPath: '/assets/locales/{{lng}}/translation.json'
+    },
+    react: { useSuspense: false }
+  });
+
+
+const fallback = (
+  <div>
+    <h2>Loading...</h2>
+  </div>
+)
+
 ReactDOM.render(
-  <React.StrictMode>
-    <AlertProvider template={AlertTemplate} {...alertOptions}>
-      <App />
-    </AlertProvider>
-  </React.StrictMode>,
+  <Suspense fallback={fallback}>
+    <React.StrictMode>
+      <AlertProvider template={AlertTemplate} {...alertOptions}>
+        <App />
+      </AlertProvider>
+    </React.StrictMode>
+  </Suspense>,
   document.getElementById('root')
 );
 

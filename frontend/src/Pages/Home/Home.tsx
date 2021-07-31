@@ -13,10 +13,13 @@ import Maze from '../../assets/images/Labyrinthe.jpg';
 import LRIMA from '../../assets/images/LRIMA.png';
 import TypeWriter from '../../Components/MiscComponents/TypeWriter/TypeWriter';
 import useRoutes from '../../state/hooks/useRoutes';
+import { useTranslation } from 'react-i18next';
 
 const Home = (props: HomeProps) => {
 
 	const history = useHistory();
+
+	const { t } = useTranslation();
 
 	const { auth_routes } = useRoutes();
 
@@ -26,9 +29,9 @@ const Home = (props: HomeProps) => {
 				<h1>A.L.I.V.E.</h1>
 				<TypeWriter
 					lines={[
-						"Apprendre la programmation",
-						"Apprendre en jouant",
-						"Apprendre les concepts de l'IA",
+						t('home.msg1'),
+						t('home.msg2'),
+						t('home.msg3')
 					]}
 					typeSpeed={80}
 					eraseSpeed={50}
