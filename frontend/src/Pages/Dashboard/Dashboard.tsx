@@ -8,7 +8,7 @@ import { useHistory } from 'react-router-dom';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import ClassroomCard from '../../Components/DashboardComponents/ClassroomCard/ClassroomCard';
 import { Classroom } from '../../Models/Playground/Classroom';
-import SmallCard from '../../Components/MainComponents/SmallCard/SmallCard';
+import SmallCard from '../../Components/MainComponents/Cards/SmallCard/SmallCard';
 import { Database } from '../../Models/Model';
 
 const Dashboard = (props: DashboardProps) => {
@@ -51,9 +51,7 @@ const Dashboard = (props: DashboardProps) => {
 			<CardContainer
 				title="Niveaux"
 			>
-				<SmallCard>
-						test
-				</SmallCard>
+				<SmallCard onClick={() => console.log("BOOMER")} title="test" />
 			</CardContainer>
 		</CenteredContainer>
 	)

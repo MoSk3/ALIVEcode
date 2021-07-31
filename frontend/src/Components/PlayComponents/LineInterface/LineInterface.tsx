@@ -16,6 +16,9 @@ const LineInterface = ({ handleChange }: LineInterfaceProps) => {
 		<StyledDiv>
 			<AceEditor
 				style={{position: 'relative', width: '100%', height: '100%' }}
+				enableSnippets
+				enableBasicAutocompletion
+				enableLiveAutocompletion
 				mode="javascript"
 				theme="monokai"
 				onChange={handleChange}

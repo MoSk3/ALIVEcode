@@ -1,6 +1,6 @@
 import FillContainer from '../../../Components/MiscComponents/FillContainer/FillContainer';
 import { SignUpMenuProps } from './signUpMenuTypes';
-import SignUpCard from '../SignUpCard/SignUpCard';
+import Card from '../../../Components/MainComponents/Cards/Card/Card';
 import { Row } from 'react-bootstrap';
 
 import StudentImg from "../../../assets/images/icons/student.png";
@@ -12,8 +12,8 @@ const SignUpMenu = (props: SignUpMenuProps) => {
   return (
     <FillContainer startAtTop centered>
       <Row>
-        <SignUpCard img={StudentImg} to="/signup-student" />
-        <SignUpCard img={ProfessorImg} to="/signup-professor" />
+        <Card img={StudentImg} to="/signup-student" title="Compte Étudiant" />
+        <Card img={ProfessorImg} to="/signup-professor" title="Compte Professeur" />
       </Row>
     </FillContainer>
   );

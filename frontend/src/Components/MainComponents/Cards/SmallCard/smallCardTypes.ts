@@ -1,8 +1,9 @@
 
 export type SmallCardProps = {
   img?: string;
+  to?: string;
   title?: string;
   style?: any;
   className?: string;
-  children?: React.ReactNode;
+  onClick: () => void;
 }

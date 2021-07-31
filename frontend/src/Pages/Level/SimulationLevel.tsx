@@ -13,6 +13,7 @@ import { faBookOpen, faCog, faPlayCircle, faQuestionCircle } from '@fortawesome/
 import IconButton from '../../Components/DashboardComponents/IconButton/IconButton';
 import Cmd from '../../Components/PlayComponents/Cmd/Cmd';
 import SimulationLevelExecutor from './SimulationLevelExecutor';
+import useCmd from '../../state/hooks/useCmd';
 
 const StyledDiv = styled(FillContainer)`
   overflow-y: hidden;
@@ -26,18 +27,22 @@ const StyledDiv = styled(FillContainer)`
 const Level = (props: LevelProps) => {
   const alert = useAlert();
   const history = useHistory();
+  const { user } = useContext(UserContext);
 
-  const [level, setLevel] = useState<any>();
+  const [level, setLevel] = useState<any>();  
+  const [executor, setExecutor] = useState<SimulationLevelExecutor>();
 
   const playButton = useRef<HTMLButtonElement>(null);
-  
-  const [executor, setExecutor] = useState<SimulationLevelExecutor>();
+
+  const [cmdRef, cmd] = useCmd();
 
   const lineInterfaceContentChanges = (content: any) => {
     if(executor) executor.lineInterfaceContent = content;
   }
 
-  const { user } = useContext(UserContext);
+  useEffect(() => {
+    if(cmd && executor) executor.cmd = cmd;
+  }, [cmd, executor]);
 
   useEffect(() => {
     const loadLevel = async () => {
@@ -86,7 +91,7 @@ const Level = (props: LevelProps) => {
               {executor && <Simulation init={(s) => executor.init(s)} />}
             </Row>
             <Row style={{ height: '40%' }}>
-                <Cmd></Cmd>
+                <Cmd ref={cmdRef}></Cmd>
             </Row>
           </Col>
         </Row>

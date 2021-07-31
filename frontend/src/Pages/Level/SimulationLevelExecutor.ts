@@ -8,6 +8,7 @@ import $ from 'jquery';
 import { PlayExecutor } from '../../Models/Executor/PlayExecutor';
 import { PlaySocket } from './PlaySocket';
 import { User } from '../../Models/User';
+import { CMD } from '../../Components/PlayComponents/Cmd/cmdTypes';
 
 // TODO: robotConnected
 const robotConnected = false;
@@ -17,6 +18,7 @@ class SimulationLevelExecutor implements PlayExecutor {
   public s: any;
   public playButton: JQuery;
   public socket?: PlaySocket;
+  public cmd?: CMD;
 
   public lineInterfaceContent: string = "";
 
@@ -253,8 +255,7 @@ class SimulationLevelExecutor implements PlayExecutor {
                   /*----     print     ----*/
 
                   if (params.length > 0 && typeof params[0] === "string") {
-                    // TODO: add print_console
-                    //print_console(params[0]);
+                    this.cmd?.print(params[0]);
                   }
                   if (dodo === 0) perform_action(i + 1, res);
                   else {
@@ -329,8 +330,7 @@ class SimulationLevelExecutor implements PlayExecutor {
                   typeof params[0] === "string" &&
                   typeof params[2] === "number"
                 ) {
-                  // TODO: add print_error
-                  //print_error(params[0] + ": " + params[1], params[2]);
+                  this.cmd?.error(params[0] + ": " + params[1], params[2]);
                 }
               }
             }
@@ -342,8 +342,7 @@ class SimulationLevelExecutor implements PlayExecutor {
           }
         });
 
-        // TODO: add clear_cmd()
-        //clear_cmd();
+        this.cmd?.clear();
         this.playButton.children("img").attr("src", "/static/images/pause_button.png");
 
         // Ancien système obsolet pour set la target on play
