@@ -2,19 +2,32 @@ import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import { LinkProps, StyledLinkProps } from './linkTypes';
 
-const StyledLink = styled.a`
-  color: ${(props: StyledLinkProps) => props.dark ? "var(--contrast-color)" :  "var(--pale-color)"};
+const Link = ({ to, className, children, style, dark, bold, block, onClick }: LinkProps) => {
+
+  const history = useHistory();
+
+  return (
+    <label
+      className={className}
+      style={style}
+      onClick={() => {
+        if (onClick) onClick();
+        else if (to) history.push(to);
+      }}>
+      {children}
+    </label>
+  )
+}
+
+export default styled(Link)`
+  color: ${(props: StyledLinkProps) => props.dark ? "var(--contrast-color)" : "var(--primary-color)"};
   transition: 0.2s;
   cursor: pointer;
   font-weight: ${(props: StyledLinkProps) => props.bold ? "bold" : ""};
   display: ${(props: StyledLinkProps) => props.block ? "block" : "inline"};
+
+  &:hover {
+    color: var(--primary-color);
+    text-decoration-line: underline;
+  }
 `;
-
-const Link = ({ to, children, style, dark, bold, block }: LinkProps) => {
-
-  const history = useHistory();
-
-  return <StyledLink dark={dark} block={block} bold={bold} style={style} onClick={() => history.push(to)}>{children}</StyledLink>
-}
-
-export default Link;

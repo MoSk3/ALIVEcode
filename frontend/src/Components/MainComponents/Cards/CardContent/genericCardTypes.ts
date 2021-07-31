@@ -13,4 +13,5 @@ export type CardStyles = {
   height: number;
   margin: string;
   boxShadow?: string;
+  scale?: number;
 }

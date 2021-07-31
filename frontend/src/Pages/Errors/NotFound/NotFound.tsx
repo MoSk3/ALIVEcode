@@ -3,8 +3,12 @@ import Link from '../../../Components/MainComponents/Link/Link';
 
 import VoitureGIF from "../../../assets/images/Voiture.gif";
 import FillContainer from '../../../Components/MiscComponents/FillContainer/FillContainer';
+import { useHistory } from 'react-router';
 
 export const NotFound = () => {
+
+	const history = useHistory();
+
 	return (
 		<FillContainer style={{ textAlign: 'center' }} startAtTop centered>
 			<div>
@@ -14,7 +18,10 @@ export const NotFound = () => {
 					src={VoitureGIF} alt="Voiture ALIVE"
 				/>
 				<div>
-					<Link to="/" dark bold>Retour à l'accueil.</Link>
+					<Link onClick={() => history.goBack()} dark bold>Retour en arrière.</Link>
+					<br />
+					<br />
+					<Link to="/" bold>Retour à la page d'accueil.</Link>
 				</div>
 			</div>
 		</FillContainer>

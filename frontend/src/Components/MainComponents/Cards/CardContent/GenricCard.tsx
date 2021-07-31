@@ -41,7 +41,7 @@ export default styled(GenericCard)`
   border-radius: 20px;
 
   &:hover {
-  transform: rotate(5deg) scale(1.2);
+  transform: rotate(5deg) scale(${(props: CardStyles) => props.scale || 1});
   background-color: var(--third-color);
   box-shadow: 0px 5px 30px rgb(131, 131, 131);
 }

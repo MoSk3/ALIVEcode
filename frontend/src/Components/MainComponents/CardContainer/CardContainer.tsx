@@ -25,6 +25,12 @@ const StyledDiv = styled.div`
     background-color: rgba(255, 255, 255, 0.75);
     box-shadow: 0px 15px 30px 0px rgb(170, 170, 170);
   }
+
+  
+  @media screen and (max-width : 1076px) {
+    text-align: center;
+    margin: 50px 20px 0px 20px;
+  }
 `
 
 const CardContainer = ({ children, title, icon, scrollable, onIconClick, style }: CardContainerProps) => {

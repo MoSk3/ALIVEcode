@@ -15,9 +15,11 @@ const CenteredContainer = ({ vertically, horizontally, startAtTop, textAlign, ch
     ...style, ...(vertically ? {
       display: 'flex',
       alignItems: 'center',
-    } : {}),  ...(horizontally ? {
+      flexDirection: 'column'
+    } : {}), ...(horizontally ? {
       display: 'flex',
       justifyContent: 'center',
+      flexDirection: 'column'
     } : {}), ...(startAtTop ? {
       top: '0',
     } : {})
@@ -25,9 +27,7 @@ const CenteredContainer = ({ vertically, horizontally, startAtTop, textAlign, ch
 
   return (
     <StyledContainer textAlign={textAlign} className={className} style={finalStyles} ref={styledContainerRef}>
-      <div>
-        {children}
-      </div>
+      {children}
     </StyledContainer>
   );
 }

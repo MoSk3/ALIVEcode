@@ -7,7 +7,9 @@ export type StyledLinkProps = {
 
 export type LinkProps = {
   children?: React.ReactChildren | React.ReactElement | string;
-  to: string;
+  className?: any;
+  to?: string;
+  onClick?: () => void;
   style?: any;
   dark?: boolean;
   bold?: boolean;
