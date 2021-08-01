@@ -7,7 +7,7 @@ import { transitions, positions, Provider as AlertProvider } from 'react-alert';
 import axios from 'axios';
 import { SERVER_URL } from './appConfigs';
 import AlertTemplate from 'react-alert-template-basic';
-import i18n from 'i18next';
+import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import HttpAPI from 'i18next-http-backend';
 import LanguageDetector from 'i18next-browser-languagedetector';
@@ -73,7 +73,7 @@ const alertOptions = {
 }
 
 
-i18n
+i18next
   .use(initReactI18next) // passes i18n down to react-i18next
   .use(LanguageDetector)
   .use(HttpAPI)
@@ -88,8 +88,9 @@ i18n
       escapeValue: false
     },
     backend: {
-      loadPath: '/assets/locales/{{lng}}/translation.json'
-    }
+      loadPath: '/assets/locales/{{lng}}/{{ns}}.json'
+    },
+    defaultNS: "translation"
   });
 
 

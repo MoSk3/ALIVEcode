@@ -51,28 +51,25 @@ const Home = (props: HomeProps) => {
 			<Container>
 				<Container fluid>
 					<HomeCard
-						title="ALIVE PLAY"
-						content="Dans cette section, vous pourrez créer vos propres niveaux ou jouer les
-                        niveaux des autres utilisateurs!"
+						title={t('home.section.alive.title')}
+						content={t('home.section.alive.description')}
 						to="/playground"
 						img={Voiture}
 					/>
 					<HomeCard
-						title="ALIVE Mind Controller"
-						content="Dans cette activité, vous auriez la possibilité de controller une voiture à
-                        l'aide de votre pensée!"
+						title={t('home.section.amc.title')}
+						content={t('home.section.amc.description')}
 						to="/mind"
 						img={Cloud}
 					/>
 					<HomeCard
-						title="Augmented Vehicle Perception"
-						content="En construction."
+						title={t('home.section.avp.title')}
+						content={t('home.section.avp.description')}
 						img={Maze}
 					/>
 					<HomeCard
-						title="Le laboratoire de recherche LRIMA"
-						content="Site officiel du laboratoire de recherche informatique de Maisonneuve
-                        LRIMA."
+						title={t('home.section.lrima.title')}
+						content={t('home.section.lrima.description')}
 						onClick={() => window.open('https://lrima.cmaisonneuve.qc.ca/', '_blank')}
 						img={LRIMA}
 					/>

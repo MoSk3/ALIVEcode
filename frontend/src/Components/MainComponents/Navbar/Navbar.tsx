@@ -9,9 +9,12 @@ import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
 import Logo from '../../../assets/images/LogoALIVE.png';
 import i18next from 'i18next';
 import { languages } from '../../../appConfigs';
+import { useTranslation } from 'react-i18next';
 
 const ALIVENavbar = ({ handleLogout }: NavbarProps) => {
 	const { user } = useContext(UserContext);
+	const { t } = useTranslation();
+
 	const history = useHistory();
 
 	return (
@@ -24,17 +27,16 @@ const ALIVENavbar = ({ handleLogout }: NavbarProps) => {
 			<Navbar.Toggle aria-controls="basic-navbar-nav" />
 			<Navbar.Collapse id="basic-navbar-nav">
 				<Nav className="mr-auto">
-					<Nav.Link className="nav-link" onClick={() => history.push('/dashboard')} >Dashboard</Nav.Link>
-					<Nav.Link className="nav-link" onClick={() => history.push('/mind')} >ALIVE Mind Controller</Nav.Link>
-					<Nav.Link className="nav-link" onClick={() => history.push('/about')} >À propos</Nav.Link>
+					<Nav.Link className="nav-link" onClick={() => history.push('/dashboard')} >{t('home.navbar.section.dashboard')}</Nav.Link>
+					<Nav.Link className="nav-link" onClick={() => history.push('/mind')} >{t('home.navbar.section.amc')}</Nav.Link>
+					<Nav.Link className="nav-link" onClick={() => history.push('/about')} >{t('home.navbar.section.about')}</Nav.Link>
 				</Nav>
 				{user ? (
 					<label style={{ marginBottom: '0' }} className="nav-link">
-						Bonjour, {user.getDisplayName()}
+						{t('home.navbar.msg.auth', { name: user.getDisplayName() })}
 					</label>
 				) : (
-					<label className="nav-link">Vous n'êtes pas connecté, <Link to={'/signin'}>se
-						connecter?
+					<label className="nav-link">{t('home.navbar.msg.non_auth.label')}<Link to={'/signin'}>{t('home.navbar.msg.non_auth.link')}
 					</Link>
 					</label>
 				)}
@@ -57,11 +59,11 @@ const ALIVENavbar = ({ handleLogout }: NavbarProps) => {
 									id="basic-nav-dropdown"
 								>
 									{user ? (
-										<NavDropdown.Item onClick={handleLogout}>Se déconnecter</NavDropdown.Item>
+										<NavDropdown.Item onClick={handleLogout}>{t('msg.auth.signout')}</NavDropdown.Item>
 									) : (
 										<>
-											<NavDropdown.Item onClick={() => history.push('/signin')}>Se connecter</NavDropdown.Item>
-											<NavDropdown.Item onClick={() => history.push('/signup')}>S'inscrire</NavDropdown.Item>
+											<NavDropdown.Item onClick={() => history.push('/signin')}>{t('msg.auth.signin')}</NavDropdown.Item>
+											<NavDropdown.Item onClick={() => history.push('/signup')}>{t('msg.auth.signup')}</NavDropdown.Item>
 										</>
 									)}
 								</NavDropdown>

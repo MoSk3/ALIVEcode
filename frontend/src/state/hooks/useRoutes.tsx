@@ -59,6 +59,15 @@ const useRoutes = (user?: User | null) => {
     about: {
       path: '/about',
       component: About
+    },
+    en: { // Route for switching language to english
+      path: '/en',
+      component: Home
+    }
+    ,
+    fr: { // Route for switching language to french
+      path: '/fr',
+      component: Home
     }
   });
 
