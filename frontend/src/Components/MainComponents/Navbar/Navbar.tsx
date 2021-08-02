@@ -10,26 +10,28 @@ import Logo from '../../../assets/images/LogoALIVE.png';
 import i18next from 'i18next';
 import { languages } from '../../../appConfigs';
 import { useTranslation } from 'react-i18next';
+import useRoutes from '../../../state/hooks/useRoutes';
 
 const ALIVENavbar = ({ handleLogout }: NavbarProps) => {
 	const { user } = useContext(UserContext);
 	const { t } = useTranslation();
+	const { routes } = useRoutes();
 
 	const history = useHistory();
 
 	return (
 		<Navbar id="navbar" bg="light" expand="lg">
 			<Navbar.Brand>
-				<Link to="/">
+				<Link to={routes.public.home.path}>
 					<img src={Logo} alt="" width="100" height="30" className="d-inline-block align-top"></img>
 				</Link>
 			</Navbar.Brand>
 			<Navbar.Toggle aria-controls="basic-navbar-nav" />
 			<Navbar.Collapse id="basic-navbar-nav">
 				<Nav className="mr-auto">
-					<Nav.Link className="nav-link" onClick={() => history.push('/dashboard')} >{t('home.navbar.section.dashboard')}</Nav.Link>
-					<Nav.Link className="nav-link" onClick={() => history.push('/mind')} >{t('home.navbar.section.amc')}</Nav.Link>
-					<Nav.Link className="nav-link" onClick={() => history.push('/about')} >{t('home.navbar.section.about')}</Nav.Link>
+					<Nav.Link className="nav-link" onClick={() => history.push(routes.auth.dashboard.path)} >{t('home.navbar.section.dashboard')}</Nav.Link>
+					<Nav.Link className="nav-link" onClick={() => history.push(routes.public.amc.path)} >{t('home.navbar.section.amc')}</Nav.Link>
+					<Nav.Link className="nav-link" onClick={() => history.push(routes.public.about.path)} >{t('home.navbar.section.about')}</Nav.Link>
 				</Nav>
 				{user ? (
 					<label style={{ marginBottom: '0' }} className="nav-link">
@@ -62,8 +64,8 @@ const ALIVENavbar = ({ handleLogout }: NavbarProps) => {
 										<NavDropdown.Item onClick={handleLogout}>{t('msg.auth.signout')}</NavDropdown.Item>
 									) : (
 										<>
-											<NavDropdown.Item onClick={() => history.push('/signin')}>{t('msg.auth.signin')}</NavDropdown.Item>
-											<NavDropdown.Item onClick={() => history.push('/signup')}>{t('msg.auth.signup')}</NavDropdown.Item>
+											<NavDropdown.Item onClick={() => history.push(routes.non_auth.signin.path)}>{t('msg.auth.signin')}</NavDropdown.Item>
+											<NavDropdown.Item onClick={() => history.push(routes.non_auth.signup.path)}>{t('msg.auth.signup')}</NavDropdown.Item>
 										</>
 									)}
 								</NavDropdown>
@@ -83,6 +85,7 @@ const ALIVENavbar = ({ handleLogout }: NavbarProps) => {
 										<NavDropdown.Item
 											key={idx}
 											onClick={() => i18next.changeLanguage(code)}
+											disabled={i18next.language === code}
 										>
 											{name}
 										</NavDropdown.Item>

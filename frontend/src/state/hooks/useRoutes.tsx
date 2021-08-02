@@ -45,10 +45,9 @@ const useRoutes = () => {
       if (
         (!user) ||
         (route.accountType === Professor && !user.professor) ||
-        (route.accountType === Student && !user.student)) 
-      {
-          route.component = redirect;
-          route.hasAccess = false;
+        (route.accountType === Student && !user.student)) {
+        route.component = redirect;
+        route.hasAccess = false;
       }
     })
     return asRoutes(routeGroup);
@@ -135,13 +134,7 @@ const useRoutes = () => {
     error: error_routes,
   }
 
-  return {
-    routes,
-    public_routes,
-    auth_routes,
-    non_auth_routes,
-    error_routes
-  }
+  return { routes };
 }
 
 export default useRoutes;

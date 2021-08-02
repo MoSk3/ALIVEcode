@@ -9,7 +9,7 @@ import useRoutes from '../../../state/hooks/useRoutes';
 export const NotFound = () => {
 
 	const history = useHistory();
-	const { public_routes } = useRoutes();
+	const { routes } = useRoutes();
 
 	return (
 		<FillContainer style={{ textAlign: 'center' }} startAtTop centered>
@@ -23,7 +23,7 @@ export const NotFound = () => {
 					<Link onClick={() => history.goBack()} dark bold>Retour en arrière.</Link>
 					<br />
 					<br />
-					<Link to={public_routes.home.path} bold>Retour à la page d'accueil.</Link>
+					<Link to={routes.public.home.path} bold>Retour à la page d'accueil.</Link>
 				</div>
 			</div>
 		</FillContainer>

@@ -2,10 +2,12 @@ import { FooterProps } from './footerTypes';
 import './footer.css';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import useRoutes from '../../../state/hooks/useRoutes';
 
 const Footer = (props: FooterProps) => {
 
 	const { t } = useTranslation();
+	const { routes } = useRoutes();
 
 	return (
 		<footer className="site-footer">
@@ -21,9 +23,9 @@ const Footer = (props: FooterProps) => {
 					<div className="col-xs-6 col-md-3">
 						<h6>{t('home.footer.categories')}</h6>
 						<ul className="footer-links">
-							<li><Link to="/dashboard">{t('msg.section.dashboard')}</Link></li>
-							<li><Link to="/mind">{t('msg.section.amc')}</Link></li>
-							<li><Link to="/about">{t('msg.section.about')}</Link></li>
+							<li><Link to={routes.auth.dashboard.path}>{t('msg.section.dashboard')}</Link></li>
+							<li><Link to={routes.public.amc.path}>{t('msg.section.amc')}</Link></li>
+							<li><Link to={routes.public.about.path}>{t('msg.section.about')}</Link></li>
 						</ul>
 					</div>
 
