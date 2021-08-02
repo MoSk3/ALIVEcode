@@ -77,6 +77,11 @@ const useRoutes = () => {
       path: '/amc',
       component: NotFound
     },
+    // TODO : change to auth
+    level_play: {
+      path: '/level/play/:id',
+      component: Level
+    },
     en: { // Route for switching language to english
       path: '/en',
       component: Home
@@ -93,10 +98,6 @@ const useRoutes = () => {
       path: '/dashboard',
       component: Dashboard,
       accountType: Professor
-    },
-    level_play: {
-      path: '/level/play/:id',
-      component: Level
     }
   });
 
