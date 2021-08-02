@@ -18,10 +18,8 @@ import { useTranslation } from 'react-i18next';
 const Home = (props: HomeProps) => {
 
 	const history = useHistory();
-
 	const { t } = useTranslation();
-
-	const { auth_routes } = useRoutes();
+	const { routes } = useRoutes();
 
 	return (
 		<>
@@ -39,7 +37,7 @@ const Home = (props: HomeProps) => {
 				/>
 
 				<div id="arrow">
-					<svg onClick={() => history.push(auth_routes.dashboard.path)} data-name="arrow" xmlns="http://www.w3.org/2000/svg"
+					<svg onClick={() => history.push(routes.auth.dashboard.path)} data-name="arrow" xmlns="http://www.w3.org/2000/svg"
 						viewBox="0 0 24 24">
 						<g data-name="Arrow Left">
 							<path style={{ fill: "white" }}
@@ -53,13 +51,13 @@ const Home = (props: HomeProps) => {
 					<HomeCard
 						title={t('home.section.alive.title')}
 						content={t('home.section.alive.description')}
-						to="/playground"
+						to={routes.auth.dashboard.path}
 						img={Voiture}
 					/>
 					<HomeCard
 						title={t('home.section.amc.title')}
 						content={t('home.section.amc.description')}
-						to="/mind"
+						to={routes.public.amc.path}
 						img={Cloud}
 					/>
 					<HomeCard

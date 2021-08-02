@@ -1,13 +1,9 @@
 import { Switch, Route } from 'react-router-dom';
-import { useContext } from 'react';
-import { UserContext } from '../../UserContext';
 import useRoutes from '../../state/hooks/useRoutes';
 
 
 export const RouterSwitch = () => {
-	const { user } = useContext(UserContext);
-
-	const { routes } = useRoutes(user);
+	const { routes } = useRoutes();
 
 	return (
 		<Switch>

@@ -1,4 +1,4 @@
-import { User } from '../../Models/User';
+import { User, Professor, Student } from '../../Models/User';
 import { RouteComponentProps } from 'react-router-dom';
 import Dashboard from '../../Pages/Dashboard/Dashboard';
 import { NotFound } from '../../Pages/Errors/NotFound/NotFound';
@@ -9,35 +9,49 @@ import { USER_TYPES } from '../../Types/userTypes';
 import Level from '../../Pages/Level/SimulationLevel';
 import SignUpMenu from '../../Pages/Account/SignUpMenu/SignUpMenu';
 import About from '../../Pages/About/About';
+import { useContext } from 'react';
+import { UserContext } from '../../UserContext';
 
 type component = React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any>;
 
-interface Route {
+export interface Route {
   path: string;
   exact?: boolean;
   component?: component;
+  hasAccess?: boolean;
 }
 
-interface AuthRoute extends Route {
-  redirect?: component
+export interface AuthRoute extends Route {
+  redirect?: component;
+  accountType?: typeof Professor | typeof Student;
 }
 
-interface RoutesGroup<T extends Route> { [key: string]: T }
+export interface RoutesGroup<T extends Route> { [key: string]: T }
 
-const useRoutes = (user?: User | null) => {
+const useRoutes = () => {
+
+  const { user } = useContext(UserContext);
 
   const asRoutes = <T extends RoutesGroup<Route>>(routeGroup: T): T => {
+    Object.values(routeGroup).forEach((route) => {
+      route.hasAccess = route.hasAccess ?? true;
+    });
     return routeGroup;
   };
 
   const asAuthRoutes = <T extends RoutesGroup<AuthRoute>>(defaultRedirect: component, routeGroup: T): T => {
-    if (!user) {
-      Object.values(routeGroup).forEach((route) => {
-        if (route.redirect) route.component = route.redirect;
-        else route.component = defaultRedirect;
-      })
-    }
-    return routeGroup;
+    Object.values(routeGroup).forEach((route) => {
+      const redirect = route.redirect || defaultRedirect;
+      if (
+        (!user) ||
+        (route.accountType === Professor && !user.professor) ||
+        (route.accountType === Student && !user.student)) 
+      {
+          route.component = redirect;
+          route.hasAccess = false;
+      }
+    })
+    return asRoutes(routeGroup);
   };
 
   const asNonAuthRoutes = <T extends RoutesGroup<AuthRoute>>(defaultRedirect: component, routeGroup: T): T => {
@@ -60,6 +74,10 @@ const useRoutes = (user?: User | null) => {
       path: '/about',
       component: About
     },
+    amc: {
+      path: '/amc',
+      component: NotFound
+    },
     en: { // Route for switching language to english
       path: '/en',
       component: Home
@@ -74,7 +92,8 @@ const useRoutes = (user?: User | null) => {
   const auth_routes = asAuthRoutes(SignIn, {
     dashboard: {
       path: '/dashboard',
-      component: Dashboard
+      component: Dashboard,
+      accountType: Professor
     },
     level_play: {
       path: '/level/play/:id',
@@ -117,12 +136,12 @@ const useRoutes = (user?: User | null) => {
   }
 
   return {
-      routes,
-      public_routes,
-      auth_routes,
-      non_auth_routes,
-      error_routes
-    }
+    routes,
+    public_routes,
+    auth_routes,
+    non_auth_routes,
+    error_routes
+  }
 }
 
 export default useRoutes;
