@@ -1,4 +1,4 @@
-import { User, Professor, Student } from '../../Models/User';
+import { Professor, Student } from '../../Models/User';
 import { RouteComponentProps } from 'react-router-dom';
 import Dashboard from '../../Pages/Dashboard/Dashboard';
 import { NotFound } from '../../Pages/Errors/NotFound/NotFound';

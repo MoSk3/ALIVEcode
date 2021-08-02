@@ -20,7 +20,7 @@ export const Database = {
         /** Contains all the request and actions that can be done to the classrooms */
         classrooms: {
             /** @returns an array of all the classrooms that the user created */
-            get all(): Promise<Classroom[]> {
+            all(): Promise<Classroom[]> {
                 return loadObj(`/playground/classrooms`, Classroom) as Promise<Classroom[]>
             },
             /** 
@@ -39,7 +39,7 @@ export const Database = {
 
                 else return Promise.all(ids.map((id) => loadObj(`/playground/classrooms/${id}`, Classroom))) as Promise<Classroom[]>;
             },
-            get ofCurrentUser(): Promise<Classroom[]> {
+            ofCurrentUser(): Promise<Classroom[]> {
                 return loadObj(`/playground/classrooms`, Classroom) as Promise<Classroom[]>
             },
             /**
@@ -52,21 +52,21 @@ export const Database = {
             get(id: string) {
                 return {
                     /** Is equivalent to {@link Database.playground.classrooms.collect Database.playground.classrooms.collect(id)} */
-                    get collect(): Promise<Classroom> {
+                    collect(): Promise<Classroom> {
                         return loadObj(`/playground/classrooms/${id}`, Classroom) as Promise<Classroom>
                     },
                     /** 
                      * Returns a {@link Promise promise} that, once resolve,
                      * returns all the {@link Student students} member of the {@link Classroom classroom} 
                      */
-                    get students(): Promise<Student[]> {
+                    students(): Promise<Student[]> {
                         return loadObj(`/playground/classrooms/${id}/students`, Student) as Promise<Student[]>
                     },
                     /** 
                      * Returns a {@link Promise promise} that, once resolve,
                      * returns all the {@link Course courses} in the {@link Classroom classroom} 
                      */
-                    get courses(): Promise<Course[]> {
+                    courses(): Promise<Course[]> {
                         return loadObj(`/playground/classrooms/${id}/courses`, Course) as Promise<Course[]>
                     }
                 }
@@ -74,7 +74,7 @@ export const Database = {
         },
         courses: {
             /** @returns an array of all the courses that the user created */
-            get all(): Promise<Course[]> {
+            all(): Promise<Course[]> {
                 return loadObj(`/playground/courses`, Course) as Promise<Course[]>
             },
             /** 

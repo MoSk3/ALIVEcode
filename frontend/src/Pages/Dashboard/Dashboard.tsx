@@ -1,15 +1,15 @@
 import { DashboardProps } from './dashboardTypes';
 import CenteredContainer from '../../Components/MiscComponents/CenteredContainer/CenteredContainer';
 import LabelHighlight from '../../Components/MiscComponents/LabelHighlight/LabelHighlight';
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import { UserContext } from '../../UserContext';
 import CardContainer from '../../Components/MainComponents/CardContainer/CardContainer';
 import { useHistory } from 'react-router-dom';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import ClassroomCard from '../../Components/DashboardComponents/ClassroomCard/ClassroomCard';
-import { Classroom } from '../../Models/Playground/Classroom';
 import SmallCard from '../../Components/MainComponents/Cards/SmallCard/SmallCard';
 import { Database } from '../../Models/Model';
+import useFetch from '../../state/hooks/useFetch';
 
 import List from '../../assets/images/icons/my_levels.png'
 import Puzzle from '../../assets/images/icons/puzzle.png'
@@ -19,16 +19,9 @@ import { Row } from 'react-bootstrap';
 
 const Dashboard = (props: DashboardProps) => {
 	const { user } = useContext(UserContext);
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const [classrooms, setClassrooms] = useState<Array<Classroom>>();
+	
 	const history = useHistory();
-
-	useEffect(() => {
-		const getClassrooms = async () => {
-			setClassrooms(await Database.playground.classrooms.ofCurrentUser);
-		}
-		getClassrooms();
-	}, [user])
+	const [ classrooms, loading ] = useFetch(Database.playground.classrooms.ofCurrentUser);
 
 	const createLevel = async () => {
 		// TODO : axios request to return new level with id
@@ -39,7 +32,7 @@ const Dashboard = (props: DashboardProps) => {
 
 	return (
 		<CenteredContainer horizontally textAlign="center" style={{ paddingLeft: '100px', paddingRight: '100px' }}>
-			<Row style={{justifyContent: 'center'}}>
+			<Row style={{ justifyContent: 'center' }}>
 				<LabelHighlight
 					text={`Bonjour, ${user?.getDisplayName()}`}
 					textColor="white"
@@ -54,10 +47,10 @@ const Dashboard = (props: DashboardProps) => {
 				onIconClick={() => history.push('/playground/join-classroom')}
 				icon={faPlus}
 			>
-				{classrooms === undefined ? (
+				{loading ? (
 					"Loading..."
 				) : (
-					classrooms.map((classroom, idx) => (
+					classrooms?.map((classroom, idx) => (
 						<ClassroomCard key={idx} classroom={classroom} />
 					))
 				)}
@@ -72,7 +65,7 @@ const Dashboard = (props: DashboardProps) => {
 			</CardContainer>
 
 			<CardContainer
-				style={{marginBottom: '100px'}}
+				style={{ marginBottom: '100px' }}
 				title="Niveaux"
 			>
 				<SmallCard to="/quiz" title="Mes quiz" img={List} />

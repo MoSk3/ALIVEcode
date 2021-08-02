@@ -32,13 +32,13 @@ export class Classroom implements ClassroomInterface {
 
   async getStudents() {
     if(this.students) return this.students;
-    this.students = await Database.playground.classrooms.get(this.id).students;
+    this.students = await Database.playground.classrooms.get(this.id).students();
     return this.students;
   }
 
   async getCourses() {
     if(this.courses) return this.courses;
-    this.courses = await Database.playground.classrooms.get(this.id).courses;
+    this.courses = await Database.playground.classrooms.get(this.id).courses();
     return this.courses;
   }
 
