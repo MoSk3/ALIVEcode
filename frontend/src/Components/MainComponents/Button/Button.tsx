@@ -12,6 +12,17 @@ const PrimaryButton = styled.button`
   }
 `;
 
+const DangerButton = styled.button`
+  background-color: rgb(207, 0, 0) !important;
+  border-style: none;
+  color: white;
+  
+  &:hover {
+    background-color:  var(--contrast-color) !important;
+    color: white;
+  }
+`;
+
 const SecondaryButton = styled.button`
   background-color: var(--secondary-color) !important;
   border-style: none;
@@ -27,6 +38,8 @@ const Button = ({ variant, type, onClick, children }: ButtonProps) => {
     switch(param) {
       case "secondary":
         return <SecondaryButton className="btn" type={type} onClick={onClick}>{children}</SecondaryButton>
+      case "danger":
+        return <DangerButton className="btn" type={type} onClick={onClick}>{children}</DangerButton>
       default:
         return <PrimaryButton className="btn" type={type} onClick={onClick}>{children}</PrimaryButton>
 

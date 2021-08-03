@@ -11,6 +11,7 @@ import SignUpMenu from '../../Pages/Account/SignUpMenu/SignUpMenu';
 import About from '../../Pages/About/About';
 import { useContext } from 'react';
 import { UserContext } from '../../UserContext';
+import Classroom from '../../Pages/Classroom/Classroom';
 
 type component = React.ComponentType<RouteComponentProps<any>> | React.ComponentType<any>;
 
@@ -96,8 +97,11 @@ const useRoutes = () => {
   const auth_routes = asAuthRoutes(SignIn, {
     dashboard: {
       path: '/dashboard',
-      component: Dashboard,
-      accountType: Professor
+      component: Dashboard
+    },
+    classroom: {
+      path: '/classroom/:id',
+      component: Classroom
     }
   });
 
