@@ -7,7 +7,7 @@ export class Classroom {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => Professor, (professor) => professor.classrooms)
+  @ManyToOne(() => Professor, professor => professor.classrooms)
   professor: Professor;
 
   @ManyToMany(() => Student, student => student.classrooms)

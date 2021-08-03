@@ -11,27 +11,32 @@ import SmallCard from '../../Components/MainComponents/Cards/SmallCard/SmallCard
 import { Database } from '../../Models/Model';
 import useFetch from '../../state/hooks/useFetch';
 
-import List from '../../assets/images/icons/my_levels.png'
-import Puzzle from '../../assets/images/icons/puzzle.png'
-import Sandbox from '../../assets/images/icons/sandboxblanc.png'
-import Voiture from '../../assets/images/Voiture.gif'
+import List from '../../assets/images/icons/my_levels.png';
+import Puzzle from '../../assets/images/icons/puzzle.png';
+import Sandbox from '../../assets/images/icons/sandboxblanc.png';
+import Voiture from '../../assets/images/Voiture.gif';
 import { Row } from 'react-bootstrap';
 
 const Dashboard = (props: DashboardProps) => {
 	const { user } = useContext(UserContext);
-	
+
 	const history = useHistory();
-	const [ classrooms, loading ] = useFetch(Database.playground.classrooms.ofCurrentUser);
+	const [classrooms, loading] = useFetch(
+		Database.playground.classrooms.ofCurrentUser,
+	);
 
 	const createLevel = async () => {
 		// TODO : axios request to return new level with id
-
 		// const level: Level;
 		// history.push(`/level/play/${level.id}`)
-	}
+	};
 
 	return (
-		<CenteredContainer horizontally textAlign="center" style={{ paddingLeft: '100px', paddingRight: '100px' }}>
+		<CenteredContainer
+			horizontally
+			textAlign="center"
+			style={{ paddingLeft: '100px', paddingRight: '100px' }}
+		>
 			<Row style={{ justifyContent: 'center' }}>
 				<LabelHighlight
 					text={`Bonjour, ${user?.getDisplayName()}`}
@@ -47,33 +52,30 @@ const Dashboard = (props: DashboardProps) => {
 				onIconClick={() => history.push('/playground/join-classroom')}
 				icon={faPlus}
 			>
-				{loading ? (
-					"Loading..."
-				) : (
-					classrooms?.map((classroom, idx) => (
-						<ClassroomCard key={idx} classroom={classroom} />
-					))
-				)}
+				{loading
+					? 'Loading...'
+					: classrooms?.map((classroom, idx) => (
+							<ClassroomCard key={idx} classroom={classroom} />
+					  ))}
 			</CardContainer>
 
-			<CardContainer
-				title="Niveaux"
-			>
+			<CardContainer title="Niveaux">
 				<SmallCard to="/level" title="Mes niveaux" img={List} />
-				<SmallCard onClick={() => createLevel} title="Créer un niveau" img={Sandbox} />
+				<SmallCard
+					onClick={() => createLevel}
+					title="Créer un niveau"
+					img={Sandbox}
+				/>
 				<SmallCard to="/level/browse" title="Jouer un niveau" img={Voiture} />
 			</CardContainer>
 
-			<CardContainer
-				style={{ marginBottom: '100px' }}
-				title="Niveaux"
-			>
+			<CardContainer style={{ marginBottom: '100px' }} title="Niveaux">
 				<SmallCard to="/quiz" title="Mes quiz" img={List} />
 				<SmallCard to="/quiz/new" title="Créer un quiz" img={Sandbox} />
 				<SmallCard to="/quiz/browse" title="Jouer un quiz" img={Puzzle} />
 			</CardContainer>
 		</CenteredContainer>
-	)
-}
+	);
+};
 
 export default Dashboard;

@@ -4,5 +4,4 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 export class Level {
   @PrimaryGeneratedColumn('uuid')
   id: string;
-
 }

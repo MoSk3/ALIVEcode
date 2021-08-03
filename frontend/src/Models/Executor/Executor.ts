@@ -1,4 +1,3 @@
-
 export interface Executor {
-  readonly s: any;
+	readonly s: any;
 }

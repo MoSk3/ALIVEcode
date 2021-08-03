@@ -1,4 +1,1 @@
-
-export type AboutProps = {
-    
-}
+export type AboutProps = {};

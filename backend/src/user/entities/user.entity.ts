@@ -2,14 +2,14 @@ import { Column, Entity, PrimaryGeneratedColumn, TableInheritance } from 'typeor
 
 export enum UserType {
   'Professor',
-  'Student'
+  'Student',
 }
 
 @Entity()
 @TableInheritance({ column: { type: 'varchar', name: 'type' } })
 export class User {
-  @PrimaryGeneratedColumn("uuid")
-  id: string
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ unique: true })
   email: string;

@@ -1,4 +1,3 @@
-
 export type CounterProps = {
-  msg?: string;
-}
+	msg?: string;
+};

@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateStudentDto } from './dto/create-student.dto';
@@ -15,8 +25,8 @@ export class UserController {
     } catch {
       throw new HttpException(
         'Impossible to create the student',
-        HttpStatus.BAD_REQUEST
-      )
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
@@ -27,8 +37,8 @@ export class UserController {
     } catch {
       throw new HttpException(
         'Impossible to create the professor',
-        HttpStatus.BAD_REQUEST
-      )
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
@@ -46,7 +56,7 @@ export class UserController {
   findAllStudents() {
     return this.userService.findAllStudents();
   }
-  
+
   @Get(':id')
   findOneStudent(@Param('id') id: string) {
     return this.userService.findOne(id);

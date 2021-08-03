@@ -16,32 +16,33 @@ import useRoutes from '../../state/hooks/useRoutes';
 import { useTranslation } from 'react-i18next';
 
 const Home = (props: HomeProps) => {
-
 	const history = useHistory();
 	const { t } = useTranslation();
 	const { routes } = useRoutes();
 
 	return (
 		<>
-			<div className="header" style={{top: '-50px'}}>
+			<div className="header" style={{ top: '-50px' }}>
 				<h1>A.L.I.V.E.</h1>
 				<TypeWriter
-					lines={[
-						t('home.msg1'),
-						t('home.msg2'),
-						t('home.msg3')
-					]}
+					lines={[t('home.msg1'), t('home.msg2'), t('home.msg3')]}
 					typeSpeed={80}
 					eraseSpeed={50}
 					shadow
 				/>
 
 				<div id="arrow">
-					<svg onClick={() => history.push(routes.auth.dashboard.path)} data-name="arrow" xmlns="http://www.w3.org/2000/svg"
-						viewBox="0 0 24 24">
+					<svg
+						onClick={() => history.push(routes.auth.dashboard.path)}
+						data-name="arrow"
+						xmlns="http://www.w3.org/2000/svg"
+						viewBox="0 0 24 24"
+					>
 						<g data-name="Arrow Left">
-							<path style={{ fill: "white" }}
-								d="M7.77,23.58l-2.24-2a0.5,0.5,0,0,1,0-.71L13.43,12,5.5,3.13a0.5,0.5,0,0,1,0-.71l2.24-2a0.5,0.5,0,0,1,.71,0L18.8,12,8.48,23.54A0.5,0.5,0,0,1,7.77,23.58Z" />
+							<path
+								style={{ fill: 'white' }}
+								d="M7.77,23.58l-2.24-2a0.5,0.5,0,0,1,0-.71L13.43,12,5.5,3.13a0.5,0.5,0,0,1,0-.71l2.24-2a0.5,0.5,0,0,1,.71,0L18.8,12,8.48,23.54A0.5,0.5,0,0,1,7.77,23.58Z"
+							/>
 						</g>
 					</svg>
 				</div>
@@ -68,14 +69,16 @@ const Home = (props: HomeProps) => {
 					<HomeCard
 						title={t('home.section.lrima.title')}
 						content={t('home.section.lrima.description')}
-						onClick={() => window.open('https://lrima.cmaisonneuve.qc.ca/', '_blank')}
+						onClick={() =>
+							window.open('https://lrima.cmaisonneuve.qc.ca/', '_blank')
+						}
 						img={LRIMA}
 					/>
 				</Container>
 			</Container>
 			<Footer />
 		</>
-	)
+	);
 };
 
 export default Home;

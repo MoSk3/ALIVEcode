@@ -1,7 +1,7 @@
 import Voiture from '../../../../../assets/images/Voiture.gif';
 import CarTop from '../../../../../assets/images/simulation/misc/VoitureDessus.png';
 import CarTopG from '../../../../../assets/images/simulation/misc/VoitureDessusG.png';
-import CarTopD  from '../../../../../assets/images/simulation/misc/VoitureDessusD.png';
+import CarTopD from '../../../../../assets/images/simulation/misc/VoitureDessusD.png';
 /*import  from '../../../../../assets/images/';
 import  from '../../../../../assets/images/';
 import  from '../../../../../assets/images/';
@@ -11,15 +11,14 @@ export const images: { [key: string]: any } = {};
 
 //export const dictImages: { [key: string]: any } = {};
 
-
 export const loadImages = (s: any) => {
-  images.carTop = s.loadImage(CarTop)
-  images.carTopG = s.loadImage(CarTopG)
-  images.carTopD = s.loadImage(CarTopD)
-  images.animatedCar = s.loadImage(Voiture);
+	images.carTop = s.loadImage(CarTop);
+	images.carTopG = s.loadImage(CarTopG);
+	images.carTopD = s.loadImage(CarTopD);
+	images.animatedCar = s.loadImage(Voiture);
 
-  // Outils pour edit
-  /*images.tools = s.loadImage('/static/images/simulation/editeur/tools.png')
+	// Outils pour edit
+	/*images.tools = s.loadImage('/static/images/simulation/editeur/tools.png')
   images.trash = s.loadImage('/static/images/simulation/editeur/trash.png')
   images.trashOpen = s.loadImage('/static/images/simulation/editeur/trashOpen.png')
   images.undo = s.loadImage('/static/images/simulation/editeur/undo.png')
@@ -86,7 +85,7 @@ export const loadImages = (s: any) => {
   images.gazon.delay(10000);
   images.alien.delay(1000000000);*/
 
-  /*
+	/*
   dictImages.carTop = images.carTop;
   dictImages.carTopG = images.carTopG;
   dictImages.carTopD = images.carTopD;
@@ -135,13 +134,12 @@ export const loadImages = (s: any) => {
   dictImages.marsRock2;
 
   dictImages.flag;*/
-  
-}
+};
 
 export const sounds: { [key: string]: any } = {};
 
 export const loadSounds = (s: any) => {
-  /*sounds.coin_collect_audio = new Audio('/static/sounds/simulation/coin_collect.wav');
+	/*sounds.coin_collect_audio = new Audio('/static/sounds/simulation/coin_collect.wav');
   sounds.level_complete_audio = new Audio('/static/sounds/simulation/level_complete.mp3');
   sounds.house_impact_audio = new Audio('/static/sounds/simulation/house_impact.mp3');
   sounds.tree_impact_audio = new Audio('/static/sounds/simulation/tree_impact.mp3');
@@ -150,4 +148,4 @@ export const loadSounds = (s: any) => {
   sounds.falling_down_audio = new Audio('/static/sounds/simulation/falling_down.mp3');
   sounds.lava_bubbles_audio = new Audio('/static/sounds/simulation/lava_bubbles.mp3');
   sounds.metal_impact_audio = new Audio('/static/sounds/simulation/metal_impact.mp3');*/
-}
+};

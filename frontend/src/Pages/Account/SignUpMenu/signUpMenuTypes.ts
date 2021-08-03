@@ -1,4 +1,1 @@
-
-export type SignUpMenuProps = {
-  
-}
+export type SignUpMenuProps = {};

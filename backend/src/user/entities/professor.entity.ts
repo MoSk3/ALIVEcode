@@ -10,6 +10,6 @@ export class Professor extends User {
   @Column()
   lastName: string;
 
-  @OneToMany(() => Classroom, (classroom) => classroom.professor)
+  @OneToMany(() => Classroom, classroom => classroom.professor)
   classrooms: Classroom[];
 }

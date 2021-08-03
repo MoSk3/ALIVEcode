@@ -26,7 +26,8 @@ export class UserService {
   }
 
   async createProfessor(createProfessorDto: CreateProfessorDto) {
-    if (!createProfessorDto.firstName || !createProfessorDto.lastName)throw new Error();
+    if (!createProfessorDto.firstName || !createProfessorDto.lastName)
+      throw new Error();
 
     return await this.professorRepository.save(
       this.professorRepository.create(createProfessorDto),

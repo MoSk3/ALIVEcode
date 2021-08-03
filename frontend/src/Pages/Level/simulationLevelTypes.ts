@@ -1,9 +1,7 @@
 import { RouteComponentProps } from "react-router-dom";
 
 interface RouteParams {
-  levelId: string
+	levelId: string;
 }
 
-export interface LevelProps extends RouteComponentProps<RouteParams> {
-
-}
+export interface LevelProps extends RouteComponentProps<RouteParams> {}

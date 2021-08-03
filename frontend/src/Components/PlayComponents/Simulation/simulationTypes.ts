@@ -1,4 +1,3 @@
-
 export type SimulationProps = {
-  init: (s: any) => void;
-}
+	init: (s: any) => void;
+};

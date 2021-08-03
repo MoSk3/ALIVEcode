@@ -1,4 +1,1 @@
-
-export type ClassroomProps = {
-  
-}
+export type ClassroomProps = {};
