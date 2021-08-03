@@ -1,1 +1,6 @@
-export class Classroom {}
+import { Entity } from "typeorm";
+
+@Entity()
+export class Classroom {
+  
+}
