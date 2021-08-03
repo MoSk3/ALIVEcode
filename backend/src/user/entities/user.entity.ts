@@ -1,8 +1,17 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, TableInheritance } from 'typeorm';
+
+export enum UserType {
+  'Professor',
+  'Student'
+}
 
 @Entity()
+@TableInheritance({ column: { type: 'varchar', name: 'type' } })
 export class User {
-  @PrimaryColumn({ unique: true })
+  @PrimaryGeneratedColumn("uuid")
+  id: string
+
+  @Column({ unique: true })
   email: string;
 
   @Column({ default: false })
