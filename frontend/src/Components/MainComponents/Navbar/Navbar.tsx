@@ -45,6 +45,12 @@ const ALIVENavbar = ({ handleLogout }: NavbarProps) => {
 						className="nav-link"
 						onClick={() => history.push(routes.public.amc.path)}
 					>
+						{t('home.navbar.section.ai')}
+					</Nav.Link>
+					<Nav.Link
+						className="nav-link"
+						onClick={() => history.push(routes.public.amc.path)}
+					>
 						{t('home.navbar.section.amc')}
 					</Nav.Link>
 					<Nav.Link

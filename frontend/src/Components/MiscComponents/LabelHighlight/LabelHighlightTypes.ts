@@ -15,8 +15,5 @@ export type LabelHighlightProps = {
 	padding?: string;
 	borderRadius?: string;
 	fontSize?: string;
-	children?:
-		| React.ReactChildren
-		| React.ReactElement
-		| Array<React.ReactElement>;
+	children?: React.ReactNode;
 };
