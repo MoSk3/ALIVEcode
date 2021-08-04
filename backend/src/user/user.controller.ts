@@ -4,22 +4,22 @@ import {
   Post,
   Body,
   Patch,
-  Param,
   Delete,
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { CreateStudentDto } from './dto/create-student.dto';
-import { CreateProfessorDto } from './dto/create-prof.dto';
+import { Professor } from './entities/professor.entity';
+import { Student } from './entities/student.entity';
+import { Param } from '@nestjs/common';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post('student')
-  async createStudent(@Body() createStudent: CreateStudentDto) {
+  async createStudent(@Body() createStudent: Student) {
     try {
       return await this.userService.createStudent(createStudent);
     } catch {
@@ -31,14 +31,26 @@ export class UserController {
   }
 
   @Post('professor')
-  async createProfessor(@Body() createProfessor: CreateProfessorDto) {
+  async createProfessor(@Body() createProfessor: Professor) {
     try {
       return await this.userService.createProfessor(createProfessor);
-    } catch {
+    } catch (err) {
       throw new HttpException(
-        'Impossible to create the professor',
+        'Impossible to create the professor ' + err,
         HttpStatus.BAD_REQUEST,
       );
+    }
+  }
+
+  @Get('login')
+  async login(
+    @Body('email') email: string,
+    @Body('password') password: string,
+  ) {
+    try {
+      return await this.userService.login(email, password);
+    } catch (err) {
+      throw new HttpException('Could not login ' + err, HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -59,7 +71,7 @@ export class UserController {
 
   @Get(':id')
   findOneStudent(@Param('id') id: string) {
-    return this.userService.findOne(id);
+    return this.userService.findById(id);
   }
 
   @Patch(':id')
