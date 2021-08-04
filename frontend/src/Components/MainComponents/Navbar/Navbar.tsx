@@ -23,6 +23,7 @@ const ALIVENavbar = ({ handleLogout }: NavbarProps) => {
 			<Navbar.Collapse id="basic-navbar-nav">
 				<Nav className="mr-auto">
 					<Nav.Link className="nav-link" onClick={() => history.push('/dashboard')} >Dashboard</Nav.Link>
+					<Nav.Link className="nav-link" onClick={() => history.push('/aliveia')} >ALIVE IA</Nav.Link>
 					<Nav.Link className="nav-link" onClick={() => history.push('/mind')} >ALIVE Mind Controller</Nav.Link>
 					<Nav.Link className="nav-link" onClick={() => history.push('/about')} >À propos</Nav.Link>
 				</Nav>
