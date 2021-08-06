@@ -7,14 +7,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class LevelService {
-  constructor(
-    @InjectRepository(Level) private levelRepository: Repository<Level>,
-  ) {}
+  constructor(@InjectRepository(Level) private levelRepository: Repository<Level>) {}
 
   async create(createLevelDto: CreateLevelDto) {
-    return await this.levelRepository.save(
-      this.levelRepository.create(createLevelDto),
-    );
+    return await this.levelRepository.save(this.levelRepository.create(createLevelDto));
   }
 
   async findAll() {

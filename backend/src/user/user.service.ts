@@ -7,6 +7,8 @@ import { Student } from './entities/student.entity';
 import { User } from './entities/user.entity';
 import { classToPlain } from 'class-transformer';
 import { compare, hash } from 'bcryptjs';
+import { Response } from 'express';
+import { createAccessToken, createRefreshToken } from './auth';
 
 @Injectable()
 export class UserService {
@@ -22,9 +24,7 @@ export class UserService {
     const hashedPassword = await hash(createStudentDto.password, 12);
     createStudentDto.password = hashedPassword;
 
-    const student = await this.studentRepository.save(
-      this.studentRepository.create(createStudentDto),
-    );
+    const student = await this.studentRepository.save(this.studentRepository.create(createStudentDto));
     delete student.password;
     return student;
   }
@@ -34,14 +34,12 @@ export class UserService {
     const hashedPassword = await hash(createProfessorDto.password, 12);
     createProfessorDto.password = hashedPassword;
 
-    const professor = await this.professorRepository.save(
-      this.professorRepository.create(createProfessorDto),
-    );
+    const professor = await this.professorRepository.save(this.professorRepository.create(createProfessorDto));
     delete professor.password;
     return professor;
   }
 
-  async login(email: string, password: string) {
+  async login(email: string, password: string, res: Response) {
     const user = await this.findByEmail(email);
 
     if (!user) {
@@ -53,9 +51,12 @@ export class UserService {
       throw 'Error';
     }
 
+    res.cookie('wif', createRefreshToken(user), {
+      httpOnly: true,
+    });
+
     return {
-      refreshToken: '',
-      accessToken: '',
+      accessToken: createAccessToken(user),
     };
   }
 

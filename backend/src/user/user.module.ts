@@ -9,11 +9,7 @@ import { Professor } from './entities/professor.entity';
 import { Student } from './entities/student.entity';
 
 @Module({
-  imports: [
-    TypeOrmModule.forRoot(config),
-    TypeOrmModule.forFeature([User, Professor, Student]),
-    DefaultAdminModule,
-  ],
+  imports: [TypeOrmModule.forRoot(config), TypeOrmModule.forFeature([User, Professor, Student]), DefaultAdminModule],
   exports: [TypeOrmModule],
   controllers: [UserController],
   providers: [UserService],

@@ -1,14 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  HttpException,
-  HttpStatus,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus } from '@nestjs/common';
 import { LevelService } from './level.service';
 import { CreateLevelDto } from './dto/create-level.dto';
 import { UpdateLevelDto } from './dto/update-level.dto';
@@ -45,10 +35,7 @@ export class LevelController {
   }
 
   @Patch(':id')
-  async update(
-    @Param('id') id: string,
-    @Body() updateLevelDto: UpdateLevelDto,
-  ) {
+  async update(@Param('id') id: string, @Body() updateLevelDto: UpdateLevelDto) {
     try {
       return await this.levelService.update(id, updateLevelDto);
     } catch (err) {

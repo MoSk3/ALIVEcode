@@ -1,11 +1,6 @@
 import { Exclude } from 'class-transformer';
 import { IsEmail, IsNotEmpty, IsOptional, MinLength } from 'class-validator';
-import {
-  Column,
-  Entity,
-  PrimaryGeneratedColumn,
-  TableInheritance,
-} from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, TableInheritance } from 'typeorm';
 
 export enum UserType {
   'Professor',

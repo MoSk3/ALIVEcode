@@ -1,18 +1,10 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Delete,
-  HttpException,
-  HttpStatus,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Delete, HttpException, HttpStatus, Res } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Professor } from './entities/professor.entity';
 import { Student } from './entities/student.entity';
 import { Param } from '@nestjs/common';
+import { Response } from 'express';
 
 @Controller('user')
 export class UserController {
@@ -23,10 +15,7 @@ export class UserController {
     try {
       return await this.userService.createStudent(createStudent);
     } catch {
-      throw new HttpException(
-        'Impossible to create the student',
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new HttpException('Impossible to create the student', HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -35,10 +24,7 @@ export class UserController {
     try {
       return await this.userService.createProfessor(createProfessor);
     } catch (err) {
-      throw new HttpException(
-        'Impossible to create the professor ' + err,
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new HttpException('Impossible to create the professor ' + err, HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -46,9 +32,10 @@ export class UserController {
   async login(
     @Body('email') email: string,
     @Body('password') password: string,
+    @Res({ passthrough: true }) res: Response,
   ) {
     try {
-      return await this.userService.login(email, password);
+      return await this.userService.login(email, password, res);
     } catch (err) {
       throw new HttpException('Could not login ' + err, HttpStatus.BAD_REQUEST);
     }
