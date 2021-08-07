@@ -1,7 +1,4 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { CreateStudentDto } from './create-student.dto';
-import { CreateUserDto } from './create-user.dto';
+import { Student } from '../entities/student.entity';
 
-export class UpdateStudentDto extends PartialType(CreateStudentDto) {
-  name: string
-}
+export class UpdateStudentDto extends PartialType(Student) {}

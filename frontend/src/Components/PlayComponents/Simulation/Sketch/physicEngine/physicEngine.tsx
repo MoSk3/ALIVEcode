@@ -4,10 +4,8 @@ var EPSILON = 1e-10
 var GRAVITATIONAL_FORCE = 9.8
 
 function handleErrors(message: string) {
-	throw new Error(message)
+	throw new Error(message);
 }
-
-console.log("IMPORT")
 
 /**
  * @author Félix Jobin
@@ -22,25 +20,29 @@ console.log("IMPORT")
  */
 
 export const PhysicEngine: any = {
-    s: null,
+	s: null,
 
 	acceleration: (sumForces: Vector, mass: number): Vector | null => {
 		if (mass < EPSILON) {
-			handleErrors("La masse entrée est égale ou presque égale à zéro")
+			handleErrors('La masse entrée est égale ou presque égale à zéro');
 			return null;
 		}
-		return sumForces.clone().multiplyScalar(1/mass);
+		return sumForces.clone().multiplyScalar(1 / mass);
 	},
 
 	speed: (prevSpeed: Vector, acceleration: Vector): Vector => {
-        const timeFactor = PhysicEngine.s?.maxFPS / PhysicEngine.s.frameRate();
-        const deltaSpeed = acceleration.multiplyScalar(timeFactor);
-        return prevSpeed.clone().add(deltaSpeed);
-    },
+		const timeFactor = PhysicEngine.s?.maxFPS / PhysicEngine.s.frameRate();
+		const deltaSpeed = acceleration.multiplyScalar(timeFactor);
+		return prevSpeed.clone().add(deltaSpeed);
+	},
 
-    rollingFrictionForce: (rollFricCoef: number, mass: number, carSpeed: Vector): Vector => {
-        const roleFricForceModulus = rollFricCoef * mass * GRAVITATIONAL_FORCE;
-        const forceOrientation: Vector = carSpeed.clone().multiplyScalar(-1);
-        return forceOrientation.clone().multiplyScalar(roleFricForceModulus);
-    }
-}
+	rollingFrictionForce: (
+		rollFricCoef: number,
+		mass: number,
+		carSpeed: Vector,
+	): Vector => {
+		const roleFricForceModulus = rollFricCoef * mass * GRAVITATIONAL_FORCE;
+		const forceOrientation: Vector = carSpeed.clone().multiplyScalar(-1);
+		return forceOrientation.clone().multiplyScalar(roleFricForceModulus);
+	},
+};

@@ -8,9 +8,8 @@ export class Classroom extends CreatedByUser {
   @ManyToOne(() => Professor, professor => professor.classrooms)
   creator: Professor;
 
-  @Generated('uuid')
-  @Column()
-  code: string;
+  @ManyToOne(() => Professor, professor => professor.classrooms)
+  professor: Professor;
 
   @ManyToMany(() => Student, student => student.classrooms)
   @JoinTable()

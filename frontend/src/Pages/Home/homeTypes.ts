@@ -1,4 +1,1 @@
-
-export type HomeProps = {
-    
-}
+export type HomeProps = {};

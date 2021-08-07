@@ -1,4 +1,3 @@
-
 export type BackArrowProps = {
-  color?: string;
-}
+	color?: string;
+};

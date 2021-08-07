@@ -5,8 +5,8 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Professor } from './entities/professor.entity';
 import { Student } from './entities/student.entity';
 import { User } from './entities/user.entity';
-import { CreateStudentDto } from './dto/create-student.dto';
-import { CreateProfessorDto } from './dto/create-prof.dto';
+import { classToPlain } from 'class-transformer';
+import { compare, hash } from 'bcryptjs';
 
 @Injectable()
 export class UserService {
@@ -17,20 +17,46 @@ export class UserService {
     @InjectRepository(Student) private studentRepository: Repository<Student>,
   ) {}
 
-  async createStudent(createStudentDto: CreateStudentDto) {
-    if (!createStudentDto.name) throw new Error();
+  async createStudent(createStudentDto: User) {
+    // TODO: random salt
+    const hashedPassword = await hash(createStudentDto.password, 12);
+    createStudentDto.password = hashedPassword;
 
-    return await this.studentRepository.save(
+    const student = await this.studentRepository.save(
       this.studentRepository.create(createStudentDto),
     );
+    delete student.password;
+    return student;
   }
 
-  async createProfessor(createProfessorDto: CreateProfessorDto) {
-    if (!createProfessorDto.firstName || !createProfessorDto.lastName)throw new Error();
+  async createProfessor(createProfessorDto: Professor) {
+    // TODO: random salt
+    const hashedPassword = await hash(createProfessorDto.password, 12);
+    createProfessorDto.password = hashedPassword;
 
-    return await this.professorRepository.save(
+    const professor = await this.professorRepository.save(
       this.professorRepository.create(createProfessorDto),
     );
+    delete professor.password;
+    return professor;
+  }
+
+  async login(email: string, password: string) {
+    const user = await this.findByEmail(email);
+
+    if (!user) {
+      throw 'Error';
+    }
+
+    const valid = await compare(password, user.password);
+    if (!valid) {
+      throw 'Error';
+    }
+
+    return {
+      refreshToken: '',
+      accessToken: '',
+    };
   }
 
   findAll() {
@@ -38,14 +64,18 @@ export class UserService {
   }
 
   findAllProfs() {
-    return this.professorRepository.find();
+    return classToPlain(this.professorRepository.find());
   }
 
   findAllStudents() {
     return this.studentRepository.find();
   }
 
-  async findOne(id: string) {
+  async findByEmail(email: string) {
+    return await this.userRepository.findOne({ where: { email: email } });
+  }
+
+  async findById(id: string) {
     return await this.userRepository.findOne(id);
   }
 
@@ -54,6 +84,6 @@ export class UserService {
   }
 
   async remove(id: string) {
-    return await this.userRepository.remove(await this.findOne(id));
+    return this.userRepository.remove(await this.findById(id));
   }
 }

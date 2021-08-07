@@ -17,17 +17,14 @@ const StyledDiv = styled.div`
 		color: #dbdbdb;
 		line-height: 2rem;
 	}
-	
+
 	a {
 		cursor: pointer;
 	}
-`
+`;
 
 const Cmd = React.forwardRef<HTMLDivElement>((props: CmdProps, ref) => {
-
-	return (
-		<StyledDiv ref={ref} />
-	)
+	return <StyledDiv ref={ref} />;
 });
 
 export default Cmd;

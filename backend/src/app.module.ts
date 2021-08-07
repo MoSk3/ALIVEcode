@@ -6,9 +6,16 @@ import { UserModule } from './user/user.module';
 import config from '../ormconfig';
 import { DefaultAdminModule } from 'nestjs-admin';
 import { ClassroomModule } from './classroom/classroom.module';
+import { LevelModule } from './level/level.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(config), UserModule, DefaultAdminModule, ClassroomModule],
+  imports: [
+    TypeOrmModule.forRoot(config),
+    UserModule,
+    DefaultAdminModule,
+    ClassroomModule,
+    LevelModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

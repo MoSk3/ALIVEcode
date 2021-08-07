@@ -1,4 +1,3 @@
-
 export interface RouterSwitchProps {
-    user: any;
+	user: any;
 }

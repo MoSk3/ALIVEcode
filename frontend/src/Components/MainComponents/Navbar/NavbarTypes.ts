@@ -1,4 +1,3 @@
-
 export type NavbarProps = {
-  handleLogout: () => void;
-}
+	handleLogout: () => void;
+};
