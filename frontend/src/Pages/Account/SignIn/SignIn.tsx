@@ -29,7 +29,7 @@ const SignIn = (props: SignInProps) => {
 			const user = await User.loadUser();
 			setUser(user);
 
-			history.push('/dashboard');
+			if(history.location.pathname === '/signin') history.push('/dashboard');
 			return alert.success("Vous êtes connecté!");
 
 		} catch (err) {
@@ -68,7 +68,7 @@ const SignIn = (props: SignInProps) => {
 
 				<br /><br />
 
-				Vous n'avez pas de compte? <Link to="/signup">S'inscrire</Link>
+				Vous n'avez pas de compte? <Link pale to="/signup">S'inscrire</Link>
 			</Form>
 		</FormContainer>
 	);

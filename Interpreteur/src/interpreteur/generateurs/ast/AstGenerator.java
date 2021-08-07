@@ -20,7 +20,7 @@ import interpreteur.utils.ArraysUtils;
  */
 
 /**
- * Les explications vont �tre rajout� quand j'aurai la motivation de les �crire XD
+ * Les explications vont être rajouté quand j'aurai la motivation de les écrire XD
  */
 
 
@@ -71,8 +71,8 @@ public class AstGenerator {
                 case "CROCHET_OUV" -> crochets++;
                 case "CROCHET_FERM" -> crochets--;
 
-                case "LISTE_OUV" -> braces++;
-                case "LISTE_FERM" -> braces--;
+                case "BRACES_OUV" -> braces++;
+                case "BRACES_FERM" -> braces--;
             }
         }
 
@@ -181,7 +181,7 @@ public class AstGenerator {
                         String ferm = expressionKeys.get(expressionKeys.size() - 1);
 
 
-                        int premier_ouv = expressionNom.subList(0, expressionNom.size()).indexOf(ouv);
+                        int premier_ouv = expressionNom.indexOf(ouv);
 
                         int cptr = 0, idx = 0;
                         if (ouv.equals(ferm)) {
@@ -270,7 +270,7 @@ public class AstGenerator {
         Token[] token = expressionArray.stream().filter(e -> e instanceof Token).toArray(Token[]::new);
 
         if (token.length > 0) {
-            throw new ASErreur.ErreurSyntaxe("Expression ill\u00E9gale: '" + String.join(" ", Arrays.stream(token).map(Token::obtenirValeur).toArray(String[]::new)) + "'");
+            throw new ASErreur.ErreurSyntaxe("Expression ill\u00E9gale: " + String.join(" ", Arrays.stream(token).map(Token::obtenirValeur).toArray(String[]::new)));
         }
 
         //System.out.println(expressionArray);
@@ -319,7 +319,7 @@ public class AstGenerator {
     protected void ajouterProgramme(String pattern, Ast<?> fonction) {
 		/*
             importance : 0 = plus important
-            si plusieurs programmes ont la même importance, le dernier ajouté sera priorisé
+            si plusieurs programmes ont la mÃªme importance, le dernier ajoutÃ© sera priorisÃ©
 		 */
 
         for (String programme : pattern.split("~")) {
@@ -336,7 +336,7 @@ public class AstGenerator {
     protected void ajouterExpression(String pattern, Ast<?> fonction) {
 		/*
             importance : 0 = plus important
-            si plusieurs expressions ont la même importance, la dernière ajoutée sera priorisée
+            si plusieurs expressions ont la mÃªme importance, la derniÃ¨re ajoutÃ©e sera priorisÃ©e
 		 */
         String nouveauPattern = remplacerCategoriesParMembre(pattern);
         fonction.setImportance(cptr++);
@@ -392,7 +392,7 @@ public class AstGenerator {
         if (programme == null) {
             throw new Error("Programme invalide: " + listToken);
         }
-        //System.out.println("Programme trouv�: " + programme);
+        //System.out.println("Programme trouvé: " + programme);
 
         ArrayList<ArrayList<Token>> expressions_programme = obtenirDivisionExpressionsProgramme(listToken, programme);
 

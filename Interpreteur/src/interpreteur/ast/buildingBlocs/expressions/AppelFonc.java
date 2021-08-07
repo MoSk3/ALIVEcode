@@ -1,5 +1,6 @@
 package interpreteur.ast.buildingBlocs.expressions;
 
+import interpreteur.as.Objets.ASFonction;
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.as.Objets.ASObjet;
 import interpreteur.ast.buildingBlocs.Expression;
@@ -16,11 +17,15 @@ public class AppelFonc implements Expression<ASObjet<?>> {
 
     @Override
     public ASObjet<?> eval() {
-        ASObjet<?> result = var.eval();
-        if (!(result instanceof ASObjet.Fonction)) {
-            throw new ASErreur.ErreurAppelFonction("Un \u00E9l\u00E9ment de type '" + result.obtenirNomType() + "' ne peut pas \u00EAtre appel\u00E9");
+        ASObjet<?> fonction = var.eval();
+        if (!(fonction instanceof ASFonction || fonction instanceof ASObjet.Fonction)) {
+            throw new ASErreur.ErreurAppelFonction("Un \u00E9l\u00E9ment de type '" + fonction.obtenirNomType() + "' ne peut pas \u00EAtre appel\u00E9");
         }
-        return ((ASObjet.Fonction) result).setParamPuisExecute(args.eval().getValue());
+        if (fonction instanceof ASFonction) {
+            return ((ASFonction) fonction).makeInstance().executer(args.eval().getValue());
+        } else {
+            return ((ASObjet.Fonction) fonction).setParamPuisExecute(args.eval().getValue());
+        }
     }
 
     @Override

@@ -71,13 +71,13 @@ canvas {
 }
 
 
-#input-challenge-name {
+#input-level-name {
     background-color: rgba(255, 255, 255, 0);
     color: white;
     border-style: none;
 }
 
-#input-challenge-name:hover {
+#input-level-name:hover {
 cursor: pointer;
 }
 

@@ -1,40 +1,20 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 
-const useFetch = (url: string, method?: 'get' | 'post' | 'put' | 'delete' | 'patch', body?: any) => {
-  const [data, setData] = useState<any>();
-  const [loading, setLoading] = useState(true);
+const useFetch = <T>(
+	query: () => Promise<T>,
+): [data: T | undefined, loading: boolean] => {
+	const [data, setData] = useState<T>();
+	const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    setLoading(true);
-    const fetch = async () => {
-      let res: any;
+	useEffect(() => {
+		const fetch = async () => {
+			setData(await query());
+			setLoading(false);
+		};
+		fetch();
+	}, [query]);
 
-      switch(method) {
-        case 'post':
-          res = (await axios.post(url, body)).data;
-          break;
-        case 'put':
-          res = (await axios.put(url, body)).data;
-          break;
-        case 'delete':
-          res = (await axios.delete(url, body)).data;
-          break;
-        case 'patch':
-          res = (await axios.patch(url, body)).data;
-          break;
-        default:
-          res = (await axios.get(url, body)).data;
-          break;
-      }
-      setData(res)
-      setLoading(false);
-    }
-    fetch();
-
-  }, [url, method, body])
-
-  return { data, loading };
-}
+	return [data, loading];
+};
 
 export default useFetch;

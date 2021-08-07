@@ -4,6 +4,7 @@ import interpreteur.ast.buildingBlocs.Expression;
 import interpreteur.ast.buildingBlocs.Programme;
 import interpreteur.data_manager.Data;
 
+@Deprecated
 public class Attendre extends Programme {
     private final Expression<?> delais;
     public Attendre(Expression<?> delais) {

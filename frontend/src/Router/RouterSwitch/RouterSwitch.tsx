@@ -1,42 +1,24 @@
 import { Switch, Route } from 'react-router-dom';
-import Dashboard from '../../Pages/Dashboard/Dashboard';
-import Home from '../../Pages/Home/Home';
-import { NotFound } from '../../Pages/Errors/NotFound/NotFound';
-import About from '../../Pages/About/About';
-import SignUp from '../../Pages/Account/SignUp/SignUp';
-import SignIn from '../../Pages/Account/SignIn/SignIn';
-import { useContext } from 'react';
-import { UserContext } from '../../UserContext';
-import SignUpMenu from '../../Pages/Account/SignUpMenu/SignUpMenu';
-import { USER_TYPES } from '../../Types/userTypes';
-import Challenge from '../../Pages/Challenge/Challenge';
-import AliveIa from '../../Pages/ALIVEIA/AliveIa';
-
+import useRoutes from '../../state/hooks/useRoutes';
 
 export const RouterSwitch = () => {
-	const { user } = useContext(UserContext);
+	// Check in useRoutes hook to see the registered routes
+	const { routes } = useRoutes();
 
 	return (
 		<Switch>
-			{/* Private only */}
-			<Route path="/dashboard" component={user ? Dashboard : SignIn} />
-
-
-			{/* Public only */}
-			{/* <Route path="/password-recovery" component={props.user ? Home : PasswordRecovery} /> */}
-			<Route path="/signup" component={user ? Home : SignUpMenu} />
-			<Route path="/signin" component={user ? Home : SignIn} />
-
-			<Route path="/signup-professor" component={() => user ? <Home /> : <SignUp userType={USER_TYPES.PROFESSOR} />} />
-			<Route path="/signup-student" component={() => user ? <Home /> : <SignUp userType={USER_TYPES.STUDENT} />} />
-
-			<Route path="/challenge/:challengeId" component={user ? Challenge : Home} />
-			<Route path="/aliveia" component={AliveIa} />
-
-			{/* All */}
-			<Route path="/about" component={About} />
-			<Route exact path="/" component={Home} />
-			<Route path="*" component={NotFound} />
+			{Object.values(routes).map(route_group =>
+				Object.values(route_group).map(
+					({ path, component, exact }: any, idx) => (
+						<Route
+							exact={exact ?? false}
+							path={path}
+							component={component}
+							key={idx}
+						/>
+					),
+				),
+			)}
 		</Switch>
-	)
-}
+	);
+};

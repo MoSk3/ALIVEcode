@@ -1,4 +1,1 @@
-
-export type DashboardProps = {
-    
-}
+export type DashboardProps = {};

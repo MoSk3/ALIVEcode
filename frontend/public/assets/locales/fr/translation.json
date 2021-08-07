@@ -1,0 +1,63 @@
+{
+  "msg": {
+    "auth": {
+      "signin": "Se connecter",
+      "signup": "S'inscrire",
+      "signout": "Se déconnecter"
+    },
+    "section": {
+      "alive": "ALIVE Play",
+      "dashboard": "Tableau de contrôle",
+      "amc": "ALIVE contrôle par la pensée",
+      "about": "À propos",
+      "avp": "Perception de véhicule augmentée",
+      "lrima": "Laboratoire de recherche LRIMA"
+    }
+  },
+  "home": {
+    "msg1": "Apprendre la programmation",
+    "msg2": "Apprendre en jouant",
+    "msg3": "Apprendre les concepts de l'IA",
+    "section": {
+      "alive": {
+        "title": "$t(msg.section.alive)",
+        "description": "Dans cette section, vous pourrez créer vos propres niveaux ou jouer les niveaux des autres utilisateurs!"
+      },
+      "amc": {
+        "title": "$t(msg.section.amc)",
+        "description": "Dans cette activité, vous auriez la possibilité de controller une voiture à l'aide de votre pensée!!"
+      },
+      "avp": {
+        "title": "$t(msg.section.avp)",
+        "description": "En construction..."
+      },
+      "lrima": {
+        "title": "$t(msg.section.lrima)",
+        "description": "Site officiel du laboratoire de recherche informatique de Maisonneuve LRIMA."
+      }
+    },
+    "navbar": {
+      "section": {
+        "dashboard": "$t(msg.section.dashboard)",
+        "amc": "$t(msg.section.amc)",
+        "about": "$t(msg.section.about)"
+      },
+      "msg": {
+        "auth": "Bonjour, {{name}}",
+        "non_auth": {
+          "label": "Vous n'êtes pas connecté, ",
+          "link": "$t(msg.auth.signin)?"
+        }
+      }
+    },
+    "footer": {
+      "about": {
+        "title": "$t(msg.section.about)",
+        "description": "Le projet ALIVE vise à fournir une méthode et une pratique d'enseignement de la programmation pour simplifier le concept théorique de la programmation."
+      },
+      "categories": "Catégories",
+      "links": "Liens pratiques",
+      "copyright": "Copyright &copy; 2021 Touts droits réservés par"
+    }
+  }
+}

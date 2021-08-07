@@ -8,19 +8,19 @@ const Counter = ({ msg }: CounterProps) => {
 	const inputRef = useRef<any>(null);
 
 	useEffect(() => {
-		console.log("")
-	})
+		console.log('');
+	});
 
 	return (
 		<div>
 			<button onClick={() => setCount(count + 1)}>Click me</button>
-			<br/>
+			<br />
 			<label>{count}</label>
-			<br/>
+			<br />
 			<button onClick={() => inputRef.current?.focus()}>Click me again</button>
 			<input ref={inputRef} />
 		</div>
 	);
-}
+};
 
 export default Counter;

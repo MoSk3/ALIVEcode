@@ -21,6 +21,10 @@ public class CreerListe implements Expression<ASObjet.Liste> {
         return new ASObjet.Liste(exprs.stream().map(Expression::eval).toArray(ASObjet[]::new));
     }
 
+    public ArrayList<Expression<?>> getExprs() {
+        return exprs;
+    }
+
     @Override
     public String toString() {
         return "CreerListe{" +
@@ -45,12 +49,26 @@ public class CreerListe implements Expression<ASObjet.Liste> {
             }
 
             public int getIdx() {
-                return (Integer) idx.eval().getValue();
+                Object valueIdx = idx.eval().getValue();
+                if (!(valueIdx instanceof Integer)) {
+                    throw new ASErreur.ErreurIndex("Un index doit \u00EAtre un nombre entier");
+                }
+                return (Integer) valueIdx;
             }
 
             @Override
             public ASObjet<?> eval() {
-                return ((ASObjet.Iterable) this.expr.eval()).get(getIdx());
+                ASObjet<?> evalExpr = this.expr.eval();
+                if (!(evalExpr instanceof ASObjet.Iterable)) {
+                    throw new ASErreur.ErreurType("L'op\u00E9ration d'index n'est pas d\u00E9finie pour " +
+                            "un \u00E9l\u00E9ment de type '" + evalExpr.obtenirNomType() + "'.");
+                }
+                int idx = getIdx();
+                if (Math.abs(idx < 0 ? idx + 1 : idx) >= ((ASObjet.Iterable) evalExpr).taille()) {
+                    int bound = (((ASObjet.Iterable) evalExpr).taille() - 1);
+                    throw new ASErreur.ErreurIndex("L'index " + idx + " est hors de port\u00E9 (entre " + -(bound + 1) + " et " + bound + ")");
+                }
+                return ((ASObjet.Iterable) evalExpr).get(idx);
             }
 
             @Override
@@ -78,18 +96,34 @@ public class CreerListe implements Expression<ASObjet.Liste> {
             }
 
             public int getDebut() {
-                return this.debut != null ? (Integer) this.debut.eval().getValue() : 0;
+                if (debut == null) return 0;
+
+                Object valueDebut = debut.eval().getValue();
+                if (!(valueDebut instanceof Integer)) {
+                    throw new ASErreur.ErreurIndex("Une balise de d\u00E9but doit \u00EAtre un nombre entier");
+                }
+                return (Integer) valueDebut;
             }
 
             public int getFin() {
-                return this.fin != null ?
-                        (Integer) this.fin.eval().getValue() :
-                        ((ASObjet.Iterable) this.expr.eval()).taille();
+                if (fin == null) return ((ASObjet.Iterable) this.expr.eval()).taille();
+
+                Object valueFin = fin.eval().getValue();
+
+                if (!(valueFin instanceof Integer)) {
+                    throw new ASErreur.ErreurIndex("Une balise de fin doit \u00EAtre un nombre entier");
+                }
+                return (Integer) valueFin;
             }
 
             @Override
             public ASObjet<?> eval() {
-                return ((ASObjet.Iterable) this.expr.eval()).sousSection(getDebut(), getFin());
+                ASObjet<?> evalExpr = this.expr.eval();
+                if (!(evalExpr instanceof ASObjet.Iterable)) {
+                    throw new ASErreur.ErreurType("L'op\u00E9ration de coupe n'est pas d\u00E9finie pour " +
+                            "un \u00E9l\u00E9ment de type '" + evalExpr.obtenirNomType() + "'.");
+                }
+                return ((ASObjet.Iterable) evalExpr).sousSection(getDebut(), getFin());
             }
 
             @Override

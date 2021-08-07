@@ -3,6 +3,7 @@ jdk-15.0.2
 *.idea
 .vscode
 static_grab
+*.cmd
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -189,7 +190,7 @@ cmake-build-*/
 *.iws
 
 # IntelliJ
-out/
+
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/

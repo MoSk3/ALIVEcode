@@ -1,15 +1,17 @@
 import { CanvasCamera } from '../Camera';
 
-export type TemplateNames<T> = "templates" extends keyof T ? keyof T["templates"] : never;
+export type TemplateNames<T> = 'templates' extends keyof T
+	? keyof T['templates']
+	: never;
 
-export type LevelTypes = "simulation" | "code"
+export type LevelTypes = 'simulation' | 'code';
 
 export interface SerializedLevel {
-    version: number
-    type: LevelTypes
-    "initial-code": string[]
-    layout: Layout | {}
-    winCondition?: {}
+	version: number;
+	type: LevelTypes;
+	'initial-code': string[];
+	layout: Layout | {};
+	winCondition?: {};
 }
 
 /**
@@ -17,13 +19,14 @@ export interface SerializedLevel {
  * @param rotation a vector {x, y} describing the rotation of the shape
  */
 export interface ShapeInfo {
-    vertices: {
-        x: number
-        y: number
-    }[]
-    rotation: {
-        x: number, y: number
-    }
+	vertices: {
+		x: number;
+		y: number;
+	}[];
+	rotation: {
+		x: number;
+		y: number;
+	};
 }
 
 /**
@@ -34,25 +37,25 @@ export interface ShapeInfo {
  * @param properties stores the properties proper to that object
  */
 export interface BaseLayoutObj {
-    id: number
-    idx: number
-    templateName: string
-    shapeInfo: ShapeInfo
-    properties?: {
-        [key: string]: any
-    }
+	id: number;
+	idx: number;
+	templateName: string;
+	shapeInfo: ShapeInfo;
+	properties?: {
+		[key: string]: any;
+	};
 }
 
 export interface Layout {
-    Camera: CanvasCamera
-    Car: BaseLayoutObj[]
-    Road: BaseLayoutObj[]
-    Terrain: BaseLayoutObj[]
-    Obstacle: BaseLayoutObj[]
-    Interactive: BaseLayoutObj[]
-    Decoration: BaseLayoutObj[]
-    Figure: BaseLayoutObj[]
-    Text: BaseLayoutObj[]
+	Camera: CanvasCamera;
+	Car: BaseLayoutObj[];
+	Road: BaseLayoutObj[];
+	Terrain: BaseLayoutObj[];
+	Obstacle: BaseLayoutObj[];
+	Interactive: BaseLayoutObj[];
+	Decoration: BaseLayoutObj[];
+	Figure: BaseLayoutObj[];
+	Text: BaseLayoutObj[];
 }
 
 

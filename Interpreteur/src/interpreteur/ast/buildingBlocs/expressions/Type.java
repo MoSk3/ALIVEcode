@@ -1,5 +1,6 @@
 package interpreteur.ast.buildingBlocs.expressions;
 
+import interpreteur.as.Objets.Scope;
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.as.Objets.ASObjet;
 import interpreteur.ast.buildingBlocs.Expression;
@@ -53,7 +54,7 @@ public class Type implements Expression<ASObjet<?>> {
 
         if (o instanceof String) {
             List<String> type = Arrays.asList(((String) o).split("\\|"));
-            return this.getNom() != null && !type.contains("tout") && this.getNomAsList().stream().noneMatch(type::contains);
+            return this.getNom() != null && !type.contains("tout") && !type.contains("nulType") && this.getNomAsList().stream().noneMatch(type::contains);
         } else if (o instanceof Type) {
             List<String> type = ((Type) o).getNomAsList();
             return this.getNom() != null && type != null && this.getNomAsList().stream().noneMatch(type::contains);
@@ -73,7 +74,7 @@ public class Type implements Expression<ASObjet<?>> {
     @Override
     public ASObjet<?> eval() {
         ASObjet.Variable var;
-        if ((var = ASObjet.VariableManager.obtenirVariable(this.getNom())) != null) {
+        if ((var = Scope.getCurrentScopeInstance().getVariable(this.nom)) != null) {
             return var.getValeurApresGetter();
         }
         throw new ASErreur.ErreurType("Il est impossible d'\u00E9valuer le type '" + this.nom + "'");
@@ -84,38 +85,6 @@ public class Type implements Expression<ASObjet<?>> {
         return "Type{" +
                 "nom=" + nom +
                 '}';
-    }
-
-    enum TypeBuiltin {
-        tout,
-        entier,
-        decimal,
-        nombre(TypeBuiltin.entier, TypeBuiltin.decimal),
-        texte,
-        liste,
-        iterable(TypeBuiltin.texte, TypeBuiltin.liste),
-        booleen,
-        nulType,
-        fonctionType;
-
-        private final TypeBuiltin[] aliases;
-
-        TypeBuiltin() {
-            this.aliases = null;
-        }
-
-        TypeBuiltin(TypeBuiltin... alias) {
-            this.aliases = alias;
-        }
-
-        public TypeBuiltin[] getAliases() {
-            return aliases;
-        }
-
-        @Override
-        public String toString() {
-            return aliases == null ? super.toString() : ArraysUtils.join("|", aliases);
-        }
     }
 
 

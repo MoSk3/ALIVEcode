@@ -1,50 +1,88 @@
 import { FooterProps } from './footerTypes';
 import './footer.css';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import useRoutes from '../../../state/hooks/useRoutes';
 
 const Footer = (props: FooterProps) => {
+	const { t } = useTranslation();
+	const { routes } = useRoutes();
 
-    return (
-        <footer className="site-footer">
-            <div className="container">
-                <div className="row">
-                    <div className="col-sm-12 col-md-6">
-                        <h6>À propos</h6>
-                        <p className="text-justify">
-                            Le projet <i>ALIVE</i> vise à fournir une méthode et une pratique d'enseignement de la programmation
-                            pour simplifier le concept théorique de la programmation.</p>
-                    </div>
+	return (
+		<footer className="site-footer">
+			<div className="container">
+				<div className="row">
+					<div className="col-sm-12 col-md-6">
+						<h6>{t('home.footer.about.title')}</h6>
+						<p className="text-justify">{t('home.footer.about.description')}</p>
+					</div>
 
-                    <div className="col-xs-6 col-md-3">
-                        <h6>Catégories</h6>
-                        <ul className="footer-links">
-                            <li><Link to="/dashboard">Dashboard</Link></li>
-                            <li><Link to="/mind">ALIVE Mind Controller</Link></li>
-                            <li><Link to="/about">À propos de nous</Link></li>
-                        </ul>
-                    </div>
+					<div className="col-xs-6 col-md-3">
+						<h6>{t('home.footer.categories')}</h6>
+						<ul className="footer-links">
+							<li>
+								<Link to={routes.auth.dashboard.path}>
+									{t('msg.section.dashboard')}
+								</Link>
+							</li>
+							<li>
+								<Link to={routes.public.amc.path}>{t('msg.section.amc')}</Link>
+							</li>
+							<li>
+								<Link to={routes.public.about.path}>
+									{t('msg.section.about')}
+								</Link>
+							</li>
+						</ul>
+					</div>
 
-                    <div className="col-xs-6 col-md-3">
-                        <h6>Liens pratiques</h6>
-                        <ul className="footer-links">
-                            <li><a href="https://lrima.cmaisonneuve.qc.ca/" rel="noopener noreferrer" target="_blank">LRIMA</a></li>
-                            <li><a href="https://lrima.cmaisonneuve.qc.ca/alive/" rel="noopener noreferrer" target="_blank">LRIMA ALIVE</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <hr />
-            </div>
-            <div className="container">
-                <div className="row">
-                    <div className="col-md-8">
-                        <p className="copyright-text">Copyright &copy; 2021 All Rights Reserved by
-                            <a href="https://lrima.cmaisonneuve.qc.ca/" rel="noopener noreferrer" target="_blank"> LRIMA</a>.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </footer>
-    )
-}
+					<div className="col-xs-6 col-md-3">
+						<h6>{t('home.footer.links')}</h6>
+						<ul className="footer-links">
+							<li>
+								<a
+									href="https://lrima.cmaisonneuve.qc.ca/"
+									rel="noopener noreferrer"
+									target="_blank"
+								>
+									LRIMA
+								</a>
+							</li>
+							<li>
+								<a
+									href="https://lrima.cmaisonneuve.qc.ca/alive/"
+									rel="noopener noreferrer"
+									target="_blank"
+								>
+									LRIMA ALIVE
+								</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<hr />
+			</div>
+			<div className="container">
+				<div className="row">
+					<div className="col-md-8">
+						{/* TODO: copyright logo*/}
+						<p className="copyright-text">
+							{t('home.footer.copyright')}
+							<a
+								href="https://lrima.cmaisonneuve.qc.ca/"
+								rel="noopener noreferrer"
+								target="_blank"
+							>
+								{' '}
+								LRIMA
+							</a>
+							.
+						</p>
+					</div>
+				</div>
+			</div>
+		</footer>
+	);
+};
 
 export default Footer;
