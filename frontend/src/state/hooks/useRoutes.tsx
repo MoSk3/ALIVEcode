@@ -9,6 +9,7 @@ import { USER_TYPES } from '../../Types/userTypes';
 import Level from '../../Pages/Level/SimulationLevel';
 import SignUpMenu from '../../Pages/Account/SignUpMenu/SignUpMenu';
 import About from '../../Pages/About/About';
+import AliveIa from '../../Pages/ALIVEIA/AliveIa';
 import { useContext } from 'react';
 import { UserContext } from '../../UserContext';
 import Classroom from '../../Pages/Classroom/Classroom';
@@ -79,6 +80,10 @@ const useRoutes = () => {
 			exact: true,
 			path: '/',
 			component: Home,
+		},
+		ai: {
+			path: '/aliveai',
+			component: AliveIa,
 		},
 		about: {
 			path: '/about',

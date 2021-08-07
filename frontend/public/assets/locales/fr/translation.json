@@ -8,6 +8,7 @@
     "section": {
       "alive": "ALIVE Play",
       "dashboard": "Tableau de contrôle",
+      "ai": "ALIVE intelligence artificielle",
       "amc": "ALIVE contrôle par la pensée",
       "about": "À propos",
       "avp": "Perception de véhicule augmentée",
@@ -39,6 +40,7 @@
     "navbar": {
       "section": {
         "dashboard": "$t(msg.section.dashboard)",
+        "ai": "$t(msg.section.ai)",
         "amc": "$t(msg.section.amc)",
         "about": "$t(msg.section.about)"
       },
