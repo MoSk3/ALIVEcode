@@ -9,13 +9,7 @@ import { ClassroomModule } from './classroom/classroom.module';
 import { LevelModule } from './level/level.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forRoot(config),
-    UserModule,
-    DefaultAdminModule,
-    ClassroomModule,
-    LevelModule,
-  ],
+  imports: [TypeOrmModule.forRoot(config), UserModule, DefaultAdminModule, ClassroomModule, LevelModule],
   controllers: [AppController],
   providers: [AppService],
 })

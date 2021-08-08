@@ -1,11 +1,11 @@
 import { Column, ChildEntity, ManyToMany } from 'typeorm';
-import { User } from './user.entity';
+import { UserEntity } from './user.entity';
 import { Classroom } from '../../classroom/entities/classroom.entity';
 import { IsNotEmpty, MaxLength } from 'class-validator';
 import { Optional } from '@nestjs/common';
 
 @ChildEntity()
-export class Student extends User {
+export class StudentEntity extends UserEntity {
   @Column()
   @IsNotEmpty()
   @MaxLength(20)

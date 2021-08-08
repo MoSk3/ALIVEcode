@@ -1,17 +1,17 @@
 import { Entity, JoinTable, ManyToMany, ManyToOne } from 'typeorm';
-import { Professor } from '../../user/entities/professor.entity';
-import { Student } from '../../user/entities/student.entity';
+import { ProfessorEntity } from '../../user/entities/professor.entity';
+import { StudentEntity } from '../../user/entities/student.entity';
 import { CreatedByUser } from '../../generics/entities/createdByUser.entity';
 
 @Entity()
 export class Classroom extends CreatedByUser {
-  @ManyToOne(() => Professor, professor => professor.classrooms)
-  creator: Professor;
+  @ManyToOne(() => ProfessorEntity, professor => professor.classrooms)
+  creator: ProfessorEntity;
 
-  @ManyToOne(() => Professor, professor => professor.classrooms)
-  professor: Professor;
+  @ManyToOne(() => ProfessorEntity, professor => professor.classrooms)
+  professor: ProfessorEntity;
 
-  @ManyToMany(() => Student, student => student.classrooms)
+  @ManyToMany(() => StudentEntity, student => student.classrooms)
   @JoinTable()
-  students: Student[];
+  students: StudentEntity[];
 }
