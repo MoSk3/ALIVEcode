@@ -1,17 +1,30 @@
-import { Controller, Get, Post, Body, Patch, Delete, HttpException, HttpStatus, Res, Req } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Delete,
+  HttpException,
+  HttpStatus,
+  Res,
+  Req,
+  UseInterceptors,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { ProfessorEntity } from './entities/professor.entity';
 import { StudentEntity } from './entities/student.entity';
 import { Param } from '@nestjs/common';
 import { Response } from 'express';
-import { MyRequest } from 'src/utils/guards/auth.guard';
 import { Auth } from '../utils/decorators/auth.decorator';
 import { UserEntity } from './entities/user.entity';
 import { User } from 'src/utils/decorators/user.decorator';
 import { Role } from 'src/utils/types/roles.types';
 import { hasRole } from './auth';
+import { DTOInterceptor } from '../utils/interceptors/dto.interceptor';
 
 @Controller('users')
+@UseInterceptors(new DTOInterceptor())
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -45,8 +58,7 @@ export class UserController {
   }
 
   @Post('refreshToken')
-  @Auth()
-  async refreshToken(@Req() req: MyRequest, @Res({ passthrough: true }) res: Response) {
+  async refreshToken(@Res({ passthrough: true }) res: Response) {
     return await this.userService.refreshToken(res);
   }
 
@@ -68,22 +80,45 @@ export class UserController {
     return this.userService.findAllStudents();
   }
 
+  @Get('me')
+  @Auth()
+  me(@User() user: UserEntity) {
+    return user;
+  }
+
   @Get(':id')
   @Auth()
-  findOneStudent(@Param('id') id: string) {
+  findOneStudent(@User() user: UserEntity, @Param('id') id: string) {
+    if (user.id === id) return user;
+    if (!hasRole(user, Role.MOD)) throw new HttpException('You cannot do that', HttpStatus.FORBIDDEN);
     return this.userService.findById(id);
   }
 
   @Patch(':id')
   @Auth()
-  update(@User() user: UserEntity, @Param('id') id: string, @Body() updateUserDto: UserEntity) {
-    if (!hasRole(user, Role.MOD) && user.id !== id) throw new HttpException('You cannot do that', HttpStatus.FORBIDDEN);
-    return this.userService.update(id, updateUserDto);
+  async update(@User() user: UserEntity, @Param('id') id: string, @Body() updateUserDto: UserEntity) {
+    if (!hasRole(user, Role.MOD)) throw new HttpException('You cannot do that', HttpStatus.FORBIDDEN);
+
+    if (user.id === id) return this.userService.update(user, updateUserDto);
+    return this.userService.update(await this.userService.findById(id), updateUserDto);
   }
 
   @Delete(':id')
-  remove(@User() user: UserEntity, @Param('id') id: string) {
+  @Auth()
+  async remove(@User() user: UserEntity, @Param('id') id: string) {
     if (!hasRole(user, Role.MOD) && user.id !== id) throw new HttpException('You cannot do that', HttpStatus.FORBIDDEN);
-    return this.userService.remove(id);
+
+    if (user.id === id) return this.userService.remove(user);
+    return this.userService.remove(await this.userService.findById(id));
+  }
+
+  @Get(':id/classrooms')
+  @Auth()
+  async getClassrooms(@User() user: UserEntity, @Param('id') id: string) {
+    if (!hasRole(user, Role.MOD) && user.id !== id) throw new HttpException('You cannot do that', HttpStatus.FORBIDDEN);
+
+    console.log(this.userService.getClassrooms(user));
+    if (user.id === id) return this.userService.getClassrooms(user);
+    return this.userService.getClassrooms(await this.userService.findById(id));
   }
 }

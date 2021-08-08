@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 import { ProfessorEntity } from './entities/professor.entity';
 import { StudentEntity } from './entities/student.entity';
 import { UserEntity } from './entities/user.entity';
-import { classToPlain } from 'class-transformer';
 import { compare, hash } from 'bcryptjs';
 import { Response } from 'express';
 import { createAccessToken, setRefreshToken, createRefreshToken } from './auth';
@@ -96,15 +95,15 @@ export class UserService {
   }
 
   findAll() {
-    return classToPlain(this.userRepository.find());
+    return this.userRepository.find();
   }
 
   findAllProfs() {
-    return classToPlain(this.professorRepository.find());
+    return this.professorRepository.find();
   }
 
   findAllStudents() {
-    return classToPlain(this.studentRepository.find());
+    return this.studentRepository.find();
   }
 
   async findByEmail(email: string) {
@@ -115,11 +114,17 @@ export class UserService {
     return await this.userRepository.findOne(id);
   }
 
-  update(id: string, updateUserDto: UserEntity) {
-    return this.userRepository.update(id, updateUserDto);
+  update(user: UserEntity, updateUserDto: UserEntity) {
+    return this.userRepository.update(user, updateUserDto);
   }
 
-  async remove(id: string) {
-    return this.userRepository.remove(await this.findById(id));
+  remove(user: UserEntity) {
+    return this.userRepository.remove(user);
+  }
+
+  getClassrooms(user: UserEntity) {
+    if (user instanceof ProfessorEntity) return user.classrooms || [];
+    if (user instanceof StudentEntity) return user.classrooms || [];
+    return [];
   }
 }

@@ -1,6 +1,6 @@
 import { ChildEntity, Column, OneToMany } from 'typeorm';
 import { UserEntity } from './user.entity';
-import { Classroom } from '../../classroom/entities/classroom.entity';
+import { ClassroomEntity } from '../../classroom/entities/classroom.entity';
 import { IsNotEmpty, IsOptional, Length } from 'class-validator';
 
 @ChildEntity()
@@ -16,6 +16,6 @@ export class ProfessorEntity extends UserEntity {
   lastName: string;
 
   @IsOptional()
-  @OneToMany(() => Classroom, classroom => classroom.professor)
-  classrooms: Classroom[];
+  @OneToMany(() => ClassroomEntity, classroom => classroom.creator, { cascade: true })
+  classrooms: ClassroomEntity[];
 }

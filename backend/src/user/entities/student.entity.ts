@@ -1,8 +1,9 @@
 import { Column, ChildEntity, ManyToMany } from 'typeorm';
 import { UserEntity } from './user.entity';
-import { Classroom } from '../../classroom/entities/classroom.entity';
+import { ClassroomEntity } from '../../classroom/entities/classroom.entity';
 import { IsNotEmpty, MaxLength } from 'class-validator';
 import { Optional } from '@nestjs/common';
+import { GetterDefault } from '../../utils/decorators/getterDefault.decorators';
 
 @ChildEntity()
 export class StudentEntity extends UserEntity {
@@ -12,6 +13,7 @@ export class StudentEntity extends UserEntity {
   name: string;
 
   @Optional()
-  @ManyToMany(() => Classroom, classroom => classroom.students)
-  classrooms: any;
+  @ManyToMany(() => ClassroomEntity, classroom => classroom.students)
+  @GetterDefault({ defaultValue: [] })
+  classrooms: ClassroomEntity[];
 }
