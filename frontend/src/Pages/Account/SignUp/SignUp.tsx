@@ -20,8 +20,7 @@ const SignUp = ({ userType }: SignUpProps) => {
 
 	const onSignIn = async (formValues: FormSignUpValues) => {
 		try {
-			const { user } = (await axios.post('/api/user/create/', formValues)).data;
-			console.log(user);
+			const { user } = (await axios.post('user/create/', formValues)).data;
 
 			const { access, refresh } = (
 				await axios.post('/api/token/obtain/', {

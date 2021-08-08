@@ -1,4 +1,4 @@
-import { Column, Entity, Generated, JoinTable, ManyToMany, ManyToOne } from 'typeorm';
+import { Entity, JoinTable, ManyToMany, ManyToOne } from 'typeorm';
 import { Professor } from '../../user/entities/professor.entity';
 import { Student } from '../../user/entities/student.entity';
 import { CreatedByUser } from '../../generics/entities/createdByUser.entity';

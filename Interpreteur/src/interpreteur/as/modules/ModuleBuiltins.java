@@ -42,6 +42,7 @@ public class ModuleBuiltins {
                 public ASObjet<?> executer() {
                     ASObjet<?> element = this.getValeurParam("element");
                     Executeur.addData(new Data(Data.Id.AFFICHER).addParam(element.toString()));
+                    Executeur.ecrire(element.toString());
                     return new Nul();
                 }
             },

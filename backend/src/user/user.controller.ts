@@ -39,7 +39,7 @@ export class UserController {
       return await this.userService.createProfessor(createProfessor);
     } catch (err) {
       throw new HttpException(
-        'Impossible to create the professor ' + err,
+        'Impossible to create the professor',
         HttpStatus.BAD_REQUEST,
       );
     }

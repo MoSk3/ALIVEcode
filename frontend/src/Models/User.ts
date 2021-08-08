@@ -13,7 +13,13 @@ export class Professor implements ProfessorInterface {
 	public first_name: string;
 	public last_name: string;
 
-	constructor(first_name: string, last_name: string) {
+	constructor({
+		first_name,
+		last_name,
+	}: {
+		first_name: string;
+		last_name: string;
+	}) {
 		this.first_name = first_name;
 		this.last_name = last_name;
 	}
@@ -29,7 +35,7 @@ export class Student implements StudentInterface {
 	public name: string;
 	public grade: GRADES | undefined;
 
-	constructor(name: string, grade: GRADES) {
+	constructor({ name, grade }: { name: string; grade: GRADES }) {
 		this.name = name;
 		this.grade = grade;
 	}
@@ -49,12 +55,15 @@ export class User implements UserInterface {
 	constructor(backendUser: BackendUser) {
 		this.email = backendUser.email;
 		if (backendUser.first_name && backendUser.last_name)
-			this.professor = new Professor(
-				backendUser.first_name,
-				backendUser.last_name,
-			);
+			this.professor = new Professor({
+				first_name: backendUser.first_name,
+				last_name: backendUser.last_name,
+			});
 		else if (backendUser.name && backendUser.scholarity)
-			this.student = new Student(backendUser.name, backendUser.scholarity);
+			this.student = new Student({
+				name: backendUser.name,
+				grade: backendUser.scholarity,
+			});
 	}
 
 	public getDisplayName() {

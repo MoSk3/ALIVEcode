@@ -599,23 +599,18 @@ public class Executeur {
     }
 
     public static void main(String[] args) {
-        String[] lines = new String[]{
-                "fonction abc(p1, p2, p3)",
-                "    afficher p1 * p2 * p3",
-                "    fonction oo(msg: texte) -> rien",
-                "        afficher msg",
-                "    fin fonction",
-                "    retourner oo",
-                "fin fonction",
-                "",
-                "",
-                "abc 1, 2, 3 'salut'",
-                "",
-                "",
-                "abc(1, 2, 3)"
-        };
+
+
+        String[] lines = """
+                                
+                afficher 3
+                                
+                """.split("\n");
+
+
         debug = true;
-        System.out.println(compiler(lines, true));
+        Object a;
+        if (!(a = compiler(lines, true)).equals("[]")) System.out.println(a);
         //printCompileDict();
         System.out.println(executerMain(false));
         //System.out.println(compiler(lines, false));
