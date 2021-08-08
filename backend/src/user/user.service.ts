@@ -1,42 +1,53 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus, Scope, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { Professor } from './entities/professor.entity';
-import { Student } from './entities/student.entity';
-import { User } from './entities/user.entity';
+import { ProfessorEntity } from './entities/professor.entity';
+import { StudentEntity } from './entities/student.entity';
+import { UserEntity } from './entities/user.entity';
 import { classToPlain } from 'class-transformer';
 import { compare, hash } from 'bcryptjs';
 import { Response } from 'express';
-import { createAccessToken, createRefreshToken } from './auth';
+import { createAccessToken, setRefreshToken, createRefreshToken } from './auth';
+import { verify } from 'jsonwebtoken';
+import { AuthPayload } from '../utils/types/auth.payload';
+import { MyRequest } from 'src/utils/guards/auth.guard';
+import { REQUEST } from '@nestjs/core';
 
-@Injectable()
+@Injectable({ scope: Scope.REQUEST })
 export class UserService {
   constructor(
-    @InjectRepository(User) private userRepository: Repository<User>,
-    @InjectRepository(Professor)
-    private professorRepository: Repository<Professor>,
-    @InjectRepository(Student) private studentRepository: Repository<Student>,
+    @InjectRepository(UserEntity) private userRepository: Repository<UserEntity>,
+    @InjectRepository(ProfessorEntity)
+    private professorRepository: Repository<ProfessorEntity>,
+    @InjectRepository(StudentEntity) private studentRepository: Repository<StudentEntity>,
+    @Inject(REQUEST) private req: MyRequest,
   ) {}
 
-  async createStudent(createStudentDto: User) {
+  async createStudent(createStudentDto: UserEntity) {
     // TODO: random salt
     const hashedPassword = await hash(createStudentDto.password, 12);
     createStudentDto.password = hashedPassword;
 
-    const student = await this.studentRepository.save(this.studentRepository.create(createStudentDto));
-    delete student.password;
-    return student;
+    try {
+      const student = await this.studentRepository.save(this.studentRepository.create(createStudentDto));
+      delete student.password;
+      return student;
+    } catch {
+      throw new HttpException('This email is already in use', HttpStatus.CONFLICT);
+    }
   }
 
-  async createProfessor(createProfessorDto: Professor) {
-    // TODO: random salt
+  async createProfessor(createProfessorDto: ProfessorEntity) {
     const hashedPassword = await hash(createProfessorDto.password, 12);
     createProfessorDto.password = hashedPassword;
 
-    const professor = await this.professorRepository.save(this.professorRepository.create(createProfessorDto));
-    delete professor.password;
-    return professor;
+    try {
+      const professor = await this.professorRepository.save(this.professorRepository.create(createProfessorDto));
+      delete professor.password;
+      return professor;
+    } catch {
+      throw new HttpException('This email is already in use', HttpStatus.CONFLICT);
+    }
   }
 
   async login(email: string, password: string, res: Response) {
@@ -51,9 +62,33 @@ export class UserService {
       throw 'Error';
     }
 
-    res.cookie('wif', createRefreshToken(user), {
-      httpOnly: true,
-    });
+    setRefreshToken(res, createRefreshToken(user));
+
+    return {
+      accessToken: createAccessToken(user),
+    };
+  }
+
+  logout(res: Response) {
+    setRefreshToken(res, '');
+    return {};
+  }
+
+  async refreshToken(res: Response) {
+    const req = this.req;
+    const authorization = req.headers['authorization'];
+    if (!authorization) throw new HttpException('Not Authenticated', HttpStatus.BAD_REQUEST);
+
+    const refreshToken = req.cookies.wif;
+    if (!refreshToken) throw new HttpException('No credentials were provided', HttpStatus.BAD_REQUEST);
+
+    const payload = verify(refreshToken, process.env.REFRESH_TOKEN_SECRET_KEY) as AuthPayload;
+    if (!payload) throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
+
+    const user = await this.findById(payload.id);
+    if (!user) throw new HttpException('', HttpStatus.UNAUTHORIZED);
+
+    setRefreshToken(res, createRefreshToken(user));
 
     return {
       accessToken: createAccessToken(user),
@@ -61,7 +96,7 @@ export class UserService {
   }
 
   findAll() {
-    return this.userRepository.find();
+    return classToPlain(this.userRepository.find());
   }
 
   findAllProfs() {
@@ -69,7 +104,7 @@ export class UserService {
   }
 
   findAllStudents() {
-    return this.studentRepository.find();
+    return classToPlain(this.studentRepository.find());
   }
 
   async findByEmail(email: string) {
@@ -80,7 +115,7 @@ export class UserService {
     return await this.userRepository.findOne(id);
   }
 
-  update(id: string, updateUserDto: UpdateUserDto) {
+  update(id: string, updateUserDto: UserEntity) {
     return this.userRepository.update(id, updateUserDto);
   }
 

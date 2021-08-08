@@ -1,16 +1,16 @@
 import { Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { Professor } from '../../user/entities/professor.entity';
-import { Student } from '../../user/entities/student.entity';
+import { ProfessorEntity } from '../../user/entities/professor.entity';
+import { StudentEntity } from '../../user/entities/student.entity';
 
 @Entity()
 export class Classroom {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => Professor, professor => professor.classrooms)
-  professor: Professor;
+  @ManyToOne(() => ProfessorEntity, professor => professor.classrooms)
+  professor: ProfessorEntity;
 
-  @ManyToMany(() => Student, student => student.classrooms)
+  @ManyToMany(() => StudentEntity, student => student.classrooms)
   @JoinTable()
-  students: Student[];
+  students: StudentEntity[];
 }

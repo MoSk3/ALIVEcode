@@ -1,31 +1,28 @@
-import { Controller, Get, Post, Body, Patch, Delete, HttpException, HttpStatus, Res } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Delete, HttpException, HttpStatus, Res, Req } from '@nestjs/common';
 import { UserService } from './user.service';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { Professor } from './entities/professor.entity';
-import { Student } from './entities/student.entity';
+import { ProfessorEntity } from './entities/professor.entity';
+import { StudentEntity } from './entities/student.entity';
 import { Param } from '@nestjs/common';
 import { Response } from 'express';
+import { MyRequest } from 'src/utils/guards/auth.guard';
+import { Auth } from '../utils/decorators/auth.decorator';
+import { UserEntity } from './entities/user.entity';
+import { User } from 'src/utils/decorators/user.decorator';
+import { Role } from 'src/utils/types/roles.types';
+import { hasRole } from './auth';
 
-@Controller('user')
+@Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post('student')
-  async createStudent(@Body() createStudent: Student) {
-    try {
-      return await this.userService.createStudent(createStudent);
-    } catch {
-      throw new HttpException('Impossible to create the student', HttpStatus.BAD_REQUEST);
-    }
+  @Post('students')
+  async createStudent(@Body() createStudent: StudentEntity) {
+    return await this.userService.createStudent(createStudent);
   }
 
-  @Post('professor')
-  async createProfessor(@Body() createProfessor: Professor) {
-    try {
-      return await this.userService.createProfessor(createProfessor);
-    } catch (err) {
-      throw new HttpException('Impossible to create the professor ' + err, HttpStatus.BAD_REQUEST);
-    }
+  @Post('professors')
+  async createProfessor(@Body() createProfessor: ProfessorEntity) {
+    return await this.userService.createProfessor(createProfessor);
   }
 
   @Get('login')
@@ -41,33 +38,52 @@ export class UserController {
     }
   }
 
+  @Get('logout')
+  @Auth()
+  logout(@Res() res: Response) {
+    return this.userService.logout(res);
+  }
+
+  @Post('refreshToken')
+  @Auth()
+  async refreshToken(@Req() req: MyRequest, @Res({ passthrough: true }) res: Response) {
+    return await this.userService.refreshToken(res);
+  }
+
   @Get()
+  @Auth(Role.MOD)
   findAll() {
     return this.userService.findAll();
   }
 
-  @Get('professor')
+  @Get('professors')
+  @Auth(Role.MOD)
   findAllProfs() {
     return this.userService.findAllProfs();
   }
 
-  @Get('student')
+  @Get('students')
+  @Auth(Role.MOD)
   findAllStudents() {
     return this.userService.findAllStudents();
   }
 
   @Get(':id')
+  @Auth()
   findOneStudent(@Param('id') id: string) {
     return this.userService.findById(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  @Auth()
+  update(@User() user: UserEntity, @Param('id') id: string, @Body() updateUserDto: UserEntity) {
+    if (!hasRole(user, Role.MOD) && user.id !== id) throw new HttpException('You cannot do that', HttpStatus.FORBIDDEN);
     return this.userService.update(id, updateUserDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@User() user: UserEntity, @Param('id') id: string) {
+    if (!hasRole(user, Role.MOD) && user.id !== id) throw new HttpException('You cannot do that', HttpStatus.FORBIDDEN);
     return this.userService.remove(id);
   }
 }

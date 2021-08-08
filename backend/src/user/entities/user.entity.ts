@@ -2,16 +2,11 @@ import { Exclude } from 'class-transformer';
 import { IsEmail, IsNotEmpty, IsOptional, MinLength } from 'class-validator';
 import { Column, Entity, PrimaryGeneratedColumn, TableInheritance } from 'typeorm';
 
-export enum UserType {
-  'Professor',
-  'Student',
-}
-
 @Entity()
 @TableInheritance({ column: { type: 'varchar', name: 'type' } })
-export class User {
+export class UserEntity {
   @PrimaryGeneratedColumn('uuid')
-  @Exclude()
+  @Exclude({ toClassOnly: true })
   id: string;
 
   @Column({ nullable: false })
@@ -27,11 +22,16 @@ export class User {
 
   @Column({ default: false })
   @IsOptional()
-  @Exclude()
-  is_staff: boolean;
+  @Exclude({ toClassOnly: true })
+  is_mod: boolean;
 
   @Column({ default: false })
   @IsOptional()
-  @Exclude()
+  @Exclude({ toClassOnly: true })
+  is_admin: boolean;
+
+  @Column({ default: false })
+  @IsOptional()
+  @Exclude({ toClassOnly: true })
   is_super_user: boolean;
-}
+} 

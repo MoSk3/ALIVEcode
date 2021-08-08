@@ -1,18 +1,18 @@
 import { ChildEntity, Column, OneToMany } from 'typeorm';
-import { User } from './user.entity';
+import { UserEntity } from './user.entity';
 import { Classroom } from '../../classroom/entities/classroom.entity';
-import { IsNotEmpty, IsOptional, MaxLength } from 'class-validator';
+import { IsNotEmpty, IsOptional, Length } from 'class-validator';
 
 @ChildEntity()
-export class Professor extends User {
+export class ProfessorEntity extends UserEntity {
   @Column()
   @IsNotEmpty()
-  @MaxLength(20)
+  @Length(3, 25)
   firstName: string;
 
   @Column()
   @IsNotEmpty()
-  @MaxLength(25)
+  @Length(3, 25)
   lastName: string;
 
   @IsOptional()
