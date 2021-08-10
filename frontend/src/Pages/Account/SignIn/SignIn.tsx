@@ -21,10 +21,9 @@ const SignIn = (props: SignInProps) => {
 
 	const onSignIn = async (formValues: FormSignInValues) => {
 		try {
-			const { access, refresh } = (await axios.post('/api/token/obtain/', formValues)).data;
+			const { access } = (await axios.post('users/login/', formValues)).data;
 			axios.defaults.headers['Authorization'] = "JWT " + access;
 			localStorage.setItem('access_token', access);
-			localStorage.setItem('refresh_token', refresh);
 
 			const user = await User.loadUser();
 			setUser(user);
