@@ -6,12 +6,20 @@ import { ProfessorEntity } from '../user/entities/professor.entity';
 
 @Injectable()
 export class ClassroomService {
-  constructor(@InjectRepository(ClassroomEntity) private classroomRepository: Repository<ClassroomEntity>) {}
+  constructor(
+    @InjectRepository(ProfessorEntity) private professorRepository: Repository<ProfessorEntity>,
+    @InjectRepository(ClassroomEntity) private classroomRepository: Repository<ClassroomEntity>,
+  ) {}
 
-  create(createClassroomDto: ClassroomEntity, professor: ProfessorEntity) {
+  async create(createClassroomDto: ClassroomEntity, professor: ProfessorEntity) {
     const classroom = this.classroomRepository.create(createClassroomDto);
     classroom.creator = professor;
-    return this.classroomRepository.save(classroom);
+    await this.classroomRepository.save(classroom);
+
+    professor.classrooms = [classroom];
+    await this.professorRepository.save(professor);
+
+    return classroom;
   }
 
   findAll() {

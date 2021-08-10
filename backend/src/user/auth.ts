@@ -13,7 +13,7 @@ export const createAccessToken = (user: UserEntity) => {
       email: user.email,
     },
     process.env.ACCESS_TOKEN_SECRET_KEY,
-    { expiresIn: '15m' },
+    { expiresIn: process.env.ACCESS_TOKEN_DURATION },
   );
 };
 
@@ -24,7 +24,7 @@ export const createRefreshToken = (user: UserEntity) => {
       email: user.email,
     },
     process.env.REFRESH_TOKEN_SECRET_KEY,
-    { expiresIn: '14d' },
+    { expiresIn: process.env.REFRESH_TOKEN_DURATION },
   );
 };
 

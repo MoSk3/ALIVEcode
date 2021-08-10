@@ -1,16 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  UseInterceptors,
-  HttpException,
-  HttpStatus,
-  Injectable,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, Injectable } from '@nestjs/common';
 import { ClassroomService } from './classroom.service';
 import { ClassroomEntity } from './entities/classroom.entity';
 import { DTOInterceptor } from '../utils/interceptors/dto.interceptor';
@@ -39,7 +27,6 @@ export class ClassroomController {
   }
 
   @Get()
-  @Auth(Role.STAFF)
   findAll() {
     return this.classroomService.findAll();
   }
