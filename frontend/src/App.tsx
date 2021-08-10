@@ -25,8 +25,8 @@ const App = () => {
 	}, []);
 
 	const handleLogout = useCallback(() => {
+		axios.get('logout');
 		localStorage.removeItem('access_token');
-		localStorage.removeItem('refresh_token');
 		axios.defaults.headers['Authorization'] = null;
 		setUser(null);
 	}, []);

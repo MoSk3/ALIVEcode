@@ -3,7 +3,7 @@ import { ClassroomService } from './classroom.service';
 import { ClassroomController } from './classroom.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ClassroomEntity } from './entities/classroom.entity';
-import { DefaultAdminModule } from 'nestjs-admin';
+import { DefaultAdminModule, DefaultAdminSite } from 'nestjs-admin';
 import config from 'ormconfig';
 import { UserEntity } from '../user/entities/user.entity';
 import { ProfessorEntity } from '../user/entities/professor.entity';
@@ -17,4 +17,9 @@ import { ProfessorEntity } from '../user/entities/professor.entity';
   controllers: [ClassroomController],
   providers: [ClassroomService],
 })
-export class ClassroomModule {}
+export class ClassroomModule {
+  constructor(private readonly adminSite: DefaultAdminSite) {
+    // Register the User entity under the "User" section
+    adminSite.register('Classroom', ClassroomEntity);
+  }
+}

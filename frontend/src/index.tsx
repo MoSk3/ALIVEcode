@@ -28,14 +28,14 @@ axios.interceptors.response.use(
 		if (
 			error.response &&
 			error.response.status === 401 &&
-			originalRequest.url === SERVER_URL + 'api/token/refresh/'
+			originalRequest.url === SERVER_URL + 'users/refreshToken'
 		) {
 			window.location.href = '/login/';
 			return Promise.reject(error);
 		}
 		if (
 			error.response &&
-			error.response.data.code === 'token_not_valid' &&
+			error.response.data.message === 'Forbidden resource' &&
 			error.response.status === 401 &&
 			error.response.statusText === 'Unauthorized'
 		) {
@@ -49,12 +49,11 @@ axios.interceptors.response.use(
 
 				if (tokenParts.exp > now) {
 					try {
-						const { refresh: newRefresh, access } = (
-							await axios.post('/api/token/refresh/', { refresh })
+						const { accessToken: access } = (
+							await axios.post('users/refreshToken')
 						).data;
 
 						localStorage.setItem('access_token', access);
-						localStorage.setItem('refresh_token', newRefresh);
 
 						axios.defaults.headers['Authorization'] = 'JWT ' + access;
 						originalRequest.headers['Authorization'] = 'JWT ' + access;

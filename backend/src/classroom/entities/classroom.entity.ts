@@ -5,10 +5,11 @@ import { CreatedByUser } from '../../generics/entities/createdByUser.entity';
 
 @Entity()
 export class ClassroomEntity extends CreatedByUser {
-  @ManyToOne(() => ProfessorEntity, professor => professor.classrooms, { cascade: true })
+  @ManyToOne(() => ProfessorEntity, professor => professor.classrooms, { cascade: true, eager: true })
+  @JoinTable()
   creator: ProfessorEntity;
 
-  @ManyToMany(() => StudentEntity, student => student.classrooms, { cascade: true })
+  @ManyToMany(() => StudentEntity, student => student.classrooms)
   @JoinTable()
   students: StudentEntity[];
 }
