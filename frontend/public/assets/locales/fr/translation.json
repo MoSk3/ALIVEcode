@@ -61,5 +61,25 @@
       "links": "Liens pratiques",
       "copyright": "Copyright &copy; 2021 Touts droits réservés par"
     }
+  },
+  "ai": {
+    "header": {
+        "title": "LE MONDE DE L'INTELLIGENCE ARTIFICIELLE AVEC ALIVESCRIPT",
+        "description": "Paragraphe accrocheur et résumé de la page : Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quam velit, vulputate eu pharetra nec, mattis ac neque. Duis vulputate commodo lectus, ac blandit elit tincidunt id. Sed rhoncus, tortor sed eleifend tristique, tortor mauris molestie elit, et lacinia ipsum quam nec dui. Quisque nec mauris sit amet elit iaculis pretium sit amet quis magna."
+    },
+    "section": {
+      "artificial-intelligence": {
+        "title": "Le potentiel de l'intelligence artificielle",
+        "description": "Paragraphe en rédaction..."
+      },
+      "machine-learning": {
+        "title": "L'apprentissage machine et sa place en IA",
+        "description": "Paragraphe en rédaction..."
+      },
+      "deep-learning": {
+        "title": "Les réseaux de neurones en IA",
+        "description": "Paragraphe en rédaction..."
+      }
+    }
   }
 }

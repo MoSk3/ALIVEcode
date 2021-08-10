@@ -60,5 +60,25 @@
       "links": "Useful links",
       "copyright": "Copyright &copy; 2021 All Rights Reserved by"
     }
+  },
+  "ai": {
+    "section": {
+      "header": {
+        "title": "THE WORLD OF ARTIFICIAL INTELLIGENCE WITH ALIVESCRIPT",
+        "description": "Paragraph in drafting..."
+      },
+      "artificial-intelligence": {
+        "title": "The Potential of Artificial Intelligence",
+        "description": "Paragraph in drafting..."
+      },
+      "machine-learning": {
+        "title": "Machine Learning and Its Place in AI",
+        "description": "Paragraph in drafting..."
+      },
+      "deep-learning": {
+        "title": "Deep Neural Networks in AI",
+        "description": "Paragraph in drafting..."
+      }
+    }
   }
 }
