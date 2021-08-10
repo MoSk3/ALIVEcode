@@ -20,7 +20,6 @@ import { User } from 'src/utils/decorators/user.decorator';
 import { ProfessorEntity } from '../user/entities/professor.entity';
 import { UserEntity } from '../user/entities/user.entity';
 import { hasRole } from '../user/auth';
-import { StudentEntity } from '../user/entities/student.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 

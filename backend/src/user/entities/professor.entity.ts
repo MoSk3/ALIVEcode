@@ -16,6 +16,6 @@ export class ProfessorEntity extends UserEntity {
   lastName: string;
 
   @IsOptional()
-  @OneToMany(() => ClassroomEntity, classroom => classroom.creator, { cascade: true })
+  @OneToMany(() => ClassroomEntity, classroom => classroom.creator, { cascade: ['insert', 'update'] })
   classrooms: ClassroomEntity[];
 }
