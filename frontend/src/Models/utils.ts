@@ -1,14 +1,20 @@
 import axios from 'axios';
 import Model from './Model';
 
-type TypeLoadObj = <T extends Object>(
-	url: string,
-	target: Model & Function,
-	body?: Object,
-) => Promise<T[] | T>;
 
-export const loadObj: TypeLoadObj = async (url, target, body?) => {
+export const loadObj = async <T extends Model & Function>(
+	url: string,
+	target: T,
+	body?: Object,
+): Promise<T | T[]> => {
 	const data = (await axios.get(url, body)).data;
+	return buildObj(data, target);
+};
+
+export const buildObj = <T extends Model & Function>(
+	data: any,
+	target: T,
+): T | T[] => {
 	return Array.isArray(data)
 		? data.map((obj: any) =>
 				deepConstruct(Object.create(target), obj, target.prototype),

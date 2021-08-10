@@ -1,45 +1,41 @@
-import { Student, Professor } from './User';
+import { Student, Professor, User } from './User';
 import axios from 'axios';
-import { ProfessorInterface, StudentInterface } from '../Types/userTypes';
-import { ClassroomInterface } from '../Types/Playground/classroomTypes';
 import { Classroom } from './Playground/Classroom';
+import { loadObj, buildObj } from './utils';
+import Model from './Model';
 
-const apiGetter = (moduleName: string) => {
-	return async (id: string) => (await axios.get(`${moduleName}/${id}`)).data;
+const apiGetter = <T extends Function & Model>(url: string, target: T) => {
+	return async (id: string) =>
+		await loadObj(
+			url.includes(':id') ? url.replace(':id', id) : `${url}/${id}`,
+			target,
+		);
 };
 
-const apiCreate = <T>(moduleName: string, obj: Function) => {
-	return async (fields: T) => {};
+const apiCreate = <U extends Function & Model>(
+	moduleName: string,
+	target: U,
+) => {
+	return async <T extends U>(fields: T) => {
+		const data = (await axios.post(moduleName, fields)).data;
+		if (!data) {
+			return null;
+		}
+		return buildObj(data, target);
+	};
 };
 
 const api = {
-	models: {
-		user: {
-			get: apiGetter('user'),
-			async createProfessor(fields: ProfessorInterface) {
-				const data = (await axios.post('user/professor', fields)).data;
-				if (!data) {
-					return null;
-				}
-				return new Professor(data);
-			},
-			async createStudent(fields: StudentInterface) {
-				const data = (await axios.post('user/student', fields)).data;
-				if (!data) {
-					return null;
-				}
-				return new Student(data);
-			},
+	db: {
+		users: {
+			get: apiGetter('users', User),
+			getClassrooms: apiGetter('users/:id/classrooms', Classroom),
+			createProfessor: apiCreate('users/professors', Professor),
+			createStudent: apiCreate('users/students', Student),
 		},
-		classroom: {
-			get: apiGetter('classroom'),
-			async create(fields: ClassroomInterface) {
-				const data = (await axios.post('classroom', fields)).data;
-				if (!data) {
-					return null;
-				}
-				return new Classroom(fields);
-			},
+		classrooms: {
+			get: apiGetter('classrooms', Classroom),
+			create: apiCreate('classrooms', Classroom),
 		},
 	},
 };
