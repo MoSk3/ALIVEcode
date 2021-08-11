@@ -10,6 +10,7 @@ import { UserEntity } from '../user/entities/user.entity';
 import { hasRole } from '../user/auth';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { UserService } from '../user/user.service';
 
 @Controller('classrooms')
 @UseInterceptors(new DTOInterceptor())
@@ -17,13 +18,35 @@ import { Repository } from 'typeorm';
 export class ClassroomController {
   constructor(
     private readonly classroomService: ClassroomService,
+    private readonly userService: UserService,
     @InjectRepository(ProfessorEntity) private professorRepository: Repository<ProfessorEntity>,
   ) {}
 
+  @Get('test')
+  async tests() {
+    const professor = this.professorRepository.create({
+      email: '7@gmail.com',
+      firstName: 'Bob',
+      lastName: 'lajoie',
+      password: '123456',
+    });
+
+    const classroom = await this.classroomService.testCreate('CLASSE EPIC', professor);
+    if (professor.classrooms) professor.classrooms.push(classroom);
+    else professor.classrooms = [classroom];
+
+    await this.professorRepository.save(professor);
+    return {
+      classroom,
+      professor,
+    };
+  }
+
   @Post()
   @Auth(Role.PROFESSOR)
-  create(@User() professor: ProfessorEntity, @Body() createClassroomDto: ClassroomEntity) {
-    return this.classroomService.create(createClassroomDto, professor);
+  async create(@User() professor: ProfessorEntity, @Body() createClassroomDto: ClassroomEntity) {
+    professor = await this.professorRepository.findOne(professor);
+    return await this.classroomService.create(createClassroomDto, professor);
   }
 
   @Get()

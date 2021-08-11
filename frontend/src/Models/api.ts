@@ -28,7 +28,7 @@ const apiCreate = <U extends Function & Model>(
 const api = {
 	db: {
 		users: {
-			get: apiGetter('users', User),
+			//get: apiGetter('users', User),
 			getClassrooms: apiGetter('users/:id/classrooms', Classroom),
 			createProfessor: apiCreate('users/professors', Professor),
 			createStudent: apiCreate('users/students', Student),

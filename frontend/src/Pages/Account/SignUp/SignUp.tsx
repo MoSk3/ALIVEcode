@@ -20,18 +20,24 @@ const SignUp = ({ userType }: SignUpProps) => {
 
 	const onSignIn = async (formValues: FormSignUpValues) => {
 		try {
-			const { user } = (await axios.post('user/create/', formValues)).data;
+			const url =
+				userType === USER_TYPES.PROFESSOR
+					? 'users/professors'
+					: 'users/students';
 
-			const { access, refresh } = (
-				await axios.post('/api/token/obtain/', {
+			console.log(formValues);
+			const { user } = (await axios.post(url, formValues)).data;
+			console.log(user);
+
+			const { accessToken } = (
+				await axios.post('/users/login', {
 					email: formValues.email,
 					password: formValues.password,
 				})
 			).data;
-			axios.defaults.headers['Authorization'] = 'JWT ' + access;
-			localStorage.setItem('access_token', access);
-			localStorage.setItem('refresh_token', refresh);
-			console.log(access, refresh);
+			axios.defaults.headers['Authorization'] = 'JWT ' + accessToken;
+			localStorage.setItem('access_token', accessToken);
+			console.log(accessToken);
 
 			setUser(user);
 		} catch (err) {
@@ -64,7 +70,7 @@ const SignUp = ({ userType }: SignUpProps) => {
 							<Form.Control
 								placeholder="Enric"
 								autoComplete="on"
-								{...register('professor.first_name', { required: true })}
+								{...register('firstName', { required: true })}
 							/>
 							{errors.professor?.first_name?.type === 'required' &&
 								'Un nom est requis'}
@@ -74,7 +80,7 @@ const SignUp = ({ userType }: SignUpProps) => {
 							<Form.Control
 								placeholder="Soldevila"
 								autoComplete="on"
-								{...register('professor.last_name', { required: true })}
+								{...register('lastName', { required: true })}
 							/>
 							{errors.professor?.last_name?.type === 'required' &&
 								'Un nom de famille est requis'}
@@ -86,7 +92,7 @@ const SignUp = ({ userType }: SignUpProps) => {
 							<Form.Label>Pseudonyme</Form.Label>
 							<Form.Control
 								placeholder="pseudo"
-								{...register('student.name', { required: true })}
+								{...register('name', { required: true })}
 							/>
 							{errors.student?.name?.type === 'required' &&
 								'Un pseudonyme est requis'}
@@ -96,7 +102,7 @@ const SignUp = ({ userType }: SignUpProps) => {
 							<Form.Control
 								placeholder="*****"
 								autoComplete="on"
-								{...register('student.scholarity', { required: true })}
+								{...register('scholarity', { required: true })}
 							/>
 							{errors.student?.scholarity?.type === 'required' &&
 								'Le niveau scholaire est requis'}

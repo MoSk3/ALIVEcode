@@ -4,7 +4,7 @@ import FillContainer from '../../Components/MiscComponents/FillContainer/FillCon
 const About = (props: AboutProps) => {
 	return (
 		<FillContainer startAtTop centered>
-			<h1>BITCH</h1>
+			<h1>In work...</h1>
 		</FillContainer>
 	);
 };

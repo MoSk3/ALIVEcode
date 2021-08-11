@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { useContext } from 'react';
 import { useAlert } from 'react-alert';
 import { FormSignInValues, SignInProps } from './signInTypes';
@@ -21,19 +21,22 @@ const SignIn = (props: SignInProps) => {
 
 	const onSignIn = async (formValues: FormSignInValues) => {
 		try {
-			const { access } = (await axios.post('users/login/', formValues)).data;
-			axios.defaults.headers['Authorization'] = "JWT " + access;
-			localStorage.setItem('access_token', access);
+			const { accessToken } = (await axios.post('users/login/', formValues)).data;
+			axios.defaults.headers['Authorization'] = "JWT " + accessToken;
+			localStorage.setItem('access_token', accessToken);
 
 			const user = await User.loadUser();
+			if(!user) return alert.error('Une erreur est survenue, veuillez réessayer');
+
 			setUser(user);
 
 			if(history.location.pathname === '/signin') history.push('/dashboard');
 			return alert.success("Vous êtes connecté!");
 
 		} catch (err) {
-			console.error(err);
-			return alert.error("Une erreur est survenue");
+			console.error(err as AxiosError);
+			console.log((err as AxiosError).response?.data.message)
+			return alert.error("Erreur : " + err.response.data.message);
 		}
 	};
 

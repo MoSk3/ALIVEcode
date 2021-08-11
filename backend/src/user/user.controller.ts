@@ -38,7 +38,7 @@ export class UserController {
     return await this.userService.createProfessor(createProfessor);
   }
 
-  @Get('login')
+  @Post('login')
   async login(
     @Body('email') email: string,
     @Body('password') password: string,
@@ -63,7 +63,7 @@ export class UserController {
   }
 
   @Get()
-  @Auth(Role.MOD)
+  //@Auth(Role.MOD)
   findAll() {
     return this.userService.findAll();
   }

@@ -1,7 +1,7 @@
 import { createContext } from "react";
-import { User } from './Models/User';
+import { Professor, Student } from './Models/User';
 
 export const UserContext = createContext<{
-	user: User | null;
-	setUser: (user: User | null) => void;
+	user: Professor | Student | null;
+	setUser: (user: Professor | Student | null) => void;
 }>({ user: null, setUser: () => {} });

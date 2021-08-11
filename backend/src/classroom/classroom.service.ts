@@ -11,11 +11,14 @@ export class ClassroomService {
     @InjectRepository(ClassroomEntity) private classroomRepository: Repository<ClassroomEntity>,
   ) {}
 
+  async testCreate(name: string, prof: ProfessorEntity) {
+    return this.classroomRepository.create({ name });
+  }
+
   async create(createClassroomDto: ClassroomEntity, professor: ProfessorEntity) {
     const classroom = this.classroomRepository.create(createClassroomDto);
     classroom.creator = professor;
     await this.classroomRepository.save(classroom);
-
     professor.classrooms = [classroom];
     await this.professorRepository.save(professor);
 

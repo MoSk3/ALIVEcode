@@ -12,6 +12,7 @@ import About from '../../Pages/About/About';
 import { useContext } from 'react';
 import { UserContext } from '../../UserContext';
 import Classroom from '../../Pages/Classroom/Classroom';
+import AccountPage from '../../Pages/Account/AccountInfo/AccountPage';
 
 type component =
 	| React.ComponentType<RouteComponentProps<any>>
@@ -51,8 +52,8 @@ const useRoutes = () => {
 			const redirect = route.redirect || defaultRedirect;
 			if (
 				!user ||
-				(route.accountType === Professor && !user.professor) ||
-				(route.accountType === Student && !user.student)
+				(route.accountType === Professor && !(user instanceof Professor)) ||
+				(route.accountType === Student && !(user instanceof Student))
 			) {
 				route.component = redirect;
 				route.hasAccess = false;
@@ -113,6 +114,10 @@ const useRoutes = () => {
 		classroom: {
 			path: '/classroom/:id',
 			component: Classroom,
+		},
+		account: {
+			path: '/account',
+			component: AccountPage,
 		},
 	});
 

@@ -98,9 +98,16 @@ const ALIVENavbar = ({ handleLogout }: NavbarProps) => {
 									id="basic-nav-dropdown"
 								>
 									{user ? (
-										<NavDropdown.Item onClick={handleLogout}>
-											{t('msg.auth.signout')}
-										</NavDropdown.Item>
+										<>
+											<NavDropdown.Item
+												onClick={() => history.push(routes.auth.account.path)}
+											>
+												{t('msg.section.account')}
+											</NavDropdown.Item>
+											<NavDropdown.Item onClick={handleLogout}>
+												{t('msg.auth.signout')}
+											</NavDropdown.Item>
+										</>
 									) : (
 										<>
 											<NavDropdown.Item
