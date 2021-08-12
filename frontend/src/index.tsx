@@ -13,64 +13,12 @@ import HttpAPI from 'i18next-http-backend';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
 axios.defaults.baseURL = SERVER_URL;
+axios.defaults.withCredentials = true;
 axios.defaults.timeout = 5000;
 axios.defaults.headers = {
-	Authorization: 'JWT ' + localStorage.getItem('access_token'),
 	'Content-Type': 'application/json',
 	accept: 'application/json',
 };
-
-axios.interceptors.response.use(
-	response => response,
-	async error => {
-		const originalRequest = error.config;
-
-		if (
-			error.response &&
-			error.response.status === 401 &&
-			originalRequest.url === SERVER_URL + 'users/refreshToken'
-		) {
-			window.location.href = '/login/';
-			return Promise.reject(error);
-		}
-		if (
-			error.response &&
-			error.response.data.message === 'Forbidden resource' &&
-			error.response.status === 401 &&
-			error.response.statusText === 'Unauthorized'
-		) {
-			const refresh = localStorage.getItem('refresh_token');
-
-			if (refresh && refresh !== 'undefined') {
-				const tokenParts = JSON.parse(atob(refresh.split('.')[1]));
-
-				// exp date in token is expressed in seconds, while now() returns milliseconds:
-				const now = Math.ceil(Date.now() / 1000);
-
-				if (tokenParts.exp > now) {
-					try {
-						const { accessToken: access } = (
-							await axios.post('users/refreshToken')
-						).data;
-
-						localStorage.setItem('access_token', access);
-
-						axios.defaults.headers['Authorization'] = 'JWT ' + access;
-						originalRequest.headers['Authorization'] = 'JWT ' + access;
-
-						return axios(originalRequest);
-					} catch (err) {
-						console.error(err);
-					}
-				}
-				console.log('Refresh token is expired', tokenParts.exp, now);
-			} else {
-				console.log('Refresh token not available.');
-			}
-		}
-		return Promise.reject(error);
-	},
-);
 
 // React Alert Configs
 const alertOptions = {
@@ -109,14 +57,14 @@ i18next
 		defaultNS: 'translation',
 	});
 
-const fallback = (
+export const Fallback = (
 	<div>
 		<h2>Loading...</h2>
 	</div>
 );
 
 ReactDOM.render(
-	<Suspense fallback={fallback}>
+	<Suspense fallback={Fallback}>
 		<React.StrictMode>
 			<AlertProvider template={AlertTemplate} {...alertOptions}>
 				<App />

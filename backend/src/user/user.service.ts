@@ -75,8 +75,6 @@ export class UserService {
 
   async refreshToken(res: Response) {
     const req = this.req;
-    const authorization = req.headers['authorization'];
-    if (!authorization) throw new HttpException('Not Authenticated', HttpStatus.BAD_REQUEST);
 
     const refreshToken = req.cookies.wif;
     if (!refreshToken) throw new HttpException('No credentials were provided', HttpStatus.BAD_REQUEST);

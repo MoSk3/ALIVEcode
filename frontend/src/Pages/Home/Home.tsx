@@ -11,7 +11,7 @@ import Voiture from '../../assets/images/Voiture.gif';
 import Cloud from '../../assets/images/cloud.png';
 import Maze from '../../assets/images/Labyrinthe.jpg';
 import LRIMA from '../../assets/images/LRIMA.png';
-import TypeWriter from '../../Components/MiscComponents/TypeWriter/TypeWriter';
+import TypeWriter from '../../Components/UtilsComponents/TypeWriter/TypeWriter';
 import useRoutes from '../../state/hooks/useRoutes';
 import { useTranslation } from 'react-i18next';
 

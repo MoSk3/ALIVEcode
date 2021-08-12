@@ -94,3 +94,13 @@ export class Student extends User {
 		return this.name;
 	}
 }
+
+let accessToken: string;
+export const setAccessToken = (value: string) => {
+	accessToken = value;
+	axios.defaults.headers['Authorization'] = 'JWT ' + accessToken;
+};
+
+export const getAccessToken = () => {
+	return accessToken;
+};

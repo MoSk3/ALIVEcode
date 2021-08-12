@@ -1,7 +1,7 @@
 import { Classroom } from './Playground/Classroom';
 import Course from './Playground/Course';
 import { Student } from './User';
-import { loadObj } from './utils';
+//import { loadObj } from './utils';
 
 interface Model {
 	readonly dependencies: {

@@ -2,13 +2,15 @@ import { CardContainerProps, StyledCardContainerProps } from './cardContainerTyp
 import IconButton from '../../DashboardComponents/IconButton/IconButton';
 import styled from 'styled-components';
 import { Container, Row } from 'react-bootstrap';
-import CenteredContainer from '../../MiscComponents/CenteredContainer/CenteredContainer';
+import CenteredContainer from '../../UtilsComponents/CenteredContainer/CenteredContainer';
 
 const StyledDiv = styled.div`
 	text-align: center;
-	margin: 50px 20px 0px 20px;
+	margin-top: 50px;
 
-	h1 {
+	.card-container-title {
+		font-size: ${({ titleSize }: StyledCardContainerProps) =>
+			titleSize || '26px'};
 		border-top-left-radius: 25px;
 		border-top-right-radius: 25px;
 		background-color: var(--primary-color);
@@ -18,38 +20,37 @@ const StyledDiv = styled.div`
 	}
 
 	.card-container-body {
-		overflow-x: ${({ scrollable }: StyledCardContainerProps) =>
-			scrollable ? 'auto' : 'none'};
+		overflow-x: ${({ scrollX }: StyledCardContainerProps) =>
+			scrollX ? 'scroll' : 'auto'};
+		overflow-y: ${({ scrollY }: StyledCardContainerProps) =>
+			scrollY ? 'scroll' : 'auto'};
 		height: auto;
 		border-bottom-left-radius: 25px;
 		border-bottom-right-radius: 25px;
 		background-color: rgba(255, 255, 255, 0.75);
 		box-shadow: 0px 15px 30px 0px rgb(170, 170, 170);
 	}
-
-	@media screen and (max-width: 1076px) {
-		text-align: center;
-		margin: 50px 20px 0px 20px;
-	}
 `;
 
 const CardContainer = ({
 	children,
 	title,
+	titleSize,
 	icon,
-	scrollable,
+	scrollX,
+	scrollY,
 	onIconClick,
 	style,
 }: CardContainerProps) => {
 	return (
 		<StyledDiv
 			style={style}
-			scrollable={scrollable === undefined ? true : scrollable}
+			scrollX={scrollX}
+			scrollY={scrollY}
+			titleSize={titleSize}
 		>
-			<div>
-				<h1>
-					{title} {icon && <IconButton icon={icon} onClick={onIconClick} />}
-				</h1>
+			<div className="card-container-title">
+				{title} {icon && <IconButton icon={icon} onClick={onIconClick} />}
 			</div>
 			<Container fluid className="card-container-body">
 				<CenteredContainer vertically horizontally>

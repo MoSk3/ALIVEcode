@@ -1,4 +1,4 @@
-import FillContainer from '../../Components/MiscComponents/FillContainer/FillContainer';
+import FillContainer from '../../Components/UtilsComponents/FillContainer/FillContainer';
 import { LevelProps } from './simulationLevelTypes';
 import { useEffect, useState, useContext, useRef } from 'react';
 import axios from 'axios';

@@ -1,55 +1,42 @@
-import styled from 'styled-components';
+import ClassroomHeader from "../../Components/ClassroomComponents/ClassroomHeader/ClassroomHeader"
+import CardContainer from '../../Components/UtilsComponents/CardContainer/CardContainer';
 import { ClassroomProps } from './classroomTypes';
-import { Badge, Col, Container, Row } from 'react-bootstrap';
-import Button from '../../Components/MainComponents/Button/Button';
+import { Row, Container } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
+import { Col } from 'react-bootstrap';
+import styled from 'styled-components';
 
-const StyledClassroom = styled.div`
-	color: white;
-	border-radius: 15px;
-	background-color: rgba(var(--primary-color-rgb), 0.92);
-	margin-top: 25px;
-	width: 85%;
-	padding: 50px;
-	box-shadow: 0px 5px 15px rgb(95 95 95);
-
-	span {
-		margin-top: 10px;
-		font-size: 20px;
-		background-color: var(--secondary-color);
-	}
-
-	#classroom-buttons {
-		text-align: right;
-	}
-
-	#classroom-buttons button {
-		margin: 10px;
-		font-size: 16px;
-		font-weight: bold;
+const StyledDiv = styled.div`
+	.classroom-content {
+		width: 80%;
+		margin-top: 50px;
+		padding-bottom: 25px;
 	}
 `;
 
 const Classroom = (props: ClassroomProps) => {
+	const { t } = useTranslation();
+
 	return (
-		<StyledClassroom as={Container}>
-			<Row>
-				<Col lg>
-					<h2>Classe pour tester</h2>
-					<h5>
-						<Badge variant="primary">Professeur</Badge>
-						{' Enric, Soldevila'}
-					</h5>
-				</Col>
-				<Col lg id="classroom-buttons">
-					<div>
-						<Button variant="primary">Ajouter des étudiants</Button>
-					</div>
-					<div>
-						<Button variant="danger">Supprimer la classe</Button>
-					</div>
-				</Col>
-			</Row>
-		</StyledClassroom>
+		<StyledDiv>
+			<ClassroomHeader />
+			<Container className="classroom-content">
+				<CardContainer title={t('classroom.container.courses')}></CardContainer>
+				<Row>
+					<Col lg>
+						<CardContainer
+							title={t('classroom.container.details')}
+						></CardContainer>
+					</Col>
+					<Col lg>
+						<CardContainer
+							scrollY
+							title={t('classroom.container.students')}
+						></CardContainer>
+					</Col>
+				</Row>
+			</Container>
+		</StyledDiv>
 	);
 };
 

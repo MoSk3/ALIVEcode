@@ -1,13 +1,13 @@
 import { DashboardProps } from './dashboardTypes';
-import CenteredContainer from '../../Components/MiscComponents/CenteredContainer/CenteredContainer';
-import LabelHighlight from '../../Components/MiscComponents/LabelHighlight/LabelHighlight';
-import { useContext } from 'react';
+import CenteredContainer from '../../Components/UtilsComponents/CenteredContainer/CenteredContainer';
+import LabelHighlight from '../../Components/UtilsComponents/LabelHighlight/LabelHighlight';
+import { useContext, useEffect } from 'react';
 import { UserContext } from '../../UserContext';
-import CardContainer from '../../Components/MainComponents/CardContainer/CardContainer';
+import CardContainer from '../../Components/UtilsComponents/CardContainer/CardContainer';
 import { useHistory } from 'react-router-dom';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import ClassroomCard from '../../Components/DashboardComponents/ClassroomCard/ClassroomCard';
-import SmallCard from '../../Components/MainComponents/Cards/SmallCard/SmallCard';
+import SmallCard from '../../Components/UtilsComponents/Cards/SmallCard/SmallCard';
 import { Database } from '../../Models/Model';
 import useFetch from '../../state/hooks/useFetch';
 
@@ -16,6 +16,7 @@ import Puzzle from '../../assets/images/icons/puzzle.png';
 import Sandbox from '../../assets/images/icons/sandboxblanc.png';
 import Voiture from '../../assets/images/Voiture.gif';
 import { Row } from 'react-bootstrap';
+import axios from 'axios';
 
 const Dashboard = (props: DashboardProps) => {
 	const { user } = useContext(UserContext);
@@ -24,6 +25,18 @@ const Dashboard = (props: DashboardProps) => {
 	const [classrooms, loading] = useFetch(
 		Database.playground.classrooms.ofCurrentUser,
 	);
+
+	useEffect(() => {
+		const getData = async () => {
+			try {
+				console.log((await axios.get('/users/me')).data);
+			} catch {
+				console.log('NOT LOGGED IN');
+			}
+		};
+
+		getData();
+	}, []);
 
 	const createLevel = async () => {
 		// TODO : axios request to return new level with id

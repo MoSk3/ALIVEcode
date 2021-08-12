@@ -5,11 +5,11 @@ import { useAlert } from 'react-alert';
 import { FormSignInValues, SignInProps } from './signInTypes';
 import { useHistory } from 'react-router';
 import { UserContext } from '../../../UserContext';
-import FormContainer from '../../../Components/MiscComponents/FormContainer/FormContainer';
+import FormContainer from '../../../Components/UtilsComponents/FormContainer/FormContainer';
 import { Form } from 'react-bootstrap';
-import Button from '../../../Components/MainComponents/Button/Button';
-import Link from '../../../Components/MainComponents/Link/Link';
-import { User } from '../../../Models/User';
+import Button from '../../../Components/UtilsComponents/Button/Button';
+import Link from '../../../Components/UtilsComponents/Link/Link';
+import { User, setAccessToken } from '../../../Models/User';
 import { useTranslation } from 'react-i18next';
 
 /** Reusable form component to handle header creation */
@@ -23,8 +23,9 @@ const SignIn = (props: SignInProps) => {
 	const onSignIn = async (formValues: FormSignInValues) => {
 		try {
 			const { accessToken } = (await axios.post('users/login/', formValues)).data;
-			axios.defaults.headers['Authorization'] = "JWT " + accessToken;
-			localStorage.setItem('access_token', accessToken);
+			if (!accessToken) throw new Error("Could not login");
+
+			setAccessToken(accessToken);
 
 			const user = await User.loadUser();
 			if(!user) return alert.error('Une erreur est survenue, veuillez réessayer');

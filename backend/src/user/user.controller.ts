@@ -8,7 +8,6 @@ import {
   HttpException,
   HttpStatus,
   Res,
-  Req,
   UseInterceptors,
 } from '@nestjs/common';
 import { UserService } from './user.service';
@@ -83,6 +82,7 @@ export class UserController {
   @Get('me')
   @Auth()
   me(@User() user: UserEntity) {
+    console.log(user);
     return user;
   }
 

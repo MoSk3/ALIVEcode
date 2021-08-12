@@ -11,8 +11,8 @@ import SignUpMenu from '../../Pages/Account/SignUpMenu/SignUpMenu';
 import About from '../../Pages/About/About';
 import { useContext } from 'react';
 import { UserContext } from '../../UserContext';
-import Classroom from '../../Pages/Classroom/Classroom';
 import AccountPage from '../../Pages/Account/AccountInfo/AccountPage';
+import Classroom from '../../Pages/Classroom/Classroom';
 
 type component =
 	| React.ComponentType<RouteComponentProps<any>>
