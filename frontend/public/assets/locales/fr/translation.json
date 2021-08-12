@@ -1,4 +1,18 @@
 {
+	"form": {
+		"title": {
+			"signin": "Connexion"
+		},
+		"pwd": { "label": "Mot de passe", "placeholder": "*****" },
+		"email": {
+			"label": "Adresse courriel",
+			"placeholder": "MonAdresse@alivecode.ca"
+		},
+		"name": { "label": "Nom", "placeholder": "Nom" },
+		"firstName": { "label": "Prénom", "placeholder": "Prénom" },
+		"lastName": { "label": "Nom", "placeholder": "Nom" },
+		"scolarity": { "label": "Niveau scholaire", "placeholder": "4e année" }
+	},
 	"msg": {
 		"auth": {
 			"signin": "Se connecter",

@@ -1,4 +1,18 @@
 {
+	"form": {
+		"title": {
+			"signin": "Sign in"
+		},
+		"pwd": { "label": "Password", "placeholder": "*****" },
+		"email": {
+			"label": "Email adress",
+			"placeholder": "MyEmailAdress@alivecode.ca"
+		},
+		"name": { "label": "Name", "placeholder": "Name" },
+		"firstName": { "label": "First name", "placeholder": "First name" },
+		"lastName": { "label": "Last name", "placeholder": "Last name" },
+		"scolarity": { "label": "Scholarity", "placeholder": "4th grade" }
+	},
 	"msg": {
 		"auth": {
 			"signin": "Connect",

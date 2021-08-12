@@ -10,12 +10,13 @@ import { Form } from 'react-bootstrap';
 import Button from '../../../Components/MainComponents/Button/Button';
 import Link from '../../../Components/MainComponents/Link/Link';
 import { User } from '../../../Models/User';
+import { useTranslation } from 'react-i18next';
 
 /** Reusable form component to handle header creation */
 const SignIn = (props: SignInProps) => {
 	const { register, handleSubmit, formState: { errors } } = useForm();
-
 	const { setUser } = useContext(UserContext);
+	const { t } = useTranslation();
 	const history = useHistory();
 	const alert = useAlert();
 
@@ -34,43 +35,41 @@ const SignIn = (props: SignInProps) => {
 			return alert.success("Vous êtes connecté!");
 
 		} catch (err) {
-			console.error(err as AxiosError);
-			console.log((err as AxiosError).response?.data.message)
-			return alert.error("Erreur : " + err.response.data.message);
+			return alert.error("Erreur : " + ((err as AxiosError).response?.data.message ?? "veuillez réessayer"));
 		}
 	};
 
 	return (
-		<FormContainer title="Connexion">
+		<FormContainer title={t('form.title.signin')}>
 			<Form onSubmit={handleSubmit(onSignIn)}>
 				<Form.Group controlId="formBasicEmail">
-					<Form.Label>Adresse courriel</Form.Label>
+					<Form.Label>{t('form.email.label')}</Form.Label>
 					<Form.Control
 						type="email"
 						autoComplete="on"
-						placeholder="Enter email"
+						placeholder={t('form.email.placeholder')}
 						{...register('email', { required: true })}
 					/>
 					{errors.email?.type === 'required' && "Une adresse courriel est requise"}
 				</Form.Group>
 
 				<Form.Group controlId="formBasicPassword">
-					<Form.Label>Password</Form.Label>
+					<Form.Label>{t('form.pwd.label')}</Form.Label>
 					<Form.Control
 						type="password"
 						autoComplete="on"
-						placeholder="*****"
+						placeholder={t('form.pwd.placeholder')}
 						{...register('password', { required: true })}
 					/>
 					{errors.password?.type === 'required' && "Un mot de passe est requis"}
 				</Form.Group>
 				<Button variant="primary" type="submit">
-					Connexion
+					{t('msg.auth.signin')}
 				</Button>
 
 				<br /><br />
 
-				Vous n'avez pas de compte? <Link pale to="/signup">S'inscrire</Link>
+				{t('home.navbar.msg.non_auth.label')}<Link pale to="/signup">{t('home.navbar.msg.non_auth.link')}</Link>
 			</Form>
 		</FormContainer>
 	);
