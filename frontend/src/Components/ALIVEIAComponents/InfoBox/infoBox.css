@@ -1,0 +1,30 @@
+:root {
+  --borders-width: 4px;
+  --padding-left-sections: 3vw;
+  --border-radius: 20px;
+}
+
+#container {
+  margin: 10vw;
+  border-style: solid;
+  border-radius: var(--border-radius);
+  border-width: var(--borders-width);
+  border-color: black;
+  background-color: white;
+}
+
+#section-title {
+  padding-left: var(--padding-left-sections);
+  padding-bottom: 5px;
+  font-size: 40px;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  border-bottom-style: solid;
+  border-width: var(--borders-width);
+  background-color: rgb(71, 169, 207);
+}
+
+#section-description {
+  font-size: 20px;
+  padding-left: var(--padding-left-sections);
+}

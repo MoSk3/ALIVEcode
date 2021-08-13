@@ -1,5 +1,5 @@
 :root {
-  --header-paddings: 10vh;
+  --header-paddings: 8vh;
 }
 
 .background {
@@ -17,12 +17,13 @@
 }
 
 #title {
-  font-size: 70px;
+  font-size: 4vw;
   padding-left: 10vw;
-  padding-right: 30vw;
+  padding-right: 25vw;
 }
 
 #presentation-paragraph {
   padding-left: 10vw;
   padding-right: 50vw;
+  font-size: 1vw;
 }
