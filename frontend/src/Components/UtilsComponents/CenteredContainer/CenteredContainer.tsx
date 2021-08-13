@@ -35,6 +35,7 @@ const CenteredContainer = ({
 		...(horizontally
 			? {
 					display: 'flex',
+					textAlign: 'center',
 					justifyContent: 'center',
 					flexDirection: 'column',
 			  }

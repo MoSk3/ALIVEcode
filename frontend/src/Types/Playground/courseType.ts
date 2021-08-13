@@ -1,4 +1,5 @@
 import { User } from '../../Models/User';
+import { Section } from '../../Models/Playground/Course';
 
 export enum COURSE_SUBJECT {
 	INFORMATIC = 'in',
@@ -31,4 +32,5 @@ export interface CourseInterface {
 	difficulty: COURSE_DIFFICULTY;
 	access: COURSE_ACCESS;
 	code: string;
+	sections: Array<Section>;
 }

@@ -2,7 +2,7 @@ import './App.css';
 import { RouterSwitch } from './Router/RouterSwitch/RouterSwitch';
 import { BrowserRouter as Router, useHistory } from 'react-router-dom';
 import ALIVENavbar from './Components/MainComponents/Navbar/Navbar';
-import { UserContext } from './UserContext';
+import { UserContext } from './state/contexts/UserContext';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import BackArrow from './Components/UtilsComponents/BackArrow/BackArrow';

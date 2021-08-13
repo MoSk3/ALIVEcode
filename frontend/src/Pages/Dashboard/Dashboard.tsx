@@ -2,7 +2,7 @@ import { DashboardProps } from './dashboardTypes';
 import CenteredContainer from '../../Components/UtilsComponents/CenteredContainer/CenteredContainer';
 import LabelHighlight from '../../Components/UtilsComponents/LabelHighlight/LabelHighlight';
 import { useContext, useEffect } from 'react';
-import { UserContext } from '../../UserContext';
+import { UserContext } from '../../state/contexts/UserContext';
 import CardContainer from '../../Components/UtilsComponents/CardContainer/CardContainer';
 import { useHistory } from 'react-router-dom';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';

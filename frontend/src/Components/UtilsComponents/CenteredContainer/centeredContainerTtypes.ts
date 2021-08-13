@@ -13,10 +13,7 @@ export type StyledCenteredContainerProps = {
 };
 
 export type CenteredContainerProps = {
-	children?:
-		| React.ReactChildren
-		| React.ReactElement
-		| Array<React.ReactElement>;
+	children?: React.ReactNode;
 	vertically?: boolean;
 	horizontally?: boolean;
 	className?: string;

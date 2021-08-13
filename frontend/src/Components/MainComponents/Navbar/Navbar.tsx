@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { NavbarProps } from './NavbarTypes';
-import { UserContext } from '../../../UserContext';
+import { UserContext } from '../../../state/contexts/UserContext';
 import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
 

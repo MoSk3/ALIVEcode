@@ -1,6 +1,6 @@
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { useContext } from 'react';
-import { UserContext } from '../../../UserContext';
+import { UserContext } from '../../../state/contexts/UserContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import CenteredContainer from '../../../Components/UtilsComponents/CenteredContainer/CenteredContainer';
 import { Professor, Student } from '../../../Models/User';

@@ -10,9 +10,10 @@ import Level from '../../Pages/Level/SimulationLevel';
 import SignUpMenu from '../../Pages/Account/SignUpMenu/SignUpMenu';
 import About from '../../Pages/About/About';
 import { useContext } from 'react';
-import { UserContext } from '../../UserContext';
+import { UserContext } from '../contexts/UserContext';
 import AccountPage from '../../Pages/Account/AccountInfo/AccountPage';
 import Classroom from '../../Pages/Classroom/Classroom';
+import Course from '../../Pages/Course/Course';
 
 type component =
 	| React.ComponentType<RouteComponentProps<any>>
@@ -114,6 +115,10 @@ const useRoutes = () => {
 		classroom: {
 			path: '/classroom/:id',
 			component: Classroom,
+		},
+		course: {
+			path: '/course/:id',
+			component: Course,
 		},
 		account: {
 			path: '/account',

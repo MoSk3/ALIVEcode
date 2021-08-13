@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { Professor, Student } from './Models/User';
+import { Professor, Student } from '../../Models/User';
 
 export const UserContext = createContext<{
 	user: Professor | Student | null;

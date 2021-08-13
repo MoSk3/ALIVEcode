@@ -7,7 +7,7 @@ import FormContainer from '../../../Components/UtilsComponents/FormContainer/For
 import Link from '../../../Components/UtilsComponents/Link/Link';
 import axios from 'axios';
 import { useContext } from 'react';
-import { UserContext } from '../../../UserContext';
+import { UserContext } from '../../../state/contexts/UserContext';
 
 const SignUp = ({ userType }: SignUpProps) => {
 	const { setUser } = useContext(UserContext);

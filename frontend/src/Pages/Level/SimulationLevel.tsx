@@ -5,7 +5,7 @@ import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import { useAlert } from 'react-alert';
 import LineInterface from '../../Components/PlayComponents/LineInterface/LineInterface';
-import { UserContext } from '../../UserContext';
+import { UserContext } from '../../state/contexts/UserContext';
 import Simulation from '../../Components/PlayComponents/Simulation/Simulation';
 import { Row, Col } from 'react-bootstrap';
 import styled from 'styled-components';

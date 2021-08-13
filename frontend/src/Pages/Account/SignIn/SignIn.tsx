@@ -4,7 +4,7 @@ import { useContext } from 'react';
 import { useAlert } from 'react-alert';
 import { FormSignInValues, SignInProps } from './signInTypes';
 import { useHistory } from 'react-router';
-import { UserContext } from '../../../UserContext';
+import { UserContext } from '../../../state/contexts/UserContext';
 import FormContainer from '../../../Components/UtilsComponents/FormContainer/FormContainer';
 import { Form } from 'react-bootstrap';
 import Button from '../../../Components/UtilsComponents/Button/Button';
