@@ -11,16 +11,18 @@ import i18next from 'i18next';
 import { languages } from '../../../appConfigs';
 import { useTranslation } from 'react-i18next';
 import useRoutes from '../../../state/hooks/useRoutes';
+import { ThemeContext, themes } from '../../../state/contexts/ThemeContext';
 
 const ALIVENavbar = ({ handleLogout }: NavbarProps) => {
 	const { user } = useContext(UserContext);
 	const { t } = useTranslation();
 	const { routes } = useRoutes();
+	const { theme, setTheme } = useContext(ThemeContext);
 
 	const history = useHistory();
 
 	return (
-		<Navbar id="navbar" bg="light" expand="lg">
+		<Navbar id="navbar" expand="lg">
 			<Navbar.Brand>
 				<Link to={routes.public.home.path}>
 					<img
@@ -104,6 +106,16 @@ const ALIVENavbar = ({ handleLogout }: NavbarProps) => {
 											>
 												{t('msg.section.account')}
 											</NavDropdown.Item>
+											<NavDropdown.Item
+												onClick={() => {
+													setTheme(
+														theme.name === 'dark' ? themes.light : themes.dark,
+													);
+												}}
+											>
+												Theme
+											</NavDropdown.Item>
+											<NavDropdown.Divider />
 											<NavDropdown.Item onClick={handleLogout}>
 												{t('msg.auth.signout')}
 											</NavDropdown.Item>
