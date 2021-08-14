@@ -4,6 +4,9 @@ import { CreateLevelDto } from './dto/create-level.dto';
 import { UpdateLevelDto } from './dto/update-level.dto';
 import { Auth } from 'src/utils/decorators/auth.decorator';
 import { Role } from 'src/utils/types/roles.types';
+import { User } from 'src/utils/decorators/user.decorator';
+import { UserEntity } from '../user/entities/user.entity';
+import { hasRole } from '../user/auth';
 
 @Controller('level')
 export class LevelController {
@@ -30,14 +33,26 @@ export class LevelController {
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateLevelDto: UpdateLevelDto) {
+  @Auth()
+  async update(@User() user: UserEntity, @Param('id') id: string, @Body() updateLevelDto: UpdateLevelDto) {
     if (!id) throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
+    const level = await this.levelService.findOne(id);
+
+    if (level.creator.id !== user.id && !hasRole(user, Role.STAFF))
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+
     return await this.levelService.update(id, updateLevelDto);
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string) {
+  @Auth()
+  async remove(@User() user: UserEntity, @Param('id') id: string) {
     if (!id) throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
+    const level = await this.levelService.findOne(id);
+
+    if (level.creator.id !== user.id && !hasRole(user, Role.STAFF))
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+
     return await this.levelService.remove(id);
   }
 }
