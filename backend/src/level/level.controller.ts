@@ -1,4 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  HttpException,
+  HttpStatus,
+  UseInterceptors,
+} from '@nestjs/common';
 import { LevelService } from './level.service';
 import { CreateLevelDto } from './dto/create-level.dto';
 import { UpdateLevelDto } from './dto/update-level.dto';
@@ -7,8 +18,10 @@ import { Role } from 'src/utils/types/roles.types';
 import { User } from 'src/utils/decorators/user.decorator';
 import { UserEntity } from '../user/entities/user.entity';
 import { hasRole } from '../user/auth';
+import { DTOInterceptor } from '../utils/interceptors/dto.interceptor';
 
 @Controller('level')
+@UseInterceptors(new DTOInterceptor())
 export class LevelController {
   constructor(private readonly levelService: LevelService) {}
 
