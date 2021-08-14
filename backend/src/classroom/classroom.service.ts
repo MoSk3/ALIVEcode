@@ -1,8 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ClassroomEntity } from './entities/classroom.entity';
 import { Repository } from 'typeorm';
 import { ProfessorEntity } from '../user/entities/professor.entity';
+import { UserEntity } from '../user/entities/user.entity';
+import { StudentEntity } from '../user/entities/student.entity';
 
 @Injectable()
 export class ClassroomService {
@@ -11,16 +13,10 @@ export class ClassroomService {
     @InjectRepository(ClassroomEntity) private classroomRepository: Repository<ClassroomEntity>,
   ) {}
 
-  async testCreate(name: string, prof: ProfessorEntity) {
-    return this.classroomRepository.create({ name });
-  }
-
   async create(createClassroomDto: ClassroomEntity, professor: ProfessorEntity) {
     const classroom = this.classroomRepository.create(createClassroomDto);
     classroom.creator = professor;
     await this.classroomRepository.save(classroom);
-    professor.classrooms = [classroom];
-    await this.professorRepository.save(professor);
 
     return classroom;
   }
@@ -39,5 +35,18 @@ export class ClassroomService {
 
   async remove(id: string) {
     return this.classroomRepository.remove(await this.findOne(id));
+  }
+
+  async findClassroomOfUser(user: UserEntity, id: string) {
+    let classroom: ClassroomEntity;
+
+    if (user instanceof ProfessorEntity)
+      classroom = await this.classroomRepository.findOne(id, { where: { creator: user } });
+    // TODO: add find classroom of student
+    else if (user instanceof StudentEntity) {
+    }
+
+    if (!classroom) throw new HttpException('Classe not found', HttpStatus.NOT_FOUND);
+    return classroom;
   }
 }

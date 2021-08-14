@@ -116,8 +116,8 @@ const App = () => {
 				if (
 					error.response &&
 					error.response.data.message === 'Forbidden resource' &&
-					error.response.status === 403 &&
-					error.response.statusText === 'Forbidden'
+					error.response.status === 401 &&
+					error.response.statusText === 'Unauthorized'
 				) {
 					try {
 						const { accessToken } = (await axios.post('/users/refreshToken'))

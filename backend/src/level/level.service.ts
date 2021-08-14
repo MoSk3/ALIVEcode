@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { CreateLevelDto } from './dto/create-level.dto';
 import { UpdateLevelDto } from './dto/update-level.dto';
-import { Level } from './entities/level.entity';
+import { LevelEntity } from './entities/level.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class LevelService {
-  constructor(@InjectRepository(Level) private levelRepository: Repository<Level>) {}
+  constructor(@InjectRepository(LevelEntity) private levelRepository: Repository<LevelEntity>) {}
 
   async create(createLevelDto: CreateLevelDto) {
     return await this.levelRepository.save(this.levelRepository.create(createLevelDto));

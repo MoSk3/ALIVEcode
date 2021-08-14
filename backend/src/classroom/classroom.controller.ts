@@ -1,4 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, Injectable } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseInterceptors,
+  Injectable,
+  HttpStatus,
+  HttpException,
+} from '@nestjs/common';
 import { ClassroomService } from './classroom.service';
 import { ClassroomEntity } from './entities/classroom.entity';
 import { DTOInterceptor } from '../utils/interceptors/dto.interceptor';
@@ -11,6 +23,7 @@ import { hasRole } from '../user/auth';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserService } from '../user/user.service';
+import { StudentEntity } from '../user/entities/student.entity';
 
 @Controller('classrooms')
 @UseInterceptors(new DTOInterceptor())
@@ -21,26 +34,6 @@ export class ClassroomController {
     private readonly userService: UserService,
     @InjectRepository(ProfessorEntity) private professorRepository: Repository<ProfessorEntity>,
   ) {}
-
-  @Get('test')
-  async tests() {
-    const professor = this.professorRepository.create({
-      email: '7@gmail.com',
-      firstName: 'Bob',
-      lastName: 'lajoie',
-      password: '123456',
-    });
-
-    const classroom = await this.classroomService.testCreate('CLASSE EPIC', professor);
-    if (professor.classrooms) professor.classrooms.push(classroom);
-    else professor.classrooms = [classroom];
-
-    await this.professorRepository.save(professor);
-    return {
-      classroom,
-      professor,
-    };
-  }
 
   @Post()
   @Auth(Role.PROFESSOR)
@@ -57,19 +50,14 @@ export class ClassroomController {
   @Get(':id')
   @Auth()
   async findOne(@User() user: UserEntity, @Param('id') id: string) {
-    if (hasRole(user, Role.STAFF)) return this.classroomService.findOne(id);
+    if (!id) throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
 
-    const prof = await this.professorRepository.findOne(user, { relations: ['classrooms'] });
-    console.log(prof);
-    console.log(prof.classrooms);
-    /*if (!(user instanceof ProfessorEntity) && !(user instanceof StudentEntity))
-      throw new HttpException('', HttpStatus.UNAUTHORIZED);
-    console.log(user);
-    const classroom = user.classrooms.find(classroom => classroom.id === id);
-    if (!classroom) throw new HttpException('', HttpStatus.NOT_FOUND);
+    if (hasRole(user, Role.STAFF)) return await this.classroomService.findOne(id);
 
-    return this.classroomService.findOne(id);*/
-    return {};
+    if (!(user instanceof ProfessorEntity) && !(user instanceof StudentEntity))
+      throw new HttpException('', HttpStatus.FORBIDDEN);
+
+    return await this.classroomService.findClassroomOfUser(user, id);
   }
 
   @Patch(':id')

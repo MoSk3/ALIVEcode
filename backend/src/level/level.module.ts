@@ -2,10 +2,10 @@ import { Module } from '@nestjs/common';
 import { LevelService } from './level.service';
 import { LevelController } from './level.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Level } from './entities/level.entity';
+import { LevelEntity } from './entities/level.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Level])],
+  imports: [TypeOrmModule.forFeature([LevelEntity])],
   controllers: [LevelController],
   providers: [LevelService],
 })

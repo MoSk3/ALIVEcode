@@ -11,6 +11,7 @@ import { verify } from 'jsonwebtoken';
 import { AuthPayload } from '../utils/types/auth.payload';
 import { MyRequest } from 'src/utils/guards/auth.guard';
 import { REQUEST } from '@nestjs/core';
+import { ClassroomEntity } from '../classroom/entities/classroom.entity';
 
 @Injectable({ scope: Scope.REQUEST })
 export class UserService {
@@ -19,6 +20,7 @@ export class UserService {
     @InjectRepository(ProfessorEntity)
     private professorRepository: Repository<ProfessorEntity>,
     @InjectRepository(StudentEntity) private studentRepository: Repository<StudentEntity>,
+    @InjectRepository(ClassroomEntity) private classroomRepository: Repository<ClassroomEntity>,
     @Inject(REQUEST) private req: MyRequest,
   ) {}
 
@@ -77,7 +79,7 @@ export class UserService {
     const req = this.req;
 
     const refreshToken = req.cookies.wif;
-    if (!refreshToken) throw new HttpException('No credentials were provided', HttpStatus.BAD_REQUEST);
+    if (!refreshToken) throw new HttpException('No credentials were provided', HttpStatus.UNAUTHORIZED);
 
     const payload = verify(refreshToken, process.env.REFRESH_TOKEN_SECRET_KEY) as AuthPayload;
     if (!payload) throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
@@ -120,9 +122,10 @@ export class UserService {
     return this.userRepository.remove(user);
   }
 
-  getClassrooms(user: UserEntity) {
-    if (user instanceof ProfessorEntity) return user.classrooms || [];
-    if (user instanceof StudentEntity) return user.classrooms || [];
+  async getClassrooms(user: UserEntity) {
+    if (user instanceof ProfessorEntity) return await this.classroomRepository.find({ where: { creator: user } });
+    if (user instanceof StudentEntity)
+      return (await this.studentRepository.findOne(user.id, { relations: ['classrooms'] })).classrooms;
     return [];
   }
 }

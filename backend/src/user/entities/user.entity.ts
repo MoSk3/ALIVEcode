@@ -1,6 +1,7 @@
 import { Exclude } from 'class-transformer';
 import { IsEmail, IsNotEmpty, IsOptional, MinLength } from 'class-validator';
-import { Column, Entity, PrimaryGeneratedColumn, TableInheritance } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn, TableInheritance } from 'typeorm';
+import { LevelEntity } from '../../level/entities/level.entity';
 
 @Entity()
 @TableInheritance({ column: { type: 'varchar', name: 'type' } })
@@ -34,4 +35,7 @@ export class UserEntity {
   @IsOptional()
   @Exclude({ toClassOnly: true })
   is_super_user: boolean;
+
+  @OneToMany(() => LevelEntity, level => level.creator)
+  levels: LevelEntity[];
 } 

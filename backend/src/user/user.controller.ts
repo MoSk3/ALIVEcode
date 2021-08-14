@@ -117,7 +117,6 @@ export class UserController {
   async getClassrooms(@User() user: UserEntity, @Param('id') id: string) {
     if (!hasRole(user, Role.MOD) && user.id !== id) throw new HttpException('You cannot do that', HttpStatus.FORBIDDEN);
 
-    console.log(this.userService.getClassrooms(user));
     if (user.id === id) return this.userService.getClassrooms(user);
     return this.userService.getClassrooms(await this.userService.findById(id));
   }
