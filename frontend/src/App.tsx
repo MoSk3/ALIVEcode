@@ -3,7 +3,7 @@ import { RouterSwitch } from './Router/RouterSwitch/RouterSwitch';
 import { BrowserRouter as Router, useHistory } from 'react-router-dom';
 import ALIVENavbar from './Components/MainComponents/Navbar/Navbar';
 import { UserContext } from './state/contexts/UserContext';
-import { useCallback, useEffect, useMemo, useState, useContext } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
 import BackArrow from './Components/UtilsComponents/BackArrow/BackArrow';
 import 'bootstrap';
@@ -13,6 +13,7 @@ import useRoutes from './state/hooks/useRoutes';
 import { SERVER_URL } from './appConfigs';
 import { ThemeContext, Theme, themes } from './state/contexts/ThemeContext';
 import styled, { createGlobalStyle } from 'styled-components';
+import { loadThemeFromCookies, setCookie } from './Types/cookies';
 
 type GlobalStyleProps = {
 	theme: Theme;
@@ -54,12 +55,17 @@ const StyledApp = styled.section`
 const App = () => {
 	const [user, setUser] = useState<Student | Professor | null>(null);
 	const [loading, setLoading] = useState(true);
-	const [theme, setTheme] = useState(themes.dark);
+	const [theme, setTheme] = useState(themes.light);
 
 	const { routes } = useRoutes();
 
 	const history = useHistory();
 	const providerValue = useMemo(() => ({ user, setUser }), [user, setUser]);
+
+	const handleSetTheme = (theme: Theme) => {
+		setCookie('theme', theme.name, 365);
+		setTheme(theme);
+	};
 
 	const logout = useCallback(async () => {
 		await axios.get('logout');
@@ -68,6 +74,7 @@ const App = () => {
 	}, []);
 
 	useEffect(() => {
+		// Persist login
 		const getUser = async () => {
 			try {
 				const { accessToken } = (await axios.post('/users/refreshToken')).data;
@@ -76,15 +83,23 @@ const App = () => {
 
 				const loadedUser = await User.loadUser();
 				setLoading(false);
-				if (!loadedUser) return history.push(routes.non_auth.signin.path);
-
+				if (!loadedUser) {
+					const loadedTheme = loadThemeFromCookies();
+					if (loadedTheme && loadedTheme !== theme) setTheme(loadedTheme);
+					return history.push(routes.non_auth.signin.path);
+				}
+				const loadedTheme = loadThemeFromCookies();
+				if (loadedTheme && loadedTheme !== theme) setTheme(loadedTheme);
 				setUser(loadedUser);
 			} catch {
+				const loadedTheme = loadThemeFromCookies();
+				if (loadedTheme && loadedTheme !== theme) setTheme(loadedTheme);
 				return setLoading(false);
 			}
 		};
 		getUser();
 
+		// Automatically refresh access token
 		axios.interceptors.response.use(
 			response => response,
 			async error => {
@@ -127,7 +142,7 @@ const App = () => {
 			<ThemeContext.Provider
 				value={{
 					theme,
-					setTheme,
+					setTheme: handleSetTheme,
 				}}
 			>
 				<GlobalStyle theme={theme} />

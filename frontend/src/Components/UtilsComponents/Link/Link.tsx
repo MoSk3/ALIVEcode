@@ -31,7 +31,6 @@ const Link = ({
 export default styled(Link)`
 	color: ${(props: StyledLinkProps) => {
 		if (props.dark) return 'var(--contrast-color)';
-		console.log(props.pale);
 		if (props.pale) return 'var(--pale-color)';
 		else return 'var(--primary-color)';
 	}};

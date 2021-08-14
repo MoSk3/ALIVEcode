@@ -136,6 +136,15 @@ const ALIVENavbar = ({ handleLogout }: NavbarProps) => {
 											>
 												{t('msg.auth.signup')}
 											</NavDropdown.Item>
+											<NavDropdown.Item
+												onClick={() => {
+													setTheme(
+														theme.name === 'dark' ? themes.light : themes.dark,
+													);
+												}}
+											>
+												Theme
+											</NavDropdown.Item>
 										</>
 									)}
 								</NavDropdown>
