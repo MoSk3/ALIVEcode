@@ -36,6 +36,6 @@ export class UserEntity {
   @Exclude({ toClassOnly: true })
   is_super_user: boolean;
 
-  @OneToMany(() => LevelEntity, level => level.creator)
+  @OneToMany(() => LevelEntity, level => level.creator, { cascade: true })
   levels: LevelEntity[];
 } 
