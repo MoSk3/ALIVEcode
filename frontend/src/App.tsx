@@ -14,6 +14,8 @@ import { SERVER_URL } from './appConfigs';
 import { ThemeContext, Theme, themes } from './state/contexts/ThemeContext';
 import styled, { createGlobalStyle } from 'styled-components';
 import { loadThemeFromCookies, setCookie } from './Types/cookies';
+import { useAlert } from 'react-alert';
+import { useTranslation } from 'react-i18next';
 
 type GlobalStyleProps = {
 	theme: Theme;
@@ -58,6 +60,8 @@ const App = () => {
 	const [theme, setTheme] = useState(themes.light);
 
 	const { routes } = useRoutes();
+	const { t } = useTranslation();
+	const alert = useAlert();
 
 	const history = useHistory();
 	const providerValue = useMemo(() => ({ user, setUser }), [user, setUser]);
@@ -68,10 +72,15 @@ const App = () => {
 	};
 
 	const logout = useCallback(async () => {
-		await axios.get('logout');
-		setAccessToken('');
-		setUser(null);
-	}, []);
+		try {
+			new Error('lol');
+			await axios.get('users/logout');
+			setAccessToken('');
+			setUser(null);
+		} catch {
+			alert.error(t('error.logout'));
+		}
+	}, [alert, t]);
 
 	useEffect(() => {
 		// Persist login
@@ -109,7 +118,7 @@ const App = () => {
 					error.response.status === 401 &&
 					originalRequest.url === SERVER_URL + 'users/refreshToken'
 				) {
-					if (user) logout();
+					if (user) await logout();
 					return Promise.reject(error);
 				}
 				console.log(error.response);
@@ -153,7 +162,7 @@ const App = () => {
 				) : (
 					<Router>
 						<UserContext.Provider value={providerValue}>
-							<ALIVENavbar handleLogout={logout} />
+							<ALIVENavbar handleLogout={async () => await logout()} />
 							<StyledApp theme={theme} className="m-auto my-4">
 								<RouterSwitch />
 							</StyledApp>

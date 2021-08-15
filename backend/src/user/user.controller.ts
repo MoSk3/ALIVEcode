@@ -52,8 +52,9 @@ export class UserController {
 
   @Get('logout')
   @Auth()
-  logout(@Res() res: Response) {
-    return this.userService.logout(res);
+  async logout(@Res() res: Response) {
+    this.userService.logout(res);
+    res.status(200).end();
   }
 
   @Post('refreshToken')

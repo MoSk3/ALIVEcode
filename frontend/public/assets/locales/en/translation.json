@@ -1,4 +1,7 @@
 {
+	"error": {
+		"logout": "Something went wrong when logging out, please try again."
+	},
 	"form": {
 		"title": {
 			"signin": "Sign in"
