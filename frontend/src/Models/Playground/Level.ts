@@ -31,7 +31,7 @@ const mySimLevel: Level = {
 	name: '',
 	description: '',
 	hint: [],
-	access: COURSE_ACCESS.PU,
+	access: COURSE_ACCESS.PUBLIC,
 	//new SimulationLevel({}, []),
 };
 

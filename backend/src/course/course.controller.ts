@@ -20,8 +20,9 @@ import { User } from 'src/utils/decorators/user.decorator';
 import { UserEntity } from '../user/entities/user.entity';
 import { hasRole } from '../user/auth';
 import { ProfessorEntity } from '../user/entities/professor.entity';
+import { SectionEntity } from './entities/section.entity';
 
-@Controller('course')
+@Controller('courses')
 @UseInterceptors(new DTOInterceptor())
 export class CourseController {
   constructor(private readonly courseService: CourseService) {}
@@ -53,6 +54,7 @@ export class CourseController {
     return course;
   }
 
+  // TODO : add repetive code as a guard
   @Patch(':id')
   @Auth(Role.PROFESSOR, Role.STAFF)
   async update(@User() user: UserEntity, @Param('id') id: string, @Body() updateCourseDto: CourseEntity) {
@@ -60,7 +62,7 @@ export class CourseController {
     if (course.creator.id !== user.id && !hasRole(user, Role.STAFF))
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
 
-    return this.courseService.update(id, updateCourseDto);
+    return await this.courseService.update(id, updateCourseDto);
   }
 
   @Delete(':id')
@@ -71,5 +73,25 @@ export class CourseController {
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
 
     return await this.courseService.remove(course);
+  }
+
+  @Post(':id/sections')
+  @Auth(Role.PROFESSOR)
+  async createSection(@User() user: ProfessorEntity, @Param('id') id: string, @Body() createSectionDTO: SectionEntity) {
+    const course = await this.courseService.findOne(id);
+    if (course.creator.id !== user.id && !hasRole(user, Role.STAFF))
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+
+    return await this.courseService.createSection(course.id, createSectionDTO);
+  }
+
+  @Get(':id/sections')
+  @Auth()
+  async getSections(@User() user: UserEntity, @Param('id') id: string) {
+    const course = await this.courseService.findOne(id);
+    if (course.creator.id !== user.id && !hasRole(user, Role.STAFF))
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+
+    return await this.courseService.getSections(id);
   }
 }

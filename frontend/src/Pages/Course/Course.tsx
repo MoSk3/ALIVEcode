@@ -39,8 +39,8 @@ const Course = (props: CourseProps) => {
 			description: 'lol cours',
 			creator: user as User,
 			subject: COURSE_SUBJECT.INFORMATIC,
-			difficulty: COURSE_DIFFICULTY.debutant,
-			access: COURSE_ACCESS.PU,
+			difficulty: COURSE_DIFFICULTY.BEGINNER,
+			access: COURSE_ACCESS.PUBLIC,
 			code: '123456',
 			sections: [
 				new Section('LOL', [
