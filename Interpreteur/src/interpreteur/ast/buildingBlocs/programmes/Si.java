@@ -20,8 +20,8 @@ public class Si extends Programme {
     public NullType execute() {
         if (test.eval().boolValue()) {
             Executeur.obtenirCoordRunTime().nouveauBloc("si");
-        } else if (Executeur.leBlocExiste("sinon_si_1")) {
-            Executeur.obtenirCoordRunTime().nouveauBloc("sinon_si_1");
+        } else if (Executeur.leBlocExiste("sinon_si_test")) {
+            Executeur.obtenirCoordRunTime().nouveauBloc("sinon_si_test");
         } else if (Executeur.leBlocExiste("sinon")) {
             Executeur.obtenirCoordRunTime().nouveauBloc("sinon");
         }
