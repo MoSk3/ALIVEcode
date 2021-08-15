@@ -1,7 +1,7 @@
 import { DashboardProps } from './dashboardTypes';
 import CenteredContainer from '../../Components/UtilsComponents/CenteredContainer/CenteredContainer';
 import LabelHighlight from '../../Components/UtilsComponents/LabelHighlight/LabelHighlight';
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { UserContext } from '../../state/contexts/UserContext';
 import CardContainer from '../../Components/UtilsComponents/CardContainer/CardContainer';
 import { useHistory } from 'react-router-dom';
@@ -16,7 +16,6 @@ import Puzzle from '../../assets/images/icons/puzzle.png';
 import Sandbox from '../../assets/images/icons/sandboxblanc.png';
 import Voiture from '../../assets/images/Voiture.gif';
 import { Row } from 'react-bootstrap';
-import axios from 'axios';
 
 const Dashboard = (props: DashboardProps) => {
 	const { user } = useContext(UserContext);
@@ -25,18 +24,6 @@ const Dashboard = (props: DashboardProps) => {
 	const [classrooms, loading] = useFetch(
 		Database.playground.classrooms.ofCurrentUser,
 	);
-
-	useEffect(() => {
-		const getData = async () => {
-			try {
-				console.log((await axios.get('/users/me')).data);
-			} catch {
-				console.log('NOT LOGGED IN');
-			}
-		};
-
-		getData();
-	}, []);
 
 	const createLevel = async () => {
 		// TODO : axios request to return new level with id

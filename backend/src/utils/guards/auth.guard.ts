@@ -1,7 +1,7 @@
 import { Injectable, CanActivate, ExecutionContext, Scope, Inject, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Request } from 'express';
-import { verify } from 'jsonwebtoken';
+import { JsonWebTokenError, verify } from 'jsonwebtoken';
 import { Repository } from 'typeorm';
 import { Reflector, REQUEST } from '@nestjs/core';
 import { AuthPayload } from '../types/auth.payload';
@@ -13,7 +13,7 @@ export interface MyRequest extends Request {
   user: UserEntity;
 }
 
-@Injectable({ scope: Scope.REQUEST })
+/*@Injectable({ scope: Scope.REQUEST })
 export class isAuth implements CanActivate {
   constructor(
     private reflector: Reflector,
@@ -38,7 +38,7 @@ export class isAuth implements CanActivate {
     }
     return true;
   }
-}
+}*/
 
 @Injectable({ scope: Scope.REQUEST })
 export class RolesGuard implements CanActivate {
@@ -58,15 +58,17 @@ export class RolesGuard implements CanActivate {
 
       const accessToken = authorization.split(' ')[1];
       const payload = verify(accessToken, process.env.ACCESS_TOKEN_SECRET_KEY);
-      if (!payload) throw new HttpException('Not authenticated', HttpStatus.UNAUTHORIZED);
+      if (!payload) throw new HttpException('Not Authenticated', HttpStatus.UNAUTHORIZED);
 
       const authPayload = payload as AuthPayload;
       const user = await this.userRepository.findOne(authPayload.id);
-      if (!user) throw new HttpException('Not authenticated', HttpStatus.UNAUTHORIZED);
+      if (!user) throw new HttpException('Not Authenticated', HttpStatus.UNAUTHORIZED);
 
       if (!hasRole(user, ...roles)) throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
       this.req.user = user;
-    } catch {
+    } catch (err) {
+      if (err instanceof JsonWebTokenError && err.name === 'TokenExpiredError')
+        throw new HttpException('Not Authenticated', HttpStatus.UNAUTHORIZED);
       throw new HttpException('Internal server error', HttpStatus.INTERNAL_SERVER_ERROR);
     }
     return true;

@@ -115,7 +115,7 @@ const App = () => {
 				console.log(error.response);
 				if (
 					error.response &&
-					error.response.data.message === 'Forbidden resource' &&
+					error.response.data.message === 'Not Authenticated' &&
 					error.response.status === 401 &&
 					error.response.statusText === 'Unauthorized'
 				) {
