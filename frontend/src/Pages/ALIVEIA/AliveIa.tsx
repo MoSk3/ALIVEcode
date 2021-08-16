@@ -13,7 +13,7 @@ const AliveIa = (props: AliveIaProps) => {
   return (
     <>
       <HeaderAI/>
-      <InfoBox/>
+      <InfoBox title={t("ai.section.artificial-intelligence.title")} description={t("ai.section.artificial-intelligence.description")}/>
     </>
   );
 }
