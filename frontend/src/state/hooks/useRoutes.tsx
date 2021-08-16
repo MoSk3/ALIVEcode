@@ -14,6 +14,8 @@ import { UserContext } from '../contexts/UserContext';
 import AccountPage from '../../Pages/Account/AccountInfo/AccountPage';
 import Classroom from '../../Pages/Classroom/Classroom';
 import Course from '../../Pages/Course/Course';
+import CourseForm from '../../Components/CourseComponents/CourseForm/CourseForm';
+import ClassroomForm from '../../Components/ClassroomComponents/ClassroomForm/ClassroomForm';
 
 type component =
 	| React.ComponentType<RouteComponentProps<any>>
@@ -112,9 +114,19 @@ const useRoutes = () => {
 			path: '/dashboard',
 			component: Dashboard,
 		},
+		classroom_create: {
+			accountType: Professor,
+			path: '/classroom/create',
+			component: ClassroomForm,
+		},
 		classroom: {
 			path: '/classroom/:id',
 			component: Classroom,
+		},
+		create_course: {
+			accountType: Professor,
+			path: '/course/create',
+			component: CourseForm,
 		},
 		course: {
 			path: '/course/:id',

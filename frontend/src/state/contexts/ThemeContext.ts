@@ -50,7 +50,7 @@ export const themes: { light: Theme; dark: Theme } = {
 	},
 	dark: {
 		color: {
-			primary: '#082032',
+			primary: '#02111D',
 			primary_rgb: '1,119,188',
 			secondary: '#2C394B',
 			secondary_rgb: '63,156,243',

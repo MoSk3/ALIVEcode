@@ -1,6 +1,6 @@
 import { Classroom } from './Playground/Classroom';
 import Course from './Playground/Course';
-import { Student } from './User';
+import { Student, User } from './User';
 //import { loadObj } from './utils';
 
 interface Model {
@@ -19,7 +19,7 @@ export const Database = {
 		/** Contains all the request and actions that can be done to the classrooms */
 		classrooms: {
 			/** @returns an array of all the classrooms that the user created */
-			all(): Promise<Classroom[]> {
+			async all(user: User): Promise<Classroom[]> {
 				return Promise.resolve([]);
 				/*return loadObj(`/playground/classrooms`, Classroom) as Promise<
 					Classroom[]
