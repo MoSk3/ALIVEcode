@@ -8,9 +8,22 @@ import { DefaultAdminModule } from 'nestjs-admin';
 import { ClassroomModule } from './classroom/classroom.module';
 import { LevelModule } from './level/level.module';
 import { CourseModule } from './course/course.module';
+import { IoTObjectModule } from './iot/IoTobject/IoTobject.module';
+import { IoTProjectModule } from './iot/IoTproject/IoTproject.module';
+import { IoTRouteModule } from './iot/IoTroute/IoTroute.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(config), UserModule, DefaultAdminModule, ClassroomModule, LevelModule, CourseModule],
+  imports: [
+    TypeOrmModule.forRoot(config),
+    UserModule,
+    DefaultAdminModule,
+    ClassroomModule,
+    LevelModule,
+    CourseModule,
+    IoTObjectModule,
+    IoTProjectModule,
+    IoTRouteModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

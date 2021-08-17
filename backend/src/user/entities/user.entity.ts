@@ -2,6 +2,9 @@ import { Exclude } from 'class-transformer';
 import { IsEmail, IsNotEmpty, IsOptional, MinLength } from 'class-validator';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn, TableInheritance } from 'typeorm';
 import { LevelEntity } from '../../level/entities/level.entity';
+import { IoTObjectEntity } from '../../iot/IoTobject/entities/IoTobject.entity';
+import { IoTProjectEntity } from '../../iot/IoTproject/entities/IoTproject.entity';
+import { IotRouteEntity } from '../../iot/IoTroute/entities/IoTroute.entity';
 
 @Entity()
 @TableInheritance({ column: { type: 'varchar', name: 'type' } })
@@ -38,4 +41,13 @@ export class UserEntity {
 
   @OneToMany(() => LevelEntity, level => level.creator, { cascade: true })
   levels: LevelEntity[];
+
+  @OneToMany(() => IoTObjectEntity, iot => iot.creator, { cascade: true })
+  IoTObjects: IoTObjectEntity[];
+
+  @OneToMany(() => IoTObjectEntity, iot => iot.creator, { cascade: true })
+  IoTProjects: IoTObjectEntity[];
+
+  @OneToMany(() => IoTProjectEntity, iot => iot.creator, { cascade: true })
+  collabIoTProjects: IoTObjectEntity[];
 } 

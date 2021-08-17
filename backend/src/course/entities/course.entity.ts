@@ -31,7 +31,6 @@ export enum COURSE_SUBJECT {
 @Entity()
 export class CourseEntity extends CreatedByUser {
   @Exclude({ toClassOnly: true })
-  @IsNotEmpty()
   @ManyToOne(() => ProfessorEntity, professor => professor.courses, { eager: true })
   creator: ProfessorEntity;
 
