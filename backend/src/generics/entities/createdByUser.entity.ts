@@ -5,7 +5,7 @@ import { IsOptional, IsNotEmpty, Length, IsEmpty } from 'class-validator';
 
 @Entity()
 export abstract class CreatedByUser {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   @Exclude({ toClassOnly: true })
   @IsEmpty()
   id: string;

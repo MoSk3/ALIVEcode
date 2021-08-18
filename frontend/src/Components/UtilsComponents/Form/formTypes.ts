@@ -5,11 +5,34 @@ export type FormProps = {
 	url: string;
 	action: 'POST' | 'UPDATE' | 'DELETE';
 	onSubmit?: (response: AxiosResponse<any>) => void;
-	inputGroups: Array<{
-		required: boolean;
-		minLength?: number;
-		maxLength?: number;
-		name: string;
-		inputType: 'text' | 'number' | 'textarea' | 'checkbox';
-	}>;
+	inputGroups: Array<InputGroup>;
+};
+
+export type InputGroup = {
+	required: boolean;
+	minLength?: number;
+	maxLength?: number;
+	name: string;
+	selectOptions?: Array<any> | { [key: string]: any };
+	inputType:
+		| 'checkbox'
+		| 'color'
+		| 'date'
+		| 'select'
+		| 'textarea'
+		| 'datetime-local'
+		| 'email'
+		| 'file'
+		| 'hidden'
+		| 'image'
+		| 'month'
+		| 'number'
+		| 'password'
+		| 'radio'
+		| 'range'
+		| 'tel'
+		| 'text'
+		| 'time'
+		| 'url'
+		| 'week';
 };

@@ -12,6 +12,7 @@ import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import HttpAPI from 'i18next-http-backend';
 import LanguageDetector from 'i18next-browser-languagedetector';
+import LoadingScreen from './Components/UtilsComponents/LoadingScreen/LoadingScreen';
 
 axios.defaults.baseURL = SERVER_URL;
 axios.defaults.withCredentials = true;
@@ -58,14 +59,8 @@ i18next
 		defaultNS: 'translation',
 	});
 
-export const Fallback = (
-	<div>
-		<h2>Loading...</h2>
-	</div>
-);
-
 ReactDOM.render(
-	<Suspense fallback={Fallback}>
+	<Suspense fallback={<LoadingScreen />}>
 		<React.StrictMode>
 			<AlertProvider template={AlertTemplate} {...alertOptions}>
 				<App />

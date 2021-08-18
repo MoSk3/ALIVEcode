@@ -4,6 +4,7 @@ import { CourseEntity } from './entities/course.entity';
 import { Repository } from 'typeorm';
 import { ProfessorEntity } from '../user/entities/professor.entity';
 import { SectionEntity } from './entities/section.entity';
+import { generate } from 'randomstring';
 
 @Injectable()
 export class CourseService {
@@ -14,6 +15,10 @@ export class CourseService {
 
   async create(professor: ProfessorEntity, createCourseDto: CourseEntity) {
     const course = this.courseRepository.create(createCourseDto);
+    course.code = generate({
+      length: 6,
+      charset: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890',
+    });
     course.creator = professor;
     return await this.courseRepository.save(course);
   }

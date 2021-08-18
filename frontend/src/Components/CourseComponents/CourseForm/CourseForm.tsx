@@ -1,76 +1,67 @@
-import { useForm } from 'react-hook-form';
-import axios, { AxiosError } from 'axios';
-import { useAlert } from 'react-alert';
 import FormContainer from '../../../Components/UtilsComponents/FormContainer/FormContainer';
-import { Form } from 'react-bootstrap';
-import Button from '../../../Components/UtilsComponents/Button/Button';
-import Link from '../../../Components/UtilsComponents/Link/Link';
 import { useTranslation } from 'react-i18next';
-import { CourseFormProps, CourseFormValues } from './courseFormTypes';
+import { CourseFormProps } from './courseFormTypes';
+import Form from '../../UtilsComponents/Form/Form';
+import { useHistory } from 'react-router';
+import useRoutes from '../../../state/hooks/useRoutes';
+import { useAlert } from 'react-alert';
+import {
+	COURSE_DIFFICULTY,
+	COURSE_SUBJECT,
+	COURSE_ACCESS,
+	Course,
+} from '../../../Models/Course/course.entity';
 
 /** Reusable form component to handle header creation */
 const CourseForm = (props: CourseFormProps) => {
-	const {
-		register,
-		handleSubmit,
-		formState: { errors },
-	} = useForm();
 	const { t } = useTranslation();
+	const history = useHistory();
+	const { routes } = useRoutes();
 	const alert = useAlert();
-
-	const onCreateCourse = async (formValues: CourseFormValues) => {
-		try {
-			console.log((await axios.post('users/login/', formValues)).data);
-		} catch (err) {
-			return alert.error(
-				'Erreur : ' +
-					((err as AxiosError).response?.data.message ?? 'veuillez réessayer'),
-			);
-		}
-	};
 
 	return (
 		<FormContainer title={t('form.title.create_course')}>
-			<Form onSubmit={handleSubmit(onCreateCourse)}>
-				<Form.Group>
-					<Form.Label>{t('form.course.name.label')}</Form.Label>
-					<Form.Control
-						placeholder={t('form.course.name.placeholder')}
-						{...register('name', { required: true })}
-					/>
-					{errors.email?.type === 'required' && t('form.name.error.required')}
-				</Form.Group>
-				<Form.Group>
-					<Form.Label>{t('form.course.description.label')}</Form.Label>
-					<Form.Control
-						placeholder={t('form.course.description.placeholder')}
-						{...register('name', { required: true })}
-					/>
-					{errors.email?.type === 'required' &&
-						t('form.description.error.required')}
-				</Form.Group>
-				<Form.Group>
-					<Form.Label>{t('form.course.description.label')}</Form.Label>
-					<Form.Control
-						placeholder={t('form.course.description.placeholder')}
-						{...register('name', { required: true })}
-					/>
-					{errors.email?.type === 'required' &&
-						t('form.description.error.required')}
-				</Form.Group>
-
-				<Button variant="primary" type="submit">
-					{t('msg.auth.signin')}
-				</Button>
-
-				<br />
-				<br />
-
-				{t('home.navbar.msg.non_auth.label')}
-				<Link pale to="/signup">
-					{t('home.navbar.msg.non_auth.link')}
-				</Link>
-			</Form>
+			<Form
+				onSubmit={res => {
+					const course: Course = res.data;
+					console.log(course);
+					history.push(routes.auth.course.path.replace(':id', course.id));
+					return alert.success('Cours créé avec succès');
+				}}
+				name="create_course"
+				url="courses"
+				action="POST"
+				inputGroups={[
+					{
+						name: 'name',
+						required: true,
+						inputType: 'text',
+					},
+					{
+						name: 'description',
+						required: false,
+						inputType: 'text',
+					},
+					{
+						name: 'subject',
+						required: true,
+						inputType: 'select',
+						selectOptions: COURSE_SUBJECT,
+					},
+					{
+						name: 'access',
+						required: true,
+						inputType: 'select',
+						selectOptions: COURSE_ACCESS,
+					},
+					{
+						name: 'difficulty',
+						required: true,
+						inputType: 'select',
+						selectOptions: COURSE_DIFFICULTY,
+					},
+				]}
+			/>
 		</FormContainer>
 	);
 };

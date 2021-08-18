@@ -124,7 +124,6 @@ const useRoutes = () => {
 			component: Classroom,
 		},
 		create_course: {
-			accountType: Professor,
 			path: '/course/create',
 			component: CourseForm,
 		},

@@ -17,6 +17,7 @@ import { useAlert } from 'react-alert';
 import { useTranslation } from 'react-i18next';
 import { setAccessToken } from './Types/accessToken';
 import { User, Student, Professor } from './Models/User/user.entity';
+import LoadingScreen from './Components/UtilsComponents/LoadingScreen/LoadingScreen';
 
 type GlobalStyleProps = {
 	theme: Theme;
@@ -122,7 +123,8 @@ const App = () => {
 					if (user) await logout();
 					return Promise.reject(error);
 				}
-				console.log(error.response);
+				// TODO : remove in production
+				if (error.response) console.log(error.response);
 				if (
 					error.response &&
 					error.response.data.message === 'Not Authenticated' &&
@@ -157,9 +159,7 @@ const App = () => {
 			>
 				<GlobalStyle theme={theme} />
 				{loading ? (
-					<div>
-						<h2>Loading...</h2>
-					</div>
+					<LoadingScreen />
 				) : (
 					<Router>
 						<UserContext.Provider value={providerValue}>

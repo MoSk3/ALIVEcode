@@ -1,10 +1,7 @@
 import axios from 'axios';
 import { loadObj} from './utils';
-import { Classroom } from './Classroom/classroom.entity';
-import { Section } from './Course/section.entity';
-import { Course } from './Course/course.entity';
-import { Professor, Student } from './User/user.entity';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const apiGetter = <T extends {}>(url: string, target: T) => {
 	return async (id: string) =>
 		await loadObj(
@@ -14,6 +11,7 @@ const apiGetter = <T extends {}>(url: string, target: T) => {
 };
 
 // TODO : add build object
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const apiCreate = <U extends {}>(moduleName: string, target: U) => {
 	return async <T extends U>(fields: T) => {
 		const data = (await axios.post(moduleName, fields)).data;
@@ -41,6 +39,9 @@ const api = {
 			create() {},
 		},
 		courses: {
+			async get(courseId: string) {
+				return (await axios.get(`courses/${courseId}`)).data;
+			},
 			async getSections(courseId: string) {
 				return (await axios.get(`courses/${courseId}/sections`)).data;
 			},
