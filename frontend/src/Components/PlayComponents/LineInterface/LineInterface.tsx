@@ -2,13 +2,12 @@ import { LineInterfaceProps } from './lineInterfaceTypes';
 
 import AceEditor from "react-ace";
 
-import 'ace-builds/src-noconflict/mode-javascript';
+import './mode-alivescript';
 import 'ace-builds/src-noconflict/theme-monokai';
 import styled from 'styled-components';
 
 const StyledDiv = styled.div`
 	flex: 1 1 auto;
-	fontsize: large;
 `;
 
 const LineInterface = ({ handleChange }: LineInterfaceProps) => {
@@ -27,7 +26,8 @@ const LineInterface = ({ handleChange }: LineInterfaceProps) => {
 				mode="alivescript"
 				theme="monokai"
 				onChange={handleChange}
-				name="UNIQUE_ID_OF_DIV"
+				fontSize="large"
+				name="1nt3rf4c3" //"UNIQUE_ID_OF_DIV"
 				editorProps={{ $blockScrolling: true }}
 			/>
 		</StyledDiv>

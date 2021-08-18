@@ -1,4 +1,8 @@
-import ace from "react-ace/lib/ace";
+import ace from 'ace-builds/src-noconflict/ace'
+import autocomplete from './autocomplete';
+import $ from 'jquery';
+
+let editor: any;
 
 ace.define(
 	'ace/mode/alivescript',
@@ -7,13 +11,13 @@ ace.define(
 		'exports',
 		'ace/lib/oop',
 		'ace/mode/text',
-		'ace/mode/as_highlight_rules',
+		'ace/mode/simplifie_highlight_rules',
 	],
 	(acequire: any, exports: any) => {
 		const oop = acequire('ace/lib/oop');
 		const TextMode = acequire('ace/mode/text').Mode;
 		const CustomHighlightRules = acequire(
-			'ace/mode/as_highlight_rules',
+			'ace/mode/simplifie_highlight_rules',
 		).CustomHighlightRules;
 
 		var Mode = function (this: any) {
@@ -244,12 +248,13 @@ ace.define(
 				],
 			};
 		};
-		//$(document).ready(() => {
-		//	ace.addKeyboardHandler(autocomplete, 0);
-		//});
+		$(() => {
+			editor = ace.edit('1nt3rf4c3');
+			editor.keyBinding.addKeyboardHandler(autocomplete, 0);
+		});
 		oop.inherits(CustomHighlightRules, TextHighlightRules);
 		exports.CustomHighlightRules = CustomHighlightRules;
 	},
 );
 
-export {};
+export { editor };

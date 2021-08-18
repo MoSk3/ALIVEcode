@@ -1,4 +1,7 @@
 //#region Types
+
+import { editor } from "./mode-alivescript";
+
 /**
  * represent all the valid command names
  */
@@ -154,7 +157,6 @@ type Position = { row: number; column: number };
 
 //#endregion types
 
-let editor: any;
 const patterns: {
 	symbolPairs: SymbolPair[];
 	blocks: SymbolPair[];
