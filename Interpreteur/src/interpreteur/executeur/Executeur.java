@@ -620,7 +620,19 @@ public class Executeur {
                 sinon
                     afficher "jamais!"
                 fin si
+                   
+                   
+                const b = 100
                 
+                si b > 10
+                    afficher ">10"
+                sinon si b > 5
+                    afficher ">5"
+                sinon si b > 1
+                    afficher ">1"
+                sinon
+                    afficher "<1"
+                fin si
                 afficher "fin"
                                 
                 """.split("\n");
@@ -629,7 +641,7 @@ public class Executeur {
         debug = true;
         Object a;
         if (!(a = compiler(lines, true)).equals("[]")) System.out.println(a);
-        //printCompileDict();
+        printCompileDict();
         System.out.println(executerMain(false));
         //System.out.println(compiler(lines, false));
         //executerMain(false);

@@ -1,23 +1,22 @@
+import ace from "react-ace/lib/ace";
 
-
-/*
 ace.define(
-	'ace/mode/simplifie',
+	'ace/mode/alivescript',
 	[
 		'require',
 		'exports',
 		'ace/lib/oop',
 		'ace/mode/text',
-		'ace/mode/custom_highlight_rules',
+		'ace/mode/as_highlight_rules',
 	],
-	(acequire, exports) => {
+	(acequire: any, exports: any) => {
 		const oop = acequire('ace/lib/oop');
 		const TextMode = acequire('ace/mode/text').Mode;
 		const CustomHighlightRules = acequire(
-			'ace/mode/simplifie_highlight_rules',
+			'ace/mode/as_highlight_rules',
 		).CustomHighlightRules;
 
-		var Mode = function () {
+		var Mode = function (this: any) {
 			this.HighlightRules = CustomHighlightRules;
 		};
 
@@ -26,19 +25,18 @@ ace.define(
 		exports.Mode = Mode; // eslint-disable-line no-param-reassign
 	},
 );
-*/
-/*
+
 // This is where we really create the highlighting rules
 ace.define(
 	'ace/mode/simplifie_highlight_rules',
 	['require', 'exports', 'ace/lib/oop', 'ace/mode/text_highlight_rules'],
-	(acequire, exports) => {
+	(acequire: any, exports: any) => {
 		const oop = acequire('ace/lib/oop');
 		const TextHighlightRules = acequire(
 			'ace/mode/text_highlight_rules',
 		).TextHighlightRules;
 
-		const CustomHighlightRules = function CustomHighlightRules() {
+		const CustomHighlightRules = function CustomHighlightRules(this: any) {
 			//this.$rules = new TextHighlightRules().getRules(); // Use Text's rules as a base
 			var identifierRe =
 				'[a-zA-Z\\$_\u00a1-\uffff][a-zA-Z\\d\\$_\u00a1-\uffff]*';
@@ -180,7 +178,7 @@ ace.define(
 						regex: reserved_words['fonctions_built_in'].join('|'),
 					},
 					{
-						token: function (name, parenthesis) {
+						token: function (name: string, parenthesis: string) {
 							if (reserved_words['fonctions_built_in'].includes(name))
 								return ['support.function.italic', 'empty'];
 							else return ['support.function', 'empty'];
@@ -246,13 +244,12 @@ ace.define(
 				],
 			};
 		};
-		$(document).ready(() => {
-			ace.addKeyboardHandler(autocomplete, 0);
-		});
+		//$(document).ready(() => {
+		//	ace.addKeyboardHandler(autocomplete, 0);
+		//});
 		oop.inherits(CustomHighlightRules, TextHighlightRules);
 		exports.CustomHighlightRules = CustomHighlightRules;
 	},
 );
-*/
 
 export {};

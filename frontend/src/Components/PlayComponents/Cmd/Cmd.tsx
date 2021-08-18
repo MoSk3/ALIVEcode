@@ -13,7 +13,7 @@ const StyledDiv = styled.div`
 
 	pre {
 		font-family: Arial, Helvetica, sans-serif;
-		font-size: large;
+		font-size: small;
 		color: #dbdbdb;
 		line-height: 2rem;
 	}

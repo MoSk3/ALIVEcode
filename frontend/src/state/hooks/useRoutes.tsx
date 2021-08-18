@@ -12,6 +12,7 @@ import About from '../../Pages/About/About';
 import { useContext } from 'react';
 import { UserContext } from '../../UserContext';
 import Classroom from '../../Pages/Classroom/Classroom';
+import CodeLevel from '../../Pages/Level/CodeLevel';
 
 type component =
 	| React.ComponentType<RouteComponentProps<any>>
@@ -92,6 +93,10 @@ const useRoutes = () => {
 		level_play: {
 			path: '/level/play/:id',
 			component: Level,
+		},
+		code_play: {
+			path: '/code',
+			component: CodeLevel,
 		},
 		en: {
 			// Route for switching language to english

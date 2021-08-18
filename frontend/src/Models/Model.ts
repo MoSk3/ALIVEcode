@@ -20,9 +20,10 @@ export const Database = {
 		classrooms: {
 			/** @returns an array of all the classrooms that the user created */
 			all(): Promise<Classroom[]> {
-				return loadObj(`/playground/classrooms`, Classroom) as Promise<
-					Classroom[]
-				>;
+				return loadObj(
+					`/playground/classrooms`,
+					Classroom,
+				) as unknown as Promise<Classroom[]>;
 			},
 			/**
 			 * Request one or more {@link Classroom classroom} object *that the user created* from the backend
@@ -40,16 +41,17 @@ export const Database = {
 					return loadObj(
 						`/playground/classrooms/${ids[0]}`,
 						Classroom,
-					) as Promise<Classroom>;
+					) as unknown as Promise<Classroom>;
 				else
 					return Promise.all(
 						ids.map(id => loadObj(`/playground/classrooms/${id}`, Classroom)),
-					) as Promise<Classroom[]>;
+					) as unknown as Promise<Classroom[]>;
 			},
 			ofCurrentUser(): Promise<Classroom[]> {
-				return loadObj(`/playground/classrooms`, Classroom) as Promise<
-					Classroom[]
-				>;
+				return loadObj(
+					`/playground/classrooms`,
+					Classroom,
+				) as unknown as Promise<Classroom[]>;
 			},
 			/**
 			 * This is an **intermediate operation** used to access a certain {@link Classroom classroom}
@@ -65,7 +67,7 @@ export const Database = {
 						return loadObj(
 							`/playground/classrooms/${id}`,
 							Classroom,
-						) as Promise<Classroom>;
+						) as unknown as Promise<Classroom>;
 					},
 					/**
 					 * Returns a {@link Promise promise} that, once resolve,
@@ -75,7 +77,7 @@ export const Database = {
 						return loadObj(
 							`/playground/classrooms/${id}/students`,
 							Student,
-						) as Promise<Student[]>;
+						) as unknown as Promise<Student[]>;
 					},
 					/**
 					 * Returns a {@link Promise promise} that, once resolve,
@@ -85,7 +87,7 @@ export const Database = {
 						return loadObj(
 							`/playground/classrooms/${id}/courses`,
 							Course,
-						) as Promise<Course[]>;
+						) as unknown as Promise<Course[]>;
 					},
 				};
 			},
@@ -93,7 +95,9 @@ export const Database = {
 		courses: {
 			/** @returns an array of all the courses that the user created */
 			all(): Promise<Course[]> {
-				return loadObj(`/playground/courses`, Course) as Promise<Course[]>;
+				return loadObj(`/playground/courses`, Course) as unknown as Promise<
+					Course[]
+				>;
 			},
 			/**
 			 * Request one or more {@link Course course} object *that the user created* from the backend
@@ -111,11 +115,11 @@ export const Database = {
 					return loadObj(
 						`/playground/courses/${ids[0]}`,
 						Course,
-					) as Promise<Course>;
+					) as unknown as Promise<Course>;
 				else
 					return Promise.all(
 						ids.map(id => loadObj(`/playground/courses/${id}`, Course)),
-					) as Promise<Course[]>;
+					) as unknown as Promise<Course[]>;
 			},
 			/**
 			 * This is an **intermediate operation** used to access a certain {@link Course course}
@@ -131,7 +135,7 @@ export const Database = {
 						return loadObj(
 							`/playground/courses/${id}`,
 							Course,
-						) as Promise<Course>;
+						) as unknown as Promise<Course>;
 					},
 				};
 			},
