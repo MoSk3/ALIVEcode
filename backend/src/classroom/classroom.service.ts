@@ -8,10 +8,7 @@ import { StudentEntity } from '../user/entities/student.entity';
 
 @Injectable()
 export class ClassroomService {
-  constructor(
-    @InjectRepository(ProfessorEntity) private professorRepository: Repository<ProfessorEntity>,
-    @InjectRepository(ClassroomEntity) private classroomRepository: Repository<ClassroomEntity>,
-  ) {}
+  constructor(@InjectRepository(ClassroomEntity) private classroomRepository: Repository<ClassroomEntity>) {}
 
   async create(createClassroomDto: ClassroomEntity, professor: ProfessorEntity) {
     const classroom = this.classroomRepository.create(createClassroomDto);

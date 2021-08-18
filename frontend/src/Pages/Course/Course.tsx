@@ -1,11 +1,9 @@
 import styled from 'styled-components';
 import { CourseProps } from './courseTypes';
-import CourseModel, { Activity, Section } from '../../Models/Playground/Course';
 import CourseNavigation from '../../Components/CourseComponents/CourseNavigation/CourseNavigation';
 import FillContainer from '../../Components/UtilsComponents/FillContainer/FillContainer';
 import { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../../state/contexts/UserContext';
-import { User } from '../../Models/User';
 import {
 	COURSE_ACCESS,
 	COURSE_DIFFICULTY,
@@ -13,6 +11,7 @@ import {
 } from '../../Types/Playground/courseType';
 import { CourseContext } from '../../state/contexts/CourseContext';
 import CourseContent from '../../Components/CourseComponents/CourseContent/CourseContent';
+import { Course as CourseModel } from '../../Models/Course/course.entity';
 
 const StyledDiv = styled.div`
 	.course-body {
@@ -33,27 +32,16 @@ const Course = (props: CourseProps) => {
 	};
 
 	useEffect(() => {
-		const course = new CourseModel({
+		const course: CourseModel = {
 			id: 'a',
 			name: 'Cours de programmation',
 			description: 'lol cours',
-			creator: user as User,
+			creator: user,
 			subject: COURSE_SUBJECT.INFORMATIC,
 			difficulty: COURSE_DIFFICULTY.BEGINNER,
 			access: COURSE_ACCESS.PUBLIC,
 			code: '123456',
-			sections: [
-				new Section('LOL', [
-					new Activity('COOOOOOL'),
-					new Activity('mouahahah'),
-				]),
-				new Section('Section pog!', [
-					new Activity('yeppp'),
-					new Activity('mouahahah'),
-				]),
-				new Section('poggers', [new Activity('tg'), new Activity('you smell')]),
-			],
-		});
+		} as CourseModel;
 		setCourse(course);
 	}, [props.match.params.id, user]);
 

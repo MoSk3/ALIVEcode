@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import Course from "../../Models/Playground/Course";
+import { Course } from "../../Models/Course/course.entity";
 
 export const CourseContext = createContext<{
 	course?: Course;

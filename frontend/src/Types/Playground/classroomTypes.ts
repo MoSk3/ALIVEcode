@@ -1,5 +1,5 @@
-import Course from '../../Models/Playground/Course';
-import { Professor, Student } from '../../Models/User';
+import { Course } from '../../Models/Course/course.entity';
+import { Professor, Student } from '../../Models/User/user.entity';
 
 export enum CLASSROOM_SUBJECTS {
 	INFORMATIC = 'in',

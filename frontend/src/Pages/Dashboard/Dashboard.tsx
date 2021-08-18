@@ -1,29 +1,38 @@
 import { DashboardProps } from './dashboardTypes';
 import CenteredContainer from '../../Components/UtilsComponents/CenteredContainer/CenteredContainer';
 import LabelHighlight from '../../Components/UtilsComponents/LabelHighlight/LabelHighlight';
-import { useContext } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { UserContext } from '../../state/contexts/UserContext';
 import CardContainer from '../../Components/UtilsComponents/CardContainer/CardContainer';
 import { useHistory } from 'react-router-dom';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import ClassroomCard from '../../Components/DashboardComponents/ClassroomCard/ClassroomCard';
 import SmallCard from '../../Components/UtilsComponents/Cards/SmallCard/SmallCard';
-import { Database } from '../../Models/Model';
-import useFetch from '../../state/hooks/useFetch';
-
 import List from '../../assets/images/icons/my_levels.png';
 import Puzzle from '../../assets/images/icons/puzzle.png';
 import Sandbox from '../../assets/images/icons/sandboxblanc.png';
 import Voiture from '../../assets/images/Voiture.gif';
 import { Row } from 'react-bootstrap';
+import { Classroom } from '../../Models/Classroom/classroom.entity';
+import { plainToClass } from 'class-transformer';
+import axios from 'axios';
 
 const Dashboard = (props: DashboardProps) => {
 	const { user } = useContext(UserContext);
+	const [loading, setLoading] = useState(true);
+	const [classrooms, setClassrooms] = useState<Classroom[]>([]);
 
 	const history = useHistory();
-	const [classrooms, loading] = useFetch(
-		Database.playground.classrooms.ofCurrentUser,
-	);
+
+	useEffect(() => {
+		const getClassrooms = async () => {
+			const data = (await axios.get('classrooms')).data;
+			console.log(data);
+			setLoading(false);
+			setClassrooms(data.map((d: any) => plainToClass(Classroom, d)));
+		};
+		getClassrooms();
+	}, []);
 
 	const createLevel = async () => {
 		// TODO : axios request to return new level with id

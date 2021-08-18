@@ -12,6 +12,7 @@ import { AuthPayload } from '../utils/types/auth.payload';
 import { MyRequest } from 'src/utils/guards/auth.guard';
 import { REQUEST } from '@nestjs/core';
 import { ClassroomEntity } from '../classroom/entities/classroom.entity';
+import { CourseEntity } from 'src/course/entities/course.entity';
 
 @Injectable({ scope: Scope.REQUEST })
 export class UserService {
@@ -21,6 +22,7 @@ export class UserService {
     private professorRepository: Repository<ProfessorEntity>,
     @InjectRepository(StudentEntity) private studentRepository: Repository<StudentEntity>,
     @InjectRepository(ClassroomEntity) private classroomRepository: Repository<ClassroomEntity>,
+    @InjectRepository(CourseEntity) private courseRepository: Repository<CourseEntity>,
     @Inject(REQUEST) private req: MyRequest,
   ) {}
 
@@ -31,7 +33,6 @@ export class UserService {
 
     try {
       const student = await this.studentRepository.save(this.studentRepository.create(createStudentDto));
-      delete student.password;
       return student;
     } catch {
       throw new HttpException('This email is already in use', HttpStatus.CONFLICT);
@@ -44,7 +45,7 @@ export class UserService {
 
     try {
       const professor = await this.professorRepository.save(this.professorRepository.create(createProfessorDto));
-      delete professor.password;
+      console.log(professor);
       return professor;
     } catch {
       throw new HttpException('This email is already in use', HttpStatus.CONFLICT);
@@ -126,6 +127,13 @@ export class UserService {
     if (user instanceof ProfessorEntity) return await this.classroomRepository.find({ where: { creator: user } });
     if (user instanceof StudentEntity)
       return (await this.studentRepository.findOne(user.id, { relations: ['classrooms'] })).classrooms;
+    return [];
+  }
+
+  async getCourses(user: UserEntity) {
+    if (user instanceof ProfessorEntity) return await this.courseRepository.find({ where: { creator: user } });
+    if (user instanceof StudentEntity)
+      return (await this.studentRepository.findOne(user.id, { relations: ['courses'] })).classrooms;
     return [];
   }
 }

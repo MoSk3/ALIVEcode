@@ -50,8 +50,8 @@ export class RolesGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     try {
-      const roles = this.reflector.get<Role[]>('roles', context.getHandler());
-      if (!roles) throw new HttpException('Internal server error', HttpStatus.INTERNAL_SERVER_ERROR);
+      let roles = this.reflector.get<Role[]>('roles', context.getHandler());
+      if (!roles) roles = [];
 
       const authorization = this.req.headers['authorization'];
       if (!authorization) throw new HttpException('Not Authenticated', HttpStatus.UNAUTHORIZED);
@@ -69,6 +69,7 @@ export class RolesGuard implements CanActivate {
     } catch (err) {
       if (err instanceof JsonWebTokenError && err.name === 'TokenExpiredError')
         throw new HttpException('Not Authenticated', HttpStatus.UNAUTHORIZED);
+      if (err instanceof HttpException) throw err;
       throw new HttpException('Internal server error', HttpStatus.INTERNAL_SERVER_ERROR);
     }
     return true;

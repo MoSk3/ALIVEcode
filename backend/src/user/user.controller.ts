@@ -29,12 +29,16 @@ export class UserController {
 
   @Post('students')
   async createStudent(@Body() createStudent: StudentEntity) {
-    return await this.userService.createStudent(createStudent);
+    return {
+      user: await this.userService.createStudent(createStudent),
+    };
   }
 
   @Post('professors')
   async createProfessor(@Body() createProfessor: ProfessorEntity) {
-    return await this.userService.createProfessor(createProfessor);
+    return {
+      user: await this.userService.createProfessor(createProfessor),
+    };
   }
 
   @Post('login')
@@ -118,6 +122,15 @@ export class UserController {
     if (!hasRole(user, Role.MOD) && user.id !== id) throw new HttpException('You cannot do that', HttpStatus.FORBIDDEN);
 
     if (user.id === id) return this.userService.getClassrooms(user);
+    return this.userService.getClassrooms(await this.userService.findById(id));
+  }
+
+  @Get(':id/courses')
+  @Auth()
+  async getCourses(@User() user: UserEntity, @Param('id') id: string) {
+    if (!hasRole(user, Role.MOD) && user.id !== id) throw new HttpException('You cannot do that', HttpStatus.FORBIDDEN);
+
+    if (user.id === id) return this.userService.getCourses(user);
     return this.userService.getClassrooms(await this.userService.findById(id));
   }
 }

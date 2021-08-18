@@ -14,7 +14,7 @@ import IconButton from '../../Components/DashboardComponents/IconButton/IconButt
 import Cmd from '../../Components/PlayComponents/Cmd/Cmd';
 import SimulationLevelExecutor from './SimulationLevelExecutor';
 import useCmd from '../../state/hooks/useCmd';
-import { Professor } from '../../Models/User';
+import { Professor } from '../../Models/User/user.entity';
 
 const StyledDiv = styled(FillContainer)`
   overflow-y: hidden;

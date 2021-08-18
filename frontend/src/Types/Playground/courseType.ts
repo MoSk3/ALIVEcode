@@ -1,5 +1,5 @@
-import { User } from '../../Models/User';
-import { Section } from '../../Models/Playground/Course';
+import { User } from '../../Models/User/user.entity';
+import { Section } from '../../Models/Course/section.entity';
 
 export enum COURSE_SUBJECT {
 	INFORMATIC = 'IN',

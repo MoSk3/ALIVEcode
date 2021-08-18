@@ -23,6 +23,8 @@ const CourseSection = ({ section }: CourseSectionProps) => {
 			</div>
 			<Collapse in={open} timeout={500}>
 				<div id={`section-${section.name}`} className="course-section-body">
+					{/*
+
 					{section.activities.map((a, idx) => (
 						<div
 							onClick={handleLoadActivity}
@@ -32,6 +34,7 @@ const CourseSection = ({ section }: CourseSectionProps) => {
 							{a.name}
 						</div>
 					))}
+						*/}
 				</div>
 			</Collapse>
 		</div>

@@ -9,8 +9,9 @@ import FormContainer from '../../../Components/UtilsComponents/FormContainer/For
 import { Form } from 'react-bootstrap';
 import Button from '../../../Components/UtilsComponents/Button/Button';
 import Link from '../../../Components/UtilsComponents/Link/Link';
-import { User, setAccessToken } from '../../../Models/User';
 import { useTranslation } from 'react-i18next';
+import { User } from '../../../Models/User/user.entity';
+import { setAccessToken } from '../../../Types/accessToken';
 
 /** Reusable form component to handle header creation */
 const SignIn = (props: SignInProps) => {

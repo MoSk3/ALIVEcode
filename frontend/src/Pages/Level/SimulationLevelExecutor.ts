@@ -7,8 +7,8 @@ import openPlaySocket from './PlaySocket';
 import $ from 'jquery';
 import { PlayExecutor } from '../../Models/Executor/PlayExecutor';
 import { PlaySocket } from './PlaySocket';
-import { User } from '../../Models/User';
 import { CMD } from '../../Components/PlayComponents/Cmd/cmdTypes';
+import { User } from '../../Models/User/user.entity';
 
 // TODO: robotConnected
 const robotConnected = false;

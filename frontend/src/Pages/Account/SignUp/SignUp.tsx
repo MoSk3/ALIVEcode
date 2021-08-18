@@ -8,6 +8,9 @@ import Link from '../../../Components/UtilsComponents/Link/Link';
 import axios from 'axios';
 import { useContext } from 'react';
 import { UserContext } from '../../../state/contexts/UserContext';
+import { User } from '../../../Models/User/user.entity';
+import { useHistory } from 'react-router';
+import { setAccessToken } from '../../../Types/accessToken';
 
 const SignUp = ({ userType }: SignUpProps) => {
 	const { setUser } = useContext(UserContext);
@@ -17,6 +20,7 @@ const SignUp = ({ userType }: SignUpProps) => {
 		formState: { errors },
 	} = useForm();
 	const alert = useAlert();
+	const history = useHistory();
 
 	const onSignIn = async (formValues: FormSignUpValues) => {
 		try {
@@ -25,21 +29,27 @@ const SignUp = ({ userType }: SignUpProps) => {
 					? 'users/professors'
 					: 'users/students';
 
-			console.log(formValues);
-			const { user } = (await axios.post(url, formValues)).data;
-			console.log(user);
+			// Register the user in the database
+			await axios.post(url, formValues);
 
+			// Generate and return new accessToken
 			const { accessToken } = (
-				await axios.post('/users/login', {
+				await axios.post('users/login', {
 					email: formValues.email,
 					password: formValues.password,
 				})
 			).data;
-			axios.defaults.headers['Authorization'] = 'JWT ' + accessToken;
-			localStorage.setItem('access_token', accessToken);
-			console.log(accessToken);
+
+			setAccessToken(accessToken);
+
+			const user = await User.loadUser();
+			if (!user)
+				return alert.error('Une erreur est survenue, veuillez réessayer');
 
 			setUser(user);
+
+			if (history.location.pathname === '/signin') history.push('/dashboard');
+			return alert.success('Vous êtes connecté avec votre nouveau compte!');
 		} catch (err) {
 			console.error(err);
 			return alert.error('Une erreur est survenue');

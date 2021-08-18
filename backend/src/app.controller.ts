@@ -1,7 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
 import { Auth } from './utils/decorators/auth.decorator';
-import { Role } from './utils/types/roles.types';
 import { User } from './utils/decorators/user.decorator';
 import { UserEntity } from './user/entities/user.entity';
 

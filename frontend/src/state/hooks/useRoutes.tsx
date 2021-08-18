@@ -1,6 +1,7 @@
-import { Professor, Student } from '../../Models/User';
 import { RouteComponentProps } from 'react-router-dom';
-import Dashboard from '../../Pages/Dashboard/Dashboard';
+import { Professor, Student } from '../../Models/User/user.entity';
+import Classroom from '../../Pages/Classroom/Classroom';
+import Course from '../../Pages/Course/Course';
 import { NotFound } from '../../Pages/Errors/NotFound/NotFound';
 import Home from '../../Pages/Home/Home';
 import SignIn from '../../Pages/Account/SignIn/SignIn';
@@ -12,10 +13,9 @@ import About from '../../Pages/About/About';
 import { useContext } from 'react';
 import { UserContext } from '../contexts/UserContext';
 import AccountPage from '../../Pages/Account/AccountInfo/AccountPage';
-import Classroom from '../../Pages/Classroom/Classroom';
-import Course from '../../Pages/Course/Course';
 import CourseForm from '../../Components/CourseComponents/CourseForm/CourseForm';
 import ClassroomForm from '../../Components/ClassroomComponents/ClassroomForm/ClassroomForm';
+import Dashboard from '../../Pages/Dashboard/Dashboard';
 
 type component =
 	| React.ComponentType<RouteComponentProps<any>>

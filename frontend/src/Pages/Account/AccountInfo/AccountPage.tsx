@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import { UserContext } from '../../../state/contexts/UserContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import CenteredContainer from '../../../Components/UtilsComponents/CenteredContainer/CenteredContainer';
-import { Professor, Student } from '../../../Models/User';
+import { Professor, Student } from '../../../Models/User/user.entity';
 
 const AccountPage = () => {
 	const { user } = useContext(UserContext);

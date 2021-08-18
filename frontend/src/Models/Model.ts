@@ -1,13 +1,7 @@
-import { Classroom } from './Playground/Classroom';
-import Course from './Playground/Course';
-import { Student, User } from './User';
 //import { loadObj } from './utils';
-
-interface Model {
-	readonly dependencies: {
-		[name: string]: Function;
-	};
-}
+import { User, Student } from './User/user.entity';
+import { Classroom } from './Classroom/classroom.entity';
+import { Course } from './Course/course.entity';
 
 /**
  * Level of abstraction to access the database from the frontend
@@ -144,5 +138,3 @@ export const Database = {
 		levels: {},
 	},
 };
-
-export default Model;

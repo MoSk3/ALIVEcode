@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import CenteredContainer from '../../UtilsComponents/CenteredContainer/CenteredContainer';
-import CourseSection from '../CourseSection/CourseSection';
 import { CourseNavigationProps } from './courseNavigationTypes';
 import { useContext } from 'react';
 import { CourseContext } from '../../../state/contexts/CourseContext';
@@ -100,9 +99,12 @@ const CourseNavigation = (props: CourseNavigationProps) => {
 					<div className="course-nav-title">{course?.name}</div>
 				</div>
 				<div className="course-nav-body">
+					{/*
+
 					{course?.sections.map((s, idx) => (
 						<CourseSection key={idx} section={s} />
 					))}
+					*/}
 				</div>
 			</CenteredContainer>
 		</StyledDiv>

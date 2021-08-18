@@ -8,7 +8,6 @@ import axios from 'axios';
 import BackArrow from './Components/UtilsComponents/BackArrow/BackArrow';
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.css';
-import { User, Professor, Student, setAccessToken } from './Models/User';
 import useRoutes from './state/hooks/useRoutes';
 import { SERVER_URL } from './appConfigs';
 import { ThemeContext, Theme, themes } from './state/contexts/ThemeContext';
@@ -16,6 +15,8 @@ import styled, { createGlobalStyle } from 'styled-components';
 import { loadThemeFromCookies, setCookie } from './Types/cookies';
 import { useAlert } from 'react-alert';
 import { useTranslation } from 'react-i18next';
+import { setAccessToken } from './Types/accessToken';
+import { User, Student, Professor } from './Models/User/user.entity';
 
 type GlobalStyleProps = {
 	theme: Theme;

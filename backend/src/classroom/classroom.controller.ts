@@ -22,7 +22,6 @@ import { UserEntity } from '../user/entities/user.entity';
 import { hasRole } from '../user/auth';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UserService } from '../user/user.service';
 import { StudentEntity } from '../user/entities/student.entity';
 
 @Controller('classrooms')
@@ -31,7 +30,6 @@ import { StudentEntity } from '../user/entities/student.entity';
 export class ClassroomController {
   constructor(
     private readonly classroomService: ClassroomService,
-    private readonly userService: UserService,
     @InjectRepository(ProfessorEntity) private professorRepository: Repository<ProfessorEntity>,
   ) {}
 

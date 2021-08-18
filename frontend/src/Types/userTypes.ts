@@ -1,7 +1,7 @@
-import { Professor, Student } from "../Models/User";
+import { Professor, Student } from '../Models/User/user.entity';
 
 export enum GRADES {
-    S1 = "s1"
+	S1 = 's1',
 }
 
 export enum USER_TYPES {

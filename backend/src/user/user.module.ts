@@ -7,10 +7,11 @@ import { DefaultAdminModule, DefaultAdminSite } from 'nestjs-admin';
 import { ProfessorEntity } from './entities/professor.entity';
 import { StudentEntity } from './entities/student.entity';
 import { ClassroomEntity } from '../classroom/entities/classroom.entity';
+import { CourseEntity } from '../course/entities/course.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UserEntity, ProfessorEntity, StudentEntity, ClassroomEntity]),
+    TypeOrmModule.forFeature([UserEntity, ProfessorEntity, StudentEntity, ClassroomEntity, CourseEntity]),
     DefaultAdminModule,
   ],
   exports: [TypeOrmModule],
