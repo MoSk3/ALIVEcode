@@ -17,5 +17,5 @@ export abstract class CreatedByUser {
 	@Type(() => Date)
 	updateDate: Date;
 
-	description: string;
+	description?: string;
 }

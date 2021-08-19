@@ -114,9 +114,14 @@ const useRoutes = () => {
 			path: '/dashboard',
 			component: Dashboard,
 		},
-		classroom_create: {
+		create_classroom: {
 			accountType: Professor,
 			path: '/classroom/create',
+			component: ClassroomForm,
+		},
+		join_classroom: {
+			accountType: Student,
+			path: '/classroom/join',
 			component: ClassroomForm,
 		},
 		classroom: {

@@ -1,5 +1,10 @@
 import axios from 'axios';
 import { loadObj} from './utils';
+import { plainToClass } from 'class-transformer';
+import { Course } from './Course/course.entity';
+import { Section } from './Course/section.entity';
+import { Classroom } from './Classroom/classroom.entity';
+import { Student } from './User/user.entity';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const apiGetter = <T extends {}>(url: string, target: T) => {
@@ -34,16 +39,35 @@ const api = {
 			createStudent() {},
 		},
 		classrooms: {
-			get() {},
-			getStudents(classroomId: string) {},
+			async get(classroomId: string) {
+				return plainToClass(
+					Classroom,
+					(await axios.get(`classrooms/${classroomId}`)).data,
+				);
+			},
+			async getStudents(classroomId: string) {
+				return (await axios.get(`classrooms/${classroomId}/students`)).data.map(
+					(d: any) => plainToClass(Student, d),
+				);
+			},
+			async getCourses(classroomId: string) {
+				return (await axios.get(`classrooms/${classroomId}/courses`)).data.map(
+					(d: any) => plainToClass(Course, d),
+				);
+			},
 			create() {},
 		},
 		courses: {
 			async get(courseId: string) {
-				return (await axios.get(`courses/${courseId}`)).data;
+				return plainToClass(
+					Course,
+					(await axios.get(`courses/${courseId}`)).data,
+				);
 			},
 			async getSections(courseId: string) {
-				return (await axios.get(`courses/${courseId}/sections`)).data;
+				return (await axios.get(`courses/${courseId}/sections`)).data.map(
+					(d: any) => plainToClass(Section, d),
+				);
 			},
 		},
 	},

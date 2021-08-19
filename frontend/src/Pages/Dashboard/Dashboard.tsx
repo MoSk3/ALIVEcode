@@ -16,13 +16,15 @@ import { Row } from 'react-bootstrap';
 import { Classroom } from '../../Models/Classroom/classroom.entity';
 import { plainToClass } from 'class-transformer';
 import axios from 'axios';
+import { Professor } from '../../Models/User/user.entity';
+import useRoutes from '../../state/hooks/useRoutes';
 
 const Dashboard = (props: DashboardProps) => {
 	const { user } = useContext(UserContext);
 	const [loading, setLoading] = useState(true);
 	const [classrooms, setClassrooms] = useState<Classroom[]>([]);
-
 	const history = useHistory();
+	const { routes } = useRoutes();
 
 	useEffect(() => {
 		const getClassrooms = async () => {
@@ -58,7 +60,13 @@ const Dashboard = (props: DashboardProps) => {
 			<CardContainer
 				title="Mes classes"
 				style={{ marginTop: '20px' }}
-				onIconClick={() => history.push('/playground/join-classroom')}
+				onIconClick={() =>
+					history.push(
+						user instanceof Professor
+							? routes.auth.create_classroom.path
+							: routes.auth.join_classroom.path,
+					)
+				}
 				icon={faPlus}
 			>
 				{loading

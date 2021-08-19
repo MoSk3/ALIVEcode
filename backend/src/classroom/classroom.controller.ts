@@ -45,6 +45,38 @@ export class ClassroomController {
     return this.classroomService.findAll();
   }
 
+  @Get(':id/courses')
+  @Auth()
+  async getCourses(@User() user: UserEntity, @Param('id') id: string) {
+    if (!id) throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
+
+    let classroom: ClassroomEntity;
+    if (hasRole(user, Role.STAFF)) classroom = await this.classroomService.findOne(id);
+    else {
+      if (!(user instanceof ProfessorEntity) && !(user instanceof StudentEntity))
+        throw new HttpException('', HttpStatus.FORBIDDEN);
+
+      classroom = await this.classroomService.findClassroomOfUser(user, id);
+    }
+    return await this.classroomService.getCourses(classroom);
+  }
+
+  @Get(':id/students')
+  @Auth()
+  async getStudents(@User() user: UserEntity, @Param('id') id: string) {
+    if (!id) throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
+
+    let classroom: ClassroomEntity;
+    if (hasRole(user, Role.STAFF)) classroom = await this.classroomService.findOne(id);
+    else {
+      if (!(user instanceof ProfessorEntity) && !(user instanceof StudentEntity))
+        throw new HttpException('', HttpStatus.FORBIDDEN);
+
+      classroom = await this.classroomService.findClassroomOfUser(user, id);
+    }
+    return await this.classroomService.getStudents(classroom);
+  }
+
   @Get(':id')
   @Auth()
   async findOne(@User() user: UserEntity, @Param('id') id: string) {

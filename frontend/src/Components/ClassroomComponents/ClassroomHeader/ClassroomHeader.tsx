@@ -2,6 +2,9 @@ import styled from 'styled-components';
 import { ClassroomHeaderProps } from './classroomHeaderTypes';
 import { Badge, Col, Container, Row } from 'react-bootstrap';
 import Button from '../../UtilsComponents/Button/Button';
+import { useContext } from 'react';
+import { UserContext } from '../../../state/contexts/UserContext';
+import { Professor } from '../../../Models/User/user.entity';
 
 const StyledClassroomHeader = styled.div`
 	color: white;
@@ -61,25 +64,35 @@ const StyledClassroomHeader = styled.div`
 	}
 `;
 
-const ClassroomHeader = (props: ClassroomHeaderProps) => {
+const ClassroomHeader = ({ classroom }: ClassroomHeaderProps) => {
+	const { user } = useContext(UserContext);
+
 	return (
 		<StyledClassroomHeader as={Container}>
 			<Row>
 				<Col lg id="classroom-title">
-					<h2>Classe pour tester</h2>
+					<h2>{classroom.name}</h2>
 					<h5>
 						<Badge variant="primary">Professeur</Badge>
 						{' Enric, Soldevila'}
 					</h5>
 				</Col>
-				<Col lg id="classroom-buttons">
-					<div>
-						<Button variant="primary">Ajouter des étudiants</Button>
-					</div>
-					<div>
-						<Button variant="danger">Supprimer la classe</Button>
-					</div>
-				</Col>
+				{user instanceof Professor ? (
+					<Col lg id="classroom-buttons">
+						<div>
+							<Button variant="primary">Ajouter des étudiants</Button>
+						</div>
+						<div>
+							<Button variant="danger">Supprimer la classe</Button>
+						</div>
+					</Col>
+				) : (
+					<Col lg id="classroom-buttons">
+						<div>
+							<Button variant="danger">Quitter la classe</Button>
+						</div>
+					</Col>
+				)}
 			</Row>
 		</StyledClassroomHeader>
 	);

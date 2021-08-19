@@ -24,7 +24,6 @@ const CourseForm = (props: CourseFormProps) => {
 			<Form
 				onSubmit={res => {
 					const course: Course = res.data;
-					console.log(course);
 					history.push(routes.auth.course.path.replace(':id', course.id));
 					return alert.success('Cours créé avec succès');
 				}}

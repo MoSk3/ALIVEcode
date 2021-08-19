@@ -17,6 +17,8 @@ const StyledDiv = styled.div`
 	}
 `;
 
+// Example course: http://localhost:3000/course/dd36ee8a-3ff5-4751-b8d4-b9495882f1fb
+
 const Course = (props: CourseProps) => {
 	const { user } = useContext(UserContext);
 	const [course, setCourse] = useState<CourseModel>();
@@ -37,14 +39,16 @@ const Course = (props: CourseProps) => {
 	useEffect(() => {
 		const getCourse = async () => {
 			try {
-				const course = await api.db.courses.get(props.match.params.id);
+				const course: CourseModel = await api.db.courses.get(
+					props.match.params.id,
+				);
+				await course.getSections();
 				setCourse(course);
-			} catch {
+			} catch (err) {
 				history.push('/');
 				return alert.error(t('error.not_found', { obj: t('msg.course') }));
 			}
 		};
-
 		getCourse();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [props.match.params.id, user]);

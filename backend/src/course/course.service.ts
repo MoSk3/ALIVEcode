@@ -16,7 +16,7 @@ export class CourseService {
   async create(professor: ProfessorEntity, createCourseDto: CourseEntity) {
     const course = this.courseRepository.create(createCourseDto);
     course.code = generate({
-      length: 6,
+      length: 10,
       charset: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890',
     });
     course.creator = professor;
