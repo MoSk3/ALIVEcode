@@ -1,6 +1,7 @@
 import { AxiosResponse } from "axios";
 
 export type FormProps = {
+	buttonText: string;
 	name: string;
 	url: string;
 	action: 'POST' | 'UPDATE' | 'DELETE';

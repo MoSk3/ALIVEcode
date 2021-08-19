@@ -1,12 +1,16 @@
 import { ClassroomFormProps } from './classroomFormTypes';
 import Form from '../../UtilsComponents/Form/Form';
 import FormContainer from '../../UtilsComponents/FormContainer/FormContainer';
+import { useTranslation } from 'react-i18next';
 
 const ClassroomForm = (props: ClassroomFormProps) => {
+	const { t } = useTranslation();
+
 	return (
 		<FormContainer title="LOL">
 			<Form
-				name="LOL"
+				buttonText={t('form.submit.create_classrooms')}
+				name="create_classroom"
 				url="classrooms"
 				action="POST"
 				inputGroups={[
@@ -19,11 +23,6 @@ const ClassroomForm = (props: ClassroomFormProps) => {
 						name: 'description',
 						inputType: 'textarea',
 						required: false,
-					},
-					{
-						name: 'bob',
-						inputType: 'number',
-						required: true,
 					},
 				]}
 			/>

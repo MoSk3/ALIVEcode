@@ -105,8 +105,11 @@ const Form = (props: FormProps) => {
 						t(`form.${props.name}.${g.name}.error.minLength`)}
 				</BootForm.Group>
 			))}
-			<Button variant="primary" type="submit">
-				{t('msg.auth.signin')}
+			<Button
+				variant={props.action === 'DELETE' ? 'danger' : 'primary'}
+				type="submit"
+			>
+				{props.buttonText}
 			</Button>
 		</BootForm>
 	);
