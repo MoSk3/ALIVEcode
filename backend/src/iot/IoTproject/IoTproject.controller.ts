@@ -5,7 +5,7 @@ import { Auth } from '../../utils/decorators/auth.decorator';
 import { User } from '../../utils/decorators/user.decorator';
 import { Role } from '../../utils/types/roles.types';
 import { hasRole } from '../../user/auth';
-import { IoTProjectEntity } from './entities/IoTproject.entity';
+import { IoTProjectEntity, IOTPROJECT_ACCESS } from './entities/IoTproject.entity';
 
 @Controller('iot/projects')
 export class IoTProjectController {
@@ -24,9 +24,17 @@ export class IoTProjectController {
   }
 
   @Get(':id')
-  @Auth(Role.STAFF)
-  async findOne(@Param('id') id: string) {
-    return await this.IoTProjectService.findOne(id);
+  @Auth()
+  async findOne(@User() user: UserEntity, @Param('id') id: string) {
+    const project = await this.IoTProjectService.findOne(id);
+
+    if (project.creator.id === user.id || hasRole(user, Role.STAFF)) return project;
+    if (project.access === IOTPROJECT_ACCESS.PRIVATE) throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    // TODO : Add restriction
+    if (project.access === IOTPROJECT_ACCESS.RESTRICTED)
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+
+    return project;
   }
 
   @Patch(':id')

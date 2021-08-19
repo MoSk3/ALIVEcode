@@ -16,6 +16,10 @@ import AccountPage from '../../Pages/Account/AccountInfo/AccountPage';
 import CourseForm from '../../Components/CourseComponents/CourseForm/CourseForm';
 import ClassroomForm from '../../Components/ClassroomComponents/ClassroomForm/ClassroomForm';
 import Dashboard from '../../Pages/Dashboard/Dashboard';
+import IoTHome from '../../Pages/IoT/IoTHome/IoTHome';
+import IoTDashboard from '../../Pages/IoT/IoTDashboard/IoTDashboard';
+import IoTProject from '../../Pages/IoT/IoTProject/IoTProject';
+import IoTProjectForm from '../../Components/IoTComponents/IoTProject/IotForm/IoTProjectForm';
 
 type component =
 	| React.ComponentType<RouteComponentProps<any>>
@@ -107,6 +111,11 @@ const useRoutes = () => {
 			path: '/fr',
 			component: Home,
 		},
+		iot: {
+			exact: true,
+			path: '/iot',
+			component: IoTHome,
+		},
 	});
 
 	const auth_routes = asAuthRoutes(SignIn, {
@@ -139,6 +148,18 @@ const useRoutes = () => {
 		account: {
 			path: '/account',
 			component: AccountPage,
+		},
+		iot_dashboard: {
+			path: '/iot/dashboard',
+			component: IoTDashboard,
+		},
+		create_iot_project: {
+			path: '/iot/projects/create',
+			component: IoTProjectForm,
+		},
+		iot_project: {
+			path: '/iot/projects/:id',
+			component: IoTProject,
 		},
 	});
 

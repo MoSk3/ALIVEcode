@@ -13,6 +13,7 @@ import { MyRequest } from 'src/utils/guards/auth.guard';
 import { REQUEST } from '@nestjs/core';
 import { ClassroomEntity } from '../classroom/entities/classroom.entity';
 import { CourseEntity } from 'src/course/entities/course.entity';
+import { IoTProjectEntity } from '../iot/IoTproject/entities/IoTproject.entity';
 
 @Injectable({ scope: Scope.REQUEST })
 export class UserService {
@@ -23,6 +24,7 @@ export class UserService {
     @InjectRepository(StudentEntity) private studentRepository: Repository<StudentEntity>,
     @InjectRepository(ClassroomEntity) private classroomRepository: Repository<ClassroomEntity>,
     @InjectRepository(CourseEntity) private courseRepository: Repository<CourseEntity>,
+    @InjectRepository(IoTProjectEntity) private iotProjectRepository: Repository<IoTProjectEntity>,
     @Inject(REQUEST) private req: MyRequest,
   ) {}
 
@@ -135,5 +137,9 @@ export class UserService {
     if (user instanceof StudentEntity)
       return (await this.studentRepository.findOne(user.id, { relations: ['courses'] })).classrooms;
     return [];
+  }
+
+  async getIoTProjects(user: UserEntity) {
+    return await this.iotProjectRepository.find({ where: { creator: user } });
   }
 }

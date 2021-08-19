@@ -25,6 +25,7 @@
 		"section": {
 			"alive": "ALIVE Play",
 			"dashboard": "Dashboard",
+			"iot": "Internet of Things",
 			"amc": "ALIVE Mind Controller",
 			"about": "About",
 			"avp": "Augmented Vehicle Perception",
@@ -58,6 +59,7 @@
 			"section": {
 				"dashboard": "$t(msg.section.dashboard)",
 				"amc": "$t(msg.section.amc)",
+				"iot": "$t(msg.section.iot)",
 				"about": "$t(msg.section.about)"
 			},
 			"msg": {

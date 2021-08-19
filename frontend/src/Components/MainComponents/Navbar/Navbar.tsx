@@ -51,6 +51,12 @@ const ALIVENavbar = ({ handleLogout }: NavbarProps) => {
 					</Nav.Link>
 					<Nav.Link
 						className="nav-link"
+						onClick={() => history.push(routes.public.iot.path)}
+					>
+						{t('home.navbar.section.iot')}
+					</Nav.Link>
+					<Nav.Link
+						className="nav-link"
 						onClick={() => history.push(routes.public.amc.path)}
 					>
 						{t('home.navbar.section.amc')}

@@ -9,10 +9,11 @@ import { ProfessorEntity } from '../user/entities/professor.entity';
 import { UserService } from '../user/user.service';
 import { StudentEntity } from '../user/entities/student.entity';
 import { CourseEntity } from '../course/entities/course.entity';
+import { IoTProjectEntity } from '../iot/IoTproject/entities/IoTproject.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([ClassroomEntity, UserEntity, ProfessorEntity, StudentEntity, CourseEntity]),
+    TypeOrmModule.forFeature([ClassroomEntity, UserEntity, ProfessorEntity, StudentEntity, CourseEntity, IoTProjectEntity]),
     DefaultAdminModule,
   ],
   controllers: [ClassroomController],

@@ -25,7 +25,8 @@
 		"section": {
 			"alive": "ALIVE Play",
 			"dashboard": "Tableau de bord",
-			"amc": "ALIVE contrôle par la pensée",
+			"iot": "Internet des objets",
+			"amc": "Contrôle par la pensée",
 			"about": "À propos",
 			"avp": "Perception de véhicule augmentée",
 			"lrima": "Laboratoire de recherche LRIMA",
@@ -57,6 +58,7 @@
 		"navbar": {
 			"section": {
 				"dashboard": "$t(msg.section.dashboard)",
+				"iot": "$t(msg.section.iot)",
 				"amc": "$t(msg.section.amc)",
 				"about": "$t(msg.section.about)"
 			},

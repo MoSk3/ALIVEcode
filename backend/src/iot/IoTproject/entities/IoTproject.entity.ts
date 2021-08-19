@@ -1,3 +1,4 @@
+import { IsNotEmpty, IsOptional } from "class-validator";
 import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany } from "typeorm";
 import { CreatedByUser } from '../../../generics/entities/createdByUser.entity';
 import { UserEntity } from '../../../user/entities/user.entity';
@@ -22,19 +23,22 @@ export class IoTProjectEntity extends CreatedByUser {
   creator: UserEntity;
 
   // TODO : body typing
-  @Column()
+  @Column({ nullable: true, default: "{}" })
+  @IsOptional()
   body: string;
 
   @Column({ enum: IOTPROJECT_ACCESS })
+  @IsNotEmpty()
   access: IOTPROJECT_ACCESS;
 
   @Column({ enum: IOTPROJECT_INTERACT_RIGHTS })
+  @IsNotEmpty()
   interactRights: IOTPROJECT_INTERACT_RIGHTS;
 
   @ManyToMany(() => UserEntity, user => user.collabIoTProjects)
   @JoinColumn()
   collaborators: UserEntity[];
 
-  @OneToMany(() => IotRouteEntity, route => route.project)
+  @OneToMany(() => IotRouteEntity, route => route.project, { eager: true })
   routes: IotRouteEntity[];
 }
