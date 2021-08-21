@@ -607,33 +607,11 @@ public class Executeur {
 
         String[] lines = """
                                 
-                const a = [1, 2, 3]
+                var a <- 23
                 
-                si a[0] == 2
-                    afficher a
-                sinon si a[1] == 3
-                    afficher vrai
-                sinon si a[2] == 4
-                    afficher "ha ha!"
-                sinon si faux
-                    afficher "toujours!"
-                sinon
-                    afficher "jamais!"
-                fin si
-                   
-                   
-                const b = 100
-                
-                si b > 10
-                    afficher ">10"
-                sinon si b > 5
-                    afficher ">5"
-                sinon si b > 1
-                    afficher ">1"
-                sinon
-                    afficher "<1"
-                fin si
-                afficher "fin"
+                afficher a
+                a += 3
+                afficher a
                                 
                 """.split("\n");
 

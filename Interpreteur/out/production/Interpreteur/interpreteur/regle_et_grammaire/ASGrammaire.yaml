@@ -25,7 +25,7 @@ Ajouter:
 
 
   assignements:
-    ASSIGNEMENT: '='
+    ASSIGNEMENT: '=|(<-)'
     PLUS_ASSIGNEMENT: '\+='
     POW_ASSIGNEMENT: '\^='
     MUL_ASSIGNEMENT: '\*='
@@ -65,6 +65,8 @@ Ajouter:
   SORTIR: '\bsortir\b'
 
   CONTINUER: '\bcontinuer\b'
+
+  ALORS: '\balors\b'
 
 
   # fin
