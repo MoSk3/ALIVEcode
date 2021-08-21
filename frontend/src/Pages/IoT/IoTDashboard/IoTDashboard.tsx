@@ -5,6 +5,13 @@ import { IoTProject } from '../../../Models/Iot/IoTproject.entity';
 import Link from '../../../Components/UtilsComponents/Link/Link';
 import useRoutes from '../../../state/hooks/useRoutes';
 import Button from '../../../Components/UtilsComponents/Button/Button';
+import styled from 'styled-components';
+import FillContainer from '../../../Components/UtilsComponents/FillContainer/FillContainer';
+import CardContainer from '../../../Components/UtilsComponents/CardContainer/CardContainer';
+
+const StyledDiv = styled(FillContainer)`
+	padding: 2vw;
+`;
 
 const IoTDashboard = (props: iotDashboardProps) => {
 	const [projects, setProjects] = useState<IoTProject[]>();
@@ -19,29 +26,37 @@ const IoTDashboard = (props: iotDashboardProps) => {
 	}, []);
 
 	return (
-		<>
+		<StyledDiv>
 			<div>
 				<h1>IoT Dashboard</h1>
 			</div>
 			<div>
-				<h4>My projects</h4>
-				{projects && projects.length > 0 ? (
-					projects.map((p, idx) => (
-						<div key={idx}>
-							<Link to={routes.auth.iot_project.path.replace(':id', p.id)}>
-								{p.name}
-							</Link>
-						</div>
-					))
-				) : (
-					<div>Aucun projet</div>
-				)}
+				<CardContainer
+					height="300px"
+					className="iot-container"
+					title="My projects"
+				>
+					{projects && projects.length > 0 ? (
+						projects.map((p, idx) => (
+							<div key={idx}>
+								<Link
+									dark
+									to={routes.auth.iot_project.path.replace(':id', p.id)}
+								>
+									{p.name}
+								</Link>
+							</div>
+						))
+					) : (
+						<div>Aucun projet</div>
+					)}
+				</CardContainer>
 				<br />
 				<Button to={routes.auth.create_iot_project.path} variant="secondary">
 					Nouveau projet
 				</Button>
 			</div>
-		</>
+		</StyledDiv>
 	);
 };
 

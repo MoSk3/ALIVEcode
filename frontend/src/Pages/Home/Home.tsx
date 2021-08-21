@@ -5,7 +5,6 @@ import { Container } from 'react-bootstrap';
 import HomeCard from '../../Components/MainComponents/HomeCard/HomeCard';
 
 import './home.css';
-import '../../assets/css/maisonneuve_background.css';
 
 import Voiture from '../../assets/images/Voiture.gif';
 import Cloud from '../../assets/images/cloud.png';

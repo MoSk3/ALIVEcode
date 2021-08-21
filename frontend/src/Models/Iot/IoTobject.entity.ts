@@ -1,7 +1,7 @@
 import { CreatedByUser } from '../Generics/createdByUser.entity';
 import { User } from '../User/user.entity';
 
-export enum IoTObjectLabel {
+export enum IOTOBJECT_LABEL {
 	HOME,
 	OTHER,
 }
@@ -9,5 +9,5 @@ export enum IoTObjectLabel {
 export class IoTObject extends CreatedByUser {
 	creator: User;
 
-	label: IoTObjectLabel;
+	label: IOTOBJECT_LABEL;
 }

@@ -17,9 +17,10 @@ import CourseForm from '../../Components/CourseComponents/CourseForm/CourseForm'
 import ClassroomForm from '../../Components/ClassroomComponents/ClassroomForm/ClassroomForm';
 import Dashboard from '../../Pages/Dashboard/Dashboard';
 import IoTHome from '../../Pages/IoT/IoTHome/IoTHome';
-import IoTDashboard from '../../Pages/IoT/IoTDashboard/IoTDashboard';
 import IoTProject from '../../Pages/IoT/IoTProject/IoTProject';
-import IoTProjectForm from '../../Components/IoTComponents/IoTProject/IotForm/IoTProjectForm';
+import IoTProjectForm from '../../Components/IoTComponents/IoTProject/IotProjectForm/IoTProjectForm';
+import CodeLevel from '../../Pages/Level/CodeLevel';
+import IoTDashboard from '../../Pages/IoT/IoTDashboard/IoTDashboard';
 
 type component =
 	| React.ComponentType<RouteComponentProps<any>>

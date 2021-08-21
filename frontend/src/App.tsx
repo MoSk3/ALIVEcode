@@ -18,12 +18,24 @@ import { useTranslation } from 'react-i18next';
 import { setAccessToken } from './Types/accessToken';
 import { User, Student, Professor } from './Models/User/user.entity';
 import LoadingScreen from './Components/UtilsComponents/LoadingScreen/LoadingScreen';
+import background_image_light from './assets/images/backgroundImage4.png';
 
 type GlobalStyleProps = {
 	theme: Theme;
 };
 
 const GlobalStyle = createGlobalStyle`
+
+	body {
+		background-color: var(--background-color);
+		color: var(--foreground-color);
+		${({ theme }: GlobalStyleProps) => {
+			return theme.name === 'light'
+				? `background-image: url(${background_image_light});`
+				: '';
+		}}
+	}
+
 	${({ theme }: GlobalStyleProps) => {
 		return `:root {
 						--primary-color: ${theme.color.primary};
@@ -48,13 +60,7 @@ const GlobalStyle = createGlobalStyle`
 	}}
 `;
 
-const StyledApp = styled.section`
-	${({ theme }: GlobalStyleProps) => {
-		return theme.name === 'dark'
-			? 'background-color: rgba(var(--background-color-rgb), 0.95)'
-			: '';
-	}}
-`;
+const StyledApp = styled.section``;
 
 const App = () => {
 	const [user, setUser] = useState<Student | Professor | null>(null);
