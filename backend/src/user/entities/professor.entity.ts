@@ -1,7 +1,7 @@
 import { ChildEntity, Column, OneToMany } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { ClassroomEntity } from '../../classroom/entities/classroom.entity';
-import { IsNotEmpty, IsOptional, Length } from 'class-validator';
+import { IsNotEmpty, Length } from 'class-validator';
 import { CourseEntity } from '../../course/entities/course.entity';
 import { Exclude } from 'class-transformer';
 

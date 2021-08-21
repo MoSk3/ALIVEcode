@@ -11,6 +11,7 @@ import { CourseModule } from './course/course.module';
 import { IoTObjectModule } from './iot/IoTobject/IoTobject.module';
 import { IoTProjectModule } from './iot/IoTproject/IoTproject.module';
 import { IoTRouteModule } from './iot/IoTroute/IoTroute.module';
+import { AsScriptModule } from './as-script/as-script.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { IoTRouteModule } from './iot/IoTroute/IoTroute.module';
     IoTObjectModule,
     IoTProjectModule,
     IoTRouteModule,
+    AsScriptModule,
   ],
   controllers: [AppController],
   providers: [AppService],
