@@ -1,16 +1,24 @@
 package interpreteur.ast.buildingBlocs;
 
 import interpreteur.executeur.Coordonnee;
+import interpreteur.executeur.Executeur;
 import interpreteur.tokens.Token;
 
 import javax.lang.model.type.NullType;
 import java.io.Serializable;
-import java.net.FileNameMap;
 import java.util.List;
-import java.util.function.Supplier;
 
 public abstract class Programme implements Serializable {
     private int numLigne = -1;
+    protected final Executeur executeurInstance;
+
+    protected Programme() {
+        this.executeurInstance = null;
+    }
+
+    protected Programme(Executeur executeurInstance) {
+        this.executeurInstance = executeurInstance;
+    }
 
     public static Programme evalExpression(Expression<?> expression, String toString) {
         return new Programme() {

@@ -3,6 +3,7 @@ package interpreteur.as.modules;
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.as.Objets.ASObjet;
 import interpreteur.ast.buildingBlocs.expressions.Type;
+import interpreteur.executeur.Executeur;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -133,6 +134,10 @@ public class ModuleTexteUtils extends ASModule {
             }
     );
     public static List<ASObjet.Constante> constantes = Collections.emptyList();
+
+    public ModuleTexteUtils(ASModuleManager moduleManager) {
+        super(moduleManager);
+    }
 }
 
 

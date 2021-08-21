@@ -38,8 +38,9 @@ public class AliveScriptApi implements HttpHandler {
 
         if (data.has("lines")) {
             String[] lignes = ((String) data.get("lines")).split("\n");
-            Executeur.compiler(lignes, true);
-            return Executeur.executerMain(false);
+            Executeur executeur = new Executeur();
+            executeur.compiler(lignes, true);
+            return executeur.executerMain(false);
         }
         return "{}";
     }

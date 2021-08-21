@@ -13,20 +13,21 @@ import java.util.List;
 public class FinBoucle extends Programme {
     private final String nomBoucle;
 
-    public FinBoucle(String nomBoucle) {
+    public FinBoucle(String nomBoucle, Executeur executeurInstance) {
+        super(executeurInstance);
         Scope.popCurrentScope();
         this.nomBoucle = nomBoucle;
     }
 
     @Override
     public ASObjet<?> execute() {
-        Executeur.obtenirCoordRunTime().recommencerLeBlocActuel();
+        executeurInstance.obtenirCoordRunTime().recommencerLeBlocActuel();
         return null;
     }
 
     @Override
     public Coordonnee prochaineCoord(Coordonnee coord, List<Token> ligne) {
-        String blocActuel = Executeur.obtenirCoordRunTime().getBlocActuel().replaceAll("_", " ");
+        String blocActuel = coord.getBlocActuel().replaceAll("_", " ");
         if (!blocActuel.equals(nomBoucle)) {
 
             blocActuel = switch (blocActuel) {
@@ -39,7 +40,7 @@ public class FinBoucle extends Programme {
                     "fin " + nomBoucle, "fin " + blocActuel);
 
         }
-        return Executeur.obtenirCoordRunTime().finBloc();
+        return coord.finBloc();
     }
 
     @Override

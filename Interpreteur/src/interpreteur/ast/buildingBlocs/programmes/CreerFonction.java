@@ -22,7 +22,8 @@ public class CreerFonction extends Programme {
     private final List<Argument> args;
     private final Type typeRetour;
 
-    public CreerFonction(Var var, Argument[] args, Type typeRetour) {
+    public CreerFonction(Var var, Argument[] args, Type typeRetour, Executeur executeurInstance) {
+        super(executeurInstance);
         this.var = var;
         this.args = Arrays.asList(args);
         this.typeRetour = typeRetour;
@@ -34,7 +35,7 @@ public class CreerFonction extends Programme {
     @Override
     public NullType execute() {
         Scope scope = new Scope(this.scope);
-        ASFonction fonction = new ASFonction(var.getNom(), this.args.stream().map(Argument::eval).toArray(ASObjet.Fonction.Parametre[]::new), this.typeRetour);
+        ASFonction fonction = new ASFonction(var.getNom(), this.args.stream().map(Argument::eval).toArray(ASObjet.Fonction.Parametre[]::new), this.typeRetour, executeurInstance);
 
         Scope.getCurrentScopeInstance().getVariable(fonction.getNom()).changerValeur(fonction);
         // declare fonction
@@ -55,7 +56,7 @@ public class CreerFonction extends Programme {
 
     @Override
     public Coordonnee prochaineCoord(Coordonnee coord, List<Token> ligne) {
-        return new Coordonnee(Executeur.nouveauScope("fonc_" + ASObjet.FonctionManager.ajouterDansStructure(this.var.getNom())));
+        return new Coordonnee(executeurInstance.nouveauScope("fonc_" + ASObjet.FonctionManager.ajouterDansStructure(this.var.getNom())));
     }
 
     @Override

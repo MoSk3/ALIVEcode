@@ -17,6 +17,7 @@ public class ASFonction implements ASObjet<Object> {
     private final String nom;
     private Scope scope;
     private String coordBlocName;
+    private Executeur executeurInstance;
 
     /**
      * @param nom        <li>
@@ -34,11 +35,12 @@ public class ASFonction implements ASObjet<Object> {
      *                   Mettre <b>null</b> si le type du retour n'a pas de type forcee
      *                   </li>
      */
-    public ASFonction(String nom, Type typeRetour) {
+    public ASFonction(String nom, Type typeRetour, Executeur executeurInstance) {
         this.nom = nom;
         this.coordBlocName = "fonc_";
         this.typeRetour = typeRetour;
         this.parametres = new Fonction.Parametre[0];
+        this.executeurInstance = executeurInstance;
     }
 
     /**
@@ -58,11 +60,12 @@ public class ASFonction implements ASObjet<Object> {
      *                   Mettre <b>null</b> si le type du retour n'a pas de type forcee
      *                   </li>
      */
-    public ASFonction(String nom, Fonction.Parametre[] parametres, Type typeRetour) {
+    public ASFonction(String nom, Fonction.Parametre[] parametres, Type typeRetour, Executeur executeurInstance) {
         this.nom = nom;
         this.coordBlocName = "fonc_";
         this.parametres = parametres;
         this.typeRetour = typeRetour;
+        this.executeurInstance = executeurInstance;
     }
 
     public String getNom() {
@@ -166,9 +169,9 @@ public class ASFonction implements ASObjet<Object> {
 
 
     public static class FonctionInstance implements ASObjet<Object> {
-        private Coordonnee coordReprise = null;
         private final ASFonction fonction;
         private final Scope.ScopeInstance scopeInstance;
+        private Coordonnee coordReprise = null;
 
         public FonctionInstance(ASFonction fonction) {
             this.fonction = fonction;
@@ -204,13 +207,13 @@ public class ASFonction implements ASObjet<Object> {
 
             Object valeur;
             ASObjet<?> asValeur;
-            Coordonnee ancienneCoord = Executeur.obtenirCoordRunTime().copy();
+            Coordonnee ancienneCoord = fonction.executeurInstance.obtenirCoordRunTime().copy();
 
-            valeur = Executeur.executerScope(fonction.coordBlocName + fonction.nom, null, coordReprise == null ? null : coordReprise.getCoordAsString());
+            valeur = fonction.executeurInstance.executerScope(fonction.coordBlocName + fonction.nom, null, coordReprise == null ? null : coordReprise.toString());
             if (valeur instanceof String) {
                 //System.out.println("valeur: " + valeur);
-                coordReprise = Executeur.obtenirCoordRunTime().copy();
-                Executeur.setCoordRunTime(ancienneCoord.getCoordAsString());
+                coordReprise = fonction.executeurInstance.obtenirCoordRunTime().copy();
+                fonction.executeurInstance.setCoordRunTime(ancienneCoord.toString());
                 throw new ASErreur.StopSendData((String) valeur);
 
             } else {
@@ -219,9 +222,9 @@ public class ASFonction implements ASObjet<Object> {
 
             coordReprise = null;
 
-            Boucle.sortirScope(Executeur.obtenirCoordRunTime().getCoordAsString());
+            Boucle.sortirScope(fonction.executeurInstance.obtenirCoordRunTime().toString());
 
-            Executeur.setCoordRunTime(ancienneCoord.getCoordAsString());
+            fonction.executeurInstance.setCoordRunTime(ancienneCoord.toString());
             Scope.popCurrentScopeInstance();
 
             //System.out.println(this.typeRetour);

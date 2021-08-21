@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 import javax.lang.model.type.NullType;
 
 import interpreteur.as.erreurs.ASErreur;
-import interpreteur.as.modules.ASModule;
 //import interpreteur.ast.buildingBlocs.expressions.Type;
 import interpreteur.ast.buildingBlocs.expressions.Type;
 import interpreteur.executeur.Coordonnee;
@@ -288,11 +287,7 @@ public interface ASObjet<T> {
         }
 
         public static void reset() {
-            FonctionManager.structure = "";
-            for (Fonction fonction : ASModule.getModuleBuiltins().getFonctions()) ajouterFonction(fonction);
-            for (Variable variable : ASModule.getModuleBuiltins().getVariables()) {
-                Scope.getCurrentScope().declarerVariable(variable);
-            }
+            structure = "";
         }
     }
 

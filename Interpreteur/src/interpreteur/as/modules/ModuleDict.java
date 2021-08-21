@@ -1,8 +1,7 @@
 package interpreteur.as.modules;
 
-import interpreteur.as.Objets.ASFonction;
 import interpreteur.as.Objets.ASObjet;
-import interpreteur.ast.buildingBlocs.expressions.Type;
+import interpreteur.executeur.Executeur;
 
 public class ModuleDict extends ASModule {
 
@@ -33,18 +32,22 @@ public class ModuleDict extends ASModule {
             fin fonction
             """;
 
-    ASFonction creer = new ASFonction("creer", ASObjet.TypeBuiltin.fonctionType.asType()) {
-        @Override
-        public FonctionInstance makeInstance() {
-            return makeJavaInstance((paramsValeur) -> {
+    public ModuleDict(ASModuleManager moduleManager) {
+        super(moduleManager);
+    }
 
-                return null;
-            });
-        }
-    };
+    //ASFonction creer = new ASFonction("creer", ASObjet.TypeBuiltin.fonctionType.asType()) {
+    //    @Override
+    //    public FonctionInstance makeInstance() {
+    //        return makeJavaInstance((paramsValeur) -> {
+//
+    //            return null;
+    //        });
+    //    }
+    //};
 
-    public static void charger() {
-        ajouterModule("Dict", new ASObjet.Fonction[]{
+    public void charger() {
+        moduleManager.ajouterModule("Dict", new ASObjet.Fonction[]{
 
                 new ASObjet.Fonction("creer", new ASObjet.Fonction.Parametre[]{
 

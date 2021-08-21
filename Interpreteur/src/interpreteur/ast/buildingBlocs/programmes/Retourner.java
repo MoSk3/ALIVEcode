@@ -8,6 +8,7 @@ public class Retourner extends Programme {
     private final Expression<?> expr;
 
     public Retourner(Expression<?> expr) {
+        super(null);
         this.expr = expr;
     }
 

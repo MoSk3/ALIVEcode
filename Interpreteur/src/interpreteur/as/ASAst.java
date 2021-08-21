@@ -35,9 +35,12 @@ import javax.lang.model.type.NullType;
 
 
 public class ASAst extends AstGenerator {
-    public ASAst() {
+    private final Executeur executeurInstance;
+
+    public ASAst(Executeur executeurInstance) {
         ajouterProgrammes();
         ajouterExpressions();
+        this.executeurInstance = executeurInstance;
     }
 
 
@@ -57,8 +60,8 @@ public class ASAst extends AstGenerator {
                         if (p.get(1) instanceof ValeurConstante && ((ValeurConstante) p.get(1)).eval() instanceof Texte) {
                             String msg = (String) ((ValeurConstante) p.get(1)).eval().getValue();
                             if (msg.equalsIgnoreCase("experimental")) {
-                                Executeur.setAst(new ASAstExperimental());
-                                return new Utiliser(new Var("experimental"));
+                                executeurInstance.setAst(new ASAstExperimental(executeurInstance));
+                                return new Utiliser(new Var("experimental"), executeurInstance);
                             } else {
                                 throw new ErreurSyntaxe("Les noms de modules ne doivent pas \u00EAtre \u00E9crits avec des \" \" ou des ' '");
                             }
@@ -71,9 +74,9 @@ public class ASAst extends AstGenerator {
                             } else {
                                 sous_modules = new Var[]{(Var) p.get(3)};
                             }
-                            return new Utiliser((Var) p.get(1), sous_modules);
+                            return new Utiliser((Var) p.get(1), sous_modules, executeurInstance);
                         }
-                        return new Utiliser((Var) p.get(1));
+                        return new Utiliser((Var) p.get(1), executeurInstance);
                     }
                 });
         /*
@@ -253,7 +256,7 @@ public class ASAst extends AstGenerator {
                             }
                             type = (Type) p.get(3);
                         }
-                        return new CreerGetter(new Var(((Token) p.get(1)).obtenirValeur()), type);
+                        return new CreerGetter(new Var(((Token) p.get(1)).obtenirValeur()), type, executeurInstance);
                     }
                 });
 
@@ -261,7 +264,7 @@ public class ASAst extends AstGenerator {
                 new Ast<FinGet>() {
                     @Override
                     public FinGet apply(List<Object> p) {
-                        return new FinGet();
+                        return new FinGet(executeurInstance);
                     }
                 });
 
@@ -285,7 +288,7 @@ public class ASAst extends AstGenerator {
                             }
                             type = (Type) p.get(5);
                         }
-                        return new CreerSetter(new Var(((Token) p.get(1)).obtenirValeur()), new Var(((Token) p.get(3)).obtenirValeur()), type);
+                        return new CreerSetter(new Var(((Token) p.get(1)).obtenirValeur()), new Var(((Token) p.get(3)).obtenirValeur()), type, executeurInstance);
                     }
                 });
 
@@ -293,7 +296,7 @@ public class ASAst extends AstGenerator {
                 new Ast<FinSet>() {
                     @Override
                     public FinSet apply(List<Object> p) {
-                        return new FinSet();
+                        return new FinSet(executeurInstance);
                     }
                 });
 
@@ -354,7 +357,7 @@ public class ASAst extends AstGenerator {
 
                         if (p.get(p.size() - 1) == null && p.get(3) instanceof Type) {
                             typeRetour = (Type) p.get(3);
-                            return new CreerFonction((Var) p.get(1), params, typeRetour);
+                            return new CreerFonction((Var) p.get(1), params, typeRetour, executeurInstance);
                         }
 
                         if (p.get(3) != null && !(p.get(3) instanceof Token)) {
@@ -374,7 +377,7 @@ public class ASAst extends AstGenerator {
                             }
                         }
 
-                        return new CreerFonction((Var) p.get(1), params, typeRetour);
+                        return new CreerFonction((Var) p.get(1), params, typeRetour, executeurInstance);
                     }
                 });
 
@@ -393,7 +396,7 @@ public class ASAst extends AstGenerator {
         ajouterProgramme("FIN FONCTION", new Ast<FinFonction>(0) {
             @Override
             public FinFonction apply(List<Object> p) {
-                return new FinFonction();
+                return new FinFonction(executeurInstance);
             }
         });
 
@@ -404,7 +407,7 @@ public class ASAst extends AstGenerator {
                 new Ast<Si>() {
                     @Override
                     public Si apply(List<Object> p) {
-                        return new Si((Expression<?>) p.get(1));
+                        return new Si((Expression<?>) p.get(1), executeurInstance);
                     }
                 });
 
@@ -413,7 +416,7 @@ public class ASAst extends AstGenerator {
                 new Ast<SinonSi>() {
                     @Override
                     public SinonSi apply(List<Object> p) {
-                        return new SinonSi((Expression<?>) p.get(2));
+                        return new SinonSi((Expression<?>) p.get(2), executeurInstance);
                     }
                 });
 
@@ -422,14 +425,14 @@ public class ASAst extends AstGenerator {
                 new Ast<Sinon>(0) {
                     @Override
                     public Sinon apply(List<Object> p) {
-                        return new Sinon();
+                        return new Sinon(executeurInstance);
                     }
                 });
 
         ajouterProgramme("FIN SI", new Ast<FinSi>() {
             @Override
             public FinSi apply(List<Object> p) {
-                return new FinSi();
+                return new FinSi(executeurInstance);
             }
         });
 
@@ -437,16 +440,16 @@ public class ASAst extends AstGenerator {
                 new Ast<Programme>() {
                     @Override
                     public Programme apply(List<Object> p) {
-                        return new Programme() {
+                        return new Programme(executeurInstance) {
                             @Override
                             public NullType execute() {
-                                Executeur.obtenirCoordRunTime().nouveauBloc("faire");
+                                this.executeurInstance.obtenirCoordRunTime().nouveauBloc("faire");
                                 return null;
                             }
 
                             @Override
                             public Coordonnee prochaineCoord(Coordonnee coord, List<Token> ligne) {
-                                return Executeur.obtenirCoordRunTime().nouveauBloc("faire");
+                                return coord.nouveauBloc("faire");
                             }
 
                             @Override
@@ -461,14 +464,14 @@ public class ASAst extends AstGenerator {
                 new Ast<BoucleTantQue>(0) {
                     @Override
                     public BoucleTantQue apply(List<Object> p) {
-                        return new BoucleTantQue((Expression<?>) p.get(1));
+                        return new BoucleTantQue((Expression<?>) p.get(1), executeurInstance);
                     }
                 });
 
         ajouterProgramme("REPETER expression", new Ast<BoucleRepeter>() {
             @Override
             public BoucleRepeter apply(List<Object> p) {
-                return new BoucleRepeter((Expression<?>) p.get(1));
+                return new BoucleRepeter((Expression<?>) p.get(1), executeurInstance);
             }
         });
 
@@ -480,10 +483,10 @@ public class ASAst extends AstGenerator {
                     public BouclePour apply(List<Object> p) {
                         // boucle pour sans déclaration
                         if (p.size() == 4) {
-                            return new BouclePour((Var) p.get(1), (Expression<?>) p.get(3));
+                            return new BouclePour((Var) p.get(1), (Expression<?>) p.get(3), executeurInstance);
                         } else {
                             boolean estConst = ((Token) p.get(1)).obtenirNom().equals("CONSTANTE");
-                            return new BouclePour((Var) p.get(2), (Expression<?>) p.get(4)).setDeclarerVar(estConst, null);
+                            return new BouclePour((Var) p.get(2), (Expression<?>) p.get(4), executeurInstance).setDeclarerVar(estConst, null);
                         }
                     }
                 });
@@ -491,14 +494,14 @@ public class ASAst extends AstGenerator {
         ajouterProgramme("SORTIR", new Ast<Boucle.Sortir>() {
             @Override
             public Boucle.Sortir apply(List<Object> p) {
-                return new Boucle.Sortir();
+                return new Boucle.Sortir(executeurInstance);
             }
         });
 
         ajouterProgramme("CONTINUER", new Ast<Boucle.Continuer>() {
             @Override
             public Boucle.Continuer apply(List<Object> p) {
-                return new Boucle.Continuer();
+                return new Boucle.Continuer(executeurInstance);
             }
         });
 
@@ -508,7 +511,7 @@ public class ASAst extends AstGenerator {
                 new Ast<FinBoucle>() {
                     @Override
                     public FinBoucle apply(List<Object> p) {
-                        return new FinBoucle(((Token) p.get(1)).obtenirValeur());
+                        return new FinBoucle(((Token) p.get(1)).obtenirValeur(), executeurInstance);
                     }
                 });
 

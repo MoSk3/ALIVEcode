@@ -243,6 +243,10 @@ public class ModuleListeUtils extends ASModule {
 
 
     public static List<ASObjet.Constante> constantes = Collections.emptyList();
+
+    public ModuleListeUtils(ASModuleManager moduleManager) {
+        super(moduleManager);
+    }
 }
 
 

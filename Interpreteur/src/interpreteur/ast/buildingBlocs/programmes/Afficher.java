@@ -28,7 +28,7 @@ public class Afficher extends Programme {
             ASObjet<?> val = expr.eval();
             msg = val instanceof ASObjet.Nul ? "nul" : val.toString();
         }
-        Executeur.ecrire(msg);
+        //Executeur.ecrire(msg);
         return new Data(Data.Id.AFFICHER).addParam(msg);
     }
 
