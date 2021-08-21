@@ -85,15 +85,29 @@ public class ASAst extends AstGenerator {
         });
          */
 
-        ajouterProgramme("LIRE DANS expression",
+        ajouterProgramme("LIRE expression~"
+                        + "LIRE expression DEUX_POINTS expression",
                 new Ast<Lire>() {
                     @Override
                     public Lire apply(List<Object> p) {
-                        System.out.println(p);
-                        if (!(p.get(2) instanceof Var)) {
-                            throw new ErreurInputOutput("Une variable est attendue apr\u00E8s la commande 'lire dans', mais '" +
-                                    p.get(2).getClass().getSimpleName() + "' a \u00E9t\u00E9 trouv\u00E9.");
+
+                        if (p.size() == 4) {
+                            if (!(p.get(3) instanceof Type)) {
+                                throw new ErreurInputOutput("Un type est attendue apr\u00E8s le deux points ':' dans la commande 'lire', mais '" +
+                                        p.get(2).getClass().getSimpleName() + "' a \u00E9t\u00E9 trouv\u00E9.");
+                            } else {
+                                //TODO le truc avec le type
+                            }
                         }
+
+                        if (!(p.get(1) instanceof Var)) {
+                            throw new ErreurInputOutput("Une variable est attendue apr\u00E8s la commande 'lire', mais '" +
+                                    p.get(2).getClass().getSimpleName() + "' a \u00E9t\u00E9 trouv\u00E9.");
+                        } else {
+                            // TODO convertion automatique
+                        }
+
+
                         return new Lire((Var) p.get(2), null);
                     }
                 });
@@ -385,7 +399,8 @@ public class ASAst extends AstGenerator {
 
 
         //<-----------------------------------Les blocs de code------------------------------------->
-        ajouterProgramme("SI expression",
+        ajouterProgramme("SI expression~" +
+                        "SI expression ALORS",
                 new Ast<Si>() {
                     @Override
                     public Si apply(List<Object> p) {
@@ -393,7 +408,8 @@ public class ASAst extends AstGenerator {
                     }
                 });
 
-        ajouterProgramme("SINON SI expression",
+        ajouterProgramme("SINON SI expression~" +
+                        "SINON SI expression ALORS",
                 new Ast<SinonSi>() {
                     @Override
                     public SinonSi apply(List<Object> p) {

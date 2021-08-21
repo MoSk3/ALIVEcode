@@ -26,25 +26,6 @@ public class SinonSi extends Programme {
         return null;
     }
 
-    public void test() {
-        Coordonnee previousCoord = new Coordonnee(Executeur.obtenirCoordRunTime().getCoordAsString());
-        previousCoord.finBloc();
-        Hashtable<String, Programme> scope = Executeur.obtenirCoordCompileDict().get(Executeur.obtenirCoordRunTime().getScope());
-
-
-        System.out.println(test.eval());
-        System.out.println(scope);
-        System.out.println(Executeur.obtenirCoordRunTime().getCoordAsString());
-
-        if (test.eval().boolValue()) {
-            //Executeur.obtenirCoordRunTime().nouveauBloc(this.coord);
-        } else if (scope.containsKey("<1>sinon_si_" + (this.num + 1) + previousCoord.getCoordAsString())) {
-            Executeur.obtenirCoordRunTime().remplacerBlocActuel("sinon_si_" + (this.num + 1));
-        } else if (scope.containsKey("<1>sinon" + previousCoord.getCoordAsString())) {
-            Executeur.obtenirCoordRunTime().remplacerBlocActuel("sinon");
-        }
-    }
-
     @Override
     public Coordonnee prochaineCoord(Coordonnee coord, List<Token> ligne) {
         String blocActuel = coord.getBlocActuel();
@@ -59,25 +40,80 @@ public class SinonSi extends Programme {
         }
         this.coord = "sinon_si_" + this.num;
 
-        Programme testProgramme = new Programme() {
-            @Override
-            public Object execute() {
-                test();
-                return null;
-            }
-        };
+        SinonSiTest sinonSiTest = new SinonSiTest(this);
 
-        Executeur.obtenirCoordRunTime().remplacerBlocActuel(this.coord);
+        coord = Executeur.obtenirCoordRunTime();
+        coord.finBloc();
 
         Executeur.obtenirCoordCompileDict()
                 .get(Executeur.obtenirCoordRunTime().getScope())
-                .put("<1>sinon_si_" + this.num + coord.getCoordAsString(), testProgramme);
+                .put("<" + this.num + ">sinon_si_test" + coord.getCoordAsString(), sinonSiTest);
+
+        Executeur.obtenirCoordRunTime().nouveauBloc(this.coord);
 
         return Executeur.obtenirCoordRunTime();
     }
 
     @Override
     public String toString() {
-        return "Sinon";
+        return "SinonSi{" +
+                "test=" + test +
+                ", coord='" + coord + '\'' +
+                ", num=" + num +
+                '}';
+    }
+
+    private static class SinonSiTest extends Programme {
+        final SinonSi parent;
+
+        SinonSiTest(SinonSi parent) {
+            this.parent = parent;
+        }
+
+        @Override
+        public Object execute() {
+            Coordonnee coord = Executeur.obtenirCoordRunTime();
+            coord.finBloc();
+            if (this.parent.test.eval().boolValue()) {
+                coord.nouveauBloc("sinon_si_" + this.parent.num);
+            } else if (Executeur.laCoordExiste("<" + (this.parent.num + 1) + ">sinon_si_test")) {
+                coord.setCoord("<" + this.parent.num + ">sinon_si_test" + coord.getCoordAsString());
+            } else if (Executeur.leBlocExiste("sinon")) {
+                coord.nouveauBloc("sinon");
+            }
+            return null;
+        }
+
+        @Override
+        public String toString() {
+            return "SinonSiTest{" +
+                    "parent=" + parent +
+                    '}';
+        }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

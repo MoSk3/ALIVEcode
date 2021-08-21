@@ -101,6 +101,10 @@ const useRoutes = () => {
 			path: '/level/play/:id',
 			component: Level,
 		},
+		code_play: {
+			path: '/code',
+			component: CodeLevel,
+		},
 		en: {
 			// Route for switching language to english
 			path: '/en',

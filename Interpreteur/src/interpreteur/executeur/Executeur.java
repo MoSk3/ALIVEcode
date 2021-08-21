@@ -262,6 +262,10 @@ public class Executeur {
         return coordCompileDict.get(coordRunTime.getScope()).containsKey("<1>" + nom + coordRunTime.getCoordAsString());
     }
 
+    public static boolean laCoordExiste(String coord) {
+        return coordCompileDict.get(coordRunTime.getScope()).containsKey(coord + coordRunTime.getCoordAsString());
+    }
+
 
     public static boolean enAction() {
         return (compilationActive || executionActive);
@@ -603,7 +607,11 @@ public class Executeur {
 
         String[] lines = """
                                 
-                afficher 3
+                var a <- 23
+                
+                afficher a
+                a += 3
+                afficher a
                                 
                 """.split("\n");
 
@@ -611,7 +619,7 @@ public class Executeur {
         debug = true;
         Object a;
         if (!(a = compiler(lines, true)).equals("[]")) System.out.println(a);
-        //printCompileDict();
+        printCompileDict();
         System.out.println(executerMain(false));
         //System.out.println(compiler(lines, false));
         //executerMain(false);
