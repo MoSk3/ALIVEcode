@@ -47,7 +47,7 @@ public class Executeur {
     // coordonne ou commencer tous les programmes
     final private static Coordonnee debutCoord = new Coordonnee("<0>main");
     // lexer et parser
-    private static ASLexer lexer = new ASLexer();
+    private static final ASLexer lexer = new ASLexer();
     //------------------------ compilation -----------------------------//
     private final Hashtable<String, Hashtable<String, Programme>> coordCompileDict = new Hashtable<>();
     final private ArrayList<Data> datas = new ArrayList<>();
