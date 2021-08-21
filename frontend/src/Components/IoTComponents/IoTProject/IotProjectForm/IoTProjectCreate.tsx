@@ -1,6 +1,5 @@
 import FormContainer from '../../../UtilsComponents/FormContainer/FormContainer';
 import { useTranslation } from 'react-i18next';
-import { CourseFormProps } from './iotProjectFormTypes';
 import Form from '../../../UtilsComponents/Form/Form';
 import { useHistory } from 'react-router';
 import useRoutes from '../../../../state/hooks/useRoutes';
@@ -12,14 +11,14 @@ import {
 } from '../../../../Models/Iot/IoTproject.entity';
 
 /** Reusable form component to handle header creation */
-const IoTProjectForm = (props: CourseFormProps) => {
+const IoTProjectCreate = () => {
 	const { t } = useTranslation();
 	const history = useHistory();
 	const { routes } = useRoutes();
 	const alert = useAlert();
 
 	return (
-		<FormContainer title={t('form.title.create_course')}>
+		<FormContainer title={t('form.title.create_iot_project')}>
 			<Form
 				onSubmit={res => {
 					const project: IoTProject = res.data;
@@ -59,4 +58,4 @@ const IoTProjectForm = (props: CourseFormProps) => {
 	);
 };
 
-export default IoTProjectForm;
+export default IoTProjectCreate;

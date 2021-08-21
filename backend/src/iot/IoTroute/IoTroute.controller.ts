@@ -8,7 +8,7 @@ import { hasRole } from '../../user/auth';
 import { IotRouteEntity } from './entities/IoTroute.entity';
 import { IoTProjectService } from '../IoTproject/IoTproject.service';
 
-@Controller('iot')
+@Controller('iot/routes')
 export class IoTRouteController {
   constructor(
     private readonly IoTRouteService: IoTRouteService,

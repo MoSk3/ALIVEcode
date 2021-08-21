@@ -1,7 +1,7 @@
 import { GenericCardProps } from '../CardContent/genericCardTypes';
 import GenericCard from '../CardContent/GenricCard';
 
-const Card = (props: GenericCardProps) => {
+const SmallCard = (props: GenericCardProps) => {
 	return (
 		<GenericCard
 			margin="15px 25px"
@@ -14,4 +14,4 @@ const Card = (props: GenericCardProps) => {
 	);
 };
 
-export default Card;
+export default SmallCard;

@@ -18,7 +18,7 @@ import ClassroomForm from '../../Components/ClassroomComponents/ClassroomForm/Cl
 import Dashboard from '../../Pages/Dashboard/Dashboard';
 import IoTHome from '../../Pages/IoT/IoTHome/IoTHome';
 import IoTProject from '../../Pages/IoT/IoTProject/IoTProject';
-import IoTProjectForm from '../../Components/IoTComponents/IoTProject/IotProjectForm/IoTProjectForm';
+import IoTProjectCreate from '../../Components/IoTComponents/IoTProject/IotProjectForm/IoTProjectCreate';
 import CodeLevel from '../../Pages/Level/CodeLevel';
 import IoTDashboard from '../../Pages/IoT/IoTDashboard/IoTDashboard';
 
@@ -160,7 +160,7 @@ const useRoutes = () => {
 		},
 		create_iot_project: {
 			path: '/iot/projects/create',
-			component: IoTProjectForm,
+			component: IoTProjectCreate,
 		},
 		iot_project: {
 			path: '/iot/projects/:id',

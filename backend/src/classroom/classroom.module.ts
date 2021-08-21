@@ -10,10 +10,19 @@ import { UserService } from '../user/user.service';
 import { StudentEntity } from '../user/entities/student.entity';
 import { CourseEntity } from '../course/entities/course.entity';
 import { IoTProjectEntity } from '../iot/IoTproject/entities/IoTproject.entity';
+import { IoTObjectEntity } from '../iot/IoTobject/entities/IoTobject.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([ClassroomEntity, UserEntity, ProfessorEntity, StudentEntity, CourseEntity, IoTProjectEntity]),
+    TypeOrmModule.forFeature([
+      ClassroomEntity,
+      UserEntity,
+      ProfessorEntity,
+      StudentEntity,
+      CourseEntity,
+      IoTProjectEntity,
+      IoTObjectEntity,
+    ]),
     DefaultAdminModule,
   ],
   controllers: [ClassroomController],

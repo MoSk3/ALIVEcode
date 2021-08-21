@@ -28,11 +28,11 @@ export class IoTProjectController {
   async findOne(@User() user: UserEntity, @Param('id') id: string) {
     const project = await this.IoTProjectService.findOne(id);
 
-    if (project.creator.id === user.id || hasRole(user, Role.STAFF)) return project;
+    if (project.creator.id !== user.id && !hasRole(user, Role.STAFF))
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
     if (project.access === IOTPROJECT_ACCESS.PRIVATE) throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
     // TODO : Add restriction
-    if (project.access === IOTPROJECT_ACCESS.RESTRICTED)
-      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    if (project.access === IOTPROJECT_ACCESS.RESTRICTED) throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
 
     return project;
   }

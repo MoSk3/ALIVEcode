@@ -7,7 +7,7 @@ import { UserEntity } from '../../user/entities/user.entity';
 import { hasRole } from '../../user/auth';
 import { IoTObjectService } from './IoTobject.service';
 
-@Controller('IoTobject')
+@Controller('iot/objects')
 export class IoTObjectController {
   constructor(private readonly IoTObjectService: IoTObjectService) {}
 
@@ -24,9 +24,13 @@ export class IoTObjectController {
   }
 
   @Get(':id')
-  @Auth(Role.STAFF)
-  async findOne(@Param('id') id: string) {
-    return await this.IoTObjectService.findOne(id);
+  @Auth()
+  async findOne(@User() user: UserEntity, @Param('id') id: string) {
+    const project = await this.IoTObjectService.findOne(id);
+
+    if (project.creator.id !== user.id && !hasRole(user, Role.STAFF))
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    return project;
   }
 
   @Patch(':id')

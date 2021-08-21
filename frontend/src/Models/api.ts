@@ -6,6 +6,7 @@ import { Section } from './Course/section.entity';
 import { Classroom } from './Classroom/classroom.entity';
 import { Student } from './User/user.entity';
 import { IoTProject } from './Iot/IoTproject.entity';
+import { IoTObject } from './Iot/IoTobject.entity';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const apiGetter = <T extends {}>(url: string, target: T) => {
@@ -33,8 +34,15 @@ const api = {
 		users: {
 			iot: {
 				async getProjects() {
-					return ((await axios.get(`users/iot/projects`)).data.map((d: any) => plainToClass(IoTProject, d)))
-				}
+					return (await axios.get(`users/iot/projects`)).data.map((d: any) =>
+						plainToClass(IoTProject, d),
+					);
+				},
+				async getObjects() {
+					return (await axios.get(`users/iot/objects`)).data.map((d: any) =>
+						plainToClass(IoTObject, d),
+					);
+				},
 			},
 			//get: apiGetter('users', User),
 			async getClassrooms(userId: string) {
@@ -79,10 +87,13 @@ const api = {
 		iot: {
 			projects: {
 				async get(projectId: string) {
-					return plainToClass(IoTProject, (await axios.get(`iot/projects/${projectId}`)).data);
-				}
-			}
-		}
+					return plainToClass(
+						IoTProject,
+						(await axios.get(`iot/projects/${projectId}`)).data,
+					);
+				},
+			},
+		},
 	},
 };
 

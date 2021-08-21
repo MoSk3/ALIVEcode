@@ -19,7 +19,6 @@ const IoTObjectCreate = () => {
 				onSubmit={res => {
 					const object: IoTObject = res.data;
 					console.log(object);
-
 					return alert.success('Objet connecté créé avec succès');
 				}}
 				buttonText={t('form.submit.create_iot_project')}
@@ -48,3 +47,5 @@ const IoTObjectCreate = () => {
 		</FormContainer>
 	);
 };
+
+export default IoTObjectCreate;

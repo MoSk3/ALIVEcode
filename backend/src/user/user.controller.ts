@@ -96,6 +96,12 @@ export class UserController {
     return await this.userService.getIoTProjects(user);
   }
 
+  @Get('iot/objects')
+  @Auth()
+  async getObjects(@User() user: UserEntity) {
+    return await this.userService.getIoTObjects(user);
+  }
+
   @Get(':id')
   @Auth()
   findOneStudent(@User() user: UserEntity, @Param('id') id: string) {
