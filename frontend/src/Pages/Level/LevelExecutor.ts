@@ -26,7 +26,7 @@ export default class LevelExecutor {
 		this.init();
 	}
 
-	init() {
+	private init() {
 		this.playButton.on('click', async (e: any) => {
 			if (!this.execution) {
 				this.execution = true;
@@ -55,7 +55,7 @@ export default class LevelExecutor {
 		});
 	}
 
-	execute(data: any) {
+	private execute(data: any) {
 		const perform_action = (
 			i: number,
 			res: Array<any> | undefined = undefined,

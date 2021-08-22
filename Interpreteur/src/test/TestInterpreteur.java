@@ -1,5 +1,7 @@
 package test;
 
+import interpreteur.as.erreurs.ASErreur;
+
 import java.util.stream.Stream;
 
 public class TestInterpreteur {
@@ -43,17 +45,44 @@ public class TestInterpreteur {
                                 """
                         )
                         .and("""
-                                var a = 23
-                                afficher a
+                                var é = 23
+                                afficher é
                                 """
                         )
                         .toPrint("23")
-                        .toEnd()
+                        .toEnd(),
+
+                // missing variable
+                new Test()
+                        .expect("""
+                                afficher a
+                                """)
+                        .toFail(new ASErreur.ErreurVariableInconnue("").getNomErreur())
 
         ).allMatch(Test::passTest);
     }
 
     public static void main(String[] args) {
-        System.out.println("Final result: " + (TestInterpreteur.test() ? "Success!" : "Failure"));
+        System.out.println("\n" + "-".repeat(20) + "\nFinal result: " + (TestInterpreteur.test() ? "Success!" : "Failure"));
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

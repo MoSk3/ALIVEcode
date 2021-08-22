@@ -1,5 +1,6 @@
 package test;
 
+import interpreteur.as.erreurs.ASErreur;
 import interpreteur.data_manager.Data;
 import interpreteur.executeur.Executeur;
 import org.json.JSONArray;
@@ -16,7 +17,7 @@ public class Test {
     final static String lastElement = "{\"p\":[\"[exécution terminée]\"],\"d\":0,\"id\":300}";
     private final ArrayList<JSONArray> outputs = new ArrayList<>();
     private final ArrayList<String> inputs = new ArrayList<>();
-    private final Hashtable<String, Boolean> results = new Hashtable<>();
+    private final Hashtable<String, String> results = new Hashtable<>();
     private int idx = 0;
 
     private static JSONArray executeAliveScript(String input) {
@@ -51,9 +52,13 @@ public class Test {
         return this.expect(input);
     }
 
+    private void saveResult(String testName, boolean testResult) {
+        results.put(testName, testResult ? "success" : "failure");
+    }
+
     public Test toEnd() {
         Stream<JSONObject> outputs = getNextOutput();
-        results.put("print the end message",
+        saveResult("Print the 'end of execution' message",
                 outputs != null && outputs.allMatch(output -> output.toString().equals(lastElement))
         );
         return this;
@@ -62,15 +67,23 @@ public class Test {
     public Test toPrint(String printedOutput) {
         Stream<JSONObject> outputs = getNextOutput();
         Data intendedData = new Data(Data.Id.AFFICHER).addParam(printedOutput);
-        results.put("print '" + printedOutput + "' to the screen",
+        saveResult("Print '" + printedOutput + "' to the screen",
                 outputs != null && outputs.allMatch(output -> output.toString().equals(intendedData.toString()))
+        );
+        return this;
+    }
+
+    public Test toFail(String errorName) {
+        Stream<JSONObject> outputs = getNextOutput();
+        saveResult("Raise the error '" + errorName + "' to the screen",
+                outputs != null && outputs.allMatch(output -> output.getJSONArray("p").getString(0).equals(errorName))
         );
         return this;
     }
 
 
     public boolean passTest() {
-        boolean result = results.values().stream().allMatch(Predicate.isEqual(true));
+        boolean result = results.values().stream().allMatch(Predicate.isEqual("success"));
         if (!result) {
             System.out.println("The inputs did not pass all the tests");
             System.out.println("inputs:");
