@@ -138,6 +138,11 @@ public class ModuleTexteUtils extends ASModule {
     public ModuleTexteUtils(ASModuleManager moduleManager) {
         super(moduleManager);
     }
+
+    @Override
+    public void charger() {
+
+    }
 }
 
 

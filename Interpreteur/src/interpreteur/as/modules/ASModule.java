@@ -5,4 +5,6 @@ public abstract class ASModule {
     public ASModule(ASModuleManager moduleManager) {
         this.moduleManager = moduleManager;
     }
+
+    abstract public void charger();
 }

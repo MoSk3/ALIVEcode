@@ -136,19 +136,8 @@ public class Executeur {
 
 
         String[] lines = """
-                utiliser Math
-                
-                var a <- 23
-                                
-                fonction abc(angle: nombre = 0) -> nombre
-                    afficher angle
-                    retourner Math.sin(angle)
-                fin fonction
-                                
-                afficher abc(90)
-                a += 3
-                afficher a
-                                
+                var a <- 10
+                afficher a           
                 """.split("\n");
 
 

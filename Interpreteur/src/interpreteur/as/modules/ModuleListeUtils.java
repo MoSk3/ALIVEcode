@@ -247,6 +247,11 @@ public class ModuleListeUtils extends ASModule {
     public ModuleListeUtils(ASModuleManager moduleManager) {
         super(moduleManager);
     }
+
+    @Override
+    public void charger() {
+
+    }
 }
 
 

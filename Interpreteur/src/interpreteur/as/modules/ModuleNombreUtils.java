@@ -74,6 +74,11 @@ public class ModuleNombreUtils extends ASModule {
     public ModuleNombreUtils(ASModuleManager moduleManager) {
         super(moduleManager);
     }
+
+    @Override
+    public void charger() {
+
+    }
 }
 
 
