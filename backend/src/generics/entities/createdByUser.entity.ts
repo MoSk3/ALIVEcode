@@ -1,5 +1,5 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
-import { UserEntity } from '../../user/entities/user.entity';
+import { UserEntity } from '../../models/user/entities/user.entity';
 import { Exclude } from 'class-transformer';
 import { IsOptional, IsNotEmpty, Length, IsEmpty } from 'class-validator';
 

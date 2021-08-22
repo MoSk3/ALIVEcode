@@ -5,8 +5,8 @@ import { JsonWebTokenError, verify } from 'jsonwebtoken';
 import { Repository } from 'typeorm';
 import { Reflector, REQUEST } from '@nestjs/core';
 import { AuthPayload } from '../types/auth.payload';
-import { UserEntity } from 'src/user/entities/user.entity';
-import { hasRole } from '../../user/auth';
+import { UserEntity } from 'src/models/user/entities/user.entity';
+import { hasRole } from '../../models/user/auth';
 import { Role } from '../types/roles.types';
 
 export interface MyRequest extends Request {

@@ -1,9 +1,9 @@
 
-export type ButtonTypes = "primary" | "secondary" | "danger";
+export type ButtonVariants = "primary" | "secondary" | "danger";
 
 export type ButtonProps = {
 	to?: string;
-	variant: ButtonTypes;
+	variant: ButtonVariants;
 	type?: 'button' | 'submit' | 'reset';
 	onClick?: () => void;
 	children?: React.ReactNode;

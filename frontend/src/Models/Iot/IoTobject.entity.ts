@@ -2,8 +2,8 @@ import { CreatedByUser } from '../Generics/createdByUser.entity';
 import { User } from '../User/user.entity';
 
 export enum IOTOBJECT_LABEL {
-	HOME,
-	OTHER,
+	HOME = 'HO',
+	OTHER = 'OT',
 }
 
 export class IoTObject extends CreatedByUser {

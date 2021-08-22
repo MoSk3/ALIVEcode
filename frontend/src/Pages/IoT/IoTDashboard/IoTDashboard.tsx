@@ -11,6 +11,8 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useHistory } from 'react-router';
 import { IoTObject } from '../../../Models/Iot/IoTobject.entity';
 import IoTObjectCreate from '../../../Components/IoTComponents/IoTObject/IotObjectForm/IoTObjectCreate';
+import FormModal from '../../../Components/UtilsComponents/FormModal/FormModal';
+import { useTranslation } from 'react-i18next';
 
 const StyledDiv = styled(FillContainer)`
 	padding: 2vw;
@@ -20,9 +22,10 @@ const IoTDashboard = (props: iotDashboardProps) => {
 	const [projects, setProjects] = useState<IoTProject[]>();
 	const [objects, setObjects] = useState<IoTObject[]>();
 	const { routes } = useRoutes();
+	const { t } = useTranslation();
 	const history = useHistory();
 	// TODO: ADD MODAL FORM GENERIC
-	const [open, setOpen] = useState(false);
+	const [openObjectCreate, setOpenObjectCreate] = useState(false);
 
 	useEffect(() => {
 		const getProjects = async () => {
@@ -61,7 +64,7 @@ const IoTDashboard = (props: iotDashboardProps) => {
 				</CardContainer>
 				<CardContainer
 					icon={faPlus}
-					onIconClick={() => setOpen(!open)}
+					onIconClick={() => setOpenObjectCreate(!openObjectCreate)}
 					height="200px"
 					className="iot-container"
 					title="My connected objects"
@@ -79,7 +82,21 @@ const IoTDashboard = (props: iotDashboardProps) => {
 					)}
 				</CardContainer>
 			</div>
-			{open && <IoTObjectCreate />}
+			<FormModal
+				onSubmit={res => {
+					if (!objects) return;
+					const newObject: IoTObject = res.data;
+					setObjects([...objects, newObject]);
+					setOpenObjectCreate(false);
+				}}
+				onClose={() => setOpenObjectCreate(false)}
+				title={t('form.title.create_iot_project')}
+				open={openObjectCreate}
+				closeButton={false}
+				buttonVariant="primary"
+			>
+				<IoTObjectCreate />
+			</FormModal>
 		</StyledDiv>
 	);
 };

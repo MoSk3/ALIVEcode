@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { UserEntity } from './user/entities/user.entity';
-import { ProfessorEntity } from './user/entities/professor.entity';
-import { StudentEntity } from './user/entities/student.entity';
+import { UserEntity } from './models/user/entities/user.entity';
+import { ProfessorEntity } from './models/user/entities/professor.entity';
+import { StudentEntity } from './models/user/entities/student.entity';
 
 @Injectable()
 export class AppService {

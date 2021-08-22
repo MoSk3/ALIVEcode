@@ -1,4 +1,4 @@
-import { ButtonProps, ButtonTypes } from './buttonTypes';
+import { ButtonProps, ButtonVariants } from './buttonTypes';
 import styled from 'styled-components';
 import { useHistory } from 'react-router';
 
@@ -42,7 +42,7 @@ const Button = ({ variant, type, onClick, to, children }: ButtonProps) => {
 		onClick ? onClick() : to && history.push(to);
 	};
 
-	const renderSwitch = (param: ButtonTypes) => {
+	const renderSwitch = (param: ButtonVariants) => {
 		switch (param) {
 			case 'secondary':
 				return (
