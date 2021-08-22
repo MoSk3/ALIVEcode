@@ -1,4 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, HttpException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  HttpStatus,
+  HttpException,
+  UseInterceptors,
+} from '@nestjs/common';
 import { IoTRouteService } from './IoTroute.service';
 import { Auth } from '../../../utils/decorators/auth.decorator';
 import { User } from '../../../utils/decorators/user.decorator';
@@ -7,8 +18,10 @@ import { IotRouteEntity } from './entities/IoTroute.entity';
 import { IoTProjectService } from '../IoTproject/IoTproject.service';
 import { UserEntity } from '../../user/entities/user.entity';
 import { hasRole } from 'src/models/user/auth';
+import { DTOInterceptor } from '../../../utils/interceptors/dto.interceptor';
 
 @Controller('iot/routes')
+@UseInterceptors(new DTOInterceptor())
 export class IoTRouteController {
   constructor(
     private readonly IoTRouteService: IoTRouteService,
