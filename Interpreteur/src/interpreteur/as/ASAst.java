@@ -111,7 +111,7 @@ public class ASAst extends AstGenerator {
                         }
 
 
-                        return new Lire((Var) p.get(2), null);
+                        return new Lire((Var) p.get(1), null);
                     }
                 });
         /*
