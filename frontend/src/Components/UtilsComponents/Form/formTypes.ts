@@ -10,9 +10,10 @@ export type FormProps = {
 };
 
 export type InputGroup = {
-	required: boolean;
+	required?: boolean;
 	minLength?: number;
 	maxLength?: number;
+	default?: any;
 	name: string;
 	selectOptions?: Array<any> | { [key: string]: any };
 	inputType:

@@ -49,8 +49,8 @@ const Form = (props: FormProps) => {
 		const placeholderValue = t(`form.${props.name}.${g.name}.placeholder`);
 		const registerOptions = {
 			required: g.required,
-			minLength: g.minLength ?? undefined,
-			maxLength: g.maxLength ?? undefined,
+			minLength: g.minLength,
+			maxLength: g.maxLength,
 		};
 		switch (g.inputType) {
 			case 'select':
@@ -58,6 +58,7 @@ const Form = (props: FormProps) => {
 					<BootForm.Control
 						as="select"
 						placeholder={placeholderValue}
+						value={g.default}
 						{...register(g.name, registerOptions)}
 					>
 						{Array.isArray(g.selectOptions)
@@ -82,6 +83,7 @@ const Form = (props: FormProps) => {
 				return (
 					<BootForm.Control
 						type={g.inputType}
+						value={g.default}
 						placeholder={placeholderValue}
 						{...register(g.name, registerOptions)}
 					/>

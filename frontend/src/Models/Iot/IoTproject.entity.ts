@@ -1,6 +1,7 @@
 import { CreatedByUser } from "../Generics/createdByUser.entity";
 import { User } from '../User/user.entity';
 import { IotRoute } from './IoTroute.entity';
+import api from '../api';
 
 export enum IOTPROJECT_INTERACT_RIGHTS {
 	ANYONE = 'AN',
@@ -28,4 +29,8 @@ export class IoTProject extends CreatedByUser {
 	collaborators: User[];
 
 	routes: IotRoute[];
+
+	async getRoutes() {
+		return await api.db.iot.projects.getRoutes(this.id);
+	}
 }

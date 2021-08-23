@@ -7,6 +7,7 @@ import { Classroom } from './Classroom/classroom.entity';
 import { Student } from './User/user.entity';
 import { IoTProject } from './Iot/IoTproject.entity';
 import { IoTObject } from './Iot/IoTobject.entity';
+import { IotRoute } from './Iot/IoTroute.entity';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const apiGetter = <T extends {}>(url: string, target: T) => {
@@ -90,6 +91,11 @@ const api = {
 					return plainToClass(
 						IoTProject,
 						(await axios.get(`iot/projects/${projectId}`)).data,
+					);
+				},
+				async getRoutes(projectId: string) {
+					return (await axios.get(`iot/projects/${projectId}/routes`)).data.map(
+						(d: any) => plainToClass(IotRoute, d),
 					);
 				},
 			},

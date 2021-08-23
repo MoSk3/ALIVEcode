@@ -26,10 +26,14 @@ export class IoTProjectService {
   }
 
   async update(id: string, updateIoTprojectDto: IoTProjectEntity) {
-    return await this.projectRepository.update(id, updateIoTprojectDto);
+    return await this.projectRepository.save({ id, ...updateIoTprojectDto });
   }
 
   async remove(id: string) {
     return await this.projectRepository.delete(id);
+  }
+
+  async getRoutes(project: IoTProjectEntity) {
+    return (await this.projectRepository.findOne(project.id, { relations: ['routes'] })).routes;
   }
 }

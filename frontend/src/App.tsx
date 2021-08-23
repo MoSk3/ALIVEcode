@@ -81,7 +81,6 @@ const App = () => {
 
 	const logout = useCallback(async () => {
 		try {
-			new Error('lol');
 			await axios.get('users/logout');
 			setAccessToken('');
 			setUser(null);
