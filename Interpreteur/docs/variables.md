@@ -32,30 +32,30 @@
 
 - ##### Déclaration:
   - variable:
-    - sans type: <code>var *var* = *valeur*</code>
-    - avec type: <code>var *var*: *type* = *valeur*</code>
+    - sans type: <code>var *variable* = *valeur*</code>
+    - avec type: <code>var *variable*: *type* = *valeur*</code>
   - constante:
-    - sans type: <code>const *var* = *valeur*</code>
-    - avec type: <code>const *var*: *type* = *valeur*</code>
+    - sans type: <code>const *variable* = *valeur*</code>
+    - avec type: <code>const *vavariabler*: *type* = *valeur*</code>
 
 - ##### Assignement:
-  - assignement variable: <code>*var* = *valeur*</code>
+  - assignement variable: <code>*variable* = *valeur*</code>
   - assignement constante: <code>**ERREUR: IMPOSSIBLE DE RÉASSIGNER UNE CONSTANTE**</code>
-  - assignement variable avec opération arithmétique <code>*var* **[operation](#arithmétique)**= *valeur*</code>
-    - <code>*var* += *valeur*</code>
-    - <code>*var* -= *valeur*</code>
-    - <code>*var* *= *valeur*</code>
-    - <code>*var* /= *valeur*</code>
-    - <code>*var* %= *valeur*</code>
-    - <code>*var* ^= *valeur*</code>
-    - <code>*var* //= *valeur*</code> 
-  - incrément: <code>*var*++</code>
-  - décrément: <code>*var*--</code>
+  - assignement variable avec opération arithmétique <code>*variable* **[operation](#arithmétique)**= *valeur*</code>
+    - <code>*variable* += *valeur*</code>
+    - <code>*variable* -= *valeur*</code>
+    - <code>*variable* *= *valeur*</code>
+    - <code>*variable* /= *valeur*</code>
+    - <code>*variable* %= *valeur*</code>
+    - <code>*variable* ^= *valeur*</code>
+    - <code>*variable* //= *valeur*</code> 
+  - incrément: <code>*variable*++</code>
+  - décrément: <code>*variable*--</code>
 
 - ##### Scoping
   - deux types de scopes:
     - global (tout ce qui est défini dans le scope 'main')
-    - local (tout ce qui est défini dans une fonction)
+    - local (tout ce qui est défini dans une fonction ou un bloc {pour, repeter, si, tant que, etc.})
   - |Variables          |Réassigner |Redéclarer           |Accéder
     ---                 |---        |---                  |---
     |même scope         |✔          |❌                  |✔

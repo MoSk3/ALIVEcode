@@ -1,5 +1,6 @@
 package interpreteur.ast.buildingBlocs.programmes;
 
+import interpreteur.as.Objets.Scope;
 import interpreteur.ast.buildingBlocs.Expression;
 import interpreteur.ast.buildingBlocs.Programme;
 import interpreteur.executeur.Coordonnee;
@@ -15,22 +16,35 @@ public class BoucleRepeter extends Boucle {
     private final Expression<?> nbFois;
     private Integer end = null;
     private int current = 0;
+    private final Scope scope;
 
     public BoucleRepeter(Expression<?> nbFois) {
         super("repeter");
         this.nbFois = nbFois;
+        this.scope = Scope.makeNewCurrentScope();
     }
 
     public void sortir() {
         current = 0;
         end = null;
         sortir = false;
+        Scope.popCurrentScopeInstance();
     }
 
     @Override
     public NullType execute() {
-        if (end == null) end = (Integer) nbFois.eval().getValue();
-        if (current++ < end && !sortir) Executeur.obtenirCoordRunTime().nouveauBloc("repeter");
+        // first time
+        if (end == null) {
+            Scope.pushCurrentScopeInstance(this.scope.makeScopeInstanceFromCurrentScope());
+            end = (Integer) nbFois.eval().getValue();
+        }
+
+        // other times
+        if (current++ < end && !sortir) {
+            Scope.popCurrentScopeInstance();
+            Scope.pushCurrentScopeInstance(this.scope.makeScopeInstanceFromCurrentScope());
+            Executeur.obtenirCoordRunTime().nouveauBloc("repeter");
+        }
         else sortir();
         return null;
     }

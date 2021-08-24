@@ -26,6 +26,7 @@ Ajouter:
 
   assignements:
     ASSIGNEMENT: '='
+    ASSIGNEMENT_FLECHE: '<-'
     PLUS_ASSIGNEMENT: '\+='
     POW_ASSIGNEMENT: '\^='
     MUL_ASSIGNEMENT: '\*='
@@ -33,6 +34,7 @@ Ajouter:
     DIV_ASSIGNEMENT: '\/='
     DIV_ENTIERE_ASSIGNEMENT : '\/\/='
     MOD_ASSIGNEMENT : '[%]='
+    PIPE_ASSIGNEMENT : '\|='
 
 
   # fonction
@@ -40,8 +42,8 @@ Ajouter:
   RETOURNER: '\bretourner\b'
   FLECHE: '->'
 
-  GET: 'get'
-  SET: 'set'
+  GET: '\bget\b'
+  SET: '\bset\b'
 
   # structure
   STRUCTURE: '\bstructure\b'
@@ -59,11 +61,13 @@ Ajouter:
 
     # bloc tant que
     TANT_QUE: '\btant que\b'
-    FAIRE: '\bfaire\b'
+    FAIRE: 'faire'
 
   SORTIR: '\bsortir\b'
 
   CONTINUER: '\bcontinuer\b'
+
+  ALORS: '\balors\b'
 
 
   # fin
@@ -88,10 +92,11 @@ Ajouter:
     NOM_NOMBRE: '\bnombre\b'
     NOM_ITERABLE: '\biterable\b'
     NOM_TOUT: '\btout\b'
+    NOM_RIEN: '\brien\b'
 
 
   comparaison:
-    EGAL: '=='
+    EGAL: '(={2})|(==)'
     PAS_EGAL: '!='
     PLUS_GRAND: '>'
     PLUS_PETIT: '<'
@@ -112,8 +117,8 @@ Ajouter:
   CROCHET_FERM: '\]'
 
   # liste
-  LISTE_OUV: '[{]'
-  LISTE_FERM: '[}]'
+  BRACES_OUV: '[{]'
+  BRACES_FERM: '[}]'
 
   # sous-categorie
   # le point indique aussi un nombre decimal
@@ -122,10 +127,13 @@ Ajouter:
   DEUX_POINTS: '[:]'
   POINT_VIRGULE: '[;]'
   PIPE: '[|]'
-  NOM_VARIABLE: '(\p{L}+(\d+)*(\p{L})*\.?)+'
+  NOM_VARIABLE: '((\p{L}|_)+(\d+)*(\p{L})*_*\.?)+'
 
 Ignorer:
   - '\s+'
+  - '#.*'
+  - '\(:.*:\)'
+  - '\(-:.*:-\)'
 
 
 

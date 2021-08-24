@@ -11,6 +11,48 @@ import java.util.function.Supplier;
 
 public abstract class Programme implements Serializable {
     private int numLigne = -1;
+
+    public static Programme evalExpression(Expression<?> expression, String toString) {
+        return new Programme() {
+            @Override
+            public Object execute() {
+                expression.eval();
+                return null;
+            }
+
+            @Override
+            public String toString() {
+                return toString;
+            }
+        };
+    }
+
+    public int getNumLigne() {
+        return numLigne;
+    }
+
+    public void setNumLigne(int numLigne) {
+        this.numLigne = numLigne;
+    }
+
+    /**
+     * appelé au runtime
+     */
+    public abstract Object execute();
+
+    public String transpile(String language) {
+        return "";
+    }
+
+    public Coordonnee prochaineCoord(Coordonnee coord, List<Token> ligne) {
+        return coord;
+    }
+
+    @Override
+    public String toString() {
+        return "vide";
+    }
+
     /**
      * INDIQUE LA FIN DU PROGRAMME
      */
@@ -24,41 +66,5 @@ public abstract class Programme implements Serializable {
         public String toString() {
             return "'FIN'";
         }
-    }
-
-    public int getNumLigne() {
-        return numLigne;
-    }
-
-    public void setNumLigne(int numLigne) {
-        this.numLigne = numLigne;
-    }
-
-    public static Programme evalExpression(Expression<?> expression, String toString) {
-        return new Programme() {
-            @Override
-            public Object execute() {
-                return expression.eval();
-            }
-
-            @Override
-            public String toString() {
-                return toString;
-            }
-        };
-    }
-
-    /**
-     *
-     * appelé au runtime
-     */
-    public abstract Object execute();
-    public Coordonnee prochaineCoord(Coordonnee coord, List<Token> ligne) {
-        return coord;
-    }
-
-    @Override
-    public String toString() {
-        return "vide";
     }
 }

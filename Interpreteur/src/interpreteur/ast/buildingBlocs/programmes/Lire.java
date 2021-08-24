@@ -1,5 +1,6 @@
 package interpreteur.ast.buildingBlocs.programmes;
 
+import interpreteur.as.Objets.Scope;
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.as.Objets.ASObjet;
 import interpreteur.ast.buildingBlocs.Expression;
@@ -19,6 +20,7 @@ public class Lire extends Programme {
     public Lire(Var var, Expression<?> message) {
         this.nomVar = var.getNom();
         this.message = message == null ? new ValeurConstante(new ASObjet.Texte("")) : message;
+        Scope.getCurrentScope().declarerVariable(new ASObjet.Variable(nomVar, null, new Type("tout")));
     }
 
     @Override
@@ -26,7 +28,7 @@ public class Lire extends Programme {
         if (Data.response.isEmpty()) {
             throw new ASErreur.StopGetInfo(new Data(Data.Id.GET).addParam("read").addParam(message.eval().getValue().toString()));
         } else {
-            ASObjet.VariableManager.ajouterVariable(new ASObjet.Variable(nomVar, new ASObjet.Texte(Data.response.pop()), new Type("tout")));
+            Scope.getCurrentScopeInstance().getVariable(nomVar).changerValeur(new ASObjet.Texte(Data.response.pop()));
         }
         return null;
     }

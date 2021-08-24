@@ -12,7 +12,6 @@ import interpreteur.as.Objets.ASObjet.Entier;
 import interpreteur.as.Objets.ASObjet.FonctionManager;
 import interpreteur.as.Objets.ASObjet.Nul;
 import interpreteur.as.Objets.ASObjet.Texte;
-import interpreteur.as.Objets.ASObjet.VariableManager;
 import interpreteur.ast.Ast;
 import interpreteur.ast.buildingBlocs.Programme;
 import interpreteur.ast.buildingBlocs.expressions.Argument;
@@ -36,12 +35,11 @@ import javax.lang.model.type.NullType;
 
 public class ASAstExperimental extends ASAst {
     public ASAstExperimental() {
-        VariableManager.varDict.putIfAbsent(VariableManager.scopeParDefaut, new Hashtable<>());
         ajouterProgrammes();
         ajouterExpressions();
     }
 
-    @Override
+
     protected void ajouterProgrammes() {
         ajouterProgramme("", new Ast<NullType>() {
             @Override
@@ -51,7 +49,7 @@ public class ASAstExperimental extends ASAst {
         });
 
         ajouterProgramme("UTILISER expression~"
-                        + "UTILISER expression LISTE_OUV expression LISTE_FERM",
+                        + "UTILISER expression BRACES_OUV expression BRACES_FERM",
                 new Ast<Utiliser>() {
                     @Override
                     public Utiliser apply(List<Object> p) {
@@ -77,13 +75,14 @@ public class ASAstExperimental extends ASAst {
                         return new Utiliser((Var) p.get(1));
                     }
                 });
-
+        /*
         ajouterProgramme("AFFICHER expression", new Ast<Afficher>() {
             @Override
             public Afficher apply(List<Object> p) {
                 return new Afficher((Expression<?>) p.get(1));
             }
         });
+         */
 
         ajouterProgramme("LIRE DANS expression",
                 new Ast<Lire>() {
@@ -97,22 +96,25 @@ public class ASAstExperimental extends ASAst {
                         return new Lire((Var) p.get(2), null);
                     }
                 });
-
+        /*
         ajouterProgramme("ATTENDRE expression", new Ast<Attendre>() {
             @Override
             public Attendre apply(List<Object> p) {
                 return new Attendre((Expression<?>) p.get(1));
             }
         });
+         */
 
         ajouterProgramme("CONSTANTE expression {assignements} expression~"
                         + "CONSTANTE expression DEUX_POINTS expression {assignements} expression~"
+                        + "VAR expression~"
+                        + "VAR expression DEUX_POINTS expression~"
                         + "VAR expression DEUX_POINTS expression {assignements} expression~"
                         + "VAR expression {assignements} expression~"
                         + "expression {assignements} expression",
-                new Ast<Assigner>() {
+                new Ast<Programme>() {
                     @Override
-                    public Assigner apply(List<Object> p) {
+                    public Programme apply(List<Object> p) {
                         /*
                          * TODO erreur si c'est pas une Var qui est passé comme expression à gauche de l'assignement
                          */
@@ -126,7 +128,19 @@ public class ASAstExperimental extends ASAst {
                         // si le premier mot est "const" ou "var"
                         if (p.get(0) instanceof Token) {
                             boolean estConst = ((Token) p.get(0)).obtenirNom().equals("CONSTANTE");
+                            if (p.size() == 2) {
+                                return new Declarer((Expression<?>) p.get(1), new ValeurConstante(new Nul()), null, false);
+                            }
+                            if (p.size() == 4 && ((Token) p.get(2)).obtenirNom().equals("DEUX_POINTS")) {
+                                // si le type précisisé n'est pas un type
+                                if (!(p.get(3) instanceof Type))
+                                    throw new ErreurType("Dans une d\u00E9claration de " +
+                                            (estConst ? "constante" : "variable") +
+                                            ", les deux points doivent \u00EAtre suivi d'un type valide");
 
+                                type = (Type) p.get(3);
+                                return new Declarer((Expression<?>) p.get(1), new ValeurConstante(new Nul()), type, false);
+                            }
                             // si la précision du type est présente
                             if (p.size() == 6) {
                                 idxValeur = 5;
@@ -159,21 +173,14 @@ public class ASAstExperimental extends ASAst {
                                 p.set(idxValeur, ((CreerListe.Enumeration) p.get(idxValeur)).build());
 
                             // on retourne l'objet Assigner
-                            return new Assigner((Expression<?>) p.get(1), (Expression<?>) p.get(idxValeur), estConst, null, type);
+                            return new Declarer((Expression<?>) p.get(1), (Expression<?>) p.get(idxValeur), type, estConst);
 
                         }
-                        // si le premier mot n'est pas "const"
+                        // si le premier mot n'est pas "const" ou "var"
                         else {
                             // si un type est précisé
                             if (p.size() == 5) {
-                                idxValeur = 4;
-                                idxAssignement = 3;
-
-                                // si le type précisisé n'est pas un type
-                                if (!(p.get(2) instanceof Type))
-                                    throw new ErreurType("Dans une d\u00E9claration de constante, les deux points doivent \u00EAtre suivi d'un type valide");
-                                type = (Type) p.get(2);
-
+                                throw new ErreurType("Il est impossible de pr\u00E9ciser le type d'une variable ailleurs que dans sa d\u00E9claration");
                             } else {
                                 idxValeur = 2;
                                 idxAssignement = 1;
@@ -188,7 +195,7 @@ public class ASAstExperimental extends ASAst {
                             // on forme une liste avec la suite d'éléments
                             if (p.get(idxValeur) instanceof CreerListe.Enumeration)
                                 p.set(idxValeur, ((CreerListe.Enumeration) p.get(idxValeur)).build());
-                            return new Assigner((Expression<?>) p.get(0), (Expression<?>) p.get(idxValeur), false, op, type);
+                            return new Assigner((Expression<?>) p.get(0), (Expression<?>) p.get(idxValeur), false, op);
                         }
                     }
                 });
@@ -204,39 +211,17 @@ public class ASAstExperimental extends ASAst {
                     }
                 });
 
-        ajouterProgramme("STRUCTURE NOM_VARIABLE", new Ast<Programme>() {
+        ajouterProgramme("STRUCTURE NOM_VARIABLE", new Ast<CreerStructure>() {
             @Override
-            public Programme apply(List<Object> p) {
-                return new Programme() {
-                    @Override
-                    public Object execute() {
-                        FonctionManager.ajouterStructure(((Token) p.get(1)).obtenirValeur());
-                        return null;
-                    }
-
-                    @Override
-                    public String toString() {
-                        return "";
-                    }
-                };
+            public CreerStructure apply(List<Object> p) {
+                return new CreerStructure(((Token) p.get(1)).obtenirValeur());
             }
         });
 
-        ajouterProgramme("FIN STRUCTURE", new Ast<Programme>() {
+        ajouterProgramme("FIN STRUCTURE", new Ast<FinStructure>() {
             @Override
-            public Programme apply(List<Object> p) {
-                return new Programme() {
-                    @Override
-                    public Object execute() {
-                        FonctionManager.ajouterStructure(((Token) p.get(1)).obtenirValeur());
-                        return null;
-                    }
-
-                    @Override
-                    public String toString() {
-                        return "FinStructure";
-                    }
-                };
+            public FinStructure apply(List<Object> p) {
+                return new FinStructure();
             }
         });
 
@@ -305,7 +290,7 @@ public class ASAstExperimental extends ASAst {
                         new Object[]{"expression DEUX_POINTS expression ASSIGNEMENT expression~"
                                 + "expression ASSIGNEMENT expression~"
                                 + "expression DEUX_POINTS expression",
-                                new Ast<Argument>(11) {
+                                new Ast<Argument>(19) {
                                     @Override
                                     public Argument apply(List<Object> p) {
                                         Type type = new Type("tout");
@@ -313,7 +298,7 @@ public class ASAstExperimental extends ASAst {
                                         Expression<?> valParDefaut = null;
 
                                         if (!(p.get(0) instanceof Var)) {
-                                            throw new ErreurSyntaxe("Une d\u00E9claration de fonction doit commencer par une variable");
+                                            throw new ErreurSyntaxe("Une d\u00E9claration de fonction doit commencer par une variable, pas par " + p.get(0));
                                         }
                                         var = (Var) p.get(0);
 
@@ -383,6 +368,8 @@ public class ASAstExperimental extends ASAst {
                 new Ast<Retourner>() {
                     @Override
                     public Retourner apply(List<Object> p) {
+                        if (p.size() > 1 && p.get(1) instanceof CreerListe.Enumeration)
+                            p.set(1, ((CreerListe.Enumeration) p.get(1)).build());
                         return new Retourner(p.size() > 1 ? (Expression<?>) p.get(1) : new ValeurConstante(new Nul()));
                     }
                 });
@@ -394,6 +381,41 @@ public class ASAstExperimental extends ASAst {
                 return new FinFonction();
             }
         });
+
+
+        ajouterProgramme("NOM_VARIABLE expression~"
+                        + "{nom_type_de_donnees} expression~"
+                        + "NOM_VARIABLE",
+                new Ast<Programme>() {
+                    @Override
+                    public Programme apply(List<Object> p) {
+                        Hashtable<String, Ast<?>> astParams = new Hashtable<>();
+
+                        //astParams.put("expression DEUX_POINTS expression", new Ast<Argument>(8){
+                        //    @Override
+                        //    public Argument apply(List<Object> p) {
+                        //        assert p.get(0) instanceof Var : "gauche assignement doit être Var (source: appelFonction dans ASAst)";
+                        //
+                        //        return new Argument((Var) p.get(0), (Expression<?>) p.get(2), null);
+                        //    }
+                        //});
+                        Expression<?> contenu;
+                        CreerListe args;
+                        if (p.size() == 2 && !(p.get(1) instanceof Expression.ExpressionVide)) {
+                            contenu = (Expression<?>) p.get(1);
+
+                            args = contenu instanceof CreerListe.Enumeration ?
+                                    ((CreerListe.Enumeration) contenu).build() :
+                                    new CreerListe(contenu);
+                        } else {
+                            args = new CreerListe();
+                        }
+
+                        final Expression<?> nom = new Var(((Token) p.get(0)).obtenirValeur());
+
+                        return Programme.evalExpression(new AppelFonc(nom, args), p.get(0).toString());
+                    }
+                });
 
 
         //<-----------------------------------Les blocs de code------------------------------------->
@@ -460,11 +482,19 @@ public class ASAstExperimental extends ASAst {
             }
         });
 
-        ajouterProgramme("POUR expression DANS expression",
+        ajouterProgramme("POUR expression DANS expression~"
+                        + "POUR VAR expression DANS expression~"
+                        + "POUR CONSTANTE expression DANS expression",
                 new Ast<BouclePour>(0) {
                     @Override
                     public BouclePour apply(List<Object> p) {
-                        return new BouclePour((Var) p.get(1), (Expression<?>) p.get(3));
+                        // boucle pour sans déclaration
+                        if (p.size() == 4) {
+                            return new BouclePour((Var) p.get(1), (Expression<?>) p.get(3));
+                        } else {
+                            boolean estConst = ((Token) p.get(1)).obtenirNom().equals("CONSTANTE");
+                            return new BouclePour((Var) p.get(2), (Expression<?>) p.get(4)).setDeclarerVar(estConst, null);
+                        }
                     }
                 });
 
@@ -495,24 +525,13 @@ public class ASAstExperimental extends ASAst {
         ajouterProgramme("expression", new Ast<Programme>() {
             @Override
             public Programme apply(List<Object> p) {
-                return new Programme() {
-                    @Override
-                    public Object execute() {
-                        ((Expression<?>) p.get(0)).eval();
-                        return null;
-                    }
-
-                    @Override
-                    public String toString() {
-                        return p.get(0).toString();
-                    }
-                };
+                return Programme.evalExpression((Expression<?>) p.get(0), p.get(0).toString());
             }
         });
         setOrdreProgramme();
     }
 
-    @Override
+
     protected void ajouterExpressions() {
 
         ajouterExpression("NOM_VARIABLE", new Ast<Var>() {
@@ -527,31 +546,6 @@ public class ASAstExperimental extends ASAst {
                     @Override
                     public Type apply(List<Object> p) {
                         return new Type(((Token) p.get(0)).obtenirValeur());
-                    }
-                });
-
-        ajouterExpression("expression PIPE expression",
-                new Ast<Expression<?>>() {
-                    @Override
-                    public Expression<?> apply(List<Object> p) {
-                        if (p.get(0) instanceof CreerListe.Enumeration) {
-                        }
-
-                        if (!(p.get(0) instanceof Type && p.get(2) instanceof Type)) {
-                            String nom;
-                            if (p.get(0) instanceof Var) {
-                                nom = ((Var) p.get(0)).getNom();
-                            } else if (p.get(2) instanceof Var) {
-                                nom = ((Var) p.get(2)).getNom();
-                            } else {
-                                nom = p.get(0) instanceof Type ? ((Expression<?>) p.get(2)).eval().toString() : ((Expression<?>) p.get(0)).eval().toString();
-                            }
-
-                            throw new ErreurType("Le symbole | doit s\u00E9parer deux types valides " +
-                                    "('" + nom + "' n'est pas un type valide)");
-                        }
-                        ((Type) p.get(0)).union((Type) p.get(2));
-                        return (Type) p.get(0);
                     }
                 });
 
@@ -597,15 +591,15 @@ public class ASAstExperimental extends ASAst {
 
 
         ajouterExpression("PARENT_OUV #expression PARENT_FERM~"
-                        + "PARENT_OUV expression PARENT_FERM",
+                        + "PARENT_OUV expression PARENT_FERM~"
+                        + "PARENT_OUV PARENT_FERM",
                 new Ast<Expression<?>>() {
                     @Override
                     public Expression<?> apply(List<Object> p) {
-                        Expression<?> result = AstGenerator.evalOneExpr(new ArrayList<>(p.subList(1, p.size() - 1)), null);
-                        if (result instanceof CreerListe.Enumeration) {
-                            return ((CreerListe.Enumeration) result).build();
+                        if (p.size() == 2) {
+                            return new Expression.ExpressionVide();
                         }
-                        return result;
+                        return AstGenerator.evalOneExpr(new ArrayList<>(p.subList(1, p.size() - 1)), null);
                     }
                 });
 
@@ -635,8 +629,8 @@ public class ASAstExperimental extends ASAst {
                     }
                 });
 
-        ajouterExpression("LISTE_OUV #expression TROIS_POINTS #expression LISTE_FERM~"
-                        + "LISTE_OUV #expression TROIS_POINTS #expression BOND #expression LISTE_FERM",
+        ajouterExpression("BRACES_OUV #expression TROIS_POINTS #expression BRACES_FERM~"
+                        + "BRACES_OUV #expression TROIS_POINTS #expression BOND #expression BRACES_FERM",
                 new Ast<Suite>() {
                     /**
                      * {1...10} -> {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
@@ -668,8 +662,8 @@ public class ASAstExperimental extends ASAst {
                     }
                 });
 
-        ajouterExpression("LISTE_OUV LISTE_FERM~" +
-                        "LISTE_OUV #expression LISTE_FERM",
+        ajouterExpression("!expression CROCHET_OUV CROCHET_FERM~" +
+                        "!expression CROCHET_OUV #expression CROCHET_FERM",
                 new Ast<CreerListe>() {
                     @Override
                     public CreerListe apply(List<Object> p) {
@@ -681,11 +675,11 @@ public class ASAstExperimental extends ASAst {
                     }
                 });
 
-        ajouterExpression("expression CROCHET_OUV #expression CROCHET_FERM~"
-                        + "expression CROCHET_OUV DEUX_POINTS CROCHET_FERM~"
+        ajouterExpression("expression CROCHET_OUV DEUX_POINTS CROCHET_FERM~"
                         + "expression CROCHET_OUV #expression DEUX_POINTS #expression CROCHET_FERM~"
                         + "expression CROCHET_OUV #expression DEUX_POINTS CROCHET_FERM~"
-                        + "expression CROCHET_OUV DEUX_POINTS #expression CROCHET_FERM",
+                        + "expression CROCHET_OUV DEUX_POINTS #expression CROCHET_FERM~"
+                        + "expression CROCHET_OUV #expression CROCHET_FERM",
                 new Ast<CreerListe.SousSection>() {
                     @Override
                     public CreerListe.SousSection apply(List<Object> p) {
@@ -704,7 +698,7 @@ public class ASAstExperimental extends ASAst {
                             Expression<?> debut = null, fin = null;
                             int idxDeuxPoints = p.indexOf(deux_pointsToken);
                             // si debut dans sous section
-                            if (idxDeuxPoints > 3) {
+                            if (idxDeuxPoints > 2) {
                                 debut = AstGenerator.evalOneExpr(new ArrayList<>(p.subList(2, idxDeuxPoints)), null);
                             }
                             // si fin dans sous section
@@ -792,14 +786,38 @@ public class ASAstExperimental extends ASAst {
             }
         });
 
+        ajouterExpression("expression PIPE expression",
+                new Ast<Expression<?>>() {
+                    @Override
+                    public Expression<?> apply(List<Object> p) {
+                        if (!(p.get(0) instanceof Type && p.get(2) instanceof Type)) {
+                            //String nom;
+                            //if (p.get(0) instanceof Var) {
+                            //    nom = ((Var) p.get(0)).getNom();
+                            //} else if (p.get(2) instanceof Var) {
+                            //    nom = ((Var) p.get(2)).getNom();
+                            //} else {
+                            //    nom = p.get(0) instanceof Type ? ((Expression<?>) p.get(2)).eval().toString() : ((Expression<?>) p.get(0)).eval().toString();
+                            //}
+
+                            return new BinOp((Expression<?>) p.get(0), BinOp.Operation.PIPE, (Expression<?>) p.get(2));
+
+                            //throw new ErreurType("Le symbole | doit s\u00E9parer deux types valides " +
+                            //        "('" + nom + "' n'est pas un type valide)");
+                        }
+                        ((Type) p.get(0)).union((Type) p.get(2));
+                        return (Type) p.get(0);
+                    }
+                });
+
         ajouterExpression("expression DANS expression~" +
                 "expression PAS DANS expression", new Ast<BinComp>() {
             @Override
             public BinComp apply(List<Object> p) {
-                return new BinComp(
-                        (Expression<?>) p.get(0),
-                        p.size() == 3 ? BinComp.Comparateur.DANS : BinComp.Comparateur.PAS_DANS,
-                        (Expression<?>) p.get(2));
+                return p.size() == 3 ?
+                        new BinComp((Expression<?>) p.get(0), BinComp.Comparateur.DANS, (Expression<?>) p.get(2))
+                        :
+                        new BinComp((Expression<?>) p.get(0), BinComp.Comparateur.PAS_DANS, (Expression<?>) p.get(3));
             }
         });
 
@@ -830,16 +848,37 @@ public class ASAstExperimental extends ASAst {
             }
         });
 
+        ajouterExpression("expression SI expression SINON expression",
+                new Ast<Ternary>() {
+                    @Override
+                    public Ternary apply(List<Object> p) {
+                        return new Ternary((Expression<?>) p.get(2), (Expression<?>) p.get(0), (Expression<?>) p.get(4));
+                    }
+                });
 
-        ajouterExpression("expression VIRGULE expression",
+
+        ajouterExpression("expression VIRGULE expression~" +
+                        "expression VIRGULE",
                 new Ast<CreerListe.Enumeration>() {
                     @Override
                     public CreerListe.Enumeration apply(List<Object> p) {
+                        if (p.size() == 2) {
+                            if (p.get(0) instanceof CreerListe.Enumeration)
+                                return (CreerListe.Enumeration) p.get(0);
+                            else
+                                return new CreerListe.Enumeration((Expression<?>) p.get(0));
+                        }
+
+                        Expression<?> valeur = (Expression<?>) p.get(2);
+                        if (p.get(2) instanceof CreerListe.Enumeration) {
+                            valeur = ((CreerListe.Enumeration) valeur).build();
+                        }
                         if (p.get(0) instanceof CreerListe.Enumeration) {
-                            ((CreerListe.Enumeration) p.get(0)).add((Expression<?>) p.get(2));
+                            ((CreerListe.Enumeration) p.get(0)).add(valeur);
                             return (CreerListe.Enumeration) p.get(0);
                         }
-                        return new CreerListe.Enumeration((Expression<?>) p.get(0), (Expression<?>) p.get(2));
+
+                        return new CreerListe.Enumeration((Expression<?>) p.get(0), valeur);
                     }
                 });
         setOrdreExpression();

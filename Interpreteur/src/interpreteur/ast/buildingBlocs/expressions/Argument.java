@@ -17,8 +17,8 @@ public class Argument implements Expression<ASObjet.Fonction.Parametre> {
         } catch (ASErreur.ErreurVariableInconnue e) {
             throw new ASErreur.ErreurVariableInconnue("Impossible d'utiliser une variable comme valeur par défaut d'une fonction");
         }
-        if (this.type != null && this.valeurParDefaut != null && !this.valeurParDefaut.obtenirNomType().equals(this.type.getNom())) {
-            throw new ASErreur.ErreurType("Le parametre '" + var.getNom() + "' est de type '" + type.getNom() +
+        if (this.type != null && this.valeurParDefaut != null && this.type.noMatch(this.valeurParDefaut.obtenirNomType())) {
+            throw new ASErreur.ErreurType("Le parametre '" + var.getNom() + "' est de type '" + type.nom() +
                     "', mais la valeur par d\u00E9faut est de type '" + this.valeurParDefaut.obtenirNomType() + "'.");
         }
     }

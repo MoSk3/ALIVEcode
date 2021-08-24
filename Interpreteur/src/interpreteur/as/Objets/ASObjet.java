@@ -3,17 +3,19 @@ package interpreteur.as.Objets;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import javax.lang.model.type.NullType;
 
+import interpreteur.as.erreurs.ASErreur;
 import interpreteur.as.modules.ASModule;
+//import interpreteur.ast.buildingBlocs.expressions.Type;
 import interpreteur.ast.buildingBlocs.expressions.Type;
-import interpreteur.ast.buildingBlocs.programmes.Boucle;
 import interpreteur.executeur.Coordonnee;
-import interpreteur.executeur.Executeur;
 import interpreteur.tokens.Token;
 import interpreteur.as.erreurs.ASErreur.*;
+import interpreteur.utils.ArraysUtils;
 
 
 /**
@@ -30,6 +32,42 @@ public interface ASObjet<T> {
     boolean boolValue();
 
     String obtenirNomType();
+
+    enum TypeBuiltin {
+        tout,
+        entier,
+        decimal,
+        nombre(TypeBuiltin.entier, TypeBuiltin.decimal),
+        texte,
+        liste,
+        iterable(TypeBuiltin.texte, TypeBuiltin.liste),
+        booleen,
+        nulType,
+        fonctionType;
+
+        private final TypeBuiltin[] aliases;
+
+        TypeBuiltin() {
+            this.aliases = null;
+        }
+
+        TypeBuiltin(TypeBuiltin... alias) {
+            this.aliases = alias;
+        }
+
+        public TypeBuiltin[] getAliases() {
+            return aliases;
+        }
+
+        public Type asType() {
+            return new Type(toString());
+        }
+
+        @Override
+        public String toString() {
+            return aliases == null ? super.toString() : ArraysUtils.join("|", aliases);
+        }
+    }
 
     interface Nombre extends ASObjet<Number> {
         @Override
@@ -63,124 +101,6 @@ public interface ASObjet<T> {
         }
     }
 
-    class VariableManager {
-        public static final String scopeParDefaut = "main";
-        public static Hashtable<String, Hashtable<String, Variable>> varDict = new Hashtable<>();
-        public static Hashtable<String, Variable> constDict = new Hashtable<>();
-        public static String currentScope = scopeParDefaut;
-
-        public static void ajouterVariable(Variable variable) {
-            String nom = FonctionManager.ajouterDansStructure(variable.nom);
-            Variable nouv = VariableManager.varDict.get(VariableManager.currentScope).put(nom, variable);
-            // if (nouv != null) {
-            //     throw new ErreurAssignement("La variable '" + nom + "' a deja ete initialisee");
-            // }
-        }
-
-        public static void ajouterVariable(Variable variable, String scope) {
-            String nom = FonctionManager.ajouterDansStructure(variable.nom);
-            varDict.putIfAbsent(scope, new Hashtable<>());
-            Variable nouv = VariableManager.varDict.get(scope).put(nom, variable);
-            // if (nouv != null) {
-            //     throw new ErreurAssignement("La variable '" + nom + "' a deja ete initialisee");
-            // }
-        }
-
-        public static void ajouterConstante(Constante constante) {
-            String nom = FonctionManager.ajouterDansStructure(constante.obtenirNom());
-            VariableManager.constDict.put(nom, constante);
-            VariableManager.varDict.get(VariableManager.currentScope).put(nom, constante);
-        }
-
-        public static void ajouterConstante(Constante constante, String scope) {
-            String nom = FonctionManager.ajouterDansStructure(constante.obtenirNom());
-            VariableManager.constDict.put(nom, constante);
-            varDict.putIfAbsent(scope, new Hashtable<>());
-            VariableManager.varDict.get(scope).put(nom, constante);
-        }
-
-        public static void initScope(String nomDuScope) {
-            varDict.putIfAbsent(nomDuScope, new Hashtable<>());
-            varDict.get(nomDuScope).putAll(constDict);
-        }
-
-        public static void initScope(String scope, String fromScope) {
-            varDict.putIfAbsent(scope, new Hashtable<>());
-            Hashtable<String, ASObjet.Variable> varFromScope = new Hashtable<>(varDict.get(fromScope));
-            varFromScope.replaceAll((name, var) -> new Variable(var.obtenirNom(), var.getValeur(), var.type).setReadOnly());
-            varDict.get(scope).putAll(varFromScope);
-        }
-
-        public static void changerScope(String nomDuScope) {
-            VariableManager.currentScope = Objects.requireNonNullElse(nomDuScope, scopeParDefaut);
-        }
-
-        public static String getCurrentScope() {
-            return currentScope;
-        }
-
-        public static Variable obtenirVariable(String nom) {
-            return VariableManager.varDict.get(VariableManager.currentScope).get(nom);
-        }
-
-        public static Variable obtenirVariable(String nom, String nomScope) {
-            varDict.putIfAbsent(nomScope, new Hashtable<>());
-            return VariableManager.varDict.get(nomScope).get(nom);
-        }
-
-        public static boolean estConstante(Variable var) {
-            return constDict.containsValue(var);
-        }
-
-        public static boolean estConstante(String nom) {
-            return constDict.keySet().stream().anyMatch(varName -> varName.equals(nom));
-        }
-
-        public static boolean laVariableExiste(String nom) {
-            return VariableManager.varDict.get(VariableManager.currentScope).containsKey(nom);
-        }
-
-        public static boolean nouvelleValeurValide(String nom, ASObjet<?> nouvelleValeur) {
-            Variable var = VariableManager.varDict.get(VariableManager.currentScope).get(nom);
-
-            if (var.getType().noMatch(nouvelleValeur.obtenirNomType())) {
-                throw new ErreurAssignement("La variable '" +
-                        nom +
-                        "' est de type *" +
-                        var.obtenirNomType() +
-                        "*. Elle ne peut pas prendre une valeur de type *" +
-                        nouvelleValeur.obtenirNomType() +
-                        "*.");
-            }
-            return true;
-        }
-
-        public static void retirerVariable(String nom) {
-            VariableManager.varDict.get(VariableManager.currentScope).remove(nom);
-        }
-
-        public static void clearCurrentScope() {
-            for (String varNom : VariableManager.varDict.get(VariableManager.currentScope).keySet()) {
-                if (!(estConstante(varNom)) && !varDict.get(currentScope).get(varNom).isReadOnly())
-                    VariableManager.varDict.get(VariableManager.currentScope).get(varNom).valeur = null;
-            }
-        }
-
-        public static void reset() {
-            VariableManager.varDict = new Hashtable<>();
-            VariableManager.constDict = new Hashtable<>();
-            VariableManager.currentScope = VariableManager.scopeParDefaut;
-            VariableManager.varDict.putIfAbsent(scopeParDefaut, new Hashtable<>());
-        }
-
-        public static Hashtable<String, Hashtable<String, Variable>> getVarDict() {
-            return varDict;
-        }
-
-        public static Hashtable<String, Variable> getConstDict() {
-            return constDict;
-        }
-    }
 
     class Variable implements ASObjet<Object> {
         private final String nom;
@@ -188,34 +108,42 @@ public interface ASObjet<T> {
         private ASObjet<?> valeur;
         private boolean readOnly = false;
 
-        private Function<ASObjet<?>, ASObjet<?>> getter = null;
+        private Supplier<ASObjet<?>> getter = null;
         private Function<ASObjet<?>, ASObjet<?>> setter = null;
 
 
         public Variable(String nom, ASObjet<?> valeur, Type type) {
-            this.type = type;
-            this.nom = nom;
+            this.type = type == null ? new Type("tout") : type;
+            this.nom = FonctionManager.ajouterDansStructure(nom);
             this.valeur = valeur instanceof Variable ? ((Variable) valeur).getValeurApresGetter() : valeur;
         }
 
-        public static void creerOuChangerValeur(String nom, ASObjet<?> valeur, Type type) {
-            Variable var = VariableManager.obtenirVariable(nom);
-            if (var != null) {
-                var.changerValeur(valeur);
-            } else {
-                VariableManager.ajouterVariable(new Variable(nom, valeur, type));
+        private boolean nouvelleValeurValide(ASObjet<?> nouvelleValeur) {
+            if (getType().noMatch(nouvelleValeur.obtenirNomType())) {
+                throw new ErreurAssignement("La variable '" +
+                        nom +
+                        "' est de type *" +
+                        obtenirNomType() +
+                        "*. Elle ne peut pas prendre une valeur de type *" +
+                        nouvelleValeur.obtenirNomType() +
+                        "*.");
             }
+            return true;
         }
 
         public void changerValeur(ASObjet<?> valeur) {
-            if (VariableManager.nouvelleValeurValide(this.nom, valeur)) {
+            if (nouvelleValeurValide(valeur)) {
                 if (this.setter != null) {
                     this.valeur = this.setter.apply(valeur);
                 } else {
                     this.valeur = valeur;
                 }
-                VariableManager.varDict.get(VariableManager.currentScope).put(nom, this);
             }
+        }
+
+        @Override
+        public Variable clone() {
+            return new Variable(nom, this.valeur, this.type).setGetter(this.getter).setSetter(this.setter);
         }
 
         public String obtenirNom() {
@@ -230,7 +158,7 @@ public interface ASObjet<T> {
             return this.valeur == null;
         }
 
-        public Variable setGetter(Function<ASObjet<?>, ASObjet<?>> getter) {
+        public Variable setGetter(Supplier<ASObjet<?>> getter) {
             this.getter = getter;
             return this;
         }
@@ -242,7 +170,7 @@ public interface ASObjet<T> {
 
         public Variable setReadOnly() {
             this.setter = (valeur) -> {
-                throw new ErreurAssignement("Cette variable est en lecture seule: elle ne peut pas \u00EAtre modifi\u00E9");
+                throw new ErreurAssignement("Cette variable est en lecture seule: elle ne peut pas \u00EAtre modifi\u00E9e");
             };
             this.readOnly = true;
             return this;
@@ -271,10 +199,10 @@ public interface ASObjet<T> {
 
         public ASObjet<?> getValeurApresGetter() {
             if (this.valeur == null) {
-                throw new ErreurAssignement("la variable " + this.nom + " est initialis\u00E9e, mais pas d\u00E9finie");
+                throw new ErreurAssignement("La variable '" + nom + "' est utilis\u00E9e avant d'\u00EAtre d\u00E9clar\u00E9e");
             }
             if (this.getter != null) {
-                return this.getter.apply(this.valeur);
+                return this.getter.get();
             }
             return this.valeur;
         }
@@ -282,10 +210,10 @@ public interface ASObjet<T> {
         @Override
         public Object getValue() {
             if (this.valeur == null) {
-                throw new ErreurAssignement("la variable " + this.nom + " est initialis\u00E9e, mais pas d\u00E9finie");
+                throw new ErreurAssignement("La variable '" + nom + "' est utilis\u00E9e avant d'\u00EAtre d\u00E9clar\u00E9e");
             }
             if (this.getter != null) {
-                return this.getter.apply(this.valeur).getValue();
+                return this.getter.get().getValue();
             }
             return this.valeur.getValue();
         }
@@ -308,13 +236,18 @@ public interface ASObjet<T> {
         }
 
         @Override
-        public Variable setSetter(Function<ASObjet<?>, ASObjet<?>> setter) {
-            throw new ErreurAssignement("Impossible d'attribuer un setter \u00E0 une constante");
+        public Variable clone() {
+            return new Constante(obtenirNom(), this.getValeur());
         }
 
         @Override
-        public Variable setGetter(Function<ASObjet<?>, ASObjet<?>> getter) {
-            throw new ErreurAssignement("Impossible d'attribuer un getter \u00E0 une constante");
+        public Variable setSetter(Function<ASObjet<?>, ASObjet<?>> setter) {
+            throw new ErreurAssignement("Les constantes ne peuvent pas avoir de setter");
+        }
+
+        @Override
+        public Variable setGetter(Supplier<ASObjet<?>> getter) {
+            throw new ErreurAssignement("Les constantes ne peuvent pas avoir de getter");
         }
 
         @Override
@@ -332,7 +265,8 @@ public interface ASObjet<T> {
         // met la fonction dans le dictionnaire de fonction et cree enregistre la fonction dans une Variable
         // pour que le code puisse la retrouver plus tard
         public static void ajouterFonction(Fonction fonction) {
-            VariableManager.ajouterConstante(new Constante(fonction.getNom(), fonction));
+            Scope.getCurrentScope().declarerVariable(new Variable(fonction.getNom(), fonction, new Type(fonction.obtenirNomType())));
+            //VariableManager.ajouterConstante(new Constante(fonction.getNom(), fonction));
             //fonction.nom = ajouterDansStructure(fonction.getNom());
         }
 
@@ -357,13 +291,12 @@ public interface ASObjet<T> {
             FonctionManager.structure = "";
             for (Fonction fonction : ASModule.getModuleBuiltins().getFonctions()) ajouterFonction(fonction);
             for (Variable variable : ASModule.getModuleBuiltins().getVariables()) {
-                if (variable instanceof Constante) VariableManager.ajouterConstante((Constante) variable);
-                else VariableManager.ajouterVariable(variable);
+                Scope.getCurrentScope().declarerVariable(variable);
             }
         }
     }
 
-    class Fonction implements ASObjet<Object> {
+    abstract class Fonction implements ASObjet<Object> {
         private final Type typeRetour;
         private final Parametre[] parametres; //String[] de forme {nomDuParam�tre, typeDuParam�tre (ou null s'il n'en poss�de pas)}
         private final String nom;
@@ -443,29 +376,27 @@ public interface ASObjet<T> {
          * @throws Error une erreur si un des tests n'est pas passe
          */
         public boolean testParams(ArrayList<?> paramsValeurs) {
-
             if (this.parametres.length == 0 && paramsValeurs.size() == 0) return false;
 
             int nonDefaultParams = (int) Arrays.stream(parametres).filter(param -> param.getValeurParDefaut() == null).count();
 
             if (paramsValeurs.size() < nonDefaultParams || paramsValeurs.size() > this.parametres.length) {
                 if (nonDefaultParams == this.parametres.length) {
-                    throw new ErreurAppelFonction(this.nom, "Le nombre de param\u00E8tres donn\u00E9s est '" + paramsValeurs.size() +
+                    throw new ASErreur.ErreurAppelFonction(this.nom, "Le nombre de param\u00E8tres donn\u00E9s est '" + paramsValeurs.size() +
                             "' alors que la fonction en prend '" + this.parametres.length + "'");
                 } else {
-                    throw new ErreurAppelFonction(this.nom, "Le nombre de param\u00E8tres donn\u00E9s est '" + paramsValeurs.size() +
+                    throw new ASErreur.ErreurAppelFonction(this.nom, "Le nombre de param\u00E8tres donn\u00E9s est '" + paramsValeurs.size() +
                             "' alors que la fonction en prend entre '" + nonDefaultParams + "' et '" + this.parametres.length + "'");
                 }
 
             }
             for (int i = 0; i < paramsValeurs.size(); i++) {
-                Parametre parametre = this.parametres[i];
+                Fonction.Parametre parametre = this.parametres[i];
                 if (parametre.getType().noMatch(((ASObjet<?>) paramsValeurs.get(i)).obtenirNomType())) {
-                    throw new ErreurType("Le param\u00E8tres '" + parametre.getNom() + "' est de type '" + parametre.getType().nom() +
+                    throw new ASErreur.ErreurType("Le param\u00E8tres '" + parametre.getNom() + "' est de type '" + parametre.getType().nom() +
                             "', mais l'argument pass\u00E9 est de type '" + ((ASObjet<?>) paramsValeurs.get(i)).obtenirNomType() + "'.");
                 }
             }
-
             return true;
 
             /*
@@ -532,48 +463,7 @@ public interface ASObjet<T> {
             return this.executer();
         }
 
-        public ASObjet<?> executer() {
-            Object valeur;
-            ASObjet<?> asValeur;
-            String ancienScope = VariableManager.currentScope;
-            VariableManager.changerScope(this.scopeName + this.nom);
-            VariableManager.initScope(this.scopeName + this.nom, ancienScope);
-
-            for (String param : this.parametres_appel.keySet()) {
-                VariableManager.ajouterVariable(new Variable(param, this.parametres_appel.get(param), new Type("tout")));
-            }
-
-            Coordonnee ancienneCoord = Executeur.obtenirCoordRunTime().copy();
-
-            valeur = Executeur.executerScope(VariableManager.currentScope, null, coordReprise == null ? null : coordReprise.getCoordAsString());
-            if (valeur instanceof String) {
-                //System.out.println("valeur: " + valeur);
-                coordReprise = Executeur.obtenirCoordRunTime().copy();
-                Executeur.setCoordRunTime(ancienneCoord.getCoordAsString());
-                VariableManager.changerScope(ancienScope);
-                throw new StopSendData((String) valeur);
-
-            } else {
-                asValeur = (ASObjet<?>) valeur;
-            }
-
-            coordReprise = null;
-
-            Boucle.sortirScope(VariableManager.getCurrentScope());
-
-            Executeur.setCoordRunTime(ancienneCoord.getCoordAsString());
-            VariableManager.clearCurrentScope();
-            VariableManager.changerScope(ancienScope);
-
-            //System.out.println(this.typeRetour);
-            //System.out.println(valeur);
-            if (asValeur == null || this.typeRetour.noMatch(asValeur.obtenirNomType())) {
-                throw new ErreurType("Le type retourner ' " + (asValeur == null ? "vide" : asValeur.obtenirNomType()) + " ' ne correspond pas "
-                        + "au type de retour pr\u00E9cis\u00E9 dans la d\u00E9claration de la fonction ' " + this.typeRetour.nom() + " '.");
-
-            }
-            return asValeur;
-        }
+        abstract public ASObjet<?> executer();
 
         public void setScopeName(String scopeName) {
             this.scopeName = scopeName;
@@ -600,7 +490,7 @@ public interface ASObjet<T> {
 
         @Override
         public String obtenirNomType() {
-            return "fonctionType";
+            return TypeBuiltin.fonctionType.toString();
         }
 
         /**
@@ -635,7 +525,7 @@ public interface ASObjet<T> {
              */
             public Parametre(Type type, String nom, ASObjet<?> valeurParDefaut) {
                 this.nom = nom;
-                this.type = type == null ? new Type("tout"): type;
+                this.type = type == null ? new Type("tout") : type;
                 this.valeurParDefaut = valeurParDefaut;
             }
 
@@ -719,6 +609,19 @@ public interface ASObjet<T> {
         public String obtenirNomType() {
             return "entier";
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Entier)) return false;
+            Entier entier = (Entier) o;
+            return valeur == entier.valeur;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(valeur);
+        }
     }
 
     class Decimal implements Nombre {
@@ -753,6 +656,19 @@ public interface ASObjet<T> {
         @Override
         public String obtenirNomType() {
             return "decimal";
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Decimal)) return false;
+            Decimal decimal = (Decimal) o;
+            return Double.compare(decimal.valeur, valeur) == 0;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(valeur);
         }
     }
 
@@ -790,6 +706,19 @@ public interface ASObjet<T> {
         public String obtenirNomType() {
             return "booleen";
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Booleen)) return false;
+            Booleen booleen = (Booleen) o;
+            return valeur == booleen.valeur;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(valeur);
+        }
     }
 
     class Nul implements ASObjet<NullType> {
@@ -815,6 +744,11 @@ public interface ASObjet<T> {
         @Override
         public String obtenirNomType() {
             return "nulType";
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return obj instanceof ASObjet<?> && ((ASObjet<?>) obj).getValue() == null;
         }
     }
 
@@ -885,7 +819,20 @@ public interface ASObjet<T> {
 
         @Override
         public String obtenirNomType() {
-            return "texte";
+            return TypeBuiltin.texte.toString();
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Texte)) return false;
+            Texte texte = (Texte) o;
+            return Objects.equals(valeur, texte.valeur);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(valeur);
         }
     }
 
@@ -897,6 +844,10 @@ public interface ASObjet<T> {
 
         public Liste(ASObjet<?>[] valeurs) {
             this.valeur = new ArrayList<>(Arrays.asList(valeurs));
+        }
+
+        public Liste(Liste liste) {
+            this.valeur = new ArrayList<>(liste.getValue());
         }
 
         public void ajouterElement(ASObjet<?> element) {
@@ -961,12 +912,15 @@ public interface ASObjet<T> {
 
         @Override
         public String toString() {
-            return "{" +
+            final char openingSymbol = '[';
+            final char closingSymbol = ']';
+
+            return openingSymbol +
                     String.join(", ", this.valeur
                             .stream()
                             .map(e -> e instanceof Texte ? '"' + e.toString() + '"' : e.toString())
                             .toArray(String[]::new))
-                    + "}";
+                    + closingSymbol;
         }
 
         @Override
@@ -979,10 +933,22 @@ public interface ASObjet<T> {
             return !this.valeur.isEmpty();
         }
 
-
         @Override
         public String obtenirNomType() {
             return "liste";
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Liste)) return false;
+            Liste liste = (Liste) o;
+            return Objects.equals(valeur, liste.valeur);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(valeur);
         }
 
         public static class SousListe extends Liste {

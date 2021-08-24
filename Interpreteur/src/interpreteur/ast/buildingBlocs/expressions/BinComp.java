@@ -35,18 +35,12 @@ public class BinComp implements Expression<ASObjet.Booleen> {
         /**
          * Gere x == y
          */
-        EGAL((gauche, droite) -> {
-            if (gauche.getValue() == null && droite.getValue() == null) return new ASObjet.Booleen(true);
-            return new ASObjet.Booleen(gauche.getValue().equals(droite.getValue()));
-        }),
+        EGAL((gauche, droite) -> new ASObjet.Booleen(gauche.equals(droite))),
 
         /**
          * Gere x != y
          */
-        PAS_EGAL((gauche, droite) -> {
-            if (gauche.getValue() == null && droite.getValue() == null) return new ASObjet.Booleen(true);
-            return new ASObjet.Booleen(!gauche.getValue().equals(droite.getValue()));
-        }),
+        PAS_EGAL((gauche, droite) -> new ASObjet.Booleen(!gauche.equals(droite))),
 
         /**
          * Gere x > y
@@ -89,14 +83,14 @@ public class BinComp implements Expression<ASObjet.Booleen> {
         }),
 
         DANS((gauche, droite) -> {
-            if (!(droite.getValue() instanceof ASObjet.Iterable)) {
+            if (!(droite instanceof ASObjet.Iterable)) {
                 throw new ASErreur.ErreurComparaison("L'op\u00E9rateur 'dans' ne s'applique que sur les \u00E9l\u00E9ments de type 'iterable'");
             }
             return new ASObjet.Booleen(((ASObjet.Iterable) droite).contient(gauche));
         }),
 
         PAS_DANS((gauche, droite) -> {
-            if (!(droite.getValue() instanceof ASObjet.Iterable)) {
+            if (!(droite instanceof ASObjet.Iterable)) {
                 throw new ASErreur.ErreurComparaison("L'op\u00E9rateur 'dans' ne s'applique que sur les \u00E9l\u00E9ments de type 'iterable'");
             }
             return new ASObjet.Booleen(!((ASObjet.Iterable) droite).contient(gauche));

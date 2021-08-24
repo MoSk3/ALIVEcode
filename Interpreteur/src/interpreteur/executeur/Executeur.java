@@ -4,13 +4,13 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import interpreteur.as.Objets.ASObjet.FonctionManager;
-import interpreteur.as.Objets.ASObjet.VariableManager;
+import interpreteur.as.Objets.Scope;
 import interpreteur.as.erreurs.ASErreur.*;
 import interpreteur.as.ASLexer;
-import interpreteur.as.experimental.ASAstExperimental;
 import interpreteur.as.modules.ASModule;
 import interpreteur.as.ASAst;
 import interpreteur.ast.buildingBlocs.Programme;
+import interpreteur.ast.buildingBlocs.programmes.Declarer;
 import interpreteur.data_manager.Data;
 import interpreteur.data_manager.DataVoiture;
 import interpreteur.tokens.Token;
@@ -82,6 +82,9 @@ public class Executeur {
     private static boolean executionActive = false;
     private static boolean canExecute = false;
 
+    //debug mode
+    private static boolean debug = false;
+
 
     public Executeur() {
     }
@@ -92,7 +95,7 @@ public class Executeur {
 
     // methode utilisee a chaque fois qu'une info doit etre afficher par le langage
     public static void ecrire(String texte) {
-        //System.out.println(texte);
+        if (debug) System.out.println(texte);
     }
 
     public static void printCompiledCode(String code) {
@@ -259,6 +262,10 @@ public class Executeur {
         return coordCompileDict.get(coordRunTime.getScope()).containsKey("<1>" + nom + coordRunTime.getCoordAsString());
     }
 
+    public static boolean laCoordExiste(String coord) {
+        return coordCompileDict.get(coordRunTime.getScope()).containsKey(coord + coordRunTime.getCoordAsString());
+    }
+
 
     public static boolean enAction() {
         return (compilationActive || executionActive);
@@ -288,6 +295,7 @@ public class Executeur {
      */
     public static String compiler(String[] lignes, boolean compilationForcee) {
         reset();
+
         /*
          * Cette condition est remplie si l'array de lignes de codes mises en parametres est identique
          * a l'array des dernieres lignes de code compilees
@@ -351,7 +359,6 @@ public class Executeur {
         //	compilationActive = false;
         //	return false;
         //}
-
         coordCompileTime.add(debutCoord);
         /*
          *  ajoute le scope "main" au dictionnaire de coordonnee
@@ -491,7 +498,7 @@ public class Executeur {
                 if (resultat instanceof Data) {
                     datas.add((Data) resultat);
 
-                } else if (resultat != null && !coordRunTime.getBlocActuel().equals("main")) {
+                } else if (resultat != null && !coordRunTime.getScope().equals("main")) {
                     // ne sera vrai que si l'on retourne d'une fonction
                     break;
                 }
@@ -527,7 +534,7 @@ public class Executeur {
             // on passe a la coordonnee suivante
             coordRunTime.plusUn();
         }
-        return (ligneParsed instanceof Programme.ProgrammeFin || !executionActive) ? datas.toString() : resultat;
+        return (ligneParsed instanceof Programme.ProgrammeFin || !executionActive || resultat == null) ? datas.toString() : resultat;
     }
 
     /**
@@ -545,6 +552,8 @@ public class Executeur {
         Object resultat;
 
         if (!resume) {
+            // créer scopeInstance globale
+            Scope.pushCurrentScopeInstance(Scope.getCurrentScope().makeScopeInstance(null));
             resultat = executerScope("main", null, null);
         } else resultat = resumeExecution();
 
@@ -575,13 +584,18 @@ public class Executeur {
      * reset tout a neuf pour la prochaine execution
      */
     private static void reset() {
+        Scope.resetAllScope();
+        // créer le scope global
+        Scope.makeNewCurrentScope();
+
         ASModule.init();
         // supprime les variables, fonctions et iterateurs de la memoire
         datas.clear();
-        VariableManager.reset();
-        FonctionManager.reset();
-        DataVoiture.reset();
 
+        DataVoiture.reset();
+        FonctionManager.reset();
+
+        Declarer.reset();
         // remet la coordonnee d'execution au debut du programme
         coordRunTime.setCoord(debutCoord.getCoordAsString());
         //if (ast instanceof ASAstExperimental) {
@@ -590,18 +604,88 @@ public class Executeur {
     }
 
     public static void main(String[] args) {
-        String[] lines = new String[]{
-                "fonction executer(commande: fonctionType, arg: tout)",
-                "    retourner commande(arg)",
-                "fin fonction",
-                "si executer, afficher, \"hey\" == nul",
-                "    afficher nul",
-                "fin si",
-        };
 
+
+        String[] lines = """
+                                
+                # Entrer votre code ci-dessous
+                                
+                
+                                
+                (:
+                 commentaire sur plusieurs ligne
+                :)
+                fonction additionner(num1: nombre, num2: nombre) -> nombre
+                    retourner num1 + num2
+                fin fonction
+                               
+                                
+                #variable
+                var a
+                #constante
+                const pi=3.1415
+                                
+                a = additionner(5,7)
+                
+                afficher a
+                
+                                
+                #structure conditionelle
+                #si a<0
+                #    afficher " negatif"
+                #sinon si a == 0
+                #    afficher " nul"
+                #sinon
+                #    afficher " positif"
+                #fin si
+                #                
+                #
+                #                
+                ##tant que
+                tant que a >10
+                    a= a- 1
+                    afficher a
+                fin tant que
+                #                
+                #                
+                ##tant que
+                faire
+                   var b <- "salut toi!"
+                   afficher b == "salut"
+                   a -= 1
+                   afficher a
+                tant que a > 0
+                
+                #                
+                #
+                #                
+                #                
+                ##pour
+                #var i
+                #pour i dans [1 ... 5]
+                #    afficher i
+                #fin pour
+                #                
+                #
+                #                
+                #afficher a
+                #                
+                #
+                #                
+                #lire variableLu
+                #                
+                #
+                #                
+                #afficher variableLu
+                                
+                """.split("\n");
+
+
+        debug = true;
+        Object a;
         System.out.println(compiler(lines, true));
         //printCompileDict();
-        executerMain(false);
+        System.out.println(executerMain(false));
         //System.out.println(compiler(lines, false));
         //executerMain(false);
     }

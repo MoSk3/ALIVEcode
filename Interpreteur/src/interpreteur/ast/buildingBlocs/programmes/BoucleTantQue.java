@@ -1,5 +1,6 @@
 package interpreteur.ast.buildingBlocs.programmes;
 
+import interpreteur.as.Objets.Scope;
 import interpreteur.ast.buildingBlocs.Expression;
 import interpreteur.executeur.Coordonnee;
 import interpreteur.executeur.Executeur;
@@ -12,25 +13,39 @@ public class BoucleTantQue extends Boucle {
     public static boolean sortir = false;
     private final Expression<?> condition;
     private final boolean isBoucleFaire;
+    private final Scope scope;
+    private boolean firstTime = true;
 
     public BoucleTantQue(Expression<?> condition) {
         super("tant que");
         this.condition = condition;
         this.isBoucleFaire = Executeur.obtenirCoordRunTime().getBlocActuel().equals("faire");
+        this.scope = isBoucleFaire ? null : Scope.makeNewCurrentScope();
     }
 
     public void sortir() {
         sortir = false;
-        if (isBoucleFaire) Executeur.obtenirCoordRunTime().finBloc();
+        firstTime = true;
+        if (isBoucleFaire)
+            Executeur.obtenirCoordRunTime().finBloc();
+        else
+            Scope.popCurrentScopeInstance();
     }
 
     @Override
     public NullType execute() {
+        if (firstTime) {
+            firstTime = false;
+            if (!isBoucleFaire) Scope.pushCurrentScopeInstance(scope.makeScopeInstanceFromCurrentScope());
+        }
         if (condition.eval().boolValue() && !sortir) {
-            if (isBoucleFaire)
+            if (isBoucleFaire) {
                 Executeur.obtenirCoordRunTime().recommencerLeBlocActuel();
-            else
+            } else {
                 Executeur.obtenirCoordRunTime().nouveauBloc("tant_que");
+                Scope.popCurrentScopeInstance();
+                Scope.pushCurrentScopeInstance(scope.makeScopeInstanceFromCurrentScope());
+            }
 
         } else sortir();
         return null;
@@ -38,10 +53,9 @@ public class BoucleTantQue extends Boucle {
 
     @Override
     public Coordonnee prochaineCoord(Coordonnee coord, List<Token> ligne) {
-        if (isBoucleFaire)
-            return Executeur.obtenirCoordRunTime().finBloc();
+        if (isBoucleFaire) return coord.finBloc();
 
-        return Executeur.obtenirCoordRunTime().nouveauBloc("tant_que");
+        return coord.nouveauBloc("tant_que");
     }
 
     @Override
