@@ -7,5 +7,7 @@ export class IotRoute {
 
 	name: string;
 
+	path: string;
+
 	project: IoTProject;
 }

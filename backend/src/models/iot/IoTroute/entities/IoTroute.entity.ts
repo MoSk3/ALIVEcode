@@ -14,6 +14,11 @@ export class IotRouteEntity {
   @Length(3, 25)
   name: string;
 
+  @Column({ nullable: false })
+  @IsNotEmpty()
+  @Length(3, 40)
+  path: string;
+
   @ManyToOne(() => IoTProjectEntity, project => project.routes)
   project: IoTProjectEntity;
 }

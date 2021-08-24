@@ -3,10 +3,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { IoTProjectEntity } from './entities/IoTproject.entity';
 import { Repository } from 'typeorm';
 import { UserEntity } from '../../user/entities/user.entity';
+import { IotRouteEntity } from '../IoTroute/entities/IoTroute.entity';
 
 @Injectable()
 export class IoTProjectService {
-  constructor(@InjectRepository(IoTProjectEntity) private projectRepository: Repository<IoTProjectEntity>) {}
+  constructor(
+    @InjectRepository(IoTProjectEntity) private projectRepository: Repository<IoTProjectEntity>,
+    @InjectRepository(IotRouteEntity) private routeRepository: Repository<IotRouteEntity>,
+  ) {}
 
   async create(user: UserEntity, createIoTprojectDto: IoTProjectEntity) {
     const project = this.projectRepository.create(createIoTprojectDto);
@@ -35,5 +39,14 @@ export class IoTProjectService {
 
   async getRoutes(project: IoTProjectEntity) {
     return (await this.projectRepository.findOne(project.id, { relations: ['routes'] })).routes;
+  }
+
+  async addRoute(project: IoTProjectEntity, routeDTO: IotRouteEntity) {
+    const newRoute = this.routeRepository.create(routeDTO);
+    await this.routeRepository.save(newRoute);
+    project = await this.projectRepository.findOne(project.id, { relations: ['routes'] });
+    project.routes.push(newRoute);
+    await this.projectRepository.save(project);
+    return newRoute;
   }
 }

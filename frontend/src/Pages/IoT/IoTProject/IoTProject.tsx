@@ -21,10 +21,15 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import Form from '../../../Components/UtilsComponents/Form/Form';
 import IconButton from '../../../Components/DashboardComponents/IconButton/IconButton';
+import FormModal from '../../../Components/UtilsComponents/FormModal/FormModal';
+import { IotRoute } from '../../../Models/Iot/IoTroute.entity';
+import { plainToClass } from 'class-transformer';
+import IoTRouteCard from '../../../Components/IoTComponents/IoTRoute/IoTRouteCard/IoTRouteCard';
 
 const IoTProject = (props: IoTProjectProps) => {
 	const [project, setProject] = useState<ProjectModel>();
 	const [selectedTab, setSelectedTab] = useState<IoTProjectTabs>('settings');
+	const [routeModalOpen, setRouteModalOpen] = useState(false);
 	const history = useHistory();
 	const alert = useAlert();
 	const { t } = useTranslation();
@@ -59,11 +64,12 @@ const IoTProject = (props: IoTProjectProps) => {
 						<div className="project-details-content-header">Settings</div>
 						<Form
 							onSubmit={res => {
-								const resProject: ProjectModel = res.data;
-								project.description = resProject.description;
-								project.name = resProject.name;
-								project.access = resProject.access;
-								setProject(project);
+								const updatedProject: ProjectModel = plainToClass(
+									ProjectModel,
+									res.data,
+								);
+								updatedProject.routes = project.routes;
+								setProject(updatedProject);
 							}}
 							action="UPDATE"
 							buttonText="update"
@@ -105,15 +111,51 @@ const IoTProject = (props: IoTProjectProps) => {
 					<>
 						<div className="project-details-content-header">
 							<label className="mr-2">Routes</label>
-							<IconButton icon={faPlus} />
+							<IconButton
+								icon={faPlus}
+								onClick={() => setRouteModalOpen(true)}
+							/>
 						</div>
 						<div>
 							{project.routes.length > 0 ? (
-								project.routes.map((r, idx) => <div key={idx}>{r.name}</div>)
+								project.routes.map((r, idx) => (
+									<IoTRouteCard key={idx} route={r} />
+								))
 							) : (
 								<label className="disabled-text">No route</label>
 							)}
 						</div>
+						<FormModal
+							title="New route"
+							onSubmit={res => {
+								const resRoute: IotRoute = res.data;
+								console.log(resRoute);
+								project.routes.push(resRoute);
+								setProject(project);
+								setRouteModalOpen(false);
+							}}
+							onClose={() => setRouteModalOpen(false)}
+							open={routeModalOpen}
+						>
+							<Form
+								action="POST"
+								buttonText="Create"
+								name="create_iot_route"
+								url={`iot/projects/${project.id}/routes`}
+								inputGroups={[
+									{
+										name: 'name',
+										required: true,
+										inputType: 'text',
+									},
+									{
+										name: 'path',
+										required: true,
+										inputType: 'text',
+									},
+								]}
+							/>
+						</FormModal>
 					</>
 				);
 			case 'access':

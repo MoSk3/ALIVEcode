@@ -58,7 +58,7 @@ const Form = (props: FormProps) => {
 					<BootForm.Control
 						as="select"
 						placeholder={placeholderValue}
-						value={g.default}
+						defaultValue={g.default}
 						{...register(g.name, registerOptions)}
 					>
 						{Array.isArray(g.selectOptions)
@@ -83,7 +83,7 @@ const Form = (props: FormProps) => {
 				return (
 					<BootForm.Control
 						type={g.inputType}
-						value={g.default}
+						defaultValue={g.default}
 						placeholder={placeholderValue}
 						{...register(g.name, registerOptions)}
 					/>
