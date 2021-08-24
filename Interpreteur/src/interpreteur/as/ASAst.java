@@ -178,7 +178,8 @@ public class ASAst extends AstGenerator {
                                 idxAssignement = 2;
                             }
                             // si on tente de déclarer une constante avec autre chose que = (ex: +=, *=, -=, etc.)
-                            if (!((Token) p.get(idxAssignement)).obtenirNom().equals("ASSIGNEMENT")) {
+                            String nomAssignement = ((Token) p.get(idxAssignement)).obtenirNom();
+                            if (!nomAssignement.equals("ASSIGNEMENT") && !(nomAssignement.equals("ASSIGNEMENT_FLECHE"))) {
                                 if (estConst)
                                     throw new ErreurAssignement("Impossible de modifier la valeur d'une constante");
                                 else
@@ -205,7 +206,8 @@ public class ASAst extends AstGenerator {
                             }
 
                             // si on tente d'assigner avec un opérateur spécial (ex: +=, *=, -=, etc.)
-                            if (!((Token) p.get(idxAssignement)).obtenirNom().equals("ASSIGNEMENT")) {
+                            String nomAssignement = ((Token) p.get(idxAssignement)).obtenirNom();
+                            if (!nomAssignement.equals("ASSIGNEMENT") && !(nomAssignement.equals("ASSIGNEMENT_FLECHE"))) {
                                 op = BinOp.Operation.valueOf(((Token) p.get(idxAssignement)).obtenirNom().split("_")[0]);
                             }
 

@@ -3,6 +3,7 @@ package interpreteur.ast.buildingBlocs;
 import interpreteur.executeur.Coordonnee;
 import interpreteur.executeur.Executeur;
 import interpreteur.tokens.Token;
+import org.jetbrains.annotations.NotNull;
 
 import javax.lang.model.type.NullType;
 import java.io.Serializable;
@@ -16,7 +17,7 @@ public abstract class Programme implements Serializable {
         this.executeurInstance = null;
     }
 
-    protected Programme(Executeur executeurInstance) {
+    protected Programme(@NotNull Executeur executeurInstance) {
         this.executeurInstance = executeurInstance;
     }
 

@@ -135,9 +135,26 @@ public class Executeur {
     public static void main(String[] args) {
 
 
-        String[] lines = """
-                var a <- 10
-                afficher a           
+        String[] lines = """   
+                fonction additionner(num1: nombre, num2: nombre) -> nombre
+                    retourner num1 + num2
+                fin fonction  
+                                
+                
+                var a
+                
+                const pi = 3.1415
+                                
+                a = additionner(5,7)
+                
+                
+                si a < 0 alors
+                    afficher " negatif"
+                sinon si a == 0 alors
+                    afficher " nul"
+                sinon
+                    afficher " positif"
+                fin si
                 """.split("\n");
 
 

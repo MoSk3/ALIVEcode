@@ -6,6 +6,7 @@ import interpreteur.ast.buildingBlocs.Programme;
 import interpreteur.executeur.Coordonnee;
 import interpreteur.executeur.Executeur;
 import interpreteur.tokens.Token;
+import org.jetbrains.annotations.NotNull;
 
 import javax.lang.model.type.NullType;
 import java.util.List;
@@ -15,7 +16,7 @@ public class SinonSi extends Programme {
     private String coord;
     private int num;
 
-    public SinonSi(Expression<?> test, Executeur executeurInstance) {
+    public SinonSi(Expression<?> test, @NotNull Executeur executeurInstance) {
         super(executeurInstance);
         this.test = test;
     }
@@ -43,6 +44,7 @@ public class SinonSi extends Programme {
 
         SinonSiTest sinonSiTest = new SinonSiTest(this);
 
+        assert executeurInstance != null;
         coord = executeurInstance.obtenirCoordRunTime();
         coord.finBloc();
 
@@ -73,13 +75,14 @@ public class SinonSi extends Programme {
 
         @Override
         public Object execute() {
-            Coordonnee coord = executeurInstance.obtenirCoordRunTime();
+            assert parent.executeurInstance != null;
+            Coordonnee coord = parent.executeurInstance.obtenirCoordRunTime();
             coord.finBloc();
-            if (this.parent.test.eval().boolValue()) {
+            if (parent.test.eval().boolValue()) {
                 coord.nouveauBloc("sinon_si_" + this.parent.num);
-            } else if (executeurInstance.laCoordExiste("<" + (this.parent.num + 1) + ">sinon_si_test")) {
-                coord.setCoord("<" + this.parent.num + ">sinon_si_test" + coord.toString());
-            } else if (executeurInstance.leBlocExiste("sinon")) {
+            } else if (parent.executeurInstance.laCoordExiste("<" + (this.parent.num + 1) + ">sinon_si_test")) {
+                coord.setCoord("<" + this.parent.num + ">sinon_si_test" + coord);
+            } else if (parent.executeurInstance.leBlocExiste("sinon")) {
                 coord.nouveauBloc("sinon");
             }
             return null;
