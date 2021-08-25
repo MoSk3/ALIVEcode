@@ -28,12 +28,14 @@ import IoTRouteCard from '../../../Components/IoTComponents/IoTRoute/IoTRouteCar
 import { io, Socket } from 'socket.io-client';
 import Button from '../../../Components/UtilsComponents/Button/Button';
 import { DefaultEventsMap } from 'socket.io/dist/typed-events';
+import CenteredContainer from '../../../Components/UtilsComponents/CenteredContainer/CenteredContainer';
 
 const IoTProject = (props: IoTProjectProps) => {
 	const [project, setProject] = useState<ProjectModel>();
 	const [selectedTab, setSelectedTab] = useState<IoTProjectTabs>('settings');
 	const [socket, setSocket] = useState<Socket>();
 	const [routeModalOpen, setRouteModalOpen] = useState(false);
+	const [lightLevel, setLightLevel] = useState<number>(34);
 	const history = useHistory();
 	const alert = useAlert();
 	const { t } = useTranslation();
@@ -43,6 +45,12 @@ const IoTProject = (props: IoTProjectProps) => {
 	useEffect(() => {
 		const socket = io(`http://${window.location.hostname}:8888`, {
 			forceNew: true,
+		});
+
+		socket.emit('register_light');
+
+		socket.on('light', lightLevel => {
+			setLightLevel(lightLevel / 1000);
 		});
 
 		// Notification test
@@ -240,12 +248,33 @@ const IoTProject = (props: IoTProjectProps) => {
 				</Col>
 				<Col sm="8" id="project-body">
 					<Row className="project-top-row"></Row>
-					<Button
-						variant="primary"
-						onClick={() => socket && socket.emit('send_notification', 'notif')}
-					>
-						Send notification to cluster
-					</Button>
+					<CenteredContainer style={{ height: '100%' }} vertically horizontally>
+						<h2 className="mb-3">Light level</h2>
+						<div className="my-progress mb-5">
+							<div className="barOverflow">
+								<div
+									className="bar"
+									style={{
+										transform: `rotate(${
+											((lightLevel > 100 ? 100 : lightLevel) / 100) * 180 + 45
+										}deg)`,
+									}}
+								></div>
+							</div>
+							<span className="my-progress-span">
+								{lightLevel > 100 ? 100 : lightLevel}%
+							</span>
+						</div>
+						<h2 className="mb-3">Cluster notification</h2>
+						<Button
+							variant="primary"
+							onClick={() =>
+								socket && socket.emit('send_notification', 'notif')
+							}
+						>
+							Send notification to cluster
+						</Button>
+					</CenteredContainer>
 				</Col>
 			</Row>
 		</StyledIoTProject>
