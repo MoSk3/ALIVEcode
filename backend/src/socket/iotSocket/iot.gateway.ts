@@ -12,7 +12,7 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 
-@WebSocketGateway(8080)
+@WebSocketGateway(8888, { cors: { origin: '*' } })
 export class IoTGateway implements OnGatewayDisconnect, OnGatewayConnection, OnGatewayInit {
   private notificationClients: Socket[] = [];
   private logger: Logger = new Logger('IoTGateway');
@@ -39,7 +39,7 @@ export class IoTGateway implements OnGatewayDisconnect, OnGatewayConnection, OnG
     return { event: 'notification', data };
   }
 
-  @SubscribeMessage('send_notif')
+  @SubscribeMessage('send_notification')
   send_notification(@MessageBody() text: string) {
     this.notificationClients.forEach(c => c.emit('notification', text));
   }

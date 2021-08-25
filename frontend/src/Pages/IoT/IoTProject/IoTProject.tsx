@@ -25,15 +25,36 @@ import FormModal from '../../../Components/UtilsComponents/FormModal/FormModal';
 import { IotRoute } from '../../../Models/Iot/IoTroute.entity';
 import { plainToClass } from 'class-transformer';
 import IoTRouteCard from '../../../Components/IoTComponents/IoTRoute/IoTRouteCard/IoTRouteCard';
+import { io, Socket } from 'socket.io-client';
+import Button from '../../../Components/UtilsComponents/Button/Button';
+import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 
 const IoTProject = (props: IoTProjectProps) => {
 	const [project, setProject] = useState<ProjectModel>();
 	const [selectedTab, setSelectedTab] = useState<IoTProjectTabs>('settings');
+	const [socket, setSocket] = useState<Socket>();
 	const [routeModalOpen, setRouteModalOpen] = useState(false);
 	const history = useHistory();
 	const alert = useAlert();
 	const { t } = useTranslation();
 	const { user } = useContext(UserContext);
+
+	// Socket io
+	useEffect(() => {
+		const socket = io(`http://${window.location.hostname}:8888`, {
+			forceNew: true,
+		});
+
+		// Notification test
+		socket.on('notification', msg => {
+			console.log(msg);
+		});
+
+		setSocket(socket);
+		return () => {
+			socket.close();
+		};
+	}, []);
 
 	useEffect(() => {
 		const getProject = async () => {
@@ -219,6 +240,12 @@ const IoTProject = (props: IoTProjectProps) => {
 				</Col>
 				<Col sm="8" id="project-body">
 					<Row className="project-top-row"></Row>
+					<Button
+						variant="primary"
+						onClick={() => socket && socket.emit('send_notification', 'notif')}
+					>
+						Send notification to cluster
+					</Button>
 				</Col>
 			</Row>
 		</StyledIoTProject>
