@@ -25,6 +25,12 @@ export const StyledIoTProject = styled(FillContainer)`
 		background-color: var(--background-color);
 	}
 
+	.project-top-row {
+		height: 50px;
+		padding: 10px !important;
+		border-bottom: 1px solid rgba(var(--foreground-color-rgb), 0.4);
+	}
+
 	.project-name {
 		font-size: 1.2em;
 		height: 50px;
@@ -77,6 +83,40 @@ export const StyledIoTProject = styled(FillContainer)`
 
 	.disabled-text {
 		color: rgba(var(--foreground-color-rgb), 0.5);
+	}
+
+	.my-progress {
+		position: relative;
+		margin: 4px;
+		float: left;
+		text-align: center;
+	}
+	.barOverflow {
+		/* Wraps the rotating .bar */
+		position: relative;
+		overflow: hidden; /* Comment this line to understand the trick */
+		width: 180px;
+		height: 90px; /* Half circle (overflow) */
+		margin-bottom: -14px; /* bring the numbers up */
+	}
+	.bar {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 180px;
+		height: 180px; /* full circle! */
+		border-radius: 50%;
+		box-sizing: border-box;
+		border: 15px solid #bbb; /* half gray, */
+		border-bottom-color: #fbff00; /* half azure */
+		border-right-color: #fbff00;
+		transform: rotate(45deg);
+	}
+
+	.my-progress-span {
+		position: relative;
+		font-size: 1.2em;
+		bottom: 20px;
 	}
 
 	.row,

@@ -1,17 +1,17 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { IotRouteEntity } from './entities/IoTroute.entity';
+import { IoTRouteEntity } from './entities/IoTroute.entity';
 import { Repository } from 'typeorm';
 import { IoTProjectEntity } from '../IoTproject/entities/IoTproject.entity';
 
 @Injectable()
 export class IoTRouteService {
   constructor(
-    @InjectRepository(IotRouteEntity) private routeRepository: Repository<IotRouteEntity>,
+    @InjectRepository(IoTRouteEntity) private routeRepository: Repository<IoTRouteEntity>,
     @InjectRepository(IoTProjectEntity) private projectRepository: Repository<IoTProjectEntity>,
   ) {}
 
-  async create(project: IoTProjectEntity, createIoTprojectDto: IotRouteEntity) {
+  async create(project: IoTProjectEntity, createIoTprojectDto: IoTRouteEntity) {
     const route = this.routeRepository.create(createIoTprojectDto);
     await this.routeRepository.save(route);
 
@@ -31,7 +31,7 @@ export class IoTRouteService {
     return route;
   }
 
-  async update(id: string, updateIoTprojectDto: IotRouteEntity) {
+  async update(id: string, updateIoTprojectDto: IoTRouteEntity) {
     return await this.routeRepository.update(id, updateIoTprojectDto);
   }
 

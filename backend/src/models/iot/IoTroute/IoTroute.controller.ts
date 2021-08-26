@@ -14,7 +14,7 @@ import { IoTRouteService } from './IoTroute.service';
 import { Auth } from '../../../utils/decorators/auth.decorator';
 import { User } from '../../../utils/decorators/user.decorator';
 import { Role } from '../../../utils/types/roles.types';
-import { IotRouteEntity } from './entities/IoTroute.entity';
+import { IoTRouteEntity } from './entities/IoTroute.entity';
 import { IoTProjectService } from '../IoTproject/IoTproject.service';
 import { UserEntity } from '../../user/entities/user.entity';
 import { hasRole } from 'src/models/user/auth';
@@ -30,7 +30,7 @@ export class IoTRouteController {
 
   @Post('projects/:id/routes')
   @Auth()
-  async create(@User() user: UserEntity, @Param('id') id: string, @Body() createIoTobjectDto: IotRouteEntity) {
+  async create(@User() user: UserEntity, @Param('id') id: string, @Body() createIoTobjectDto: IoTRouteEntity) {
     const project = await this.IoTProjectService.findOne(id);
     if (project.creator.id !== user.id && !hasRole(user, Role.STAFF))
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
@@ -55,7 +55,7 @@ export class IoTRouteController {
     @User() user: UserEntity,
     @Param('projectId') projectId: string,
     @Param('id') id: string,
-    @Body() updateIoTobjectDto: IotRouteEntity,
+    @Body() updateIoTobjectDto: IoTRouteEntity,
   ) {
     if (!id) throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
     const project = await this.IoTProjectService.findOne(projectId);

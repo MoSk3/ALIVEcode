@@ -11,6 +11,7 @@ import { IoTProjectModule } from './models/iot/IoTproject/IoTproject.module';
 import { IoTRouteModule } from './models/iot/IoTroute/IoTroute.module';
 import { UserModule } from './models/user/user.module';
 import { LevelModule } from './models/level/level.module';
+import { IoTGateway } from './socket/iotSocket/iot.gateway';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { LevelModule } from './models/level/level.module';
     IoTObjectModule,
     IoTProjectModule,
     IoTRouteModule,
+    IoTGateway,
   ],
   controllers: [AppController],
   providers: [AppService],

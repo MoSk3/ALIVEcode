@@ -51,11 +51,11 @@ export const themes: { light: Theme; dark: Theme } = {
 	dark: {
 		color: {
 			primary: '#02111D',
-			primary_rgb: '1,119,188',
+			primary_rgb: '2,17,29',
 			secondary: '#2C394B',
-			secondary_rgb: '63,156,243',
+			secondary_rgb: '44,57,75',
 			third: '#334756',
-			third_rgb: '0,186,198',
+			third_rgb: '51,71,86',
 			fourth: '#029FCA',
 			fourth_rgb: '2,159,202',
 			pale: '#D9F3FF',

@@ -18,6 +18,7 @@ import { IoTProjectEntity, IOTPROJECT_ACCESS } from './entities/IoTproject.entit
 import { UserEntity } from '../../user/entities/user.entity';
 import { hasRole } from 'src/models/user/auth';
 import { DTOInterceptor } from '../../../utils/interceptors/dto.interceptor';
+import { IoTRouteEntity } from '../IoTroute/entities/IoTroute.entity';
 
 @Controller('iot/projects')
 @UseInterceptors(new DTOInterceptor())
@@ -48,19 +49,6 @@ export class IoTProjectController {
     return project;
   }
 
-  @Get(':id/routes')
-  @Auth()
-  async getRoutes(@User() user: UserEntity, @Param('id') id: string) {
-    const project = await this.IoTProjectService.findOne(id);
-
-    if (project.creator.id === user.id || hasRole(user, Role.STAFF))
-      return await this.IoTProjectService.getRoutes(project);
-    if (project.access === IOTPROJECT_ACCESS.PRIVATE) throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
-    // TODO : Add restriction
-    if (project.access === IOTPROJECT_ACCESS.RESTRICTED) throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
-    return await this.IoTProjectService.getRoutes(project);
-  }
-
   @Patch(':id')
   @Auth()
   async update(@User() user: UserEntity, @Param('id') id: string, @Body() updateIoTobjectDto: IoTProjectEntity) {
@@ -81,5 +69,31 @@ export class IoTProjectController {
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
 
     return await this.IoTProjectService.remove(id);
+  }
+
+  @Get(':id/routes')
+  @Auth()
+  async getRoutes(@User() user: UserEntity, @Param('id') id: string) {
+    const project = await this.IoTProjectService.findOne(id);
+
+    if (project.creator.id === user.id || hasRole(user, Role.STAFF))
+      return await this.IoTProjectService.getRoutes(project);
+    if (project.access === IOTPROJECT_ACCESS.PRIVATE) throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    // TODO : Add restriction
+    if (project.access === IOTPROJECT_ACCESS.RESTRICTED) throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    return await this.IoTProjectService.getRoutes(project);
+  }
+
+  @Post(':id/routes')
+  @Auth()
+  async addRoute(@User() user: UserEntity, @Param('id') id: string, @Body() routeDTO: IoTRouteEntity) {
+    const project = await this.IoTProjectService.findOne(id);
+
+    if (project.creator.id === user.id || hasRole(user, Role.STAFF))
+      return await this.IoTProjectService.addRoute(project, routeDTO);
+    if (project.access === IOTPROJECT_ACCESS.PRIVATE) throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    // TODO : Add restriction
+    if (project.access === IOTPROJECT_ACCESS.RESTRICTED) throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    return await this.IoTProjectService.addRoute(project, routeDTO);
   }
 }

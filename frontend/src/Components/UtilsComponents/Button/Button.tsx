@@ -1,4 +1,4 @@
-import { ButtonProps, ButtonVariants } from './buttonTypes';
+import { ButtonProps, ButtonVariants, StyledButtonProps } from './buttonTypes';
 import styled from 'styled-components';
 import { useHistory } from 'react-router';
 
@@ -6,6 +6,7 @@ const PrimaryButton = styled.button`
 	background-color: var(--third-color) !important;
 	border-style: none;
 	color: white;
+	padding: ${({ padding }: StyledButtonProps) => padding ?? 'none'};
 
 	&:hover {
 		background-color: var(--contrast-color) !important;
@@ -17,6 +18,7 @@ const DangerButton = styled.button`
 	background-color: rgb(207, 0, 0) !important;
 	border-style: none;
 	color: white;
+	padding: ${({ padding }: StyledButtonProps) => padding ?? 'none'};
 
 	&:hover {
 		background-color: var(--contrast-color) !important;
@@ -28,6 +30,7 @@ const SecondaryButton = styled.button`
 	background-color: var(--secondary-color) !important;
 	border-style: none;
 	color: white;
+	padding: ${({ padding }: StyledButtonProps) => padding ?? 'none'};
 
 	&:hover {
 		background-color: var(--contrast-color) !important;
@@ -35,7 +38,14 @@ const SecondaryButton = styled.button`
 	}
 `;
 
-const Button = ({ variant, type, onClick, to, children }: ButtonProps) => {
+const Button = ({
+	variant,
+	type,
+	onClick,
+	to,
+	children,
+	padding,
+}: ButtonProps) => {
 	const history = useHistory();
 
 	const customOnClick = () => {
@@ -46,19 +56,34 @@ const Button = ({ variant, type, onClick, to, children }: ButtonProps) => {
 		switch (param) {
 			case 'secondary':
 				return (
-					<SecondaryButton className="btn" type={type} onClick={customOnClick}>
+					<SecondaryButton
+						className="btn"
+						padding={padding}
+						type={type}
+						onClick={customOnClick}
+					>
 						{children}
 					</SecondaryButton>
 				);
 			case 'danger':
 				return (
-					<DangerButton className="btn" type={type} onClick={customOnClick}>
+					<DangerButton
+						className="btn"
+						padding={padding}
+						type={type}
+						onClick={customOnClick}
+					>
 						{children}
 					</DangerButton>
 				);
 			default:
 				return (
-					<PrimaryButton className="btn" type={type} onClick={customOnClick}>
+					<PrimaryButton
+						className="btn"
+						padding={padding}
+						type={type}
+						onClick={customOnClick}
+					>
 						{children}
 					</PrimaryButton>
 				);

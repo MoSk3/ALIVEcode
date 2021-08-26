@@ -1,7 +1,18 @@
 import { cloneElement, isValidElement } from 'react';
 import { Modal } from 'react-bootstrap';
+import styled from 'styled-components';
 import Button from '../Button/Button';
 import { FormModalProps } from './formModalTypes';
+
+const StyledModal = styled(Modal)`
+	.modal-content {
+		background-color: var(--background-color);
+	}
+
+	.close {
+		color: var(--foreground-color);
+	}
+`;
 
 const FormModal = ({
 	children: form,
@@ -19,7 +30,7 @@ const FormModal = ({
 	};
 
 	return (
-		<Modal show={open} onHide={onClose}>
+		<StyledModal show={open} onHide={onClose}>
 			<Modal.Header closeButton>
 				<Modal.Title>{title}</Modal.Title>
 			</Modal.Header>
@@ -34,7 +45,7 @@ const FormModal = ({
 					Save Changes
 				</Button>
 			</Modal.Footer>
-		</Modal>
+		</StyledModal>
 	);
 };
 
