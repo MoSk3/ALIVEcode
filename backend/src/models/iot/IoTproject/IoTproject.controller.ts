@@ -18,7 +18,7 @@ import { IoTProjectEntity, IOTPROJECT_ACCESS } from './entities/IoTproject.entit
 import { UserEntity } from '../../user/entities/user.entity';
 import { hasRole } from 'src/models/user/auth';
 import { DTOInterceptor } from '../../../utils/interceptors/dto.interceptor';
-import { IotRouteEntity } from '../IoTroute/entities/IoTroute.entity';
+import { IoTRouteEntity } from '../IoTroute/entities/IoTroute.entity';
 
 @Controller('iot/projects')
 @UseInterceptors(new DTOInterceptor())
@@ -86,7 +86,7 @@ export class IoTProjectController {
 
   @Post(':id/routes')
   @Auth()
-  async addRoute(@User() user: UserEntity, @Param('id') id: string, @Body() routeDTO: IotRouteEntity) {
+  async addRoute(@User() user: UserEntity, @Param('id') id: string, @Body() routeDTO: IoTRouteEntity) {
     const project = await this.IoTProjectService.findOne(id);
 
     if (project.creator.id === user.id || hasRole(user, Role.STAFF))

@@ -13,29 +13,29 @@ const StyledModal = styled(BootModal)`
 	}
 `;
 
-const Modal = ({
-	children,
-	title,
-	open,
-	size,
-	hideFooter,
-	closeButton,
-	buttonVariant,
-	onClose,
-}: ModalProps) => {
+const Modal = (props: ModalProps) => {
+	const {
+		children,
+		title,
+		open,
+		size,
+		hideFooter,
+		closeButton,
+		buttonVariant,
+		onClose,
+		...other
+	} = props;
 	return (
-		<StyledModal size={size} show={open} onHide={onClose}>
-			<BootModal.Header closeButton>
+		<StyledModal size={size} show={open} onHide={onClose} {...other}>
+			<BootModal.Header closeButton={closeButton}>
 				<BootModal.Title>{title}</BootModal.Title>
 			</BootModal.Header>
 			<BootModal.Body>{children}</BootModal.Body>
 			{!hideFooter && (
 				<BootModal.Footer>
-					{(closeButton ?? true) && (
-						<Button variant="secondary" onClick={onClose}>
-							Close
-						</Button>
-					)}
+					<Button variant="secondary" onClick={onClose}>
+						Close
+					</Button>
 					<Button variant={buttonVariant || 'primary'} onClick={onClose}>
 						Save Changes
 					</Button>

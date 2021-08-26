@@ -4,7 +4,7 @@ import { IsNotEmpty, Length } from 'class-validator';
 import { IoTProjectEntity } from 'src/models/iot/IoTproject/entities/IoTproject.entity';
 
 @Entity()
-export class IotRouteEntity {
+export class IoTRouteEntity {
   @PrimaryGeneratedColumn()
   @Exclude({ toClassOnly: true })
   id: string;

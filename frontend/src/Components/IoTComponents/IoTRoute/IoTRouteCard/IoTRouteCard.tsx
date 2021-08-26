@@ -28,12 +28,12 @@ const StyledRouteCard = styled.div`
 	}
 `;
 
-const IoTRouteCard = ({ route, key }: IoTRouteCardProps) => {
+const IoTRouteCard = ({ route }: IoTRouteCardProps) => {
 	const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
 
 	return (
 		<>
-			<StyledRouteCard key={key} className="mb-2">
+			<StyledRouteCard className="mb-2">
 				<div>
 					<div>{route.name}</div>
 					<div>
@@ -59,6 +59,8 @@ const IoTRouteCard = ({ route, key }: IoTRouteCardProps) => {
 				title="Are you sure you want to delete this route"
 				open={deleteConfirmOpen}
 				onClose={() => setDeleteConfirmOpen(false)}
+				onConfirm={() => console.log('DELETE!')}
+				onCancel={() => console.log('CANCEL!')}
 			/>
 		</>
 	);

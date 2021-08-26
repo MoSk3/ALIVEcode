@@ -1,7 +1,7 @@
 import { IsEmpty, IsNotEmpty, IsOptional } from "class-validator";
 import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany } from 'typeorm';
 import { CreatedByUser } from '../../../../generics/entities/createdByUser.entity';
-import { IotRouteEntity } from '../../IoTroute/entities/IoTroute.entity';
+import { IoTRouteEntity } from '../../IoTroute/entities/IoTroute.entity';
 import { UserEntity } from '../../../user/entities/user.entity';
 
 export enum IOTPROJECT_INTERACT_RIGHTS {
@@ -41,7 +41,7 @@ export class IoTProjectEntity extends CreatedByUser {
   @IsEmpty()
   collaborators: UserEntity[];
 
-  @OneToMany(() => IotRouteEntity, route => route.project, { eager: true })
+  @OneToMany(() => IoTRouteEntity, route => route.project, { eager: true })
   @IsEmpty()
-  routes: IotRouteEntity[];
+  routes: IoTRouteEntity[];
 }

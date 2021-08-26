@@ -1,6 +1,7 @@
 import { ButtonVariants } from '../Button/buttonTypes';
+import { ModalProps as BootModalProps } from 'react-bootstrap';
 
-export type ModalProps = {
+export interface ModalProps extends BootModalProps {
 	title: string;
 	open: boolean;
 	size?: 'sm' | 'lg' | 'xl';
