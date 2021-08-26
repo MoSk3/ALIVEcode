@@ -27,7 +27,6 @@ import { plainToClass } from 'class-transformer';
 import IoTRouteCard from '../../../Components/IoTComponents/IoTRoute/IoTRouteCard/IoTRouteCard';
 import { io, Socket } from 'socket.io-client';
 import Button from '../../../Components/UtilsComponents/Button/Button';
-import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import CenteredContainer from '../../../Components/UtilsComponents/CenteredContainer/CenteredContainer';
 
 const IoTProject = (props: IoTProjectProps) => {
@@ -43,9 +42,7 @@ const IoTProject = (props: IoTProjectProps) => {
 
 	// Socket io
 	useEffect(() => {
-		const socket = io(`http://${window.location.hostname}:8888`, {
-			forceNew: true,
-		});
+		const socket = io(`http://${window.location.hostname}:8888`);
 
 		socket.emit('register_light');
 

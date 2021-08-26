@@ -1,4 +1,3 @@
-import { cloneElement, isValidElement } from 'react';
 import { Modal as BootModal } from 'react-bootstrap';
 import styled from 'styled-components';
 import Button from '../Button/Button';
