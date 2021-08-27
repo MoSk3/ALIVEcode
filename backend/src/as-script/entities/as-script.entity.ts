@@ -1,4 +1,4 @@
-import { UserEntity } from 'src/user/entities/user.entity';
+import { UserEntity } from 'src/models/user/entities/user.entity';
 import { Entity, ManyToOne } from 'typeorm';
 import { CreatedByUser } from '../../generics/entities/createdByUser.entity';
 

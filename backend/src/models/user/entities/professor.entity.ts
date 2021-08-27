@@ -1,11 +1,9 @@
+import { Exclude } from 'class-transformer';
+import { IsNotEmpty, Length } from 'class-validator';
+import { ClassroomEntity } from 'src/models/classroom/entities/classroom.entity';
+import { CourseEntity } from 'src/models/course/entities/course.entity';
 import { ChildEntity, Column, OneToMany } from 'typeorm';
 import { UserEntity } from './user.entity';
-import { ClassroomEntity } from '../../classroom/entities/classroom.entity';
-import { IsNotEmpty, Length } from 'class-validator';
-import { CourseEntity } from '../../course/entities/course.entity';
-import { Exclude } from 'class-transformer';
-import { ClassroomEntity } from '../../classroom/entities/classroom.entity';
-import { CourseEntity } from '../../course/entities/course.entity';
 
 @ChildEntity()
 export class ProfessorEntity extends UserEntity {

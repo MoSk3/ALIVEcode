@@ -1,10 +1,10 @@
 import { Exclude } from 'class-transformer';
-import { IsEmail, IsEmpty, IsNotEmpty, IsOptional, MinLength } from 'class-validator';
+import { IsEmail, IsEmpty, IsNotEmpty, MinLength } from 'class-validator';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn, TableInheritance } from 'typeorm';
 import { LevelEntity } from '../../level/entities/level.entity';
 import { IoTObjectEntity } from '../../iot/IoTobject/entities/IoTobject.entity';
 import { IoTProjectEntity } from '../../iot/IoTproject/entities/IoTproject.entity';
-import { AsScriptEntity } from '../../as-script/entities/as-script.entity';
+import { AsScriptEntity } from 'src/as-script/entities/as-script.entity';
 
 @Entity()
 @TableInheritance({ column: { type: 'varchar', name: 'type' } })

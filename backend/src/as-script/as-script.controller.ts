@@ -1,15 +1,13 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { AsScriptService } from './as-script.service';
-import { CreateAsScriptDto } from './dto/create-as-script.dto';
-import { UpdateAsScriptDto } from './dto/update-as-script.dto';
 
 @Controller('as-script')
 export class AsScriptController {
   constructor(private readonly asScriptService: AsScriptService) {}
 
   @Post()
-  create(@Body() createAsScriptDto: CreateAsScriptDto) {
-    return this.asScriptService.create(createAsScriptDto);
+  create(@Body() createAsScriptDto: any) {
+    return; //this.asScriptService.create(createAsScriptDto);
   }
 
   @Get()
@@ -23,8 +21,8 @@ export class AsScriptController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAsScriptDto: UpdateAsScriptDto) {
-    return this.asScriptService.update(+id, updateAsScriptDto);
+  update(@Param('id') id: string, @Body() updateAsScriptDto: any) {
+    return; //this.asScriptService.update(+id, updateAsScriptDto);
   }
 
   @Delete(':id')
