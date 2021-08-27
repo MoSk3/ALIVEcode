@@ -104,7 +104,7 @@ ace.define(
 					"\\bdroite\\b",
 					"\\bgauche\\b",
 					"\\barreter\\b",
-					"\\blire dans\\b",
+					"\\blire\\b",
 					"\\bafficher\\b",
 					"\\battendre\\b",
 					"\\butiliser\\b",

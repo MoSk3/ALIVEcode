@@ -308,7 +308,7 @@ function init(s) {
                                 switch (params[0]) {
                                     case "read": {
                                         /*----     lire     ----*/
-                                        let input = prompt("Entrez l'input");
+                                        let input = prompt(params[1]);
                                         res.push(input);
                                         perform_action(i + 1, res);
                                         break id_switch;

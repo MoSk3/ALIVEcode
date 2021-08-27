@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
+import interpreteur.as.Objets.ASFonction;
+import interpreteur.as.Objets.ASObjet;
 import interpreteur.as.Objets.Scope;
 import interpreteur.as.erreurs.ASErreur.*;
 import interpreteur.as.Objets.ASObjet.Booleen;
@@ -87,29 +89,33 @@ public class ASAst extends AstGenerator {
          */
 
         ajouterProgramme("LIRE expression~"
-                        + "LIRE expression DEUX_POINTS expression",
+                        + "LIRE expression DANS expression~"
+                        + "LIRE expression VIRGULE expression~"
+                        + "LIRE expression DANS expression VIRGULE expression",
                 new Ast<Lire>() {
                     @Override
                     public Lire apply(List<Object> p) {
 
-                        if (p.size() == 4) {
-                            if (!(p.get(3) instanceof Type)) {
-                                throw new ErreurInputOutput("Un type est attendue apr\u00E8s le deux points ':' dans la commande 'lire', mais '" +
-                                        p.get(2).getClass().getSimpleName() + "' a \u00E9t\u00E9 trouv\u00E9.");
-                            } else {
-                                //TODO le truc avec le type
-                            }
-                        }
+                        boolean hasPromptMessage = p.stream()
+                                .anyMatch(e -> e instanceof Token && ((Token) e).obtenirNom().equals("VIRGULE"));
+                        boolean hasAppliedFunction = p.stream()
+                                .anyMatch(e -> e instanceof Token && ((Token) e).obtenirNom().equals("DANS"));
 
-                        if (!(p.get(1) instanceof Var)) {
+                        Expression<?> message = null, fonction = null;
+
+                        int idxVar = 1;
+                        if (hasAppliedFunction) {
+                            fonction = (Expression<?>) p.get(1);
+                            idxVar = 3;
+                        }
+                        if (hasPromptMessage) message = (Expression<?>) p.get(p.size() - 1);
+
+                        if (!(p.get(idxVar) instanceof Var)) {
                             throw new ErreurInputOutput("Une variable est attendue apr\u00E8s la commande 'lire', mais '" +
-                                    p.get(2).getClass().getSimpleName() + "' a \u00E9t\u00E9 trouv\u00E9.");
-                        } else {
-                            // TODO convertion automatique
+                                    p.get(idxVar).getClass().getSimpleName() + "' a \u00E9t\u00E9 trouv\u00E9.");
                         }
 
-
-                        return new Lire((Var) p.get(1), null);
+                        return new Lire((Var) p.get(idxVar), message, fonction);
                     }
                 });
         /*

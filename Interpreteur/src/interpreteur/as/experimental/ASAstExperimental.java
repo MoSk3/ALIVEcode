@@ -84,16 +84,34 @@ public class ASAstExperimental extends ASAst {
         });
          */
 
-        ajouterProgramme("LIRE DANS expression",
+        ajouterProgramme("LIRE expression~"
+                        + "LIRE expression DANS expression~"
+                        + "LIRE expression VIRGULE expression~"
+                        + "LIRE expression DANS expression VIRGULE expression",
                 new Ast<Lire>() {
                     @Override
                     public Lire apply(List<Object> p) {
-                        System.out.println(p);
-                        if (!(p.get(2) instanceof Var)) {
-                            throw new ErreurInputOutput("Une variable est attendue apr\u00E8s la commande 'lire dans', mais '" +
-                                    p.get(2).getClass().getSimpleName() + "' a \u00E9t\u00E9 trouv\u00E9.");
+
+                        boolean hasPromptMessage = p.stream()
+                                .anyMatch(e -> e instanceof Token && ((Token) e).obtenirNom().equals("VIRGULE"));
+                        boolean hasAppliedFunction = p.stream()
+                                .anyMatch(e -> e instanceof Token && ((Token) e).obtenirNom().equals("DANS"));
+
+                        Expression<?> message = null, fonction = null;
+
+                        int idxVar = 1;
+                        if (hasAppliedFunction) {
+                            fonction = (Expression<?>) p.get(1);
+                            idxVar = 3;
                         }
-                        return new Lire((Var) p.get(2), null);
+                        if (hasPromptMessage) message = (Expression<?>) p.get(p.size() - 1);
+
+                        if (!(p.get(idxVar) instanceof Var)) {
+                            throw new ErreurInputOutput("Une variable est attendue apr\u00E8s la commande 'lire', mais '" +
+                                    p.get(idxVar).getClass().getSimpleName() + "' a \u00E9t\u00E9 trouv\u00E9.");
+                        }
+
+                        return new Lire((Var) p.get(idxVar), message, fonction);
                     }
                 });
         /*

@@ -10,7 +10,7 @@ from asgiref.sync import async_to_sync
 #os.environ['JDK_HOME'] = 'C:/Users/Poste/.jdks/openjdk-15.0.1'
 os.environ['JAVA_HOME'] = '/usr/java/oracle/jdk-15.0.1'
 import jnius_config
-jnius_config.set_classpath('../Interpreteur/out/production/Interpreteur/artifacts/Interpreteur_jar/Interpreteur.jar')
+jnius_config.set_classpath('../Interpreteur/out/artifacts/Interpreteur_jar/Interpreteur.jar')
 from jnius import autoclass
 clientsWithRobots = {}
 # Websocket pour l'interpréteur du site
