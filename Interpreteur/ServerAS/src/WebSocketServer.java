@@ -33,4 +33,10 @@ public class WebSocketServer {
         System.out.println("onError::" + t.getMessage());
     }
 
+    public static void main(String[] args) {
+        new WebSocketServer();
+
+
+
+    }
 }

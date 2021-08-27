@@ -296,7 +296,7 @@ public interface ASObjet<T> {
         private final Parametre[] parametres; //String[] de forme {nomDuParam�tre, typeDuParam�tre (ou null s'il n'en poss�de pas)}
         private final String nom;
         private Hashtable<String, ASObjet<?>> parametres_appel = new Hashtable<>();  // Object[][] de forme {{nom_param, valeur}, {nom_param2, valeur2}}
-        private Coordonnee coordReprise = null;
+        private final Coordonnee coordReprise = null;
         private String scopeName;
 
         /**

@@ -1,4 +1,4 @@
-package test.generateurs;
+package test.generateurs.ast;
 
 import interpreteur.as.ASLexer;
 import org.junit.jupiter.api.BeforeAll;
