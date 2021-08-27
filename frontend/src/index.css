@@ -26,6 +26,11 @@ code {
   --contrast-color: #ffb013;
   --contrast-color-rgb: 255,176,19;
   --hover-color: #00cbe6;
+  --background-color: #ffffff;
+  --background-rgb: 255,255,255;
+  --foreground-color: black;
+  --foreground-color: 0,0,0;
+
 }
 
 .card {
