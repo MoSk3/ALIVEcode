@@ -5,6 +5,8 @@ import interpreteur.executeur.Executeur;
 import org.json.JSONObject;
 
 import java.io.*;
+import java.util.Arrays;
+import java.util.List;
 
 public class AliveScriptApi implements HttpHandler {
 
@@ -31,6 +33,16 @@ public class AliveScriptApi implements HttpHandler {
             inputData.append((char) b);
         }
         return new JSONObject(inputData.toString());
+    }
+
+    private boolean hasValidDataStructure(JSONObject data) {
+        List<String> mustHaveFields = Arrays.asList(
+                "metadata",
+                "lines"
+        );
+        boolean allFields = mustHaveFields.stream().allMatch(data::has);
+
+        return true;
     }
 
     private String handlePostRequest(HttpExchange httpExchange) throws IOException {
