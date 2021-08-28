@@ -14,20 +14,28 @@ import { LevelService } from './level.service';
 import { Auth } from 'src/utils/decorators/auth.decorator';
 import { Role } from 'src/utils/types/roles.types';
 import { User } from 'src/utils/decorators/user.decorator';
-import { LevelEntity } from './entities/level.entity';
+import { LevelEntity, LEVEL_ACCESS } from './entities/level.entity';
 import { DTOInterceptor } from '../../utils/interceptors/dto.interceptor';
 import { UserEntity } from '../user/entities/user.entity';
 import { hasRole } from '../user/auth';
+import { LevelAliveEntity } from './entities/levelAlive.entity';
+import { LevelCodeEntity } from './entities/levelCode.entity';
 
 @Controller('level')
 @UseInterceptors(new DTOInterceptor())
 export class LevelController {
   constructor(private readonly levelService: LevelService) {}
 
-  @Post()
+  @Post('alive')
   @Auth()
-  async create(@Body() createLevelDto: LevelEntity) {
-    return await this.levelService.create(createLevelDto);
+  async createLevelAlive(@Body() createLevelDto: LevelAliveEntity) {
+    return await this.levelService.createLevelAlive(createLevelDto);
+  }
+
+  @Post('code')
+  @Auth()
+  async createLevelCode(@Body() createLevelDto: LevelCodeEntity) {
+    return await this.levelService.createLevelCode(createLevelDto);
   }
 
   @Get()
@@ -38,9 +46,12 @@ export class LevelController {
 
   @Get(':id')
   @Auth()
-  async findOne(@Param('id') id: string) {
+  async findOne(@User() user: UserEntity, @Param('id') id: string) {
     if (!id) throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
     const level = await this.levelService.findOne(id);
+    if (level.creator.id === user.id || hasRole(user, Role.STAFF)) return level;
+    if (level.access === LEVEL_ACCESS.PRIVATE || level.access === LEVEL_ACCESS.RESTRICTED)
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
     return level;
   }
 

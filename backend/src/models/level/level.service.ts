@@ -2,13 +2,23 @@ import { Injectable } from '@nestjs/common';
 import { LevelEntity } from './entities/level.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { LevelAliveEntity } from './entities/levelAlive.entity';
+import { LevelCodeEntity } from './entities/levelCode.entity';
 
 @Injectable()
 export class LevelService {
-  constructor(@InjectRepository(LevelEntity) private levelRepository: Repository<LevelEntity>) {}
+  constructor(
+    @InjectRepository(LevelEntity) private levelRepository: Repository<LevelEntity>,
+    @InjectRepository(LevelAliveEntity) private levelAliveRepo: Repository<LevelAliveEntity>,
+    @InjectRepository(LevelCodeEntity) private levelCodeRepo: Repository<LevelCodeEntity>,
+  ) {}
 
-  async create(createLevelDto: LevelEntity) {
-    return await this.levelRepository.save(this.levelRepository.create(createLevelDto));
+  async createLevelAlive(createLevelDto: LevelAliveEntity) {
+    return await this.levelAliveRepo.save(this.levelRepository.create(createLevelDto));
+  }
+
+  async createLevelCode(createLevelDto: LevelCodeEntity) {
+    return await this.levelCodeRepo.save(this.levelRepository.create(createLevelDto));
   }
 
   async findAll() {
