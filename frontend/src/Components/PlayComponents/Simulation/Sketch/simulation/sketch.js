@@ -24,10 +24,13 @@ export const sketch = s => {
 	let canvas;
 	let jCanvas;
 	let canvasDiv;
+	let previousParent;
 
 	s.myCustomRedrawAccordingToNewPropsHandler = props => {
 		if (props.init) s.init = props.init;
-		if (props.fullscreenDiv) s.fullscreenDiv = $(`#${props.fullscreenDiv}`);
+		if (props.fullscreenDiv)
+			s.fullscreenDiv = $(`.${props.fullscreenDiv}`).first();
+		if (props.canvasDiv) canvasDiv = $(`.${props.canvasDiv}`).first();
 	};
 
 	s.preload = () => {
@@ -40,17 +43,14 @@ export const sketch = s => {
 	};
 
 	s.setup = () => {
-		console.log('SETUP');
-
 		//************************** Setup Canvas **********************************
 
-		canvasDiv = $('#simulation-div');
-		//s.zoomButton = $('#zoom-button');
+		s.zoomButton = $('.zoom-button').first();
 
 		// Fonction pour zoomer/dezoomer
 		const zoom = () => {
 			if (s.fullscreenDiv.css('display') === 'none') {
-				//const previousParent = canvasDiv.parent();
+				previousParent = canvasDiv.parent();
 				s.fullscreenDiv.css('display', 'block');
 				canvasDiv.css('height', '100%');
 				canvasDiv.appendTo(s.fullscreenDiv);
@@ -66,7 +66,7 @@ export const sketch = s => {
 				s.zoomButton.attr('src', '/static/images/fullscreen-off.png');
 			} else if (!s.editorButton?.hovering) {
 				s.fullscreenDiv.css('display', 'none');
-				//canvasDiv.appendTo(previousParent);
+				canvasDiv.appendTo(previousParent);
 
 				if (s.isMobile) {
 					if (document.exitFullscreen) {
@@ -80,6 +80,7 @@ export const sketch = s => {
 					s.exitEditMode();
 					if (s.execution) s.playButton.click();
 				}
+				setTimeout(s.resize, 1000);
 			}
 		};
 
@@ -88,7 +89,7 @@ export const sketch = s => {
 		width = canvasDiv.width();
 		height = canvasDiv.height();
 		canvas = s.createCanvas(width, height);
-		canvas.parent('simulation-div');
+		canvas.parent(canvasDiv[0]);
 		jCanvas = $('canvas').last();
 		s.resize();
 		setTimeout(s.resize, 100);

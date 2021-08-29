@@ -7,13 +7,13 @@ import {
 import { useState, useRef, useEffect } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import styled from 'styled-components';
-import IconButton from '../../Components/DashboardComponents/IconButton/IconButton';
-import Cmd from '../../Components/PlayComponents/Cmd/Cmd';
-import LineInterface from '../../Components/PlayComponents/LineInterface/LineInterface';
-import useCmd from '../../state/hooks/useCmd';
-import { LevelProps } from './simulationLevelTypes';
-import LevelExecutor from './LevelExecutor';
-import FillContainer from '../../Components/UtilsComponents/FillContainer/FillContainer';
+import IconButton from '../../../Components/DashboardComponents/IconButton/IconButton';
+import Cmd from '../../../Components/PlayComponents/Cmd/Cmd';
+import LineInterface from '../../../Components/PlayComponents/LineInterface/LineInterface';
+import useCmd from '../../../state/hooks/useCmd';
+import LevelCodeExecutor from './LevelCodeExecutor';
+import FillContainer from '../../../Components/UtilsComponents/FillContainer/FillContainer';
+import { LevelCodeProps } from './levelCodeTypes';
 
 const StyledDiv = styled(FillContainer)`
 	overflow-y: hidden;
@@ -24,12 +24,12 @@ const StyledDiv = styled(FillContainer)`
 	}
 `;
 
-const CodeLevel = (props?: LevelProps) => {
+const LevelCode = ({ level }: LevelCodeProps) => {
 	//const alert = useAlert();
 	//const history = useHistory();
 
 	//const [level, setLevel] = useState<any>();
-	const [executor, setExecutor] = useState<LevelExecutor>();
+	const [executor, setExecutor] = useState<LevelCodeExecutor>();
 
 	const playButton = useRef<HTMLButtonElement>(null);
 
@@ -43,24 +43,11 @@ const CodeLevel = (props?: LevelProps) => {
 		if (cmd && executor) executor.cmd = cmd;
 	}, [cmd, executor]);
 
-	//useEffect(() => {
-	//	const loadLevel = async () => {
-	//		try {
-	//			setLevel(
-	//				(await axios.get(`/playground/levels/${props.match.params.levelId}`))
-	//					.data,
-	//			);
-	//		} catch (err) {
-	//			alert.error('Niveau introuvable');
-	//			//history.push('/');
-	//		}
-	//	};
-	//	loadLevel();
-	//}, [props.match.params.levelId, alert, history]);
-
 	useEffect(() => {
 		if (!playButton.current) return;
-		setExecutor(new LevelExecutor(undefined, 'no name', playButton.current));
+		setExecutor(
+			new LevelCodeExecutor(undefined, 'no name', playButton.current),
+		);
 	}, []);
 
 	const [buttonIcon, setButtonIcon] = useState(faPlayCircle);
@@ -97,7 +84,6 @@ const CodeLevel = (props?: LevelProps) => {
 							}
 						/>
 					</div>
-
 					<LineInterface handleChange={lineInterfaceContentChanges} />
 				</Col>
 
@@ -112,4 +98,4 @@ const CodeLevel = (props?: LevelProps) => {
 	);
 };
 
-export default CodeLevel;
+export default LevelCode;
