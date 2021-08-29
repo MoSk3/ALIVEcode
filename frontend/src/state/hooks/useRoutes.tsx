@@ -7,7 +7,7 @@ import Home from '../../Pages/Home/Home';
 import SignIn from '../../Pages/Account/SignIn/SignIn';
 import SignUp from '../../Pages/Account/SignUp/SignUp';
 import { USER_TYPES } from '../../Types/userTypes';
-import Level from '../../Pages/Level/Level';
+import Level from '../../Pages/Level/SimulationLevel';
 import SignUpMenu from '../../Pages/Account/SignUpMenu/SignUpMenu';
 import About from '../../Pages/About/About';
 import { useContext } from 'react';
@@ -19,6 +19,7 @@ import Dashboard from '../../Pages/Dashboard/Dashboard';
 import IoTHome from '../../Pages/IoT/IoTHome/IoTHome';
 import IoTProject from '../../Pages/IoT/IoTProject/IoTProject';
 import IoTProjectCreate from '../../Components/IoTComponents/IoTProject/IotProjectForm/IoTProjectCreate';
+import CodeLevel from '../../Pages/Level/CodeLevel';
 import IoTDashboard from '../../Pages/IoT/IoTDashboard/IoTDashboard';
 
 type component =
@@ -100,6 +101,10 @@ const useRoutes = () => {
 		level_play: {
 			path: '/level/play/:id',
 			component: Level,
+		},
+		code_play: {
+			path: '/code',
+			component: CodeLevel,
 		},
 		en: {
 			// Route for switching language to english

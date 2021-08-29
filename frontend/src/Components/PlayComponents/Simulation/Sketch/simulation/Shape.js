@@ -86,13 +86,12 @@ export class Shape {
 		//if (!this.isRect()) throw new ShapeException('Cannot apply an image to a shape that is not a rectangle')
 		this.img = img;
 
-		// TODO : redo image saving
-		/*for (const [imgName, img] of Object.entries(this.s.dictImages)) {
+		for (const [imgName, img] of Object.entries(this.s.dictImages)) {
 			if (img === this.img) {
 				this.imgName = imgName;
 				break;
 			}
-		}*/
+		}
 
 		this.res = res;
 		this.hasTexture = true;
@@ -101,14 +100,12 @@ export class Shape {
 	setSoundOnCollision(sound) {
 		this.soundOnCollision = sound;
 
-		// TODO : redo sound saving
-		/*
 		for (const [soundName, sound] of Object.entries(this.s.dictAudios)) {
 			if (sound === this.soundOnCollision) {
 				this.soundOnCollisionName = soundName;
 				break;
 			}
-		}*/
+		}
 	}
 
 	calculateCenterPos() {
@@ -265,6 +262,7 @@ export class Shape {
 				}
 			}
 			for (let vertex of this.vertices) {
+				if (vertex == null || isNaN(vertex)) alert('NULL');
 				this.s.vertex(
 					(vertex.x - this.camera.pos.x) * (1000 / this.camera.scale),
 					(this.camera.pos.y - vertex.y) * (1000 / this.camera.scale),

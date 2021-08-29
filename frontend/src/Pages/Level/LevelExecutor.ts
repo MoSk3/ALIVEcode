@@ -1,10 +1,10 @@
-import { CMD } from "../../../Components/PlayComponents/Cmd/cmdTypes";
-import { PlaySocket } from '../PlaySocket';
+import { CMD } from "../../Components/PlayComponents/Cmd/cmdTypes";
+import { PlaySocket } from './PlaySocket';
 import $ from 'jquery';
 import axios from 'axios';
-import { User } from '../../../Models/User/user.entity';
+import { User } from '../../Models/User/user.entity';
 
-export default class LevelCodeExecutor {
+export default class LevelExecutor {
 	public playButton: JQuery;
 	public socket?: PlaySocket;
 	public cmd?: CMD;

@@ -1,19 +1,19 @@
 /* eslint-disable no-labels */
-import { images } from '../../../Components/PlayComponents/Simulation/Sketch/simulation/assets';
-import { InteractiveObject } from '../../../Components/PlayComponents/Simulation/Sketch/simulation/InteractiveObject';
-import { Shape } from '../../../Components/PlayComponents/Simulation/Sketch/simulation/Shape';
-import { Vector } from '../../../Components/PlayComponents/Simulation/Sketch/simulation/Vector';
-import openPlaySocket from '../PlaySocket';
+import { images } from '../../Components/PlayComponents/Simulation/Sketch/simulation/assets';
+import { InteractiveObject } from '../../Components/PlayComponents/Simulation/Sketch/simulation/InteractiveObject';
+import { Shape } from '../../Components/PlayComponents/Simulation/Sketch/simulation/Shape';
+import { Vector } from '../../Components/PlayComponents/Simulation/Sketch/simulation/Vector';
+import openPlaySocket from './PlaySocket';
 import $ from 'jquery';
-import { PlayExecutor } from '../../../Models/Executor/PlayExecutor';
-import { PlaySocket } from '../PlaySocket';
-import { CMD } from '../../../Components/PlayComponents/Cmd/cmdTypes';
-import { Professor, Student } from '../../../Models/User/user.entity';
+import { PlayExecutor } from '../../Models/Executor/PlayExecutor';
+import { PlaySocket } from './PlaySocket';
+import { CMD } from '../../Components/PlayComponents/Cmd/cmdTypes';
+import { User } from '../../Models/User/user.entity';
 
 // TODO: robotConnected
 const robotConnected = false;
 
-class LevelAliveExecutor implements PlayExecutor {
+class SimulationLevelExecutor implements PlayExecutor {
 	public s: any;
 	public playButton: JQuery;
 	public socket?: PlaySocket;
@@ -38,10 +38,10 @@ class LevelAliveExecutor implements PlayExecutor {
 	};
 
 	public levelName?: string;
-	public creator?: Professor | Student | null;
+	public creator?: User | undefined;
 
 	constructor(
-		creator: Professor | Student | null | undefined,
+		creator: User | undefined,
 		levelName: string,
 		playButton: HTMLButtonElement,
 	) {
@@ -480,6 +480,7 @@ class LevelAliveExecutor implements PlayExecutor {
 
 	private spawnEditorButton() {
 		let s = this.s;
+		if (this.s) return;
 		this.editorButton = s.spawnFixedRect(
 			s.width / 2 - 35,
 			-s.height / 2 + 95,
@@ -524,4 +525,4 @@ class LevelAliveExecutor implements PlayExecutor {
 	}
 }
 
-export default LevelAliveExecutor;
+export default SimulationLevelExecutor;
