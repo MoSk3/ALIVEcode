@@ -141,20 +141,9 @@ public class Executeur {
                 fin fonction  
                                 
                 
-                var a
+                var a = "23.1"
+                afficher (decimal(a) + decimal(a)) / 2
                 
-                const pi = 3.1415
-                                
-                a = additionner(5,7)
-                
-                
-                si a < 0 alors
-                    afficher " negatif"
-                sinon si a == 0 alors
-                    afficher " nul"
-                sinon
-                    afficher " positif"
-                fin si
                 """.split("\n");
 
 
