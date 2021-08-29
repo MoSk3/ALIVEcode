@@ -1,20 +1,17 @@
-import FillContainer from '../../Components/UtilsComponents/FillContainer/FillContainer';
-import { LevelProps } from './simulationLevelTypes';
+import FillContainer from '../../../Components/UtilsComponents/FillContainer/FillContainer';
+import { LevelAliveProps } from './levelAliveTypes';
 import { useEffect, useState, useContext, useRef } from 'react';
-import axios from 'axios';
-import { useHistory } from 'react-router-dom';
-import { useAlert } from 'react-alert';
-import LineInterface from '../../Components/PlayComponents/LineInterface/LineInterface';
-import { UserContext } from '../../state/contexts/UserContext';
-import Simulation from '../../Components/PlayComponents/Simulation/Simulation';
+import LineInterface from '../../../Components/PlayComponents/LineInterface/LineInterface';
+import { UserContext } from '../../../state/contexts/UserContext';
+import Simulation from '../../../Components/PlayComponents/Simulation/Simulation';
 import { Row, Col } from 'react-bootstrap';
 import styled from 'styled-components';
 import { faBookOpen, faCog, faPlayCircle, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
-import IconButton from '../../Components/DashboardComponents/IconButton/IconButton';
-import Cmd from '../../Components/PlayComponents/Cmd/Cmd';
-import SimulationLevelExecutor from './SimulationLevelExecutor';
-import useCmd from '../../state/hooks/useCmd';
-import { Professor } from '../../Models/User/user.entity';
+import IconButton from '../../../Components/DashboardComponents/IconButton/IconButton';
+import Cmd from '../../../Components/PlayComponents/Cmd/Cmd';
+import LevelAliveExecutor from './LevelAliveExecutor';
+import useCmd from '../../../state/hooks/useCmd';
+import { Professor } from '../../../Models/User/user.entity';
 
 const StyledDiv = styled(FillContainer)`
   overflow-y: hidden;
@@ -25,13 +22,10 @@ const StyledDiv = styled(FillContainer)`
   }
 `
 
-const Level = (props: LevelProps) => {
-  const alert = useAlert();
-  const history = useHistory();
+const LevelAlive = ({ level }: LevelAliveProps) => {
   const { user } = useContext(UserContext);
 
-  const [level, setLevel] = useState<any>();  
-  const [executor, setExecutor] = useState<SimulationLevelExecutor>();
+  const [executor, setExecutor] = useState<LevelAliveExecutor>();
 
   const playButton = useRef<HTMLButtonElement>(null);
 
@@ -46,21 +40,9 @@ const Level = (props: LevelProps) => {
   }, [cmd, executor]);
 
   useEffect(() => {
-    const loadLevel = async () => {
-      try {
-        setLevel((await axios.get(`/playground/levels/${props.match.params.levelId}`)).data)
-      } catch (err) {
-        alert.error('Niveau introuvable');
-        //history.push('/');
-      }
-    }
-    loadLevel();
-  }, [props.match.params.levelId, alert, history]);
-
-  useEffect(() => {
     if(!playButton.current) return;
-    setExecutor(new SimulationLevelExecutor(undefined, "alllo", playButton.current));
-  }, []);
+    setExecutor(new LevelAliveExecutor(user ?? ({} as Professor), "alllo", playButton.current));
+  }, [user]);
 
   return (
       <StyledDiv>
@@ -100,7 +82,7 @@ const Level = (props: LevelProps) => {
   )
 }
 
-export default Level;
+export default LevelAlive;
 
 
 /*

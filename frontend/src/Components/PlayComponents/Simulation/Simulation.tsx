@@ -1,29 +1,33 @@
 import FillContainer from "../../UtilsComponents/FillContainer/FillContainer";
 import { sketch } from './Sketch/simulation/sketch';
 import P5Wrapper from 'react-p5-wrapper';
-import { SimulationProps } from './simulationTypes';
+import { SimulationProps, StyledSimulation } from './simulationTypes';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSquare } from '@fortawesome/free-solid-svg-icons';
 
 const Simulation = ({ init }: SimulationProps) => {
 	return (
-		<>
+		<StyledSimulation>
 			<FillContainer
-				id="simulation-div"
+				className="simulation-div"
 				relative
 				style={{ backgroundColor: 'white' }}
 			>
+				<FontAwesomeIcon
+					className="zoom-button"
+					icon={faSquare}
+					color="black"
+				/>
 				<P5Wrapper
-					fullscreenDiv="fullscreenDiv"
+					fullscreenDiv="fullscreen-div"
+					canvasDiv="simulation-div"
 					zoomButton={''}
 					init={init}
 					sketch={sketch}
 				/>
 			</FillContainer>
-			<FillContainer
-				id="fullscreenDiv"
-				startAtTop
-				style={{ position: 'fixed', zIndex: 100, left: 0, display: 'none' }}
-			/>
-		</>
+			<FillContainer className="fullscreen-div" startAtTop />
+		</StyledSimulation>
 	);
 };
 
