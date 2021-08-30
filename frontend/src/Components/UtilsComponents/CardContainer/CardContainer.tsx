@@ -52,6 +52,7 @@ const CardContainer = ({
 	onIconClick,
 	style,
 	height,
+	asRow,
 }: CardContainerProps) => {
 	return (
 		<StyledDiv
@@ -71,7 +72,11 @@ const CardContainer = ({
 					vertically
 					horizontally
 				>
-					<Row className="mt-4 pb-4 pt-2 card-container-row">{children}</Row>
+					{asRow ? (
+						<Row className="mt-4 pb-4 pt-2 card-container-row">{children}</Row>
+					) : (
+						<>{children}</>
+					)}
 				</CenteredContainer>
 			</Container>
 		</StyledDiv>
