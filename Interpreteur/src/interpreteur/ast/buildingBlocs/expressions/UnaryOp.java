@@ -1,6 +1,7 @@
 package interpreteur.ast.buildingBlocs.expressions;
 
 import interpreteur.as.Objets.ASObjet;
+import interpreteur.as.erreurs.ASErreur;
 import interpreteur.ast.buildingBlocs.Expression;
 import interpreteur.ast.buildingBlocs.programmes.Assigner;
 
@@ -46,9 +47,38 @@ public class UnaryOp implements Expression<ASObjet<?>> {
                 new ASObjet.Entier(Math.abs(((ASObjet.Entier) expr).getValue()))
         ),
 
-        NEGATION(expr -> expr instanceof ASObjet.Decimal ?
-                new ASObjet.Decimal(-((ASObjet.Decimal) expr).getValue()) :
-                new ASObjet.Entier(-((ASObjet.Entier) expr).getValue())),
+        PLUS(expr -> {
+            if (expr instanceof ASObjet.Decimal || expr instanceof ASObjet.Entier) {
+                return expr;
+            } else {
+                String nb = expr.getValue().toString();
+                try {
+                    boolean estDecimal = nb.contains(".");
+                    if (estDecimal) return new ASObjet.Decimal(Double.parseDouble(nb));
+                    else return new ASObjet.Entier(Integer.parseInt(nb));
+                } catch (NumberFormatException ignored) {
+                    throw new ASErreur.ErreurType("impossible de convertir '" + nb + "' en nombre decimal");
+                }
+            }
+        }),
+
+        NEGATION(expr -> {
+            if (expr instanceof ASObjet.Decimal) {
+                return new ASObjet.Decimal(-((ASObjet.Decimal) expr).getValue());
+            } else if (expr instanceof ASObjet.Entier) {
+                return new ASObjet.Entier(-((ASObjet.Entier) expr).getValue());
+            } else {
+                String nb = expr.getValue().toString();
+                try {
+                    boolean estDecimal = nb.contains(".");
+                    if (estDecimal) return new ASObjet.Decimal(-Double.parseDouble(nb));
+                    else return new ASObjet.Entier(-Integer.parseInt(nb));
+                } catch (NumberFormatException ignored) {
+                    throw new ASErreur.ErreurType("impossible de convertir '" + nb + "' en nombre decimal");
+                }
+            }
+        }),
+
 
         PLUS_PLUS(expr -> {
             if (expr instanceof ASObjet.Variable) {

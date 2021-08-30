@@ -520,7 +520,7 @@ public interface ASObjet<T> {
              */
             public Parametre(Type type, String nom, ASObjet<?> valeurParDefaut) {
                 this.nom = nom;
-                this.type = type == null ? new Type("tout") : type;
+                this.type = type == null ? ASObjet.TypeBuiltin.tout.asType() : type;
                 this.valeurParDefaut = valeurParDefaut;
             }
 

@@ -106,7 +106,8 @@ Ajouter:
   porte_logique:
     ET: '\bet\b'
     OU: '\bou\b'
-    PAS: '\bpas\b'
+
+  PAS: '\bpas\b'
 
   # separateur
   PARENT_OUV: '[(]'

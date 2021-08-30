@@ -735,6 +735,14 @@ public class ASAst extends AstGenerator {
                     }
                 });
 
+        ajouterExpression("!expression PLUS expression",
+                new Ast<UnaryOp>() {
+                    @Override
+                    public UnaryOp apply(List<Object> p) {
+                        return new UnaryOp((Expression<?>) p.get(1), UnaryOp.Operation.PLUS);
+                    }
+                });
+
 
         ajouterExpression("expression MOD expression", new Ast<BinOp>() {
             @Override
@@ -837,20 +845,24 @@ public class ASAst extends AstGenerator {
         });
 
 
-        ajouterExpression("expression {porte_logique} expression~"
-                + "{porte_logique} expression", new Ast<BoolOp>() {
-            @Override
-            public BoolOp apply(List<Object> p) {
-                if (p.size() == 3) {
-                    return new BoolOp(
-                            (Expression<?>) p.get(0),
-                            BoolOp.Operateur.valueOf(((Token) p.get(1)).obtenirNom()),
-                            (Expression<?>) p.get(2));
-                } else {
-                    return new BoolOp((Expression<?>) p.get(1), BoolOp.Operateur.PAS, null);
-                }
-            }
-        });
+        ajouterExpression("expression {porte_logique} expression",
+                new Ast<BoolOp>() {
+                    @Override
+                    public BoolOp apply(List<Object> p) {
+                        return new BoolOp(
+                                (Expression<?>) p.get(0),
+                                BoolOp.Operateur.valueOf(((Token) p.get(1)).obtenirNom()),
+                                (Expression<?>) p.get(2));
+                    }
+                });
+
+        ajouterExpression("PAS expression",
+                new Ast<BoolOp>() {
+                    @Override
+                    public BoolOp apply(List<Object> p) {
+                        return new BoolOp((Expression<?>) p.get(1), BoolOp.Operateur.PAS, null);
+                    }
+                });
 
         ajouterExpression("expression SI expression SINON expression",
                 new Ast<Ternary>() {

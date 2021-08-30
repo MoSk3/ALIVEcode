@@ -122,12 +122,45 @@
 #### Arithmétique
 
 -   addition: `+`
+    -   nombre + nombre -> nombre
+        -   ex: `2 + 2 = 4`
+    -   liste + tout -> ajoute le deuxième terme à la fin de la liste
+        -   ex: `[2, 3, 4] + "salut" = [2, 3, 4, "salut"]`
+    -   texte + tout -> concationne le texte avec la représentation en texte du deuxième terme
+        -   ex: `"salut " + vrai = "salut vrai"`
+    -   (tout sauf liste) + texte -> concationne le texte avec la représentation en texte du premier terme
+        -   ex: `12 + "hey" = "12hey"`
 -   soustraction: `-`
+    -   nombre - nombre -> nombre
+        -   ex: `12 - 2 = 10`
+    -   liste - tout -> retire tous les éléments de la liste qui sont égaux au deuxième terme
+        -   ex: `[1, vrai, "bonjour"] - vrai = [1, "bonjour"]`
+    -   texte - texte -> retire tous les sous-textes du premier terme matchant au deuxième terme
+        -   ex: `"salut je suis Mathis" - "is" = "salut je su Math`
 -   multiplication: `*`
+    -   nombre \* nombre -> nombre
+        -   ex: `4 * 12 = 48`
+    -   texte \* entier -> répète le texte un nombre de fois égal au deuxième terme
+        -   ex: `"salut " * 3 = "salut salut salut "`
+    -   liste \* entier -> répète la liste un nombre de fois égal au deuxième terme
+        -   ex: `[12, vrai, "h"] * 3 = [12, vrai, "h", 12, vrai, "h", 12, vrai, "h"]`
 -   division: `/`
+    -   nombre / nombre -> nombre
+        -   ex: `25 / 2 = 12.5`
+    -   liste / liste -> retire tous les éléments de la liste 1 présent dans la liste 2
+        -   ex: `[1, 1, 2, vrai, faux, 4, 5, "foo"] / [vrai, 2, 4, 1] = [faux, 5, "foo"]`
 -   division entière: `//`
+    -   nombre // nombre -> entier
+        -   ex: `25 / 2 = 12`
 -   exposant: `^`
+    -   nombre ^ nombre -> nombre
+        -   ex: `3 ^ 4 = 81`
 -   modulo: `%`
+    -   entier % entier -> entier
+        -   ex: `7 % 3 = 1`
+-   pipe: `|`
+    -   liste | liste -> créé une nouvelle liste composé des éléments des deux listes sans modifier les listes originales
+        -   ex: `[1, 2, 3, vrai] | [3, faux, "salut"] = [1, 2, 3, vrai, 3, faux, "salut"]`
 
 #### Comparaisons
 
@@ -190,6 +223,17 @@
     -   `fonctionType` syntaxe: [fonction](#Fonction)
     -   `nulType` syntaxe: `nul`
     -   `rien` syntaxe: `rien`
+
+-   ##### Transformation de type
+
+    -   txt: texte -> nombre: `+txt` **OU** `--txt`
+    -   txt: texte -> entier: `entier(txt)`
+    -   txt: texte -> decimal: `decimal(txt)`
+
+    -   txt: texte -> liste: `liste(txt)`
+
+    -   element: tout -> texte: `"" + element` **OU** `texte(element)`
+    -   element: tout -> booleen: `pas pas element` **OU** `booleen(element)`
 
 #### Iterable (liste | texte)
 

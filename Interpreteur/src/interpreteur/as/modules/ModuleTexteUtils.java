@@ -15,7 +15,7 @@ public class ModuleTexteUtils extends ASModule {
     public static List<ASObjet.Fonction> fonctions = Arrays.asList(
 
             new ASObjet.Fonction("texte", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(null, "element", null)
+                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.tout.asType(), "element", null)
             }, ASObjet.TypeBuiltin.texte.asType()) {
                 @Override
                 public Texte executer() {
