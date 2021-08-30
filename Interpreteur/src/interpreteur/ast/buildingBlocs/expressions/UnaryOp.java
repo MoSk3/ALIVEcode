@@ -54,7 +54,7 @@ public class UnaryOp implements Expression<ASObjet<?>> {
             if (expr instanceof ASObjet.Variable) {
                 return new BinOp((Expression<?>) expr, BinOp.Operation.PLUS, new ValeurConstante(new ASObjet.Entier(1))).eval();
             }
-            new Assigner((Expression<?>) expr, new ValeurConstante(new ASObjet.Entier(1)), false, BinOp.Operation.PLUS).execute();
+            new Assigner((Expression<?>) expr, new ValeurConstante(new ASObjet.Entier(1)), BinOp.Operation.PLUS).execute();
             return ((Expression<?>) expr).eval();
         }),
 
@@ -62,7 +62,7 @@ public class UnaryOp implements Expression<ASObjet<?>> {
             if (expr instanceof ValeurConstante) {
                 return new BinOp((Expression<?>) expr, BinOp.Operation.MOINS, new ValeurConstante(new ASObjet.Entier(1))).eval();
             }
-            new Assigner((Expression<?>) expr, new ValeurConstante(new ASObjet.Entier(1)), false, BinOp.Operation.MOINS).execute();
+            new Assigner((Expression<?>) expr, new ValeurConstante(new ASObjet.Entier(1)), BinOp.Operation.MOINS).execute();
             return ((Expression<?>) expr).eval();
         }),
 

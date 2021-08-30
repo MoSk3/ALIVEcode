@@ -50,36 +50,25 @@ public class Executeur {
     private static final ASLexer lexer = new ASLexer();
     //------------------------ compilation -----------------------------//
     private final Hashtable<String, Hashtable<String, Programme>> coordCompileDict = new Hashtable<>();
-    final private ArrayList<Data> datas = new ArrayList<>();
     private final ArrayList<Coordonnee> coordCompileTime = new ArrayList<>();
     // Coordonnee utilisee lors de l'execution pour savoir quelle ligne executer
-    final private Coordonnee coordRunTime = new Coordonnee(debutCoord.toString());
+    private final Coordonnee coordRunTime = new Coordonnee(debutCoord.toString());
     // modules
     private final ASModuleManager asModuleManager = new ASModuleManager(this);
-    /*
-     * forme:
-     * {
-     * 		"scope1": {
-     * 				 	{programme, arbre, programmeToken}, // ligne 1 du scope 1
-     * 					{programme, arbre, programmeToken}, // ligne 2 du scope 1
-     * 					...
-     * 				  },
-     * 		"scope2": {
-     * 					{programme, arbre, programmeToken}, // ligne 1 du scope 2
-     * 					{programme, arbre, programmeToken}, // ligne 2 du scope 2
-     * 					...
-     * 				  },
-     * 		...
-     *
-     * }
-     */
+
+    // data explaining the actions to do to the server
+    private final ArrayList<Data> datas = new ArrayList<>();
+
+    // data stack used when the program asks the site for information
+    private final Stack<Object> dataResponse = new Stack<>();
+
     private String[] anciennesLignes = null;
     // failsafe
     private boolean compilationActive = false;
     private boolean executionActive = false;
     private boolean canExecute = false;
     //debug mode
-    private boolean debug = false;
+    public boolean debug = false;
     // ast
     private ASAst ast;
 
@@ -140,10 +129,10 @@ public class Executeur {
                     retourner num1 + num2
                 fin fonction  
                                 
-                
+                                
                 var a = "23.1"
                 afficher (decimal(a) + decimal(a)) / 2
-                
+                                
                 """.split("\n");
 
 
@@ -188,6 +177,14 @@ public class Executeur {
 
     public void addData(Data data) {
         datas.add(data);
+    }
+
+    public Stack<Object> getDataResponse() {
+        return this.dataResponse;
+    }
+
+    public Object pushDataResponse(Object item) {
+        return this.dataResponse.push(item);
     }
 
     /**
@@ -327,7 +324,7 @@ public class Executeur {
          * Cependant, cette condition peut etre overwrite si la compilation est forcee (compilationForce serait alors true)
          */
         if (Arrays.equals(lignes, anciennesLignes) && !compilationForcee) {
-            System.out.println("No changes: compilation done");
+            if (debug) System.out.println("No changes: compilation done");
             return "[]";
         } else {
             // Si le code est different ou que la compilation est forcee, compiler les lignes
@@ -353,7 +350,7 @@ public class Executeur {
         // sert au calcul du temps qu'a pris le code pour etre compile
         LocalDateTime before = LocalDateTime.now();
 
-        System.out.println("compiling...");
+        if (debug) System.out.println("compiling...");
 
         // vide le dictionnaire de coordonne ainsi que la liste de coordonne
         coordCompileDict.clear();
@@ -475,7 +472,10 @@ public class Executeur {
         /*
          * affiche le temps qu'a pris la compilation du programme
          */
-        System.out.println("compilation done in " + (LocalDateTime.now().toLocalTime().toNanoOfDay() - before.toLocalTime().toNanoOfDay()) / Math.pow(10, 9) + " seconds\n");
+        if (debug)
+            System.out.println("compilation done in "
+                    + (LocalDateTime.now().toLocalTime().toNanoOfDay() - before.toLocalTime().toNanoOfDay()) / Math.pow(10, 9)
+                    + " seconds\n");
 
         // set la valeur des anciennes lignes de code aux nouvelles lignes donnees en parametre
         anciennesLignes = lignes;
@@ -542,7 +542,7 @@ public class Executeur {
                 e.printStackTrace();
                 datas.add(new ErreurSyntaxe("Une erreur interne inconnue est survenue lors de l'ex\u00E9cution de la ligne, v\u00E9rifiez que la syntaxe est valide")
                         .getAsData(this));
-                System.out.println(coordRunTime);
+                if (debug) System.out.println(coordRunTime);
                 arreterExecution();
                 resultat = null;
                 break;
@@ -578,12 +578,15 @@ public class Executeur {
          * affiche le temps qu'a pris l'execution du programme (au complet ou jusqu'a l'interruption)
          */
         if (coordRunTime.toString() == null || !executionActive) {
-            System.out.println("execution " + (executionActive ? "done" : "interruped") + " in " +
-                    (LocalDateTime.now().toLocalTime().toNanoOfDay() - before.toLocalTime().toNanoOfDay()) / Math.pow(10, 9) + " seconds\n");
+            if (debug)
+                System.out.println("execution " + (executionActive ? "done" : "interruped") + " in " +
+                        (LocalDateTime.now().toLocalTime().toNanoOfDay() - before.toLocalTime().toNanoOfDay()) / Math.pow(10, 9) + " seconds\n");
             //System.out.println(datas);
             // boolean servant a indique que l'execution est terminee
             executionActive = false;
             reset();
+            // ajoute un '!' devant le résultat pour indiquer que l'exécution est terminée
+            resultat = "!" + resultat.toString();
         }
         datas.clear();
 

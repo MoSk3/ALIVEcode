@@ -43,21 +43,6 @@ const CodeLevel = (props?: LevelProps) => {
 		if (cmd && executor) executor.cmd = cmd;
 	}, [cmd, executor]);
 
-	//useEffect(() => {
-	//	const loadLevel = async () => {
-	//		try {
-	//			setLevel(
-	//				(await axios.get(`/playground/levels/${props.match.params.levelId}`))
-	//					.data,
-	//			);
-	//		} catch (err) {
-	//			alert.error('Niveau introuvable');
-	//			//history.push('/');
-	//		}
-	//	};
-	//	loadLevel();
-	//}, [props.match.params.levelId, alert, history]);
-
 	useEffect(() => {
 		if (!playButton.current) return;
 		setExecutor(new LevelExecutor(undefined, 'no name', playButton.current));

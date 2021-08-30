@@ -26,6 +26,19 @@ export default class LevelExecutor {
 		this.init();
 	}
 
+	private async sendDataToAsServer(
+		data: { lines: string } | { idToken: string; 'response-data': string[] },
+	) {
+		return (
+			await axios({
+				method: 'POST',
+				url: '/compile/',
+				baseURL: 'http://localhost:8001',
+				data,
+			})
+		).data;
+	}
+
 	private init() {
 		this.playButton.on('click', async (e: any) => {
 			if (!this.execution) {
@@ -33,16 +46,22 @@ export default class LevelExecutor {
 				// Envoie le code à exécuter au serveur
 				const lines: string = this.lineInterfaceContent;
 
-				const data = await (
-					await axios({
-						method: 'POST',
-						url: '/compile/',
-						baseURL: 'http://localhost:8001',
-						data: { lines },
-					})
-				).data;
+				let { idToken, result: data } = await this.sendDataToAsServer({
+					lines,
+				});
+				console.log(idToken, data);
 
-				this.execute(data);
+				while (true) {
+					let res = this.execute(data);
+					if ((Array.isArray(res) && res.length === 0) || res === undefined) {
+						break;
+					} else {
+						({ idToken, result: data } = await this.sendDataToAsServer({
+							idToken,
+							'response-data': res,
+						}));
+					}
+				}
 			} else {
 				this.cmd?.clear();
 				this.execution = false;
@@ -56,35 +75,32 @@ export default class LevelExecutor {
 	}
 
 	private execute(data: any) {
-		const perform_action = (
-			i: number,
-			res: Array<any> | undefined = undefined,
-		) => {
-			if (res === undefined) res = [];
-			const ID = 'id';
-			const DODO = 'd';
-			const PARAMS = 'p';
+		const res: any = [];
+		const ID = 'id';
+		const DODO = 'd';
+		const PARAMS = 'p';
 
-			const validDataStructure = (action: any) => {
-				return (
-					ID in action &&
-					typeof action[ID] === 'number' &&
-					DODO in action &&
-					typeof action[DODO] === 'number' &&
-					PARAMS in action &&
-					Array.isArray(action[PARAMS])
-				);
-			};
+		const validDataStructure = (action: any) => {
+			return (
+				ID in action &&
+				typeof action[ID] === 'number' &&
+				DODO in action &&
+				typeof action[DODO] === 'number' &&
+				PARAMS in action &&
+				Array.isArray(action[PARAMS])
+			);
+		};
 
+		const perform_action = (i: number) => {
 			if (i >= data.length) {
-				this.socket?.response(res);
+				//this.socket?.response(res);
 				return;
 			}
-			let action = data[i];
+			const action = data[i];
 			if (validDataStructure(action)) {
-				let dodo = action[DODO] >= 0 ? action[DODO] : 0;
-				let id = action[ID];
-				let params = action[PARAMS];
+				if (action[DODO] < 0) action[DODO] = 0;
+
+				const { [DODO]: dodo, [ID]: id, [PARAMS]: params } = action;
 
 				// Traite l'action a effectuée envoyée par le serveur
 				switch (id) {
@@ -97,11 +113,11 @@ export default class LevelExecutor {
 						if (params.length > 0 && typeof params[0] === 'string') {
 							this.cmd?.print(params[0]);
 						}
-						if (dodo === 0) perform_action(i + 1, res);
+						if (dodo === 0) perform_action(i + 1);
 						else {
 							this.timeouts.push(
 								setTimeout(() => {
-									perform_action(i + 1, res);
+									perform_action(i + 1);
 								}, dodo * 1000),
 							);
 						}
@@ -111,7 +127,7 @@ export default class LevelExecutor {
 						if (params.length > 0 && typeof params[0] === 'number') {
 							this.timeouts.push(
 								setTimeout(() => {
-									perform_action(i + 1, res);
+									perform_action(i + 1);
 								}, params[0] * 1000),
 							);
 						}
@@ -123,9 +139,9 @@ export default class LevelExecutor {
 						switch (params[0]) {
 							case 'read': {
 								/*----     lire     ----*/
-								let input = prompt("Entrez l'input");
+								let input = prompt(params[1]);
 								res.push(input);
-								perform_action(i + 1, res);
+								perform_action(i + 1);
 							}
 						}
 						break;
@@ -155,5 +171,6 @@ export default class LevelExecutor {
 		if (Array.isArray(data) && data.length > 0) {
 			perform_action(0);
 		}
+		return res;
 	}
 }

@@ -62,7 +62,6 @@ public final class ASModuleManager {
     public void init() {
         if (!dejaCharger) {
             chargerModules();
-            System.out.println("init");
             dejaCharger = true;
         }
     }

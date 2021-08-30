@@ -15,11 +15,10 @@ public class Assigner extends Programme {
 
     private final Expression<?> expr;
     private final Expression<?> valeur;
-    private final boolean constante;
     private final BinOp.Operation op;
     private final Var var;
 
-    public Assigner(Expression<?> expr, Expression<?> valeur, boolean constante, BinOp.Operation op) {
+    public Assigner(Expression<?> expr, Expression<?> valeur, BinOp.Operation op) {
         // get la variable
         if (expr instanceof Var) var = (Var) expr;
         else if (expr instanceof CreerListe.SousSection && ((CreerListe.SousSection) expr).getExpr() instanceof Var) {
@@ -32,10 +31,6 @@ public class Assigner extends Programme {
         }
         this.expr = expr;
         this.valeur = valeur;
-        if (constante && op != null) {
-            throw new ASErreur.ErreurAssignement("Il est impossible de modifier la valeur d'une constante");
-        }
-        this.constante = constante;
         this.op = op;
         //addVariable();
     }
@@ -96,7 +91,6 @@ public class Assigner extends Programme {
         return "Assigner{" +
                 "expr=" + expr +
                 ", valeur=" + valeur +
-                ", constante=" + constante +
                 '}';
     }
 
