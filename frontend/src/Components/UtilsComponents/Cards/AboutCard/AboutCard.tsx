@@ -11,13 +11,23 @@ const StyledDiv = styled(Col)`
 	margin-bottom: 25px;
 	margin-left: 7px;
 	margin-right: 7px;
+
+	.about-name {
+		margin-top: 10px;
+	}
+
+	img {
+		border-radius: 20px;
+		width: 250;
+		height: 250;
+	}
 `;
 
 const AboutCard = ({ img, name }: AboutCardProps) => {
 	return (
 		<StyledDiv lg>
 			<img src={img} alt={`alive-${name}`} />
-			<div>
+			<div className="about-name">
 				<h3>{name}</h3>
 			</div>
 		</StyledDiv>

@@ -17,4 +17,5 @@ export type CardContainerProps = {
 	scrollY?: boolean;
 	children?: React.ReactNode;
 	titleSize?: string;
+	asRow?: boolean;
 };
