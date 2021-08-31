@@ -604,9 +604,9 @@ public class ASAst extends AstGenerator {
                     }
                 });
 
-        ajouterExpression("!expression PARENT_OUV #expression PARENT_FERM~"
-                        + "!expression PARENT_OUV expression PARENT_FERM~"
-                        + "!expression PARENT_OUV PARENT_FERM",
+        ajouterExpression("PARENT_OUV #expression PARENT_FERM~"
+                        + "PARENT_OUV expression PARENT_FERM~"
+                        + "PARENT_OUV PARENT_FERM",
                 new Ast<Expression<?>>() {
                     @Override
                     public Expression<?> apply(List<Object> p) {

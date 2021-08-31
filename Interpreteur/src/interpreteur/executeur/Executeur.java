@@ -125,14 +125,16 @@ public class Executeur {
 
 
         String[] lines = """   
-                fonction additionner(num1: nombre, num2: nombre) -> nombre
-                    retourner num1 + num2
-                fin fonction  
+                fonction additionner(num1: nombre, num2: nombre) -> liste
+                    fonction f(a)
+                        afficher a
+                    fin fonction
+                    retourner [f, 1]
+                fin fonction
                                 
-                                
-                var a = "23.1"
-                afficher (decimal(a) + decimal(a)) / 2
-                                
+                var a <- "23.1"
+                var b <- '11'
+                afficher(additionner(decimal(a), decimal(b))[0] a)
                 """.split("\n");
 
 
@@ -140,7 +142,7 @@ public class Executeur {
         executeur.debug = true;
         Object a;
         if (!(a = executeur.compiler(lines, true)).equals("[]")) System.out.println(a);
-        executeur.printCompileDict();
+        // executeur.printCompileDict();
         System.out.println(executeur.executerMain(false));
         //System.out.println(compiler(lines, false));
         //executerMain(false);
