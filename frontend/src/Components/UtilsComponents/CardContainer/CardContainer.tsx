@@ -15,7 +15,7 @@ const StyledDiv = styled.div`
 		border-top-left-radius: 25px;
 		border-top-right-radius: 25px;
 		background-color: var(--primary-color);
-		color: var(--foreground-color);
+		color: var(--background-color);
 		margin-bottom: 0px;
 		padding: 10px;
 	}

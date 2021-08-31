@@ -12,13 +12,20 @@ import Zarine from '../../assets/images/creators/Zarine.jpg';
 import Felix from '../../assets/images/creators/Felix.jpg';
 import Pablo from '../../assets/images/creators/Pablo.jpg';
 import Brian from '../../assets/images/creators/Brian.jpg';
+import Younes from '../../assets/images/simulation/obstacles/water.jpg';
+import Hamza from '../../assets/images/creators/Hamza.jpg';
+import Eloi from '../../assets/images/creators/Eloi.jpg';
+import Gabriel from '../../assets/images/creators/Gabriel.jpg';
+import Simon from '../../assets/images/creators/Simon.jpg';
+import Guillaume from '../../assets/images/creators/Guillaume.jpg';
+import Emile from '../../assets/images/creators/Emile.jpg';
 import styled from 'styled-components';
 
 const StyledCenteredContainer = styled(CenteredContainer)`
 	padding: 0 10% 0 10%;
 
 	.row-prof {
-		padding-top: 10px;
+		margin-top: 10px;
 		margin-bottom: 10px;
 	}
 `;
@@ -28,7 +35,7 @@ const About = (props: AboutProps) => {
 
 	return (
 		<StyledCenteredContainer vertically horizontally>
-			<CardContainer title={t('msg.section.about')}>
+			<CardContainer titleSize="1.2em" title={t('msg.section.about')}>
 				<Row>
 					<AboutCard
 						className="row-prof"
@@ -37,16 +44,19 @@ const About = (props: AboutProps) => {
 					/>
 				</Row>
 				<Row>
-					<AboutCard name="Jihène Rezgui" img={Enric} />
-					<AboutCard name="Jihène Rezgui" img={Mathis} />
-					<AboutCard name="Jihène Rezgui" img={Zarine} />
-					<AboutCard name="Jihène Rezgui" img={Felix} />
-					<AboutCard name="Jihène Rezgui" img={Pablo} />
-					<AboutCard name="Jihène Rezgui" img={Brian} />
-					<AboutCard name="Jihène Rezgui" img={Jihene} />
-					<AboutCard name="Jihène Rezgui" img={Jihene} />
-					<AboutCard name="Jihène Rezgui" img={Jihene} />
-					<AboutCard name="Jihène Rezgui" img={Jihene} />
+					<AboutCard name="Enric Soldevila" img={Enric} />
+					<AboutCard name="Mathis Laroche" img={Mathis} />
+					<AboutCard name="Zarine Ardekani" img={Zarine} />
+					<AboutCard name="Félix Jobin" img={Felix} />
+					<AboutCard name="Pablo Cabale" img={Pablo} />
+					<AboutCard name="Brian-José Mejia-Rivera" img={Brian} />
+					<AboutCard name="Younes Kechout" img={Younes} />
+					<AboutCard name="Hamza Bellahsen" img={Hamza} />
+					<AboutCard name="Eloi Vincent-Légaré" img={Eloi} />
+					<AboutCard name="Gabriel Landry" img={Gabriel} />
+					<AboutCard name="Simon Beaulieu" img={Simon} />
+					<AboutCard name="Guillaume Blain" img={Guillaume} />
+					<AboutCard name="Émile Gagné" img={Emile} />
 				</Row>
 			</CardContainer>
 		</StyledCenteredContainer>
