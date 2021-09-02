@@ -39,9 +39,8 @@ const LevelForm = ({ type }: LevelFormProps) => {
 								required: true,
 							},
 							{
-								name: 'access',
+								name: 'description',
 								inputType: 'text',
-								required: true,
 							},
 							{
 								name: 'access',

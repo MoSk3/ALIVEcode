@@ -6,6 +6,8 @@ import LoadingScreen from '../../../Components/UtilsComponents/LoadingScreen/Loa
 import api from '../../../Models/api';
 import Link from '../../../Components/UtilsComponents/Link/Link';
 import useRoutes from '../../../state/hooks/useRoutes';
+import LevelCard from '../../../Components/LevelComponents/LevelCard/LevelCard';
+import CardContainer from '../../../Components/UtilsComponents/CardContainer/CardContainer';
 
 const LevelBrowse = (props: LevelBrowseProps) => {
 	const [levels, setLevels] = useState<Array<Level>>();
@@ -20,19 +22,17 @@ const LevelBrowse = (props: LevelBrowseProps) => {
 	}, []);
 
 	return (
-		<CenteredContainer vertically horizontally>
+		<CardContainer title="Users's levels">
 			{!levels ? (
 				<LoadingScreen />
 			) : (
 				<>
-					{levels.map(l => (
-						<Link to={routes.auth.level_play.path.replace(':id', l.id)}>
-							{l.name}
-						</Link>
+					{levels.map((l, idx) => (
+						<LevelCard level={l} key={idx} />
 					))}
 				</>
 			)}
-		</CenteredContainer>
+		</CardContainer>
 	);
 };
 

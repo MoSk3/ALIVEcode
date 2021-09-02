@@ -48,6 +48,15 @@ const api = {
 					);
 				},
 			},
+			async getLevels(userId: string) {
+				return (await axios.get(`users/${userId}/levels`)).data.map(
+					(l: any) => {
+						if (l.layout) return plainToClass(LevelAlive, l);
+						if (l.testCases) return plainToClass(LevelCode, l);
+						return plainToClass(Level, l);
+					},
+				);
+			},
 			//get: apiGetter('users', User),
 			async getClassrooms(userId: string) {
 				return (await axios.get(`users/${userId}/classrooms`)).data;

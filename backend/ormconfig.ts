@@ -12,7 +12,7 @@ const config: PostgresConnectionOptions = {
     'dist/src/**/**/entities/*.entity.js',
     'node_modules/nestjs-admin/**/*.entity.js',
   ],
-  synchronize: false,
+  synchronize: true,
   migrations: ['dist/src/db/migrations/*.js'],
   cli: {
     migrationsDir: 'src/db/migrations',

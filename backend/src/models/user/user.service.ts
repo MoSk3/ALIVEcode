@@ -15,6 +15,7 @@ import { CourseEntity } from 'src/models/course/entities/course.entity';
 import { ClassroomEntity } from '../classroom/entities/classroom.entity';
 import { IoTProjectEntity } from '../iot/IoTproject/entities/IoTproject.entity';
 import { IoTObjectEntity } from '../iot/IoTobject/entities/IoTobject.entity';
+import { LevelEntity } from '../level/entities/level.entity';
 
 @Injectable({ scope: Scope.REQUEST })
 export class UserService {
@@ -27,6 +28,7 @@ export class UserService {
     @InjectRepository(CourseEntity) private courseRepository: Repository<CourseEntity>,
     @InjectRepository(IoTProjectEntity) private iotProjectRepository: Repository<IoTProjectEntity>,
     @InjectRepository(IoTObjectEntity) private iotObjectRepository: Repository<IoTObjectEntity>,
+    @InjectRepository(LevelEntity) private levelRepository: Repository<LevelEntity>,
     @Inject(REQUEST) private req: MyRequest,
   ) {}
 
@@ -146,5 +148,9 @@ export class UserService {
 
   async getIoTObjects(user: UserEntity) {
     return await this.iotObjectRepository.find({ where: { creator: user } });
+  }
+
+  async getLevels(user: UserEntity) {
+    return await this.levelRepository.find({ where: { creator: user } });
   }
 }

@@ -145,4 +145,13 @@ export class UserController {
     if (user.id === id) return this.userService.getCourses(user);
     return this.userService.getClassrooms(await this.userService.findById(id));
   }
+
+  @Get(':id/levels')
+  @Auth()
+  async getLevels(@User() user: UserEntity, @Param('id') id: string) {
+    if (!hasRole(user, Role.MOD) && user.id !== id) throw new HttpException('You cannot do that', HttpStatus.FORBIDDEN);
+
+    if (user.id === id) return this.userService.getLevels(user);
+    return this.userService.getLevels(await this.userService.findById(id));
+  }
 }

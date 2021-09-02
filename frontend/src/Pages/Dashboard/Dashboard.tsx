@@ -29,7 +29,6 @@ const Dashboard = (props: DashboardProps) => {
 	useEffect(() => {
 		const getClassrooms = async () => {
 			const data = (await axios.get('classrooms')).data;
-			console.log(data);
 			setLoading(false);
 			setClassrooms(data.map((d: any) => plainToClass(Classroom, d)));
 		};

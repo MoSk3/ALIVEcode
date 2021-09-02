@@ -22,6 +22,7 @@ import IoTProjectCreate from '../../Components/IoTComponents/IoTProject/IotProje
 import IoTDashboard from '../../Pages/IoT/IoTDashboard/IoTDashboard';
 import LevelForm from '../../Components/LevelComponents/LevelForm/LevelForm';
 import LevelBrowse from '../../Pages/Level/LevelBrowse/LevelBrowse';
+import LevelList from '../../Pages/Level/LevelList/LevelList';
 
 type component =
 	| React.ComponentType<RouteComponentProps<any>>
@@ -157,6 +158,11 @@ const useRoutes = () => {
 		iot_project: {
 			path: '/iot/projects/:id',
 			component: IoTProject,
+		},
+		level_list: {
+			path: '/level',
+			exact: true,
+			component: LevelList,
 		},
 		level_browse: {
 			path: '/level/browse',
