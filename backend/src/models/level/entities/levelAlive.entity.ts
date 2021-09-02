@@ -8,7 +8,7 @@ export enum LEVEL_RESOLUTION_MODE {
 
 @ChildEntity()
 export class LevelAliveEntity extends LevelEntity {
-  @Column({ type: 'json', default: '{}' })
+  @Column({ type: 'json', default: () => "'{}'" })
   @IsOptional()
   layout: string;
 

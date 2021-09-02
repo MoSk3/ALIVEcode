@@ -36,12 +36,6 @@ const Dashboard = (props: DashboardProps) => {
 		getClassrooms();
 	}, []);
 
-	const createLevel = async () => {
-		// TODO : axios request to return new level with id
-		// const level: Level;
-		// history.push(`/level/play/${level.id}`)
-	};
-
 	return (
 		<CenteredContainer
 			horizontally
@@ -79,11 +73,15 @@ const Dashboard = (props: DashboardProps) => {
 			<CardContainer title="Niveaux">
 				<SmallCard to="/level" title="Mes niveaux" img={List} />
 				<SmallCard
-					onClick={() => createLevel}
+					to={routes.auth.level_create.path}
 					title="Créer un niveau"
 					img={Sandbox}
 				/>
-				<SmallCard to="/level/browse" title="Jouer un niveau" img={Voiture} />
+				<SmallCard
+					to={routes.auth.level_browse.path}
+					title="Jouer un niveau"
+					img={Voiture}
+				/>
 			</CardContainer>
 
 			<CardContainer style={{ marginBottom: '100px' }} title="Niveaux">

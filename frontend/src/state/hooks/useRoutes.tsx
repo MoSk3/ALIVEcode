@@ -20,6 +20,8 @@ import IoTHome from '../../Pages/IoT/IoTHome/IoTHome';
 import IoTProject from '../../Pages/IoT/IoTProject/IoTProject';
 import IoTProjectCreate from '../../Components/IoTComponents/IoTProject/IotProjectForm/IoTProjectCreate';
 import IoTDashboard from '../../Pages/IoT/IoTDashboard/IoTDashboard';
+import LevelForm from '../../Components/LevelComponents/LevelForm/LevelForm';
+import LevelBrowse from '../../Pages/Level/LevelBrowse/LevelBrowse';
 
 type component =
 	| React.ComponentType<RouteComponentProps<any>>
@@ -96,11 +98,6 @@ const useRoutes = () => {
 			path: '/amc',
 			component: NotFound,
 		},
-		// TODO : change to auth
-		level_play: {
-			path: '/level/play/:id',
-			component: Level,
-		},
 		en: {
 			// Route for switching language to english
 			path: '/en',
@@ -160,6 +157,18 @@ const useRoutes = () => {
 		iot_project: {
 			path: '/iot/projects/:id',
 			component: IoTProject,
+		},
+		level_browse: {
+			path: '/level/browse',
+			component: LevelBrowse,
+		},
+		level_play: {
+			path: '/level/play/:id',
+			component: Level,
+		},
+		level_create: {
+			path: '/level/create',
+			component: () => <LevelForm type="ALIVE" />,
 		},
 	});
 

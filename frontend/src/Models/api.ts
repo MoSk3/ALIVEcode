@@ -8,6 +8,9 @@ import { Student } from './User/user.entity';
 import { IoTProject } from './Iot/IoTproject.entity';
 import { IoTObject } from './Iot/IoTobject.entity';
 import { IotRoute } from './Iot/IoTroute.entity';
+import { Level } from './Level/level.entity';
+import { LevelAlive } from './Level/levelAlive.entity';
+import { LevelCode } from './Level/levelCode.entity';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const apiGetter = <T extends {}>(url: string, target: T) => {
@@ -98,6 +101,22 @@ const api = {
 						(d: any) => plainToClass(IotRoute, d),
 					);
 				},
+			},
+		},
+		levels: {
+			async get(levelId: string) {
+				const level = (await axios.get(`levels/${levelId}`)).data;
+				if (level.layout) return plainToClass(LevelAlive, level);
+				if (level.testCases) return plainToClass(LevelCode, level);
+				return plainToClass(Level, level);
+			},
+			async query() {
+				const levels: Array<any> = (await axios.get(`levels/query`)).data;
+				return levels.map((l: any) => {
+					if (l.layout) return plainToClass(LevelAlive, l);
+					if (l.testCases) return plainToClass(LevelCode, l);
+					return plainToClass(Level, l);
+				});
 			},
 		},
 	},

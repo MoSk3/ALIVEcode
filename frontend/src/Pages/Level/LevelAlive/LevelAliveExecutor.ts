@@ -1,13 +1,13 @@
 /* eslint-disable no-labels */
-import { images } from '../../../Components/PlayComponents/Simulation/Sketch/simulation/assets';
-import { InteractiveObject } from '../../../Components/PlayComponents/Simulation/Sketch/simulation/InteractiveObject';
-import { Shape } from '../../../Components/PlayComponents/Simulation/Sketch/simulation/Shape';
-import { Vector } from '../../../Components/PlayComponents/Simulation/Sketch/simulation/Vector';
+import { images } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/assets';
+import { InteractiveObject } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/InteractiveObject';
+import { Shape } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/Shape';
+import { Vector } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/Vector';
 import openPlaySocket from '../PlaySocket';
 import $ from 'jquery';
 import { PlayExecutor } from '../../../Models/Executor/PlayExecutor';
 import { PlaySocket } from '../PlaySocket';
-import { CMD } from '../../../Components/PlayComponents/Cmd/cmdTypes';
+import { CMD } from '../../../Components/LevelComponents/Cmd/cmdTypes';
 import { Professor, Student } from '../../../Models/User/user.entity';
 
 // TODO: robotConnected

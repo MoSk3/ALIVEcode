@@ -40,12 +40,12 @@ export class LevelEntity extends CreatedByUser {
   @IsOptional()
   startingCode: string;
 
-  @Column({ array: true, default: [] })
+  @Column({ type: 'jsonb', default: () => "'[]'", nullable: false })
   @IsOptional()
-  hints: string[];
+  hints: string[] = [];
 
   // TODO: Switch to postgreSQL
-  @Column({ enum: LEVEL_TAG, array: true, default: [] })
+  @Column({ enum: LEVEL_TAG, type: 'jsonb', default: () => "'[]'" })
   @IsOptional()
-  tags: LEVEL_TAG[];
+  tags: LEVEL_TAG[] = [];
 }

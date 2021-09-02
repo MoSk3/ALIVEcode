@@ -1,14 +1,18 @@
-import { SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionOptions';
+import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 
-const config: SqliteConnectionOptions = {
-  type: 'sqlite',
-  database: 'db/db.sqlite3',
+const config: PostgresConnectionOptions = {
+  type: 'postgres',
+  host: process.env.DB_HOST,
+  port: Number(process.env.DB_PORT),
+  username: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME,
   entities: [
     'dist/src/**/entities/*.entity.js',
     'dist/src/**/**/entities/*.entity.js',
     'node_modules/nestjs-admin/**/*.entity.js',
   ],
-  synchronize: true,
+  synchronize: false,
   migrations: ['dist/src/db/migrations/*.js'],
   cli: {
     migrationsDir: 'src/db/migrations',

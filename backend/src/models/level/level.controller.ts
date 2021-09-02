@@ -21,21 +21,21 @@ import { hasRole } from '../user/auth';
 import { LevelAliveEntity } from './entities/levelAlive.entity';
 import { LevelCodeEntity } from './entities/levelCode.entity';
 
-@Controller('level')
+@Controller('levels')
 @UseInterceptors(new DTOInterceptor())
 export class LevelController {
   constructor(private readonly levelService: LevelService) {}
 
   @Post('alive')
   @Auth()
-  async createLevelAlive(@Body() createLevelDto: LevelAliveEntity) {
-    return await this.levelService.createLevelAlive(createLevelDto);
+  async createLevelAlive(@User() user: UserEntity, @Body() createLevelDto: LevelAliveEntity) {
+    return await this.levelService.createLevelAlive(user, createLevelDto);
   }
 
   @Post('code')
   @Auth()
-  async createLevelCode(@Body() createLevelDto: LevelCodeEntity) {
-    return await this.levelService.createLevelCode(createLevelDto);
+  async createLevelCode(@User() user: UserEntity, @Body() createLevelDto: LevelCodeEntity) {
+    return await this.levelService.createLevelCode(user, createLevelDto);
   }
 
   @Get()
@@ -44,10 +44,15 @@ export class LevelController {
     return await this.levelService.findAll();
   }
 
+  @Get('query')
+  @Auth()
+  async findQuery() {
+    return await this.levelService.findQuery();
+  }
+
   @Get(':id')
   @Auth()
   async findOne(@User() user: UserEntity, @Param('id') id: string) {
-    if (!id) throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
     const level = await this.levelService.findOne(id);
     if (level.creator.id === user.id || hasRole(user, Role.STAFF)) return level;
     if (level.access === LEVEL_ACCESS.PRIVATE || level.access === LEVEL_ACCESS.RESTRICTED)
@@ -58,7 +63,6 @@ export class LevelController {
   @Patch(':id')
   @Auth()
   async update(@User() user: UserEntity, @Param('id') id: string, @Body() updateLevelDto: LevelEntity) {
-    if (!id) throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
     const level = await this.levelService.findOne(id);
 
     if (level.creator.id !== user.id && !hasRole(user, Role.STAFF))

@@ -1,14 +1,14 @@
 import FillContainer from '../../../Components/UtilsComponents/FillContainer/FillContainer';
 import { LevelAliveProps } from './levelAliveTypes';
 import { useEffect, useState, useContext, useRef } from 'react';
-import LineInterface from '../../../Components/PlayComponents/LineInterface/LineInterface';
+import LineInterface from '../../../Components/LevelComponents/LineInterface/LineInterface';
 import { UserContext } from '../../../state/contexts/UserContext';
-import Simulation from '../../../Components/PlayComponents/Simulation/Simulation';
+import Simulation from '../../../Components/LevelComponents/Simulation/Simulation';
 import { Row, Col } from 'react-bootstrap';
 import styled from 'styled-components';
 import { faBookOpen, faCog, faPlayCircle, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import IconButton from '../../../Components/DashboardComponents/IconButton/IconButton';
-import Cmd from '../../../Components/PlayComponents/Cmd/Cmd';
+import Cmd from '../../../Components/LevelComponents/Cmd/Cmd';
 import LevelAliveExecutor from './LevelAliveExecutor';
 import useCmd from '../../../state/hooks/useCmd';
 import { Professor } from '../../../Models/User/user.entity';
@@ -24,12 +24,9 @@ const StyledDiv = styled(FillContainer)`
 
 const LevelAlive = ({ level }: LevelAliveProps) => {
   const { user } = useContext(UserContext);
-
   const [executor, setExecutor] = useState<LevelAliveExecutor>();
-
-  const playButton = useRef<HTMLButtonElement>(null);
-
   const [cmdRef, cmd] = useCmd();
+  const playButton = useRef<HTMLButtonElement>(null);
 
   const lineInterfaceContentChanges = (content: any) => {
     if(executor) executor.lineInterfaceContent = content;
@@ -51,7 +48,7 @@ const LevelAlive = ({ level }: LevelAliveProps) => {
             <div style={{ flex: '0 1 70px', backgroundColor: '#013677', border: 'none' }}>
               <IconButton icon={faBookOpen} size="2x" />
               <IconButton icon={faQuestionCircle} size="2x" />
-              {(user instanceof Professor && user === level?.creator) ? (
+              {(user?.id === level?.creator.id) ? (
                 <>
                   <input type="text" id="input-level-name" value={level?.name} style={{ marginLeft: '5px' }} />
                   <div id="status-modify-div" style={{display: "inline"}}>

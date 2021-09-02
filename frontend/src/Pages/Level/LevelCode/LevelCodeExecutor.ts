@@ -1,4 +1,4 @@
-import { CMD } from "../../../Components/PlayComponents/Cmd/cmdTypes";
+import { CMD } from "../../../Components/LevelComponents/Cmd/cmdTypes";
 import { PlaySocket } from '../PlaySocket';
 import $ from 'jquery';
 import axios from 'axios';
