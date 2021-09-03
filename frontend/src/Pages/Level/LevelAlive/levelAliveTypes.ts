@@ -5,6 +5,7 @@ import FillContainer from '../../../Components/UtilsComponents/FillContainer/Fil
 export interface LevelAliveProps {
 	level: LevelAlive;
 	editMode: boolean;
+	setLevel: (level: LevelAlive) => void;
 }
 
 type StyledProps = {

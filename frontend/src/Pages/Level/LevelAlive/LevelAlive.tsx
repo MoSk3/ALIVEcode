@@ -19,8 +19,16 @@ import { Professor } from '../../../Models/User/user.entity';
 import { useHistory } from 'react-router-dom';
 import useRoutes from '../../../state/hooks/useRoutes';
 import LoadingScreen from '../../../Components/UtilsComponents/LoadingScreen/LoadingScreen';
+import FormModal from '../../../Components/UtilsComponents/FormModal/FormModal';
+import Form from '../../../Components/UtilsComponents/Form/Form';
+import { plainToClass } from 'class-transformer';
+import { LevelAlive as LevelAliveModel } from '../../../Models/Level/levelAlive.entity';
+import {
+	LEVEL_ACCESS,
+	LEVEL_DIFFICULTY,
+} from '../../../Models/Level/level.entity';
 
-const LevelAlive = ({ level, editMode }: LevelAliveProps) => {
+const LevelAlive = ({ level, editMode, setLevel }: LevelAliveProps) => {
 	const { user } = useContext(UserContext);
 	const [executor, setExecutor] = useState<LevelAliveExecutor>();
 	const [cmdRef, cmd] = useCmd();
@@ -28,6 +36,7 @@ const LevelAlive = ({ level, editMode }: LevelAliveProps) => {
 	const history = useHistory();
 	const { routes } = useRoutes();
 	const [editTitle, setEditTitle] = useState(false);
+	const [settingsModalOpen, setSettingsModalOpen] = useState(false);
 
 	const lineInterfaceContentChanges = (content: any) => {
 		if (executor) executor.lineInterfaceContent = content;
@@ -79,7 +88,11 @@ const LevelAlive = ({ level, editMode }: LevelAliveProps) => {
 								{/*
 								<label className="save-message">Niveau sauvegardé ✔</label>
 								*/}
-								<IconButton icon={faCog} size="2x" />
+								<IconButton
+									onClick={() => setSettingsModalOpen(true)}
+									icon={faCog}
+									size="2x"
+								/>
 							</>
 						)}
 						{!editMode && user.id === level.creator.id && (
@@ -107,6 +120,51 @@ const LevelAlive = ({ level, editMode }: LevelAliveProps) => {
 					</Row>
 				</Col>
 			</Row>
+			<FormModal
+				title="New route"
+				onSubmit={res => {
+					const updatedLevel = plainToClass(LevelAliveModel, res.data);
+					updatedLevel.creator = level.creator;
+					setLevel(updatedLevel);
+					setSettingsModalOpen(false);
+				}}
+				onClose={() => setSettingsModalOpen(false)}
+				open={settingsModalOpen}
+			>
+				<Form
+					action="UPDATE"
+					buttonText="Update"
+					name="update_level"
+					url={`levels/${level.id}`}
+					inputGroups={[
+						{
+							name: 'name',
+							inputType: 'text',
+							required: true,
+							default: level.name,
+						},
+						{
+							name: 'description',
+							inputType: 'text',
+							default: level.description,
+						},
+						{
+							name: 'access',
+							required: true,
+							inputType: 'select',
+							selectOptions: LEVEL_ACCESS,
+							default: level.access,
+						},
+						{
+							name: 'difficulty',
+							required: true,
+							inputType: 'select',
+							selectOptions: LEVEL_DIFFICULTY,
+							default: level.difficulty,
+						},
+					]}
+				/>
+			</FormModal>
 		</StyledAliveLevel>
 	);
 };

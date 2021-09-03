@@ -37,6 +37,7 @@ const Level = (props: LevelProps) => {
 	if (level instanceof LevelAliveModel)
 		return (
 			<LevelAlive
+				setLevel={setLevel}
 				level={level}
 				editMode={props.editMode && level.creator.id === user.id}
 			></LevelAlive>
