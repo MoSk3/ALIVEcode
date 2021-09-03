@@ -5,6 +5,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.ast.Ast;
@@ -30,7 +31,7 @@ public class AstGenerator {
 
     static Hashtable<String, Ast<?>> expressionsDict = new Hashtable<>();
     static ArrayList<String> ordreExpressions = new ArrayList<>();
-
+    int cptr = 0;
 
     private static ArrayList<String> ajouterSousAstOrdre(Hashtable<String, Ast<?>> sous_ast) {
         ArrayList<String> nouvelOrdre = new ArrayList<>(ordreExpressions);
@@ -110,13 +111,12 @@ public class AstGenerator {
 
     public static ArrayList<Expression<?>> eval(ArrayList<Object> expressions, Hashtable<String, Ast<?>> sous_ast) {
 
-        Hashtable<String, Ast<?>> expressionsDispo;
-        ArrayList<String> ordreExpression = new ArrayList<>(ordreExpressions);
-        expressionsDispo = new Hashtable<>(expressionsDict);
+        Hashtable<String, Ast<?>> regleSyntaxeDispo = new Hashtable<>(expressionsDict);
+        ArrayList<String> ordreRegleSyntaxe = new ArrayList<>(ordreExpressions);
 
         if (sous_ast != null) {
-            expressionsDispo.putAll(sous_ast);
-            ordreExpression = ajouterSousAstOrdre(sous_ast);
+            regleSyntaxeDispo.putAll(sous_ast);
+            ordreRegleSyntaxe = ajouterSousAstOrdre(sous_ast);
         }
 
         //System.out.println(expressions);
@@ -126,7 +126,7 @@ public class AstGenerator {
         if (expressions.get(0) instanceof ArrayList<?>) {
             ArrayList<Object> expressionList = new ArrayList<>();
             for (Object expr : expressions) {
-                expressionList.addAll(eval((ArrayList<Object>) expr, expressionsDispo));
+                expressionList.addAll(eval((ArrayList<Object>) expr, regleSyntaxeDispo));
             }
             return ((ArrayList<?>) expressionList).stream().map(e -> (Expression<?>) e).collect(Collectors.toCollection(ArrayList::new));
         }
@@ -135,98 +135,110 @@ public class AstGenerator {
 
         hasSafeSyntax(expressionArray.stream().filter(e -> e instanceof Token).toArray(Token[]::new));
 
-        for (String expressionsStruc : ordreExpression) {
-            next_expression:
-            for (String expression : expressionsStruc.split("~")) {
-                expression = expression.trim();
+        for (String regleSyntaxeEtVariante : ordreRegleSyntaxe) {
+            for (String regleSyntaxe : regleSyntaxeEtVariante.split("~")) {
+                regleSyntaxe = regleSyntaxe.trim();
 
-                List<String> expressionKeys = Arrays.asList(expression.split(" "));
-                int nbNotExpr = (int) expressionKeys.stream().filter(e -> e.equals("!expression")).count();
-                int longueurExpression = expressionKeys.size() - nbNotExpr;
+                List<String> membresRegleSyntaxe = Arrays.asList(regleSyntaxe.split(" "));
+                int nbNotExpr = (int) membresRegleSyntaxe.stream().filter(e -> e.equals("!expression")).count();
+                int longueurRegleSyntaxe = membresRegleSyntaxe.size() - nbNotExpr;
 
-                int i = 0, debut = 0, fin;
-                while (i + longueurExpression <= expressionArray.size()) {
+                int i = 0, debut, exprLength;
+                while (i + longueurRegleSyntaxe <= expressionArray.size()) {
+
                     List<String> expressionNom = new ArrayList<>();
-                    expressionArray.forEach(e -> expressionNom.add(e instanceof Token ? ((Token) e).obtenirNom() : "expression"));
+
+                    for (Object expr : expressionArray) {
+                        expressionNom.add(expr instanceof Token ? ((Token) expr).obtenirNom() : "expression");
+                    }
                     //System.out.println("Nom " + expressionNom);
-                    Matcher match = memeStructureExpression(String.join(" ", expressionNom), expression);
-                    if (expression.contains("#expression") && match.find()) {
-                        int somme = 0;
-                        for (int count = 0; count < expressionNom.size(); count++) {
-                            somme += expressionNom.get(count).length();
-                            if (somme >= match.start()) {
-                                debut = count;
-                                break;
-                            }
+                    Matcher match = memeStructureExpression(String.join(" ", expressionNom.subList(i, expressionNom.size())), regleSyntaxe);
+                    if (regleSyntaxe.contains("#expression") && match.find()) {
+                        if (match.start() != 0 || (expressionArray.get(i) instanceof Token && regleSyntaxe.startsWith("expression"))) {
+                            i++;
+                            continue;
                         }
+                        // obtiens l'index du premier élément qui match avec la règle de syntaxe
+                        debut = i;
+                        expressionNom = expressionNom.subList(i, expressionNom.size());
 
 
                         /*
                          * Check to make sure an expression is not a token
                          */
 
-                        if (expressionArray.get(debut) instanceof Token && expression.startsWith("expression")) {
-                            continue next_expression;
-                        }
-                        if (expression.contains("!expression") && i > 0 && expressionNom.get(i - 1).equals("expression")) {
-                            i++;
-                            continue;
-                        }
+
+                        // comment if (nbNotExpr > 0 && i > 0 && expressionNom.get(i - 1).equals("expression")) {
+                        //     i++;
+                        //     continue;
+                        // }
 
                         /*
                          * End of the check
                          */
 
-                        String ouv = expressionKeys.get(expressionKeys.indexOf("#expression") - 1);
-                        String ferm = expressionKeys.get(expressionKeys.size() - 1);
-
+                        String ouv = membresRegleSyntaxe.get(membresRegleSyntaxe.indexOf("#expression") - 1);
+                        String ferm = membresRegleSyntaxe.get(membresRegleSyntaxe.size() - 1);
 
                         int premier_ouv = expressionNom.indexOf(ouv);
-
-                        int cptr = 0, idx = 0;
-                        if (ouv.equals(ferm)) {
-                            idx = expressionNom.subList(premier_ouv+1, expressionNom.size() - 1).indexOf(ouv) + 1;
-                        } else {
-                            for (String exp : expressionNom.subList(premier_ouv, expressionNom.size())) {
-                                if (exp.equals(ouv)) {
-                                    cptr++;
-                                } else if (exp.equals(ferm)) {
-                                    cptr--;
-                                }
-                                if (cptr == 0) {
-                                    break;
-                                }
-                                idx++;
+                        //System.out.println(expressionNom);
+                        // algorithme des parenthèses (), des crochets [] et des accolades {}
+                        int cptr = 0;
+                        exprLength = premier_ouv;
+                        do {
+                            String exp = expressionNom.get(exprLength);
+                            if (exp.equals(ferm)) {
+                                cptr--;
+                            } else if (exp.equals(ouv)) {
+                                cptr++;
                             }
-                        }
+                            //comment System.out.println("\nexp: " + exp
+                            //        + "\nfin: " + exprLength
+                            //        + "\ncptr: " + cptr
+                            //        + "\n" + "-".repeat(10)
+                            //);
+                            exprLength++;
+                        } while (cptr > 0);
 
-                        fin = premier_ouv + idx + 1;
-                        List<Object> expr = expressionArray.subList(debut, fin);
+                        //comment for (String exp : expressionNom.subList(premier_ouv + 1, expressionNom.size())) {
+                        //    if (exp.equals(ouv)) {
+                        //        cptr++;
+                        //    } else if (exp.equals(ferm)) {
+                        //        cptr--;
+                        //    }
+                        //    idx++;
+                        //    if (cptr == 0) {
+                        //        break;
+                        //    }
+                        //}
 
-                        //System.out.println("#expr ->" + expression + " : " + expressionArray.subList(debut, fin));
+
+                        List<Object> expr = expressionArray.subList(debut, debut + exprLength);
+
+                        // System.out.println("\nregle: " + regleSyntaxe + "\nexpr: " + expr);
                         //expr.stream().map(Object::toString).forEach(Executeur::printCompiledCode);
 
 
-                        Expression<?> capsule = (Expression<?>) expressionsDict.get(expressionsStruc).apply(new ArrayList<>(expr));
+                        Expression<?> capsule = (Expression<?>) expressionsDict.get(regleSyntaxeEtVariante).apply(new ArrayList<>(expr));
                         //System.out.println(capsule);
 
-                        ArrayList<Object> newArray = new ArrayList<>(debut != 0 ? expressionArray.subList(0, debut) : new ArrayList<>());
+                        ArrayList<Object> newArray = new ArrayList<>(expressionArray.subList(0, debut));
                         newArray.add(capsule);
-                        newArray.addAll(expressionArray.subList(fin, expressionArray.size()));
+                        newArray.addAll(expressionArray.subList(debut + exprLength, expressionArray.size()));
 
                         //System.out.println(expressionArray);
                         expressionArray = newArray;
                         //System.out.println(expressionArray);
 
                     } else {
-                        if (expression.contains("!expression") && i > 0 && expressionNom.get(i - 1).equals("expression")) {
+                        if (regleSyntaxe.contains("!expression") && i > 0 && expressionNom.get(i - 1).equals("expression")) {
                             i++;
                             continue;
                         }
                         debut = i;
-                        fin = debut + longueurExpression;
+                        exprLength = debut + longueurRegleSyntaxe;
 
-                        if (memeStructureExpression(String.join(" ", expressionNom.subList(debut, fin)), expression).matches()) {
+                        if (memeStructureExpression(String.join(" ", expressionNom.subList(debut, exprLength)), regleSyntaxe).matches()) {
                             //System.out.println(expressionNom);
 
                             /*
@@ -235,7 +247,7 @@ public class AstGenerator {
 
                             //System.out.println(memeStructure(String.join(" ", expressionNom.subList(debut, fin)), expression).toString());
                             //System.out.println(expressionArray);
-                            if ((expression.startsWith("expression") &&
+                            if ((regleSyntaxe.startsWith("expression") &&
                                     (!(expressionArray.get(debut) instanceof Expression<?>))
                                     ||
                                     expressionArray.get(debut) == null)
@@ -248,16 +260,16 @@ public class AstGenerator {
                              */
                             //System.out.println("expr ->" + expression + " : " + expressionArray.subList(debut, fin));
 
-                            Expression<?> capsule = (Expression<?>) expressionsDispo.get(expressionsStruc).apply(expressionArray.subList(debut, fin));
+                            Expression<?> capsule = (Expression<?>) regleSyntaxeDispo.get(regleSyntaxeEtVariante).apply(expressionArray.subList(debut, exprLength));
                             //System.out.println(capsule);
 
                             ArrayList<Object> newArray = new ArrayList<>(debut != 0 ? expressionArray.subList(0, debut) : new ArrayList<>());
                             newArray.add(capsule);
-                            newArray.addAll(expressionArray.subList(debut + longueurExpression, expressionArray.size()));
+                            newArray.addAll(expressionArray.subList(debut + longueurRegleSyntaxe, expressionArray.size()));
 
                             expressionArray = newArray;
                             //System.out.println(expressionArray);
-                            if (longueurExpression == 1) i++;
+                            if (longueurRegleSyntaxe == 1) i++;
 
                         } else {
                             i++;
@@ -291,6 +303,13 @@ public class AstGenerator {
         );
         //System.out.println(line + " matcher:" + structurePattern.matcher(line));
         return structurePattern.matcher(line);
+    }
+
+    static protected void reset() {
+        expressionsDict.clear();
+        programmesDict.clear();
+        ordreExpressions.clear();
+        ordreProgrammes.clear();
     }
 
     private String remplacerCategoriesParMembre(String pattern) {
@@ -332,7 +351,7 @@ public class AstGenerator {
             programmesDict.put(remplacerCategoriesParMembre(programme), fonction); // remplace les categories par ses membres, s'il n'y a pas de categorie, ne modifie pas le pattern
         }
     }
-    int cptr = 0;
+
     protected void ajouterExpression(String pattern, Ast<?> fonction) {
 		/*
             importance : 0 = plus important
@@ -342,7 +361,6 @@ public class AstGenerator {
         fonction.setImportance(cptr++);
         expressionsDict.put(nouveauPattern, fonction);
     }
-
 
     protected void setOrdreProgramme() {
         for (int i = 0; i < programmesDict.size(); ++i) {
@@ -478,13 +496,6 @@ public class AstGenerator {
         }
         expressionsList.add(programmeList);
         return expressionsList;
-    }
-
-    static protected void reset() {
-        expressionsDict.clear();
-        programmesDict.clear();
-        ordreExpressions.clear();
-        ordreProgrammes.clear();
     }
 }
 

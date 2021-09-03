@@ -3,6 +3,7 @@ package interpreteur.as.modules;
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.as.Objets.ASObjet;
 import interpreteur.ast.buildingBlocs.expressions.Type;
+import interpreteur.executeur.Executeur;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -14,7 +15,7 @@ public class ModuleTexteUtils extends ASModule {
     public static List<ASObjet.Fonction> fonctions = Arrays.asList(
 
             new ASObjet.Fonction("texte", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(null, "element", null)
+                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.tout.asType(), "element", null)
             }, ASObjet.TypeBuiltin.texte.asType()) {
                 @Override
                 public Texte executer() {
@@ -133,6 +134,15 @@ public class ModuleTexteUtils extends ASModule {
             }
     );
     public static List<ASObjet.Constante> constantes = Collections.emptyList();
+
+    public ModuleTexteUtils(ASModuleManager moduleManager) {
+        super(moduleManager);
+    }
+
+    @Override
+    public void charger() {
+
+    }
 }
 
 

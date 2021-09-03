@@ -12,7 +12,8 @@ import java.util.List;
 
 public class FinFonction extends Programme {
 
-    public FinFonction() {
+    public FinFonction(Executeur executeurInstance) {
+        super(executeurInstance);
         Scope.popCurrentScope();
     }
 
@@ -25,7 +26,7 @@ public class FinFonction extends Programme {
     public Coordonnee prochaineCoord(Coordonnee coord, List<Token> ligne) {
         if (!coord.getScope().startsWith("fonc_"))
             throw new ASErreur.ErreurFermeture(coord.getScope(), "fin fonction");
-        return new Coordonnee(Executeur.finScope());
+        return new Coordonnee(executeurInstance.finScope());
     }
 
     @Override

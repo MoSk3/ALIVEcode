@@ -25,7 +25,7 @@ public class Module {
     public void utiliser() {
         FonctionManager.ajouterStructure(nomModule);
         for (Fonction fonction : fonctions) {
-            FonctionManager.ajouterFonction(fonction);
+            Scope.getCurrentScope().declarerVariable(new Variable(fonction.getNom(), fonction, new Type(fonction.obtenirNomType())));
         }
         for (Variable variable : variables) {
             Scope.getCurrentScope().declarerVariable(variable);
