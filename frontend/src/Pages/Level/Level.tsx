@@ -1,5 +1,5 @@
 import { LevelProps } from './levelTypes';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { Level as LevelModel } from '../../Models/Level/level.entity';
 import { useAlert } from 'react-alert';
 import LevelAlive from './LevelAlive/LevelAlive';
@@ -8,9 +8,12 @@ import LoadingScreen from '../../Components/UtilsComponents/LoadingScreen/Loadin
 import { LevelCode as LevelCodeModel } from '../../Models/Level/levelCode.entity';
 import LevelCode from './LevelCode/LevelCode';
 import api from '../../Models/api';
-import { useHistory } from 'react-router';
+import { useHistory, useParams } from 'react-router';
+import { UserContext } from '../../state/contexts/UserContext';
 
 const Level = (props: LevelProps) => {
+	const { id } = useParams<{ id: string }>();
+	const { user } = useContext(UserContext);
 	const [level, setLevel] = useState<LevelModel>();
 	const alert = useAlert();
 	const history = useHistory();
@@ -18,7 +21,7 @@ const Level = (props: LevelProps) => {
 	useEffect(() => {
 		const loadLevel = async () => {
 			try {
-				const level = await api.db.levels.get(props.match.params.id);
+				const level = await api.db.levels.get(id);
 				setLevel(level);
 			} catch (err) {
 				alert.error('Niveau introuvable');
@@ -27,15 +30,25 @@ const Level = (props: LevelProps) => {
 		};
 		loadLevel();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [props.match.params.id]);
+	}, [id]);
 
-	if (!level) return <LoadingScreen />;
+	if (!level || !user) return <LoadingScreen />;
 
 	if (level instanceof LevelAliveModel)
-		return <LevelAlive level={level}></LevelAlive>;
+		return (
+			<LevelAlive
+				level={level}
+				editMode={props.editMode && level.creator.id === user.id}
+			></LevelAlive>
+		);
 
 	if (level instanceof LevelCodeModel)
-		return <LevelCode level={level}></LevelCode>;
+		return (
+			<LevelCode
+				level={level}
+				editMode={props.editMode && level.creator.id === user.id}
+			></LevelCode>
+		);
 
 	return <></>;
 };

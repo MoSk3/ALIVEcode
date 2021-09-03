@@ -1,133 +1,114 @@
-import FillContainer from '../../../Components/UtilsComponents/FillContainer/FillContainer';
-import { LevelAliveProps } from './levelAliveTypes';
+import { LevelAliveProps, StyledAliveLevel } from './levelAliveTypes';
 import { useEffect, useState, useContext, useRef } from 'react';
 import LineInterface from '../../../Components/LevelComponents/LineInterface/LineInterface';
 import { UserContext } from '../../../state/contexts/UserContext';
 import Simulation from '../../../Components/LevelComponents/Simulation/Simulation';
 import { Row, Col } from 'react-bootstrap';
-import styled from 'styled-components';
-import { faBookOpen, faCog, faPlayCircle, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import {
+	faBookOpen,
+	faCog,
+	faPencilAlt,
+	faPlayCircle,
+	faQuestionCircle,
+} from '@fortawesome/free-solid-svg-icons';
 import IconButton from '../../../Components/DashboardComponents/IconButton/IconButton';
 import Cmd from '../../../Components/LevelComponents/Cmd/Cmd';
 import LevelAliveExecutor from './LevelAliveExecutor';
 import useCmd from '../../../state/hooks/useCmd';
 import { Professor } from '../../../Models/User/user.entity';
+import { useHistory } from 'react-router-dom';
+import useRoutes from '../../../state/hooks/useRoutes';
+import LoadingScreen from '../../../Components/UtilsComponents/LoadingScreen/LoadingScreen';
 
-const StyledDiv = styled(FillContainer)`
-  overflow-y: hidden;
+const LevelAlive = ({ level, editMode }: LevelAliveProps) => {
+	const { user } = useContext(UserContext);
+	const [executor, setExecutor] = useState<LevelAliveExecutor>();
+	const [cmdRef, cmd] = useCmd();
+	const playButton = useRef<HTMLButtonElement>(null);
+	const history = useHistory();
+	const { routes } = useRoutes();
+	const [editTitle, setEditTitle] = useState(false);
 
-  .row {
-    padding: 0;
-    margin: 0;
-  }
-`
+	const lineInterfaceContentChanges = (content: any) => {
+		if (executor) executor.lineInterfaceContent = content;
+	};
 
-const LevelAlive = ({ level }: LevelAliveProps) => {
-  const { user } = useContext(UserContext);
-  const [executor, setExecutor] = useState<LevelAliveExecutor>();
-  const [cmdRef, cmd] = useCmd();
-  const playButton = useRef<HTMLButtonElement>(null);
+	useEffect(() => {
+		if (cmd && executor) executor.cmd = cmd;
+	}, [cmd, executor]);
 
-  const lineInterfaceContentChanges = (content: any) => {
-    if(executor) executor.lineInterfaceContent = content;
-  }
+	useEffect(() => {
+		if (!user || (editMode && level.creator.id !== user.id))
+			return history.push(routes.public.home.path);
 
-  useEffect(() => {
-    if(cmd && executor) executor.cmd = cmd;
-  }, [cmd, executor]);
+		if (!playButton.current) return;
+		setExecutor(
+			new LevelAliveExecutor(
+				user ?? ({} as Professor),
+				level.name,
+				playButton.current,
+			),
+		);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [user, level]);
 
-  useEffect(() => {
-    if(!playButton.current) return;
-    setExecutor(new LevelAliveExecutor(user ?? ({} as Professor), "alllo", playButton.current));
-  }, [user]);
+	if (!user) return <LoadingScreen />;
 
-  return (
-      <StyledDiv>
-        <Row style={{height: '100%'}}>
-          <Col md={6} style={{ resize: 'both', padding: '0', display: 'flex', flexFlow: 'column', }}>
-            <div style={{ flex: '0 1 70px', backgroundColor: '#013677', border: 'none' }}>
-              <IconButton icon={faBookOpen} size="2x" />
-              <IconButton icon={faQuestionCircle} size="2x" />
-              {(user?.id === level?.creator.id) ? (
-                <>
-                  <input type="text" id="input-level-name" value={level?.name} style={{ marginLeft: '5px' }} />
-                  <div id="status-modify-div" style={{display: "inline"}}>
-                    <label style={{ color: 'white' }}>Niveau sauvegardé ✔</label>
-                    <IconButton icon={faCog} size="2x" />
-                  </div>
-                </>
-              ) : (
-                <label id="label-level-name" style={{ color: 'white', marginLeft: '5px' }}>{level ? level.name : "Sans nom"}</label>
-              )}
-              <IconButton icon={faPlayCircle} size="2x" ref={playButton} />
-            </div>
+	return (
+		<StyledAliveLevel editMode={editMode}>
+			<Row className="h-100">
+				<Col className="left-col" md={6}>
+					<div className="tools-bar">
+						{editMode && editTitle ? (
+							<input
+								type="text"
+								autoFocus
+								onBlur={() => setEditTitle(false)}
+								defaultValue={level.name}
+							/>
+						) : (
+							<label
+								className="level-title"
+								onClick={() => editMode && setEditTitle(true)}
+							>
+								{level ? level.name : 'Sans nom'}
+							</label>
+						)}
+						{editMode && (
+							<>
+								{/*
+								<label className="save-message">Niveau sauvegardé ✔</label>
+								*/}
+								<IconButton icon={faCog} size="2x" />
+							</>
+						)}
+						{!editMode && user.id === level.creator.id && (
+							<IconButton
+								onClick={() => console.log('a')}
+								to={routes.auth.level_edit.path.replace(':id', level.id)}
+								icon={faPencilAlt}
+								size="2x"
+							/>
+						)}
+						<IconButton icon={faBookOpen} size="2x" />
+						<IconButton icon={faQuestionCircle} size="2x" />
+						<IconButton icon={faPlayCircle} size="2x" ref={playButton} />
+					</div>
 
-            <LineInterface handleChange={lineInterfaceContentChanges} />
+					<LineInterface handleChange={lineInterfaceContentChanges} />
+				</Col>
 
-          </Col>
-
-          <Col md={6} style={{ resize: 'both', padding: '0' }}>
-            <Row id="simulation-row" style={{ height: '60%' }}>
-              {executor && <Simulation init={(s) => executor.init(s)} />}
-            </Row>
-            <Row style={{ height: '40%' }}>
-                <Cmd ref={cmdRef}></Cmd>
-            </Row>
-          </Col>
-        </Row>
-      </StyledDiv>
-  )
-}
+				<Col md={6} style={{ resize: 'both', padding: '0' }}>
+					<Row id="simulation-row" style={{ height: '60%' }}>
+						{executor && <Simulation init={s => executor.init(s)} />}
+					</Row>
+					<Row style={{ height: '40%' }}>
+						<Cmd ref={cmdRef}></Cmd>
+					</Row>
+				</Col>
+			</Row>
+		</StyledAliveLevel>
+	);
+};
 
 export default LevelAlive;
-
-
-/*
-
-<div id='main-div' className="container-fluid" style="position: relative; max-width: 100%;">
-    <div className="row h-100">
-        <div className="col-6" style="resize: both; padding:0; display: flex; flex-flow: column;">
-            <div style="flex: 0 1 70px; background-color: #013677; border: none;">
-                <div id="go-back-button" className="btn btn-primary"
-                    onclick="window.location=`{% url 'home:switch_to_bloc_interface' levelId=level.id %}`">
-                    Programmation en blocs
-                </div>
-                <button type="button" id="btn-book" className="btn" data-toggle="modal" data-target="#modal">
-                    <i className="fas fa-book-open fa-2x" style="color: white;"></i>
-                </button>
-                <button type="button" id="btn-hint" className="btn" data-toggle="modal" data-target="#modal-hint">
-                    <i className="fas fa-question-circle fa-2x" style="color: white;"></i>
-                </button>
-                {% if creator %}
-                <input type="text" id="input-level-name" value="{{ level.name }}" style="margin-left: 5px;">
-                <div id="status-modify-div" className="btn">
-                    <label id="saving-status" style="color:white">Niveau sauvegardé ✔</label>
-                    <button type="button" id="btn-modify" ­­ className="btn btn-primary" data-toggle="modal"
-                        data-target="#edit-modal">
-                        <i className="fas fa-cog fa-2x"></i>
-                    </button>
-                </div>
-                {% else %}
-                <label id="label-level-name" style="color:white; margin-left: 5px;">{{level.name}}</label>
-                {% endif %}
-            </div>
-
-
-            {% include "modules/line_interface.html" %}
-
-
-        </div>
-        <div className="col-6" style="resize: both">
-            <div className="row" id="simulation-row" style="height:60%;">
-                {% include "modules/simulation.html" %}
-            </div>
-            <div className="row" style="height:40%">
-                <div style="padding: 0;" className="col">
-                    {% include "modules/cmd.html" %}
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-*/

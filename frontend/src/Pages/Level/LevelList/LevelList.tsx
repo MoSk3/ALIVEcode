@@ -37,7 +37,7 @@ const LevelList = (props: LevelListProps) => {
 			) : (
 				<>
 					{levels.map((l, idx) => (
-						<LevelCard level={l} key={idx} />
+						<LevelCard enterEdit level={l} key={idx} />
 					))}
 				</>
 			)}

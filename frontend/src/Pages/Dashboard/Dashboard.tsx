@@ -70,7 +70,11 @@ const Dashboard = (props: DashboardProps) => {
 			</CardContainer>
 
 			<CardContainer title="Niveaux">
-				<SmallCard to="/level" title="Mes niveaux" img={List} />
+				<SmallCard
+					to={routes.auth.level_list.path}
+					title="Mes niveaux"
+					img={List}
+				/>
 				<SmallCard
 					to={routes.auth.level_create.path}
 					title="Créer un niveau"

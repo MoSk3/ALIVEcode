@@ -164,6 +164,10 @@ const useRoutes = () => {
 			exact: true,
 			component: LevelList,
 		},
+		level_edit: {
+			path: '/level/edit/:id',
+			component: () => <Level editMode />,
+		},
 		level_browse: {
 			path: '/level/browse',
 			component: LevelBrowse,

@@ -72,6 +72,34 @@ export const themes: { light: Theme; dark: Theme } = {
 		name: 'dark',
 	},
 };
+/*
+
+	POTENTIAL THEME
+
+	light: {
+		color: {
+			primary: '#012a4a',
+			primary_rgb: '1,42,74',
+			secondary: '#013a63',
+			secondary_rgb: '63,156,243',
+			third: '#01497c',
+			third_rgb: '0,186,198',
+			fourth: '#029FCA',
+			fourth_rgb: '2,159,202',
+			pale: '#D9F3FF',
+			pale_rgb: '217,243,255',
+			contrast: '#ffb013',
+			constrast_rgb: '255,176,19',
+			hover: '#00cbe6',
+			background: '#ffffff',
+			background_rgb: '255,255,255',
+			foreground: 'black',
+			foreground_rgb: '0,0,0',
+		},
+		background: '#ffffff',
+		name: 'light',
+	},
+*/
 
 export const ThemeContext = createContext<{
 	theme: Theme;

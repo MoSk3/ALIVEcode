@@ -5,6 +5,7 @@ import styled from 'styled-components';
 
 export type LevelCardProps = {
 	level: LevelAlive | LevelCode | Level;
+	enterEdit?: boolean;
 };
 
 export const StyledLevelCard = styled.div`

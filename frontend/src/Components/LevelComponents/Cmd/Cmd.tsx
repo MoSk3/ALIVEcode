@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import React from 'react';
 
 const StyledDiv = styled.div`
-	background-color: #001b3d;
-	color: #dbdbdb;
+	background-color: var(--primary-color);
+	color: var(--foreground-color);
 	padding: 15px;
 	width: 100%;
 	overflow-y: auto;
@@ -14,7 +14,7 @@ const StyledDiv = styled.div`
 	pre {
 		font-family: Arial, Helvetica, sans-serif;
 		font-size: small;
-		color: #dbdbdb;
+		color: var(--foreground-color);
 		line-height: 2rem;
 	}
 
