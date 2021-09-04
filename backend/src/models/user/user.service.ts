@@ -117,7 +117,9 @@ export class UserService {
   }
 
   async findById(id: string) {
-    return await this.userRepository.findOne(id);
+    const user = await this.userRepository.findOne(id);
+    if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    return user;
   }
 
   update(user: UserEntity, updateUserDto: UserEntity) {

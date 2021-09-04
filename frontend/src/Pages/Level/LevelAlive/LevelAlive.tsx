@@ -30,7 +30,13 @@ import {
 } from '../../../Models/Level/level.entity';
 import $ from 'jquery';
 
-const LevelAlive = ({ level, editMode, setLevel }: LevelAliveProps) => {
+const LevelAlive = ({
+	level,
+	editMode,
+	progression,
+	setLevel,
+	setProgression,
+}: LevelAliveProps) => {
 	const { user } = useContext(UserContext);
 	const [executor, setExecutor] = useState<LevelAliveExecutor>();
 	const [cmdRef, cmd] = useCmd();
@@ -46,6 +52,12 @@ const LevelAlive = ({ level, editMode, setLevel }: LevelAliveProps) => {
 
 	const lineInterfaceContentChanges = (content: any) => {
 		if (executor) executor.lineInterfaceContent = content;
+		if (!editMode) {
+			progression.data.code = content;
+			const updatedProgression = progression;
+			setProgression(updatedProgression);
+			saveProgressionTimed();
+		}
 	};
 
 	useEffect(() => {
@@ -89,12 +101,39 @@ const LevelAlive = ({ level, editMode, setLevel }: LevelAliveProps) => {
 		saveTimeout.current = setTimeout(saveLevel, 2000);
 	};
 
+	const saveProgression = async () => {
+		if (!user) return;
+		if (saveTimeout.current) clearTimeout(saveTimeout.current);
+		if (messageTimeout.current) clearTimeout(messageTimeout.current);
+		setSaving(true);
+		setSaved(false);
+		const updatedProgression = await api.db.levels.progressions.save(
+			level.id,
+			user,
+			progression,
+		);
+		messageTimeout.current = setTimeout(() => {
+			setSaving(false);
+			setSaved(true);
+
+			messageTimeout.current = setTimeout(() => {
+				setSaved(false);
+			}, 5000);
+		}, 500);
+		setProgression(updatedProgression);
+	};
+
+	const saveProgressionTimed = () => {
+		if (saveTimeout.current) clearTimeout(saveTimeout.current);
+		saveTimeout.current = setTimeout(saveProgression, 2000);
+	};
+
 	useEffect(() => {
 		$(document).on('keydown', e => {
 			if (e.keyCode === 83 && e.ctrlKey) {
 				e.preventDefault();
 				e.stopPropagation();
-				saveLevel();
+				editMode ? saveLevel() : saveProgression();
 			}
 		});
 
@@ -146,7 +185,7 @@ const LevelAlive = ({ level, editMode, setLevel }: LevelAliveProps) => {
 						<IconButton icon={faBookOpen} size="2x" />
 						<IconButton icon={faQuestionCircle} size="2x" />
 						<IconButton icon={faPlayCircle} size="2x" ref={playButton} />
-						{editMode && (saving || saved) && (
+						{(saving || saved) && (
 							<label className="save-message">
 								{saving && 'Sauvegarde en cours...'}
 								{saved && 'Niveau sauvegardé ✔'}
@@ -188,7 +227,11 @@ const LevelAlive = ({ level, editMode, setLevel }: LevelAliveProps) => {
 						/>
 					) : (
 						<LineInterface
-							content={level.initialCode}
+							content={
+								progression.data.code
+									? progression.data.code
+									: level.initialCode
+							}
 							handleChange={lineInterfaceContentChanges}
 						/>
 					)}

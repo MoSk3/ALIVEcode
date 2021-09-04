@@ -1,10 +1,13 @@
 import { LevelAlive } from "../../../Models/Level/levelAlive.entity";
 import styled from 'styled-components';
 import FillContainer from '../../../Components/UtilsComponents/FillContainer/FillContainer';
+import { LevelProgression } from '../../../Models/Level/levelProgression';
 
 export interface LevelAliveProps {
 	level: LevelAlive;
 	editMode: boolean;
+	progression: LevelProgression;
+	setProgression: (progression: LevelProgression) => void;
 	setLevel: (level: LevelAlive) => void;
 }
 

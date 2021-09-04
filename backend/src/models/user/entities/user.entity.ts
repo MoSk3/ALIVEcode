@@ -4,7 +4,7 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn, TableInheritance } f
 import { LevelEntity } from '../../level/entities/level.entity';
 import { IoTObjectEntity } from '../../iot/IoTobject/entities/IoTobject.entity';
 import { IoTProjectEntity } from '../../iot/IoTproject/entities/IoTproject.entity';
-import { LevelProgessionEntity } from '../../level/entities/levelProgression.entity';
+import { LevelProgressionEntity } from '../../level/entities/levelProgression.entity';
 
 @Entity()
 @TableInheritance({ column: { type: 'varchar', name: 'type' } })
@@ -51,6 +51,6 @@ export class UserEntity {
   @OneToMany(() => IoTProjectEntity, iot => iot.creator, { cascade: true })
   collabIoTProjects: IoTProjectEntity[];
 
-  @OneToMany(() => LevelProgessionEntity, prog => prog.user, { cascade: true })
-  levelProgressions: LevelProgessionEntity[];
+  @OneToMany(() => LevelProgressionEntity, prog => prog.user, { cascade: true })
+  levelProgressions: LevelProgressionEntity[];
 } 

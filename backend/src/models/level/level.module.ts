@@ -6,13 +6,32 @@ import { LevelEntity } from './entities/level.entity';
 import { UserEntity } from '../user/entities/user.entity';
 import { LevelAliveEntity } from './entities/levelAlive.entity';
 import { LevelCodeEntity } from './entities/levelCode.entity';
-import { LevelProgessionEntity } from './entities/levelProgression.entity';
+import { LevelProgressionEntity } from './entities/levelProgression.entity';
+import { UserService } from '../user/user.service';
+import { ProfessorEntity } from '../user/entities/professor.entity';
+import { StudentEntity } from '../user/entities/student.entity';
+import { ClassroomEntity } from '../classroom/entities/classroom.entity';
+import { CourseEntity } from '../course/entities/course.entity';
+import { IoTProjectEntity } from '../iot/IoTproject/entities/IoTproject.entity';
+import { IoTObjectEntity } from '../iot/IoTobject/entities/IoTobject.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([LevelEntity, UserEntity, LevelAliveEntity, LevelCodeEntity, LevelProgessionEntity]),
+    TypeOrmModule.forFeature([
+      LevelEntity,
+      UserEntity,
+      LevelAliveEntity,
+      LevelCodeEntity,
+      LevelProgressionEntity,
+      ProfessorEntity,
+      StudentEntity,
+      ClassroomEntity,
+      CourseEntity,
+      IoTProjectEntity,
+      IoTObjectEntity,
+    ]),
   ],
   controllers: [LevelController],
-  providers: [LevelService],
+  providers: [LevelService, UserService],
 })
 export class LevelModule {}

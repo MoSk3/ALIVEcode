@@ -4,13 +4,14 @@ import { plainToClass } from 'class-transformer';
 import { Course } from './Course/course.entity';
 import { Section } from './Course/section.entity';
 import { Classroom } from './Classroom/classroom.entity';
-import { Student } from './User/user.entity';
+import { Student, User } from './User/user.entity';
 import { IoTProject } from './Iot/IoTproject.entity';
 import { IoTObject } from './Iot/IoTobject.entity';
 import { IotRoute } from './Iot/IoTroute.entity';
 import { Level } from './Level/level.entity';
 import { LevelAlive } from './Level/levelAlive.entity';
 import { LevelCode } from './Level/levelCode.entity';
+import { LevelProgression } from './Level/levelProgression';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const apiGetter = <T extends {}>(url: string, target: T) => {
@@ -132,6 +133,25 @@ const api = {
 				if (l.layout) return plainToClass(LevelAlive, l);
 				if (l.testCases) return plainToClass(LevelCode, l);
 				return plainToClass(Level, l);
+			},
+			progressions: {
+				async get(levelId: string, user: User) {
+					return plainToClass(
+						LevelProgression,
+						(await axios.get(`levels/${levelId}/progressions/${user.id}`)).data,
+					);
+				},
+				async save(levelId: string, user: User, data: LevelProgression) {
+					return plainToClass(
+						LevelProgression,
+						(
+							await axios.patch(
+								`levels/${levelId}/progressions/${user.id}`,
+								data,
+							)
+						).data,
+					);
+				},
 			},
 		},
 	},

@@ -20,11 +20,13 @@ import { UserEntity } from '../user/entities/user.entity';
 import { hasRole } from '../user/auth';
 import { LevelAliveEntity } from './entities/levelAlive.entity';
 import { LevelCodeEntity } from './entities/levelCode.entity';
+import { UserService } from '../user/user.service';
+import { LevelProgressionEntity } from './entities/levelProgression.entity';
 
 @Controller('levels')
 @UseInterceptors(new DTOInterceptor())
 export class LevelController {
-  constructor(private readonly levelService: LevelService) {}
+  constructor(private readonly levelService: LevelService, private readonly userService: UserService) {}
 
   @Post('alive')
   @Auth()
@@ -60,10 +62,25 @@ export class LevelController {
     return level;
   }
 
-  @Get(':id/progression')
+  @Get(':id/progressions/:userId')
   @Auth()
-  async getProgression(@User() user: UserEntity, @Param('id') id: string) {
-    return {};
+  async getProgression(@User() user: UserEntity, @Param('id') id: string, @Param('userId') userId: string) {
+    if (user.id !== userId && !hasRole(user, Role.STAFF)) throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    const target = await this.userService.findById(userId);
+    return this.levelService.getProgression(id, target);
+  }
+
+  @Patch(':id/progressions/:userId')
+  @Auth()
+  async updateProgression(
+    @User() user: UserEntity,
+    @Param('id') id: string,
+    @Param('userId') userId: string,
+    @Body() updateProgressionDto: LevelProgressionEntity,
+  ) {
+    if (user.id !== userId && !hasRole(user, Role.STAFF)) throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    const target = await this.userService.findById(userId);
+    return this.levelService.updateProgression(id, target, updateProgressionDto);
   }
 
   @Patch(':id')

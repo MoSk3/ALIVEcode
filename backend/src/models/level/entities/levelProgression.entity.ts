@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsOptional } from 'class-validator';
+import { Exclude } from 'class-transformer';
+import { IsEmpty, IsOptional } from 'class-validator';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { UserEntity } from '../../user/entities/user.entity';
 
@@ -7,12 +8,14 @@ export type LevelProgression = {
 };
 
 @Entity()
-export class LevelProgessionEntity {
+export class LevelProgressionEntity {
   @PrimaryGeneratedColumn()
+  @IsEmpty()
+  @Exclude()
   id: string;
 
   @Column({ nullable: false })
-  @IsNotEmpty()
+  @Exclude()
   levelId: string;
 
   @Column({ type: 'json', default: () => "'{}'" })

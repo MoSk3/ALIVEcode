@@ -1,9 +1,9 @@
-export type LevelProgression = {
+export type LevelProgressionData = {
   code?: string;
 };
 
-export class LevelProgessionEntity {
+export class LevelProgression {
 	levelId: string;
 
-	data: LevelProgression;
+	data: LevelProgressionData;
 }
