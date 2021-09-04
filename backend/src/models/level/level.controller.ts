@@ -60,6 +60,12 @@ export class LevelController {
     return level;
   }
 
+  @Get(':id/progression')
+  @Auth()
+  async getProgression(@User() user: UserEntity, @Param('id') id: string) {
+    return {};
+  }
+
   @Patch(':id')
   @Auth()
   async update(
