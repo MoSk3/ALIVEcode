@@ -1,11 +1,11 @@
-import FillContainer from '../../Components/MiscComponents/FillContainer/FillContainer';
+import FillContainer from '../../Components/UtilsComponents/FillContainer/FillContainer';
 import { LevelProps } from './simulationLevelTypes';
 import { useEffect, useState, useContext, useRef } from 'react';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import { useAlert } from 'react-alert';
 import LineInterface from '../../Components/PlayComponents/LineInterface/LineInterface';
-import { UserContext } from '../../UserContext';
+import { UserContext } from '../../state/contexts/UserContext';
 import Simulation from '../../Components/PlayComponents/Simulation/Simulation';
 import { Row, Col } from 'react-bootstrap';
 import styled from 'styled-components';
@@ -14,6 +14,7 @@ import IconButton from '../../Components/DashboardComponents/IconButton/IconButt
 import Cmd from '../../Components/PlayComponents/Cmd/Cmd';
 import SimulationLevelExecutor from './SimulationLevelExecutor';
 import useCmd from '../../state/hooks/useCmd';
+import { Professor } from '../../Models/User/user.entity';
 
 const StyledDiv = styled(FillContainer)`
   overflow-y: hidden;
@@ -68,7 +69,7 @@ const Level = (props: LevelProps) => {
             <div style={{ flex: '0 1 70px', backgroundColor: '#013677', border: 'none' }}>
               <IconButton icon={faBookOpen} size="2x" />
               <IconButton icon={faQuestionCircle} size="2x" />
-              {(user?.professor && user?.professor === level?.creator) ? (
+              {(user instanceof Professor && user === level?.creator) ? (
                 <>
                   <input type="text" id="input-level-name" value={level?.name} style={{ marginLeft: '5px' }} />
                   <div id="status-modify-div" style={{display: "inline"}}>

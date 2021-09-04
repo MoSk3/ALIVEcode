@@ -1,8 +1,8 @@
 import './NotFound.css';
-import Link from '../../../Components/MainComponents/Link/Link';
+import Link from '../../../Components/UtilsComponents/Link/Link';
 
 import VoitureGIF from '../../../assets/images/Voiture.gif';
-import FillContainer from '../../../Components/MiscComponents/FillContainer/FillContainer';
+import FillContainer from '../../../Components/UtilsComponents/FillContainer/FillContainer';
 import { useHistory } from 'react-router';
 import useRoutes from '../../../state/hooks/useRoutes';
 

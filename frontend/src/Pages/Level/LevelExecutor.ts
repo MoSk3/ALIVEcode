@@ -1,8 +1,8 @@
 import { CMD } from "../../Components/PlayComponents/Cmd/cmdTypes";
-import { User } from '../../Models/User';
 import { PlaySocket } from './PlaySocket';
 import $ from 'jquery';
 import axios from 'axios';
+import { User } from '../../Models/User/user.entity';
 
 export default class LevelExecutor {
 	public playButton: JQuery;

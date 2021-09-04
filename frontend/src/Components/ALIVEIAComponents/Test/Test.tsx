@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-import LabelHighlight from '../../MiscComponents/LabelHighlight/LabelHighlight';
-import Button from '../../MainComponents/Button/Button';
-import FillContainer from '../../MiscComponents/FillContainer/FillContainer';
+import Button from '../../UtilsComponents/Button/Button';
+import FillContainer from '../../UtilsComponents/FillContainer/FillContainer';
 const Test = (props: any) => {
 	const [chiffre, setChiffre] = useState(0);
 	const [chiffre2, setChiffre2] = useState(0);

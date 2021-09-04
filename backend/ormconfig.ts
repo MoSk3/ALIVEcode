@@ -2,12 +2,16 @@ import { SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionO
 
 const config: SqliteConnectionOptions = {
   type: 'sqlite',
-  database: 'db.sqlite3',
-  entities: ['dist/src/**/entities/*.entity.js', 'node_modules/nestjs-admin/**/*.entity.js'],
+  database: 'db/db.sqlite3',
+  entities: [
+    'dist/src/**/entities/*.entity.js',
+    'dist/src/**/**/entities/*.entity.js',
+    'node_modules/nestjs-admin/**/*.entity.js',
+  ],
   synchronize: true,
-  migrations: ['dist/src/migrations/*.js'],
+  migrations: ['dist/src/db/migrations/*.js'],
   cli: {
-    migrationsDir: 'src/migrations',
+    migrationsDir: 'src/db/migrations',
   },
 };
 export default config;

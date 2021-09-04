@@ -8,12 +8,12 @@ import { useState, useRef, useEffect } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import styled from 'styled-components';
 import IconButton from '../../Components/DashboardComponents/IconButton/IconButton';
-import FillContainer from '../../Components/MiscComponents/FillContainer/FillContainer';
 import Cmd from '../../Components/PlayComponents/Cmd/Cmd';
 import LineInterface from '../../Components/PlayComponents/LineInterface/LineInterface';
 import useCmd from '../../state/hooks/useCmd';
 import { LevelProps } from './simulationLevelTypes';
 import LevelExecutor from './LevelExecutor';
+import FillContainer from '../../Components/UtilsComponents/FillContainer/FillContainer';
 
 const StyledDiv = styled(FillContainer)`
 	overflow-y: hidden;

@@ -1,73 +1,77 @@
 import { useForm } from 'react-hook-form';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { useContext } from 'react';
 import { useAlert } from 'react-alert';
 import { FormSignInValues, SignInProps } from './signInTypes';
 import { useHistory } from 'react-router';
-import { UserContext } from '../../../UserContext';
-import FormContainer from '../../../Components/MiscComponents/FormContainer/FormContainer';
+import { UserContext } from '../../../state/contexts/UserContext';
+import FormContainer from '../../../Components/UtilsComponents/FormContainer/FormContainer';
 import { Form } from 'react-bootstrap';
-import Button from '../../../Components/MainComponents/Button/Button';
-import Link from '../../../Components/MainComponents/Link/Link';
-import { User } from '../../../Models/User';
+import Button from '../../../Components/UtilsComponents/Button/Button';
+import Link from '../../../Components/UtilsComponents/Link/Link';
+import { useTranslation } from 'react-i18next';
+import { User } from '../../../Models/User/user.entity';
+import { setAccessToken } from '../../../Types/accessToken';
 
 /** Reusable form component to handle header creation */
 const SignIn = (props: SignInProps) => {
 	const { register, handleSubmit, formState: { errors } } = useForm();
-
 	const { setUser } = useContext(UserContext);
+	const { t } = useTranslation();
 	const history = useHistory();
 	const alert = useAlert();
 
 	const onSignIn = async (formValues: FormSignInValues) => {
 		try {
-			const { access } = (await axios.post('users/login/', formValues)).data;
-			axios.defaults.headers['Authorization'] = "JWT " + access;
-			localStorage.setItem('access_token', access);
+			const { accessToken } = (await axios.post('users/login/', formValues)).data;
+			if (!accessToken) throw new Error("Could not login");
+
+			setAccessToken(accessToken);
 
 			const user = await User.loadUser();
+			if(!user) return alert.error('Une erreur est survenue, veuillez réessayer');
+
 			setUser(user);
 
 			if(history.location.pathname === '/signin') history.push('/dashboard');
 			return alert.success("Vous êtes connecté!");
 
 		} catch (err) {
-			console.error(err);
-			return alert.error("Une erreur est survenue");
+			return alert.error("Erreur : " + ((err as AxiosError).response?.data.message ?? "veuillez réessayer"));
 		}
 	};
 
 	return (
-		<FormContainer title="Connexion">
+		<FormContainer title={t('form.title.signin')}>
 			<Form onSubmit={handleSubmit(onSignIn)}>
 				<Form.Group controlId="formBasicEmail">
-					<Form.Label>Adresse courriel</Form.Label>
+					<Form.Label>{t('form.email.label')}</Form.Label>
 					<Form.Control
 						type="email"
 						autoComplete="on"
-						placeholder="Enter email"
+						placeholder={t('form.email.placeholder')}
 						{...register('email', { required: true })}
 					/>
 					{errors.email?.type === 'required' && "Une adresse courriel est requise"}
 				</Form.Group>
 
 				<Form.Group controlId="formBasicPassword">
-					<Form.Label>Password</Form.Label>
+					<Form.Label>{t('form.pwd.label')}</Form.Label>
 					<Form.Control
 						type="password"
 						autoComplete="on"
-						placeholder="*****"
+						placeholder={t('form.pwd.placeholder')}
 						{...register('password', { required: true })}
 					/>
 					{errors.password?.type === 'required' && "Un mot de passe est requis"}
 				</Form.Group>
 				<Button variant="primary" type="submit">
-					Connexion
+					{t('msg.auth.signin')}
 				</Button>
 
 				<br /><br />
 
-				Vous n'avez pas de compte? <Link pale to="/signup">S'inscrire</Link>
+				{t('home.navbar.msg.non_auth.label')}<Link pale to="/signup">{t('home.navbar.msg.non_auth.link')}</Link>
 			</Form>
 		</FormContainer>
 	);

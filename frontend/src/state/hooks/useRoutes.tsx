@@ -1,6 +1,7 @@
-import { Professor, Student } from '../../Models/User';
 import { RouteComponentProps } from 'react-router-dom';
-import Dashboard from '../../Pages/Dashboard/Dashboard';
+import { Professor, Student } from '../../Models/User/user.entity';
+import Classroom from '../../Pages/Classroom/Classroom';
+import Course from '../../Pages/Course/Course';
 import { NotFound } from '../../Pages/Errors/NotFound/NotFound';
 import Home from '../../Pages/Home/Home';
 import SignIn from '../../Pages/Account/SignIn/SignIn';
@@ -10,9 +11,16 @@ import Level from '../../Pages/Level/SimulationLevel';
 import SignUpMenu from '../../Pages/Account/SignUpMenu/SignUpMenu';
 import About from '../../Pages/About/About';
 import { useContext } from 'react';
-import { UserContext } from '../../UserContext';
-import Classroom from '../../Pages/Classroom/Classroom';
+import { UserContext } from '../contexts/UserContext';
+import AccountPage from '../../Pages/Account/AccountInfo/AccountPage';
+import CourseForm from '../../Components/CourseComponents/CourseForm/CourseForm';
+import ClassroomForm from '../../Components/ClassroomComponents/ClassroomForm/ClassroomForm';
+import Dashboard from '../../Pages/Dashboard/Dashboard';
+import IoTHome from '../../Pages/IoT/IoTHome/IoTHome';
+import IoTProject from '../../Pages/IoT/IoTProject/IoTProject';
+import IoTProjectCreate from '../../Components/IoTComponents/IoTProject/IotProjectForm/IoTProjectCreate';
 import CodeLevel from '../../Pages/Level/CodeLevel';
+import IoTDashboard from '../../Pages/IoT/IoTDashboard/IoTDashboard';
 
 type component =
 	| React.ComponentType<RouteComponentProps<any>>
@@ -52,8 +60,8 @@ const useRoutes = () => {
 			const redirect = route.redirect || defaultRedirect;
 			if (
 				!user ||
-				(route.accountType === Professor && !user.professor) ||
-				(route.accountType === Student && !user.student)
+				(route.accountType === Professor && !(user instanceof Professor)) ||
+				(route.accountType === Student && !(user instanceof Student))
 			) {
 				route.component = redirect;
 				route.hasAccess = false;
@@ -108,6 +116,11 @@ const useRoutes = () => {
 			path: '/fr',
 			component: Home,
 		},
+		iot: {
+			exact: true,
+			path: '/iot',
+			component: IoTHome,
+		},
 	});
 
 	const auth_routes = asAuthRoutes(SignIn, {
@@ -115,9 +128,43 @@ const useRoutes = () => {
 			path: '/dashboard',
 			component: Dashboard,
 		},
+		create_classroom: {
+			accountType: Professor,
+			path: '/classroom/create',
+			component: ClassroomForm,
+		},
+		join_classroom: {
+			accountType: Student,
+			path: '/classroom/join',
+			component: ClassroomForm,
+		},
 		classroom: {
 			path: '/classroom/:id',
 			component: Classroom,
+		},
+		create_course: {
+			path: '/course/create',
+			component: CourseForm,
+		},
+		course: {
+			path: '/course/:id',
+			component: Course,
+		},
+		account: {
+			path: '/account',
+			component: AccountPage,
+		},
+		iot_dashboard: {
+			path: '/iot/dashboard',
+			component: IoTDashboard,
+		},
+		create_iot_project: {
+			path: '/iot/projects/create',
+			component: IoTProjectCreate,
+		},
+		iot_project: {
+			path: '/iot/projects/:id',
+			component: IoTProject,
 		},
 	});
 

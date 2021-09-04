@@ -1,19 +1,19 @@
-import { Injectable, CanActivate, ExecutionContext, Scope, Inject } from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext, Scope, Inject, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Request } from 'express';
-import { verify } from 'jsonwebtoken';
+import { JsonWebTokenError, verify } from 'jsonwebtoken';
 import { Repository } from 'typeorm';
 import { Reflector, REQUEST } from '@nestjs/core';
 import { AuthPayload } from '../types/auth.payload';
-import { UserEntity } from 'src/user/entities/user.entity';
-import { hasRole } from '../../user/auth';
+import { UserEntity } from 'src/models/user/entities/user.entity';
+import { hasRole } from '../../models/user/auth';
 import { Role } from '../types/roles.types';
 
 export interface MyRequest extends Request {
   user: UserEntity;
 }
 
-@Injectable({ scope: Scope.REQUEST })
+/*@Injectable({ scope: Scope.REQUEST })
 export class isAuth implements CanActivate {
   constructor(
     private reflector: Reflector,
@@ -38,7 +38,7 @@ export class isAuth implements CanActivate {
     }
     return true;
   }
-}
+}*/
 
 @Injectable({ scope: Scope.REQUEST })
 export class RolesGuard implements CanActivate {
@@ -50,23 +50,27 @@ export class RolesGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     try {
-      const roles = this.reflector.get<Role[]>('roles', context.getHandler());
-      if (!roles) throw Error('Internal server error');
+      let roles = this.reflector.get<Role[]>('roles', context.getHandler());
+      if (!roles) roles = [];
 
       const authorization = this.req.headers['authorization'];
-      if (!authorization) throw Error('Not Authenticated');
+      if (!authorization) throw new HttpException('Not Authenticated', HttpStatus.UNAUTHORIZED);
 
       const accessToken = authorization.split(' ')[1];
       const payload = verify(accessToken, process.env.ACCESS_TOKEN_SECRET_KEY);
-      if (!payload) throw Error('Not Authenticated');
+      if (!payload) throw new HttpException('Not Authenticated', HttpStatus.UNAUTHORIZED);
 
       const authPayload = payload as AuthPayload;
       const user = await this.userRepository.findOne(authPayload.id);
+      if (!user) throw new HttpException('Not Authenticated', HttpStatus.UNAUTHORIZED);
 
-      if (!hasRole(user, ...roles)) throw Error('Forbidden');
+      if (!hasRole(user, ...roles)) throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
       this.req.user = user;
-    } catch {
-      return false;
+    } catch (err) {
+      if (err instanceof JsonWebTokenError && err.name === 'TokenExpiredError')
+        throw new HttpException('Not Authenticated', HttpStatus.UNAUTHORIZED);
+      if (err instanceof HttpException) throw err;
+      throw new HttpException('Internal server error', HttpStatus.INTERNAL_SERVER_ERROR);
     }
     return true;
   }

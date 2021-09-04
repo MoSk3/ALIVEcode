@@ -1,4 +1,4 @@
-import FillContainer from "../../MiscComponents/FillContainer/FillContainer";
+import FillContainer from "../../UtilsComponents/FillContainer/FillContainer";
 import { sketch } from './Sketch/simulation/sketch';
 import P5Wrapper from 'react-p5-wrapper';
 import { SimulationProps } from './simulationTypes';

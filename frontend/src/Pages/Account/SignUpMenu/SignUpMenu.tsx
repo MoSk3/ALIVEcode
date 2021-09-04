@@ -1,6 +1,6 @@
-import FillContainer from '../../../Components/MiscComponents/FillContainer/FillContainer';
+import FillContainer from '../../../Components/UtilsComponents/FillContainer/FillContainer';
 import { SignUpMenuProps } from './signUpMenuTypes';
-import Card from '../../../Components/MainComponents/Cards/Card/Card';
+import Card from '../../../Components/UtilsComponents/Cards/Card/Card';
 import { Row } from 'react-bootstrap';
 
 import StudentImg from '../../../assets/images/icons/student.png';
