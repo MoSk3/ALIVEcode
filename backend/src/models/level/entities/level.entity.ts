@@ -36,10 +36,6 @@ export class LevelEntity extends CreatedByUser {
   @IsNotEmpty()
   difficulty: LEVEL_DIFFICULTY;
 
-  @Column({ default: '' })
-  @IsOptional()
-  startingCode: string;
-
   @Column({ type: 'jsonb', default: () => "'[]'", nullable: false })
   @IsOptional()
   hints: string[] = [];

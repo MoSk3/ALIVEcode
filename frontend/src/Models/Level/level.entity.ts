@@ -23,13 +23,9 @@ export class Level extends CreatedByUser {
 	@Exclude({ toPlainOnly: true })
 	creator: User;
 
-	type: string;
-
 	access: LEVEL_ACCESS;
 
 	difficulty: LEVEL_DIFFICULTY;
-
-	startingCode: string;
 
 	hints: string[];
 

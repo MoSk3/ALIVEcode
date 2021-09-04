@@ -12,6 +12,10 @@ export class LevelAliveEntity extends LevelEntity {
   @IsOptional()
   layout: string;
 
+  @Column({ nullable: true })
+  @IsOptional()
+  initialCode?: string;
+
   @Column({ enum: LEVEL_RESOLUTION_MODE, default: LEVEL_RESOLUTION_MODE.ANY })
   @IsOptional()
   resolution: LEVEL_RESOLUTION_MODE;

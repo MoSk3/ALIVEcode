@@ -101,6 +101,7 @@ const LevelAlive = ({ level, editMode, setLevel }: LevelAliveProps) => {
 		return () => {
 			clearTimeout(saveTimeout.current);
 			clearTimeout(messageTimeout.current);
+			$(document).off('keydown');
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
@@ -159,9 +160,9 @@ const LevelAlive = ({ level, editMode, setLevel }: LevelAliveProps) => {
 								{
 									title: 'Initial Code',
 									open: true,
-									content: level.startingCode,
+									content: level.initialCode,
 									onChange: content => {
-										level.startingCode = content;
+										level.initialCode = content;
 										const newLevel = plainToClass(LevelAliveModel, {
 											...level,
 										});
@@ -187,7 +188,7 @@ const LevelAlive = ({ level, editMode, setLevel }: LevelAliveProps) => {
 						/>
 					) : (
 						<LineInterface
-							content={level.startingCode}
+							content={level.initialCode}
 							handleChange={lineInterfaceContentChanges}
 						/>
 					)}

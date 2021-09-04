@@ -6,6 +6,7 @@ export enum LEVEL_RESOLUTION_MODE {
 
 export class LevelAlive extends Level {
 	layout: string;
+	initialCode?: string;
 	resolution: LEVEL_RESOLUTION_MODE;
 	solution?: string;
 }

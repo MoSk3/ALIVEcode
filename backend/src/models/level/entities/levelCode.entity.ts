@@ -12,6 +12,10 @@ export class LevelCodeEntity extends LevelEntity {
   @IsOptional()
   resolution: LEVEL_RESOLUTION_MODE;
 
+  @Column({ nullable: true })
+  @IsOptional()
+  initialCode?: string;
+
   @Column({ type: 'jsonb', nullable: false })
   @IsNotEmpty()
   testCases: string;
