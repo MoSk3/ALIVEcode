@@ -11,6 +11,7 @@ import { CourseEntity } from '../course/entities/course.entity';
 import { IoTProjectEntity } from '../iot/IoTproject/entities/IoTproject.entity';
 import { IoTObjectEntity } from '../iot/IoTobject/entities/IoTobject.entity';
 import { LevelEntity } from '../level/entities/level.entity';
+import { LevelProgessionEntity } from '../level/entities/levelProgression.entity';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { LevelEntity } from '../level/entities/level.entity';
       IoTProjectEntity,
       IoTObjectEntity,
       LevelEntity,
+      LevelProgessionEntity,
     ]),
     DefaultAdminModule,
   ],
