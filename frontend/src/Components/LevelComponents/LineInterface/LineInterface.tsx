@@ -35,6 +35,8 @@ const LineInterface = ({
 		handleChange(content);
 	};
 
+	console.log(tabs);
+
 	return (
 		<StyledLineInterface>
 			{hasTabs && (
@@ -46,25 +48,34 @@ const LineInterface = ({
 			)}
 			{hasTabs ? (
 				<>
-					{tabs.map((t, idx) => (
-						<AceEditor
-							key={idx}
-							className={
-								'ace-editor relative w-100 h-100 ' +
-								(t.open ? '' : 'hidden-editor')
-							}
-							defaultValue={t.content}
-							enableSnippets
-							enableBasicAutocompletion
-							enableLiveAutocompletion
-							mode="alivescript"
-							theme="alive"
-							onChange={content => onEditorChange(content, t)}
-							fontSize="large"
-							name="1nt3rf4c3" //"UNIQUE_ID_OF_DIV"
-							editorProps={{ $blockScrolling: true }}
-						/>
-					))}
+					{tabs.map((t, idx) => {
+						return (
+							<AceEditor
+								key={idx}
+								className={
+									'ace-editor relative w-100 h-100 ' +
+									(!t.open && t.loaded ? 'hidden-editor' : '')
+								}
+								defaultValue={t.content}
+								enableSnippets
+								enableBasicAutocompletion
+								enableLiveAutocompletion
+								mode="alivescript"
+								theme="alive"
+								onLoad={() => {
+									// To only hide the tab editor once it loaded
+									setTimeout(() => {
+										tabs[idx].loaded = true;
+										setTabs([...tabs]);
+									}, 100);
+								}}
+								onChange={content => onEditorChange(content, t)}
+								fontSize="large"
+								name="1nt3rf4c3" //"UNIQUE_ID_OF_DIV"
+								editorProps={{ $blockScrolling: true }}
+							/>
+						);
+					})}
 				</>
 			) : (
 				<AceEditor

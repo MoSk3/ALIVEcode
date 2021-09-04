@@ -73,6 +73,8 @@ const LevelAlive = ({ level, editMode, setLevel }: LevelAliveProps) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, level]);
 
+	console.log(level);
+
 	const saveLevel = () => {
 		if (saveTimeout.current) clearTimeout(saveTimeout.current);
 
@@ -92,7 +94,7 @@ const LevelAlive = ({ level, editMode, setLevel }: LevelAliveProps) => {
 				}, 5000);
 			}, 1000);
 			setLevel(updatedLevel);
-		}, 2000);
+		}, 1000);
 	};
 
 	if (!user) return <LoadingScreen />;
@@ -163,7 +165,15 @@ const LevelAlive = ({ level, editMode, setLevel }: LevelAliveProps) => {
 								{
 									title: 'Solution',
 									open: false,
-									onChange: content => {},
+									content: level.solution,
+									onChange: content => {
+										level.solution = content;
+										const newLevel = plainToClass(LevelAliveModel, {
+											...level,
+										});
+										setLevel(newLevel);
+										saveLevel();
+									},
 								},
 							]}
 							handleChange={lineInterfaceContentChanges}

@@ -13,8 +13,6 @@ type StyledProps = {
 };
 
 export const StyledAliveLevel = styled(FillContainer)`
-	overflow-y: hidden;
-
 	.row {
 		padding: 0;
 		margin: 0;
