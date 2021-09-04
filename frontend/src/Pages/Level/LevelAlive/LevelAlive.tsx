@@ -23,6 +23,7 @@ import FormModal from '../../../Components/UtilsComponents/FormModal/FormModal';
 import Form from '../../../Components/UtilsComponents/Form/Form';
 import { plainToClass } from 'class-transformer';
 import { LevelAlive as LevelAliveModel } from '../../../Models/Level/levelAlive.entity';
+import api from '../../../Models/api';
 import {
 	LEVEL_ACCESS,
 	LEVEL_DIFFICULTY,
@@ -37,10 +38,21 @@ const LevelAlive = ({ level, editMode, setLevel }: LevelAliveProps) => {
 	const { routes } = useRoutes();
 	const [editTitle, setEditTitle] = useState(false);
 	const [settingsModalOpen, setSettingsModalOpen] = useState(false);
+	const [saving, setSaving] = useState(false);
+	const [saved, setSaved] = useState(false);
+	const saveTimeout = useRef<any>(null);
+	const messageTimeout = useRef<any>(null);
 
 	const lineInterfaceContentChanges = (content: any) => {
 		if (executor) executor.lineInterfaceContent = content;
 	};
+
+	useEffect(() => {
+		return () => {
+			clearTimeout(saveTimeout.current);
+			clearTimeout(messageTimeout.current);
+		};
+	}, []);
 
 	useEffect(() => {
 		if (cmd && executor) executor.cmd = cmd;
@@ -60,6 +72,28 @@ const LevelAlive = ({ level, editMode, setLevel }: LevelAliveProps) => {
 		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, level]);
+
+	const saveLevel = () => {
+		if (saveTimeout.current) clearTimeout(saveTimeout.current);
+
+		saveTimeout.current = setTimeout(async () => {
+			if (messageTimeout.current) clearTimeout(messageTimeout.current);
+			setSaving(true);
+			setSaved(false);
+			const updatedLevel = (await api.db.levels.update(
+				level,
+			)) as LevelAliveModel;
+			messageTimeout.current = setTimeout(() => {
+				setSaving(false);
+				setSaved(true);
+
+				messageTimeout.current = setTimeout(() => {
+					setSaved(false);
+				}, 5000);
+			}, 1000);
+			setLevel(updatedLevel);
+		}, 2000);
+	};
 
 	if (!user) return <LoadingScreen />;
 
@@ -85,9 +119,6 @@ const LevelAlive = ({ level, editMode, setLevel }: LevelAliveProps) => {
 						)}
 						{editMode && (
 							<>
-								{/*
-								<label className="save-message">Niveau sauvegardé ✔</label>
-								*/}
 								<IconButton
 									onClick={() => setSettingsModalOpen(true)}
 									icon={faCog}
@@ -105,6 +136,12 @@ const LevelAlive = ({ level, editMode, setLevel }: LevelAliveProps) => {
 						<IconButton icon={faBookOpen} size="2x" />
 						<IconButton icon={faQuestionCircle} size="2x" />
 						<IconButton icon={faPlayCircle} size="2x" ref={playButton} />
+						{editMode && (saving || saved) && (
+							<label className="save-message">
+								{saving && 'Sauvegarde en cours...'}
+								{saved && 'Niveau sauvegardé ✔'}
+							</label>
+						)}
 					</div>
 					{editMode ? (
 						<LineInterface
@@ -115,11 +152,12 @@ const LevelAlive = ({ level, editMode, setLevel }: LevelAliveProps) => {
 									open: true,
 									content: level.startingCode,
 									onChange: content => {
+										level.startingCode = content;
 										const newLevel = plainToClass(LevelAliveModel, {
 											...level,
 										});
-										newLevel.startingCode = content;
 										setLevel(newLevel);
+										saveLevel();
 									},
 								},
 								{

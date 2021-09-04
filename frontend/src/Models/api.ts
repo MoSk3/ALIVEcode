@@ -127,6 +127,12 @@ const api = {
 					return plainToClass(Level, l);
 				});
 			},
+			async update(level: Level | LevelAlive | LevelCode) {
+				const l = (await axios.patch(`levels/${level.id}`, level)).data;
+				if (l.layout) return plainToClass(LevelAlive, l);
+				if (l.testCases) return plainToClass(LevelCode, l);
+				return plainToClass(Level, l);
+			},
 		},
 	},
 };

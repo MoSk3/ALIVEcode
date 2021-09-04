@@ -62,7 +62,33 @@ export class LevelController {
 
   @Patch(':id')
   @Auth()
-  async update(@User() user: UserEntity, @Param('id') id: string, @Body() updateLevelDto: LevelEntity) {
+  async update(
+    @User() user: UserEntity,
+    @Param('id') id: string,
+    @Body() updateLevelDto: LevelEntity | LevelCodeEntity | LevelAliveEntity,
+  ) {
+    const level = await this.levelService.findOne(id);
+
+    if (level.creator.id !== user.id && !hasRole(user, Role.STAFF))
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+
+    return await this.levelService.update(id, updateLevelDto);
+  }
+
+  @Patch('alive/:id')
+  @Auth()
+  async updateAlive(@User() user: UserEntity, @Param('id') id: string, @Body() updateLevelDto: LevelAliveEntity) {
+    const level = await this.levelService.findOne(id);
+
+    if (level.creator.id !== user.id && !hasRole(user, Role.STAFF))
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+
+    return await this.levelService.update(id, updateLevelDto);
+  }
+
+  @Patch('code/:id')
+  @Auth()
+  async updateCode(@User() user: UserEntity, @Param('id') id: string, @Body() updateLevelDto: LevelCodeEntity) {
     const level = await this.levelService.findOne(id);
 
     if (level.creator.id !== user.id && !hasRole(user, Role.STAFF))
