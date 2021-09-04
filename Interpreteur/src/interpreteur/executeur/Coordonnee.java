@@ -1,6 +1,8 @@
 package interpreteur.executeur;
 
 
+import java.util.Objects;
+
 public class Coordonnee {
     private String coord;
     private int numLigne;
@@ -130,7 +132,8 @@ public class Coordonnee {
         return this;
     }
 
-    public String getCoordAsString() {
+    @Override
+    public String toString() {
         return coord;
     }
 
@@ -147,15 +150,18 @@ public class Coordonnee {
     }
 
     @Override
-    public String toString() {
-        return "(" + this.getCoordAsString() + ", " + this.numLigne + ")";
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Coordonnee)) return false;
+        Coordonnee that = (Coordonnee) o;
+        return numLigne == that.numLigne &&
+                Objects.equals(coord, that.coord);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return this.toString().equals(obj.toString());
+    public int hashCode() {
+        return Objects.hash(coord, numLigne);
     }
-
 
     enum Boucle {
         POUR("pour"),

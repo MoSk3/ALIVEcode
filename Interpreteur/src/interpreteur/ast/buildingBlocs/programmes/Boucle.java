@@ -1,7 +1,6 @@
 package interpreteur.ast.buildingBlocs.programmes;
 
 import interpreteur.as.erreurs.ASErreur;
-import interpreteur.as.Objets.ASObjet;
 import interpreteur.ast.buildingBlocs.Programme;
 import interpreteur.executeur.Executeur;
 
@@ -20,9 +19,10 @@ public abstract class Boucle extends Programme {
         Boucle.boucles.getOrDefault(scope, new ArrayList<>()).forEach(Boucle::sortir);
     }
 
-    protected Boucle(String nomBoucle) {
+    protected Boucle(String nomBoucle, Executeur executeurInstance) {
+        super(executeurInstance);
         this.nomBoucle = nomBoucle;
-        boucles.getOrDefault(Executeur.obtenirCoordRunTime().getCoordAsString(), new ArrayList<>()).add(this);
+        boucles.getOrDefault(executeurInstance.obtenirCoordRunTime().toString(), new ArrayList<>()).add(this);
     }
 
     public String getNomBoucle() {
@@ -30,26 +30,32 @@ public abstract class Boucle extends Programme {
     }
 
     public static class Sortir extends Programme {
+        public Sortir(Executeur executeurInstance) {
+            super(executeurInstance);
+        }
         @Override
         public NullType execute() {
-            switch (Executeur.obtenirCoordRunTime().getBoucleActuelle()) {
+            switch (executeurInstance.obtenirCoordRunTime().getBoucleActuelle()) {
                 case "pour" -> BouclePour.sortir = true;
                 case "repeter" -> BoucleRepeter.sortir = true;
                 case "tant_que" -> BoucleTantQue.sortir = true;
                 default -> throw new ASErreur.ErreurSyntaxe("Il faut \u00EAtre dans une boucle pour pouvoir utiliser le mot clef 'sortir'");
             }
-            Executeur.obtenirCoordRunTime().recommencerBoucleActuelle();
+            executeurInstance.obtenirCoordRunTime().recommencerBoucleActuelle();
             return null;
         }
     }
 
     public static class Continuer extends Programme {
+        public Continuer(Executeur executeurInstance) {
+            super(executeurInstance);
+        }
         @Override
         public NullType execute() {
-            if (Executeur.obtenirCoordRunTime().getBoucleActuelle() == null) {
+            if (executeurInstance.obtenirCoordRunTime().getBoucleActuelle() == null) {
                 throw new ASErreur.ErreurSyntaxe("Il faut \u00EAtre dans une boucle pour pouvoir utiliser le mot clef 'continuer'");
             }
-            Executeur.obtenirCoordRunTime().recommencerBoucleActuelle();
+            executeurInstance.obtenirCoordRunTime().recommencerBoucleActuelle();
             return null;
         }
     }

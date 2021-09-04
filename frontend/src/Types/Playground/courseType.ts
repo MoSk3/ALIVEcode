@@ -1,25 +1,27 @@
-import { User } from '../../Models/User';
+import { User } from '../../Models/User/user.entity';
+import { Section } from '../../Models/Course/section.entity';
 
 export enum COURSE_SUBJECT {
-	INFORMATIC = 'in',
+	INFORMATIC = 'IN',
 	AI = 'AI',
-	MATH = 'ma',
-	SCIENCE = 'sc',
+	MATH = 'MA',
+	SCIENCE = 'SC',
 }
+
 export enum COURSE_DIFFICULTY {
-	debutant = 1,
-	facile = 2,
-	intermédiaire = 3,
-	avance = 4,
-	difficile = 5,
-	expert = 6,
+	BEGINNER = 1,
+	EASY = 2,
+	MEDIUM = 3,
+	ADVANCED = 4,
+	HARD = 5,
+	EXPERT = 6,
 }
 
 export enum COURSE_ACCESS {
-	PU = 'Public', // can be found via a search
-	UN = 'Non répertorié', // must be shared via a url
-	RE = 'Restrain', // limited to certain classes
-	PR = 'Privé', // only accessible to the creator
+	PUBLIC = 'PU', // can be found via a search
+	UNLISTED = 'UN', // must be shared via a url
+	RESTRICTED = 'RE', // limited to certain classes
+	PRIVATE = 'PR', // only accessible to the creator
 }
 
 export interface CourseInterface {
@@ -31,4 +33,5 @@ export interface CourseInterface {
 	difficulty: COURSE_DIFFICULTY;
 	access: COURSE_ACCESS;
 	code: string;
+	sections: Array<Section>;
 }

@@ -1,4 +1,4 @@
-{ 
+{
   "compilerOptions": {
     "module": "commonjs",
     "declaration": true,
@@ -10,7 +10,8 @@
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
-    "incremental": true,
+    "noEmit": false,
+    "incremental": false,
     "skipLibCheck": true
   }
 }

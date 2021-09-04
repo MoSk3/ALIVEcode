@@ -1,21 +1,28 @@
 import axios from 'axios';
-import Model from './Model';
+import { plainToClass } from 'class-transformer';
 
-type TypeLoadObj = <T extends Object>(
+export const loadObj = async <T extends {}>(
 	url: string,
-	target: Model & Function,
+	target: T,
 	body?: Object,
-) => Promise<T[] | T>;
-
-export const loadObj: TypeLoadObj = async (url, target, body?) => {
+): Promise<T | T[]> => {
 	const data = (await axios.get(url, body)).data;
+	return Array.isArray(data)
+		? data.map(obj => plainToClass(obj, target))
+		: plainToClass(data, target);
+};
+/*
+export const buildObj = <T extends Model & Function>(
+	data: any,
+	target: T,
+): T | T[] => {
 	return Array.isArray(data)
 		? data.map((obj: any) =>
 				deepConstruct(Object.create(target), obj, target.prototype),
 		  )
 		: deepConstruct(Object.create(target), data, target.prototype);
 };
-
+*/
 const deepConstruct = (target: any, source: any, prototype?: Object) => {
 	// Iterate through `source` properties and if an `Object` set property to merge of `target` and `source` properties
 	for (const key of Object.keys(source)) {
@@ -42,6 +49,7 @@ const deepConstruct = (target: any, source: any, prototype?: Object) => {
 					sourceValue,
 					target.dependencies[key].prototype,
 				);
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			} else source[key] = deepConstruct(target[key], sourceValue);
 		}
 	}
@@ -49,12 +57,3 @@ const deepConstruct = (target: any, source: any, prototype?: Object) => {
 	target = Object.assign(target || {}, source);
 	return prototype ? Object.setPrototypeOf(target, prototype) : target;
 };
-
-
-
-
-
-
-
-
-

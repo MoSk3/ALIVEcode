@@ -26,6 +26,7 @@ Ajouter:
 
   assignements:
     ASSIGNEMENT: '='
+    ASSIGNEMENT_FLECHE: '<-'
     PLUS_ASSIGNEMENT: '\+='
     POW_ASSIGNEMENT: '\^='
     MUL_ASSIGNEMENT: '\*='
@@ -60,11 +61,13 @@ Ajouter:
 
     # bloc tant que
     TANT_QUE: '\btant que\b'
-    FAIRE: '\bfaire\b'
+    FAIRE: 'faire'
 
   SORTIR: '\bsortir\b'
 
   CONTINUER: '\bcontinuer\b'
+
+  ALORS: '\balors\b'
 
 
   # fin
@@ -93,7 +96,7 @@ Ajouter:
 
 
   comparaison:
-    EGAL: '=='
+    EGAL: '(={2})|(==)'
     PAS_EGAL: '!='
     PLUS_GRAND: '>'
     PLUS_PETIT: '<'
@@ -103,7 +106,8 @@ Ajouter:
   porte_logique:
     ET: '\bet\b'
     OU: '\bou\b'
-    PAS: '\bpas\b'
+
+  PAS: '\bpas\b'
 
   # separateur
   PARENT_OUV: '[(]'

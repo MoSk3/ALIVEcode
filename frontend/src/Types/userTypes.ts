@@ -1,7 +1,7 @@
-import { Professor, Student } from "../Models/User";
+import { Professor, Student } from '../Models/User/user.entity';
 
 export enum GRADES {
-    S1 = "s1"
+	S1 = 's1',
 }
 
 export enum USER_TYPES {
@@ -10,8 +10,8 @@ export enum USER_TYPES {
 }
 
 export interface ProfessorInterface {
-	first_name: string;
-	last_name: string;
+	firstName: string;
+	lastName: string;
 }
 
 export interface StudentInterface {
@@ -26,9 +26,10 @@ export interface UserInterface {
 }
 
 export type BackendUser = {
+	id: string;
 	email: string;
 	name: string;
 	scholarity: GRADES;
-	first_name: string;
-	last_name: string;
+	firstName: string;
+	lastName: string;
 };

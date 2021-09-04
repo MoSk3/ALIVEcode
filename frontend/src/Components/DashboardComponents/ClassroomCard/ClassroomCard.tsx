@@ -1,6 +1,6 @@
 import { ClassRoomCardProps } from './classroomCardTypes';
 import { useContext } from 'react';
-import { UserContext } from '../../../UserContext';
+import { UserContext } from '../../../state/contexts/UserContext';
 import { useHistory } from 'react-router-dom';
 import IconButton from '../IconButton/IconButton';
 import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
@@ -94,7 +94,7 @@ const ClassroomCard = ({ classroom }: ClassRoomCardProps) => {
 			<div className="card-back">
 				<div className="card-body">
 					{classroom.creator.getDisplayName()}
-					{user?.student && (
+					{user?.isStudent() && (
 						<h6 className="card-subtitle mb-2 text-muted">
 							Classe des élèves de {classroom.creator.getDisplayName()}
 						</h6>

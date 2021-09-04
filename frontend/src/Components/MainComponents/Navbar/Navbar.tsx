@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { NavbarProps } from './NavbarTypes';
-import { UserContext } from '../../../UserContext';
+import { UserContext } from '../../../state/contexts/UserContext';
 import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
 
@@ -11,16 +11,18 @@ import i18next from 'i18next';
 import { languages } from '../../../appConfigs';
 import { useTranslation } from 'react-i18next';
 import useRoutes from '../../../state/hooks/useRoutes';
+import { ThemeContext, themes } from '../../../state/contexts/ThemeContext';
 
 const ALIVENavbar = ({ handleLogout }: NavbarProps) => {
 	const { user } = useContext(UserContext);
 	const { t } = useTranslation();
 	const { routes } = useRoutes();
+	const { theme, setTheme } = useContext(ThemeContext);
 
 	const history = useHistory();
 
 	return (
-		<Navbar id="navbar" bg="light" expand="lg">
+		<Navbar id="navbar" expand="lg">
 			<Navbar.Brand>
 				<Link to={routes.public.home.path}>
 					<img
@@ -47,6 +49,12 @@ const ALIVENavbar = ({ handleLogout }: NavbarProps) => {
 						onClick={() => history.push(routes.public.ai.path)}
 					>
 						{t('home.navbar.section.ai')}
+					</Nav.Link>
+					<Nav.Link
+						className="nav-link"
+						onClick={() => history.push(routes.public.iot.path)}
+					>
+						{t('home.navbar.section.iot')}
 					</Nav.Link>
 					<Nav.Link
 						className="nav-link"
@@ -99,9 +107,26 @@ const ALIVENavbar = ({ handleLogout }: NavbarProps) => {
 									id="basic-nav-dropdown"
 								>
 									{user ? (
-										<NavDropdown.Item onClick={handleLogout}>
-											{t('msg.auth.signout')}
-										</NavDropdown.Item>
+										<>
+											<NavDropdown.Item
+												onClick={() => history.push(routes.auth.account.path)}
+											>
+												{t('msg.section.account')}
+											</NavDropdown.Item>
+											<NavDropdown.Item
+												onClick={() => {
+													setTheme(
+														theme.name === 'dark' ? themes.light : themes.dark,
+													);
+												}}
+											>
+												Theme
+											</NavDropdown.Item>
+											<NavDropdown.Divider />
+											<NavDropdown.Item onClick={handleLogout}>
+												{t('msg.auth.signout')}
+											</NavDropdown.Item>
+										</>
 									) : (
 										<>
 											<NavDropdown.Item
@@ -117,6 +142,15 @@ const ALIVENavbar = ({ handleLogout }: NavbarProps) => {
 												}
 											>
 												{t('msg.auth.signup')}
+											</NavDropdown.Item>
+											<NavDropdown.Item
+												onClick={() => {
+													setTheme(
+														theme.name === 'dark' ? themes.light : themes.dark,
+													);
+												}}
+											>
+												Theme
 											</NavDropdown.Item>
 										</>
 									)}

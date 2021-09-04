@@ -3,11 +3,12 @@ package interpreteur.executeur;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import interpreteur.as.Objets.ASObjet;
 import interpreteur.as.Objets.ASObjet.FonctionManager;
 import interpreteur.as.Objets.Scope;
 import interpreteur.as.erreurs.ASErreur.*;
 import interpreteur.as.ASLexer;
-import interpreteur.as.modules.ASModule;
+import interpreteur.as.modules.ASModuleManager;
 import interpreteur.as.ASAst;
 import interpreteur.ast.buildingBlocs.Programme;
 import interpreteur.ast.buildingBlocs.programmes.Declarer;
@@ -45,57 +46,35 @@ afficher "fin"
 public class Executeur {
     // coordonne ou commencer tous les programmes
     final private static Coordonnee debutCoord = new Coordonnee("<0>main");
-
-    //------------------------ compilation -----------------------------//
-
-    private static final ArrayList<Coordonnee> coordCompileTime = new ArrayList<>();
-
-    private static final Hashtable<String, Hashtable<String, Programme>> coordCompileDict = new Hashtable<>();
-    /*
-     * forme:
-     * {
-     * 		"scope1": {
-     * 				 	{programme, arbre, programmeToken}, // ligne 1 du scope 1
-     * 					{programme, arbre, programmeToken}, // ligne 2 du scope 1
-     * 					...
-     * 				  },
-     * 		"scope2": {
-     * 					{programme, arbre, programmeToken}, // ligne 1 du scope 2
-     * 					{programme, arbre, programmeToken}, // ligne 2 du scope 2
-     * 					...
-     * 				  },
-     * 		...
-     *
-     * }
-     */
-
-    // Coordonnee utilisee lors de l'execution pour savoir quelle ligne executer
-    final private static Coordonnee coordRunTime = new Coordonnee(debutCoord.getCoordAsString());
-    final private static ArrayList<Data> datas = new ArrayList<>();
-    private static String[] anciennesLignes = null;
     // lexer et parser
-    private static ASLexer lexer = new ASLexer();
-    private static ASAst ast = new ASAst();
+    private static final ASLexer lexer = new ASLexer();
+    //------------------------ compilation -----------------------------//
+    private final Hashtable<String, Hashtable<String, Programme>> coordCompileDict = new Hashtable<>();
+    private final ArrayList<Coordonnee> coordCompileTime = new ArrayList<>();
+    // Coordonnee utilisee lors de l'execution pour savoir quelle ligne executer
+    private final Coordonnee coordRunTime = new Coordonnee(debutCoord.toString());
+    // modules
+    private final ASModuleManager asModuleManager = new ASModuleManager(this);
 
+    // data explaining the actions to do to the server
+    private final ArrayList<Data> datas = new ArrayList<>();
+
+    // data stack used when the program asks the site for information
+    private final Stack<Object> dataResponse = new Stack<>();
+
+    private String[] anciennesLignes = null;
     // failsafe
-    private static boolean compilationActive = false;
-    private static boolean executionActive = false;
-    private static boolean canExecute = false;
-
+    private boolean compilationActive = false;
+    private boolean executionActive = false;
+    private boolean canExecute = false;
     //debug mode
-    private static boolean debug = false;
+    public boolean debug = false;
+    // ast
+    private ASAst ast;
 
 
     public Executeur() {
-    }
-
-    public Executeur(ASLexer lexer) {
-        Executeur.lexer = lexer;
-    }
-
-    // methode utilisee a chaque fois qu'une info doit etre afficher par le langage
-    public static void ecrire(String texte) {
-        if (debug) System.out.println(texte);
+        asModuleManager.init();
     }
 
     public static void printCompiledCode(String code) {
@@ -135,7 +114,46 @@ public class Executeur {
         System.out.println();
     }
 
-    public static void printCompileDict() {
+    /**
+     * @return le lexer utilise par l'interpreteur (voir ASLexer)
+     */
+    public static ASLexer getLexer() {
+        return Executeur.lexer;
+    }
+
+    public static void main(String[] args) {
+
+
+        String[] lines = """   
+                fonction additionner(num1: nombre, num2: nombre) -> liste
+                    fonction f(a)
+                        afficher a
+                    fin fonction
+                    retourner [f, 1]
+                fin fonction
+                                
+                var a <- "23.1"
+                var b <- '11'
+                afficher(additionner(decimal(a), decimal(b))[0] a)
+                """.split("\n");
+
+
+        Executeur executeur = new Executeur();
+        executeur.debug = true;
+        Object a;
+        if (!(a = executeur.compiler(lines, true)).equals("[]")) System.out.println(a);
+        // executeur.printCompileDict();
+        System.out.println(executeur.executerMain(false));
+        //System.out.println(compiler(lines, false));
+        //executerMain(false);
+    }
+
+    // methode utilisee a chaque fois qu'une info doit etre afficher par le langage
+    public void ecrire(String texte) {
+        if (debug) System.out.println(texte);
+    }
+
+    public void printCompileDict() {
         int nbTab = 0;
         for (String scope : coordCompileDict.keySet()) {
             System.out.print("\n" + scope + ":\n");
@@ -159,40 +177,68 @@ public class Executeur {
         }
     }
 
-    public static void addData(Data data) {
+    public void addData(Data data) {
         datas.add(data);
     }
 
-    /**
-     * @return le lexer utilise par l'interpreteur (voir ASLexer)
-     */
-    public static ASLexer getLexer() {
-        return Executeur.lexer;
+    public Stack<Object> getDataResponse() {
+        return this.dataResponse;
     }
 
-    /**
-     * @return le parser utilise par l'interpreteur (voir ASAst)
-     */
-    public static ASAst getAst() {
-        return Executeur.ast;
-    }
-
-    public static void setAst(ASAst ast) {
-        Executeur.ast = ast;
+    public Object pushDataResponse(Object item) {
+        return this.dataResponse.push(item);
     }
 
     /**
      * @return les dernieres lignes a avoir ete compile sous la forme d'une array de String
      */
-    public static String[] getLignes() {
+    public String[] getLignes() {
         return anciennesLignes;
+    }
+
+    /**
+     * @param coord <li>la coordonne d'une certaine ligne de code</li>
+     * @return la position de la la ligne de code dans le code
+     */
+    public Integer getLineFromCoord(Coordonnee coord) {
+        return coordCompileDict.get(coord.getScope()).get(coord.toString()).getNumLigne();
+    }
+
+    /**
+     * @return le dictionnaire de coordonnees compilees
+     */
+    public Hashtable<String, Hashtable<String, Programme>> obtenirCoordCompileDict() {
+        return coordCompileDict;
+    }
+
+    public boolean enAction() {
+        return (compilationActive || executionActive);
+    }
+
+    public void arreterExecution() {
+        executionActive = false;
+    }
+
+    /**
+     * @return le parser utilise par l'interpreteur (voir ASAst)
+     */
+    public ASAst getAst() {
+        return ast;
+    }
+
+    public void setAst(ASAst ast) {
+        this.ast = ast;
+    }
+
+    public ASModuleManager getAsModuleManager() {
+        return asModuleManager;
     }
 
     /**
      * @param nomDuScope <li>cree un nouveau scope et ajoute la premiere coordonnee a ce scope</li>
      * @return la premiere coordonnee du scope
      */
-    public static String nouveauScope(String nomDuScope) {
+    public String nouveauScope(String nomDuScope) {
         coordCompileDict.put(nomDuScope, new Hashtable<>());
         // peut-etre faire en sorte qu'il y ait une erreur si le scope existe deja
         coordCompileTime.add(new Coordonnee("<0>" + nomDuScope));
@@ -215,27 +261,19 @@ public class Executeur {
      *
      * @return la nouvelle coordonne actuelle
      */
-    public static String finScope() {
+    public String finScope() {
         if (coordCompileTime.size() == 1) {
             throw new ErreurFermeture("main", "");
         }
         coordCompileTime.remove(coordCompileTime.size() - 1);
-        return coordCompileTime.get(coordCompileTime.size() - 1).getCoordAsString();
+        return coordCompileTime.get(coordCompileTime.size() - 1).toString();
     }
 
     /**
      * @return la coordonne actuelle lors de l'execution du code
      */
-    public static Coordonnee obtenirCoordRunTime() {
+    public Coordonnee obtenirCoordRunTime() {
         return coordRunTime;
-    }
-
-    /**
-     * @param coord <li>la coordonne d'une certaine ligne de code</li>
-     * @return la position de la la ligne de code dans le code
-     */
-    public static Integer getLineFromCoord(Coordonnee coord) {
-        return coordCompileDict.get(coord.getScope()).get(coord.getCoordAsString()).getNumLigne();
     }
 
     /**
@@ -243,34 +281,21 @@ public class Executeur {
      *
      * @param coord <li>la nouvelle coordonnee</li>
      */
-    public static void setCoordRunTime(String coord) {
-        Executeur.coordRunTime.setCoord(coord);
-    }
-
-    /**
-     * @return le dictionnaire de coordonnees compilees
-     */
-    public static Hashtable<String, Hashtable<String, Programme>> obtenirCoordCompileDict() {
-        return coordCompileDict;
+    public void setCoordRunTime(String coord) {
+        coordRunTime.setCoord(coord);
     }
 
     /**
      * @param nom
      * @return
      */
-    public static boolean leBlocExiste(String nom) {
-        return coordCompileDict.get(coordRunTime.getScope()).containsKey("<1>" + nom + coordRunTime.getCoordAsString());
+    public boolean leBlocExiste(String nom) {
+        return coordCompileDict.get(coordRunTime.getScope()).containsKey("<1>" + nom + coordRunTime.toString());
     }
 
-
-    public static boolean enAction() {
-        return (compilationActive || executionActive);
+    public boolean laCoordExiste(String coord) {
+        return coordCompileDict.get(coordRunTime.getScope()).containsKey(coord + coordRunTime.toString());
     }
-
-    public static void arreterExecution() {
-        Executeur.executionActive = false;
-    }
-
 
     /**
      * Cette fonction permet de compiler des lignes de code afin de pouvoir les executer (voir Executeur.executerMain)
@@ -289,7 +314,7 @@ public class Executeur {
      *                          (le code sera alors compile meme s'il est identique au code precedemment compile)
      *                          </li>
      */
-    public static String compiler(String[] lignes, boolean compilationForcee) {
+    public String compiler(String[] lignes, boolean compilationForcee) {
         reset();
 
         /*
@@ -301,16 +326,15 @@ public class Executeur {
          * Cependant, cette condition peut etre overwrite si la compilation est forcee (compilationForce serait alors true)
          */
         if (Arrays.equals(lignes, anciennesLignes) && !compilationForcee) {
-            System.out.println("No changes: compilation done");
+            if (debug) System.out.println("No changes: compilation done");
             return "[]";
         } else {
             // Si le code est different ou que la compilation est forcee, compiler les lignes
             //System.out.println(Arrays.toString(PreCompiler.preCompile(lignes)));
             lignes = PreCompiler.preCompile(lignes, "\nafficher '[ex\u00E9cution termin\u00e9e]'");
-            return compiler(lignes, null);
+            return compiler(lignes);
         }
     }
-
 
     /**
      * Fonction privee charge de compiler un array de ligne de code
@@ -322,18 +346,13 @@ public class Executeur {
      *               Represente les lignes de code a compiler, une ligne se finit par un <code>\n</code>
      *               </li>
      */
-    private static String compiler(String[] lignes, Hashtable<String, Hashtable<String, Programme>> coordCompileDict) {
-        if (coordCompileDict == null) {
-            coordCompileDict = Executeur.coordCompileDict;
-            ArrayList<Coordonnee> coordCompileTime = Executeur.coordCompileTime;
-        } else {
-
-        }
+    private String compiler(String[] lignes) {
+        this.ast = new ASAst(this);
 
         // sert au calcul du temps qu'a pris le code pour etre compile
         LocalDateTime before = LocalDateTime.now();
 
-        System.out.println("compiling...");
+        if (debug) System.out.println("compiling...");
 
         // vide le dictionnaire de coordonne ainsi que la liste de coordonne
         coordCompileDict.clear();
@@ -370,7 +389,7 @@ public class Executeur {
             List<Token> lineToken = lexer.lex(line.trim());
 
             // obtiens la coordonne ainsi que le scope ou sera enregistree la ligne compilee
-            String coordActuelle = coordCompileTime.get(coordCompileTime.size() - 1).getCoordAsString();
+            String coordActuelle = coordCompileTime.get(coordCompileTime.size() - 1).toString();
             String scopeActuel = coordCompileTime.get(coordCompileTime.size() - 1).getScope();
 
             // System.out.println(coordActuelle + "   " + scopeActuel);
@@ -407,8 +426,8 @@ public class Executeur {
                 coordCompileDict.get(scopeActuel).put(coordActuelle, ligneParsed);
 
                 // accede a la fonction prochaineCoord du programme trouvee afin de definir la prochaine coordonnee
-                coordRunTime.setCoord(ligneParsed.prochaineCoord(new Coordonnee(coordActuelle), lineToken).getCoordAsString());
-                coordActuelle = coordRunTime.getCoordAsString();
+                coordRunTime.setCoord(ligneParsed.prochaineCoord(new Coordonnee(coordActuelle), lineToken).toString());
+                coordActuelle = coordRunTime.toString();
                 scopeActuel = coordRunTime.getScope();
 
                 // si la coordonnee est de taille 0, cela signifie que le code contient un "fin ..." a l'exterieur d'un bloc de code
@@ -420,21 +439,21 @@ public class Executeur {
             } catch (ErreurAliveScript err) {
                 canExecute = false;
                 compilationActive = false;
-                err.afficher(i + 1);
+                err.afficher(this, i + 1);
                 return "[" + err.getAsData(i + 1) + "]";
 
             }
 
             // update la coordonnee
             coordCompileTime.set(coordCompileTime.size() - 1,
-                    new Coordonnee(coordRunTime.plusUn().getCoordAsString())
+                    new Coordonnee(coordRunTime.plusUn().toString())
             );
 
             // ajoute une ligne null à la fin pour signaler la fin de l'exécution
             if (i + 1 == lignes.length) {
                 Programme fin = new Programme.ProgrammeFin();
                 fin.setNumLigne(i + 1);
-                coordCompileDict.get(scopeActuel).put(coordRunTime.getCoordAsString(), fin);
+                coordCompileDict.get(scopeActuel).put(coordRunTime.toString(), fin);
             }
         }
         try {
@@ -447,7 +466,7 @@ public class Executeur {
         } catch (ErreurAliveScript err) {
             canExecute = false;
             compilationActive = false;
-            err.afficher(lignes.length);
+            err.afficher(this, lignes.length);
             return "[" + err.getAsData(lignes.length) + "]";
 
         }
@@ -455,7 +474,10 @@ public class Executeur {
         /*
          * affiche le temps qu'a pris la compilation du programme
          */
-        System.out.println("compilation done in " + (LocalDateTime.now().toLocalTime().toNanoOfDay() - before.toLocalTime().toNanoOfDay()) / Math.pow(10, 9) + " seconds\n");
+        if (debug)
+            System.out.println("compilation done in "
+                    + (LocalDateTime.now().toLocalTime().toNanoOfDay() - before.toLocalTime().toNanoOfDay()) / Math.pow(10, 9)
+                    + " seconds\n");
 
         // set la valeur des anciennes lignes de code aux nouvelles lignes donnees en parametre
         anciennesLignes = lignes;
@@ -464,9 +486,8 @@ public class Executeur {
         return "[]";
     }
 
-
-    public static Object executerScope(String scope, Hashtable<String, Hashtable<String, Programme>> coordCompileDict, String startCoord) {
-        if (coordCompileDict == null) coordCompileDict = Executeur.coordCompileDict;
+    public Object executerScope(String scope, Hashtable<String, Hashtable<String, Programme>> coordCompileDict, String startCoord) {
+        if (coordCompileDict == null) coordCompileDict = this.coordCompileDict;
         if (startCoord == null) startCoord = "<0>" + scope;
 
         // set la coordonne au debut du scope
@@ -478,7 +499,7 @@ public class Executeur {
         while (executionActive && canExecute) {
             // System.out.println(coordRunTime);
             // get la ligne a executer dans le dictionnaire de coordonnees
-            ligneParsed = coordCompileDict.get(scope).get(coordRunTime.getCoordAsString());
+            ligneParsed = coordCompileDict.get(scope).get(coordRunTime.toString());
 
             if (ligneParsed instanceof Programme.ProgrammeFin) { // ne sera vrai que si cela est la derniere ligne du programme
                 coordRunTime.setCoord(null);
@@ -511,9 +532,9 @@ public class Executeur {
             } catch (ErreurAliveScript e) {
                 // si l'erreur lancee est de type ASErreur.ErreurExecution (Voir ASErreur.java),
                 // on l'affiche et on arrete l'execution du programme
-                datas.add(e.getAsData());
+                datas.add(e.getAsData(this));
                 arreterExecution();
-                e.afficher();
+                e.afficher(this);
                 resultat = null;
                 break;
 
@@ -521,8 +542,9 @@ public class Executeur {
                 // s'il y a une erreur, mais que ce n'est pas une erreur se trouvant dans ASErreur, c'est une
                 // erreur de syntaxe, comme l'autre type d'erreur, on l'affiche et on arrete l'execution du programme
                 e.printStackTrace();
-                datas.add(new ErreurSyntaxe("Une erreur interne inconnue est survenue lors de l'ex\u00E9cution de la ligne, v\u00E9rifiez que la syntaxe est valide").getAsData());
-                System.out.println(coordRunTime);
+                datas.add(new ErreurSyntaxe("Une erreur interne inconnue est survenue lors de l'ex\u00E9cution de la ligne, v\u00E9rifiez que la syntaxe est valide")
+                        .getAsData(this));
+                if (debug) System.out.println(coordRunTime);
                 arreterExecution();
                 resultat = null;
                 break;
@@ -536,7 +558,7 @@ public class Executeur {
     /**
      * fonction executant le scope principal ("main")
      */
-    public static String executerMain(boolean resume) {
+    public String executerMain(boolean resume) {
         executionActive = true;
         // sert au calcul du temps qu'a pris le code pour etre execute
         LocalDateTime before = LocalDateTime.now();
@@ -557,69 +579,52 @@ public class Executeur {
          * affiche si l'execution s'est deroulee sans probleme ou si elle a ete interrompue par une erreur
          * affiche le temps qu'a pris l'execution du programme (au complet ou jusqu'a l'interruption)
          */
-        if (coordRunTime.getCoordAsString() == null || !executionActive) {
-            System.out.println("execution " + (executionActive ? "done" : "interruped") + " in " +
-                    (LocalDateTime.now().toLocalTime().toNanoOfDay() - before.toLocalTime().toNanoOfDay()) / Math.pow(10, 9) + " seconds\n");
+        if (coordRunTime.toString() == null || !executionActive) {
+            if (debug)
+                System.out.println("execution " + (executionActive ? "done" : "interruped") + " in " +
+                        (LocalDateTime.now().toLocalTime().toNanoOfDay() - before.toLocalTime().toNanoOfDay()) / Math.pow(10, 9) + " seconds\n");
             //System.out.println(datas);
             // boolean servant a indique que l'execution est terminee
             executionActive = false;
             reset();
+            // ajoute un '!' devant le résultat pour indiquer que l'exécution est terminée
+            resultat = "!" + resultat.toString();
         }
         datas.clear();
 
         return resultat.toString();
     }
 
-    public static Object resumeExecution() {
-        Coordonnee coordActuel = Executeur.obtenirCoordRunTime();
-        return Executeur.executerScope(coordActuel.getScope(), null, coordActuel.getCoordAsString());
+    public Object resumeExecution() {
+        Coordonnee coordActuel = obtenirCoordRunTime();
+        return executerScope(coordActuel.getScope(), null, coordActuel.toString());
     }
-
 
     /**
      * reset tout a neuf pour la prochaine execution
      */
-    private static void reset() {
+    private void reset() {
         Scope.resetAllScope();
         // créer le scope global
         Scope.makeNewCurrentScope();
 
-        ASModule.init();
         // supprime les variables, fonctions et iterateurs de la memoire
         datas.clear();
+
         FonctionManager.reset();
+        for (ASObjet.Fonction fonction : asModuleManager.getModuleBuiltins().getFonctions())
+            FonctionManager.ajouterFonction(fonction);
+        for (ASObjet.Variable variable : asModuleManager.getModuleBuiltins().getVariables()) {
+            Scope.getCurrentScope().declarerVariable(variable);
+        }
         DataVoiture.reset();
 
         Declarer.reset();
         // remet la coordonnee d'execution au debut du programme
-        coordRunTime.setCoord(debutCoord.getCoordAsString());
+        coordRunTime.setCoord(debutCoord.toString());
         //if (ast instanceof ASAstExperimental) {
         //    ast = new ASAst();
         //}
-    }
-
-    public static void main(String[] args) {
-        String[] lines = new String[]{
-                "fonction abc(p1, p2, p3)",
-                "    afficher p1 * p2 * p3",
-                "    fonction oo(msg: texte) -> rien",
-                "        afficher msg",
-                "    fin fonction",
-                "    retourner oo",
-                "fin fonction",
-                "",
-                "",
-                "abc 1, 2, 3 'salut'",
-                "",
-                "",
-                "abc(1, 2, 3)"
-        };
-        debug = true;
-        System.out.println(compiler(lines, true));
-        //printCompileDict();
-        System.out.println(executerMain(false));
-        //System.out.println(compiler(lines, false));
-        //executerMain(false);
     }
 }
 

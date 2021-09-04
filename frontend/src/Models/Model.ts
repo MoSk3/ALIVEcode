@@ -1,13 +1,7 @@
-import { Classroom } from './Playground/Classroom';
-import Course from './Playground/Course';
-import { Student } from './User';
-import { loadObj } from './utils';
-
-interface Model {
-	readonly dependencies: {
-		[name: string]: Function;
-	};
-}
+//import { loadObj } from './utils';
+import { User, Student } from './User/user.entity';
+import { Classroom } from './Classroom/classroom.entity';
+import { Course } from './Course/course.entity';
 
 /**
  * Level of abstraction to access the database from the frontend
@@ -19,10 +13,11 @@ export const Database = {
 		/** Contains all the request and actions that can be done to the classrooms */
 		classrooms: {
 			/** @returns an array of all the classrooms that the user created */
-			all(): Promise<Classroom[]> {
-				return loadObj(`/playground/classrooms`, Classroom) as Promise<
+			async all(user: User): Promise<Classroom[]> {
+				return Promise.resolve([]);
+				/*return loadObj(`/playground/classrooms`, Classroom) as Promise<
 					Classroom[]
-				>;
+				>;*/
 			},
 			/**
 			 * Request one or more {@link Classroom classroom} object *that the user created* from the backend
@@ -36,20 +31,20 @@ export const Database = {
 			collect(...ids: string[]): Promise<Classroom | Classroom[]> {
 				if (ids.length === 0)
 					throw new Error('You need to specify at least one id to collect');
-				else if (ids.length === 1)
-					return loadObj(
+				else if (ids.length === 1) return Promise.resolve([]);
+				/*return loadObj(
 						`/playground/classrooms/${ids[0]}`,
 						Classroom,
-					) as Promise<Classroom>;
-				else
-					return Promise.all(
+					) as Promise<Classroom>;*/ else return Promise.resolve([]);
+				/*return Promise.all(
 						ids.map(id => loadObj(`/playground/classrooms/${id}`, Classroom)),
-					) as Promise<Classroom[]>;
+					) as Promise<Classroom[]>;*/
 			},
 			ofCurrentUser(): Promise<Classroom[]> {
-				return loadObj(`/playground/classrooms`, Classroom) as Promise<
+				return Promise.resolve([]);
+				/*return loadObj(`/playground/classrooms`, Classroom) as Promise<
 					Classroom[]
-				>;
+				>;*/
 			},
 			/**
 			 * This is an **intermediate operation** used to access a certain {@link Classroom classroom}
@@ -61,31 +56,34 @@ export const Database = {
 			get(id: string) {
 				return {
 					/** Is equivalent to {@link Database.playground.classrooms.collect Database.playground.classrooms.collect(id)} */
-					collect(): Promise<Classroom> {
-						return loadObj(
+					collect(): Promise<Classroom | null> {
+						return Promise.resolve(null);
+						/*return loadObj(
 							`/playground/classrooms/${id}`,
 							Classroom,
-						) as Promise<Classroom>;
+						) as Promise<Classroom>;*/
 					},
 					/**
 					 * Returns a {@link Promise promise} that, once resolve,
 					 * returns all the {@link Student students} member of the {@link Classroom classroom}
 					 */
 					students(): Promise<Student[]> {
-						return loadObj(
+						return Promise.resolve([]);
+						/*return loadObj(
 							`/playground/classrooms/${id}/students`,
 							Student,
-						) as Promise<Student[]>;
+						) as Promise<Student[]>;*/
 					},
 					/**
 					 * Returns a {@link Promise promise} that, once resolve,
 					 * returns all the {@link Course courses} in the {@link Classroom classroom}
 					 */
 					courses(): Promise<Course[]> {
-						return loadObj(
+						return Promise.resolve([]);
+						/*return loadObj(
 							`/playground/classrooms/${id}/courses`,
 							Course,
-						) as Promise<Course[]>;
+						) as Promise<Course[]>;*/
 					},
 				};
 			},
@@ -93,7 +91,8 @@ export const Database = {
 		courses: {
 			/** @returns an array of all the courses that the user created */
 			all(): Promise<Course[]> {
-				return loadObj(`/playground/courses`, Course) as Promise<Course[]>;
+				return Promise.resolve([]);
+				//return loadObj(`/playground/courses`, Course) as Promise<Course[]>;
 			},
 			/**
 			 * Request one or more {@link Course course} object *that the user created* from the backend
@@ -107,15 +106,14 @@ export const Database = {
 			collect(...ids: string[]): Promise<Course | Course[]> {
 				if (ids.length === 0)
 					throw new Error('You need to specify at least one id to collect');
-				else if (ids.length === 1)
-					return loadObj(
+				else if (ids.length === 1) return Promise.resolve([]);
+				/*return loadObj(
 						`/playground/courses/${ids[0]}`,
 						Course,
-					) as Promise<Course>;
-				else
-					return Promise.all(
+					) as Promise<Course>;*/ else return Promise.resolve([]);
+				/*return Promise.all(
 						ids.map(id => loadObj(`/playground/courses/${id}`, Course)),
-					) as Promise<Course[]>;
+					) as Promise<Course[]>;*/
 			},
 			/**
 			 * This is an **intermediate operation** used to access a certain {@link Course course}
@@ -127,11 +125,12 @@ export const Database = {
 			get(id: string) {
 				return {
 					/** Is equivalent to {@link Database.playground.courses.collect Database.playground.courses.collect(id)} */
-					get collect(): Promise<Course> {
-						return loadObj(
+					get collect(): Promise<Course | null> {
+						return Promise.resolve(null);
+						/*return loadObj(
 							`/playground/courses/${id}`,
 							Course,
-						) as Promise<Course>;
+						) as Promise<Course>;*/
 					},
 				};
 			},
@@ -139,5 +138,3 @@ export const Database = {
 		levels: {},
 	},
 };
-
-export default Model;

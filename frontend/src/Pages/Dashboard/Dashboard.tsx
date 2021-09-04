@@ -1,29 +1,40 @@
 import { DashboardProps } from './dashboardTypes';
-import CenteredContainer from '../../Components/MiscComponents/CenteredContainer/CenteredContainer';
-import LabelHighlight from '../../Components/MiscComponents/LabelHighlight/LabelHighlight';
-import { useContext } from 'react';
-import { UserContext } from '../../UserContext';
-import CardContainer from '../../Components/MainComponents/CardContainer/CardContainer';
+import CenteredContainer from '../../Components/UtilsComponents/CenteredContainer/CenteredContainer';
+import LabelHighlight from '../../Components/UtilsComponents/LabelHighlight/LabelHighlight';
+import { useContext, useState, useEffect } from 'react';
+import { UserContext } from '../../state/contexts/UserContext';
+import CardContainer from '../../Components/UtilsComponents/CardContainer/CardContainer';
 import { useHistory } from 'react-router-dom';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import ClassroomCard from '../../Components/DashboardComponents/ClassroomCard/ClassroomCard';
-import SmallCard from '../../Components/MainComponents/Cards/SmallCard/SmallCard';
-import { Database } from '../../Models/Model';
-import useFetch from '../../state/hooks/useFetch';
-
+import SmallCard from '../../Components/UtilsComponents/Cards/SmallCard/SmallCard';
 import List from '../../assets/images/icons/my_levels.png';
 import Puzzle from '../../assets/images/icons/puzzle.png';
 import Sandbox from '../../assets/images/icons/sandboxblanc.png';
 import Voiture from '../../assets/images/Voiture.gif';
 import { Row } from 'react-bootstrap';
+import { Classroom } from '../../Models/Classroom/classroom.entity';
+import { plainToClass } from 'class-transformer';
+import axios from 'axios';
+import { Professor } from '../../Models/User/user.entity';
+import useRoutes from '../../state/hooks/useRoutes';
 
 const Dashboard = (props: DashboardProps) => {
 	const { user } = useContext(UserContext);
-
+	const [loading, setLoading] = useState(true);
+	const [classrooms, setClassrooms] = useState<Classroom[]>([]);
 	const history = useHistory();
-	const [classrooms, loading] = useFetch(
-		Database.playground.classrooms.ofCurrentUser,
-	);
+	const { routes } = useRoutes();
+
+	useEffect(() => {
+		const getClassrooms = async () => {
+			const data = (await axios.get('classrooms')).data;
+			console.log(data);
+			setLoading(false);
+			setClassrooms(data.map((d: any) => plainToClass(Classroom, d)));
+		};
+		getClassrooms();
+	}, []);
 
 	const createLevel = async () => {
 		// TODO : axios request to return new level with id
@@ -47,9 +58,16 @@ const Dashboard = (props: DashboardProps) => {
 				/>
 			</Row>
 			<CardContainer
+				asRow
 				title="Mes classes"
 				style={{ marginTop: '20px' }}
-				onIconClick={() => history.push('/playground/join-classroom')}
+				onIconClick={() =>
+					history.push(
+						user instanceof Professor
+							? routes.auth.create_classroom.path
+							: routes.auth.join_classroom.path,
+					)
+				}
 				icon={faPlus}
 			>
 				{loading
@@ -59,7 +77,7 @@ const Dashboard = (props: DashboardProps) => {
 					  ))}
 			</CardContainer>
 
-			<CardContainer title="Niveaux">
+			<CardContainer asRow title="Niveaux">
 				<SmallCard to="/level" title="Mes niveaux" img={List} />
 				<SmallCard
 					onClick={() => createLevel}
@@ -69,7 +87,7 @@ const Dashboard = (props: DashboardProps) => {
 				<SmallCard to="/level/browse" title="Jouer un niveau" img={Voiture} />
 			</CardContainer>
 
-			<CardContainer style={{ marginBottom: '100px' }} title="Niveaux">
+			<CardContainer asRow style={{ marginBottom: '100px' }} title="Niveaux">
 				<SmallCard to="/quiz" title="Mes quiz" img={List} />
 				<SmallCard to="/quiz/new" title="Créer un quiz" img={Sandbox} />
 				<SmallCard to="/quiz/browse" title="Jouer un quiz" img={Puzzle} />

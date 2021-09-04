@@ -3,11 +3,14 @@ import { Button, Form, Col } from 'react-bootstrap';
 import { useAlert } from 'react-alert';
 import { useForm } from 'react-hook-form';
 import { USER_TYPES } from '../../../Types/userTypes';
-import FormContainer from '../../../Components/MiscComponents/FormContainer/FormContainer';
-import Link from '../../../Components/MainComponents/Link/Link';
+import FormContainer from '../../../Components/UtilsComponents/FormContainer/FormContainer';
+import Link from '../../../Components/UtilsComponents/Link/Link';
 import axios from 'axios';
 import { useContext } from 'react';
-import { UserContext } from '../../../UserContext';
+import { UserContext } from '../../../state/contexts/UserContext';
+import { User } from '../../../Models/User/user.entity';
+import { useHistory } from 'react-router';
+import { setAccessToken } from '../../../Types/accessToken';
 
 const SignUp = ({ userType }: SignUpProps) => {
 	const { setUser } = useContext(UserContext);
@@ -17,24 +20,36 @@ const SignUp = ({ userType }: SignUpProps) => {
 		formState: { errors },
 	} = useForm();
 	const alert = useAlert();
+	const history = useHistory();
 
 	const onSignIn = async (formValues: FormSignUpValues) => {
 		try {
-			const { user } = (await axios.post('/api/user/create/', formValues)).data;
-			console.log(user);
+			const url =
+				userType === USER_TYPES.PROFESSOR
+					? 'users/professors'
+					: 'users/students';
 
-			const { access, refresh } = (
-				await axios.post('/api/token/obtain/', {
+			// Register the user in the database
+			await axios.post(url, formValues);
+
+			// Generate and return new accessToken
+			const { accessToken } = (
+				await axios.post('users/login', {
 					email: formValues.email,
 					password: formValues.password,
 				})
 			).data;
-			axios.defaults.headers['Authorization'] = 'JWT ' + access;
-			localStorage.setItem('access_token', access);
-			localStorage.setItem('refresh_token', refresh);
-			console.log(access, refresh);
+
+			setAccessToken(accessToken);
+
+			const user = await User.loadUser();
+			if (!user)
+				return alert.error('Une erreur est survenue, veuillez réessayer');
 
 			setUser(user);
+
+			if (history.location.pathname === '/signin') history.push('/dashboard');
+			return alert.success('Vous êtes connecté avec votre nouveau compte!');
 		} catch (err) {
 			console.error(err);
 			return alert.error('Une erreur est survenue');
@@ -65,7 +80,7 @@ const SignUp = ({ userType }: SignUpProps) => {
 							<Form.Control
 								placeholder="Enric"
 								autoComplete="on"
-								{...register('professor.first_name', { required: true })}
+								{...register('firstName', { required: true })}
 							/>
 							{errors.professor?.first_name?.type === 'required' &&
 								'Un nom est requis'}
@@ -75,7 +90,7 @@ const SignUp = ({ userType }: SignUpProps) => {
 							<Form.Control
 								placeholder="Soldevila"
 								autoComplete="on"
-								{...register('professor.last_name', { required: true })}
+								{...register('lastName', { required: true })}
 							/>
 							{errors.professor?.last_name?.type === 'required' &&
 								'Un nom de famille est requis'}
@@ -87,7 +102,7 @@ const SignUp = ({ userType }: SignUpProps) => {
 							<Form.Label>Pseudonyme</Form.Label>
 							<Form.Control
 								placeholder="pseudo"
-								{...register('student.name', { required: true })}
+								{...register('name', { required: true })}
 							/>
 							{errors.student?.name?.type === 'required' &&
 								'Un pseudonyme est requis'}
@@ -97,7 +112,7 @@ const SignUp = ({ userType }: SignUpProps) => {
 							<Form.Control
 								placeholder="*****"
 								autoComplete="on"
-								{...register('student.scholarity', { required: true })}
+								{...register('scholarity', { required: true })}
 							/>
 							{errors.student?.scholarity?.type === 'required' &&
 								'Le niveau scholaire est requis'}
