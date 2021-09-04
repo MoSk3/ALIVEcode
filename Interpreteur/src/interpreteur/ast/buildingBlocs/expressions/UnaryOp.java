@@ -7,15 +7,8 @@ import interpreteur.ast.buildingBlocs.programmes.Assigner;
 
 import java.util.function.Function;
 
-public class UnaryOp implements Expression<ASObjet<?>> {
-
-    private final Expression<?> expression;
-    private final Operation op;
-
-    public UnaryOp(Expression<?> expression, Operation op) {
-        this.expression = expression;
-        this.op = op;
-    }
+public record UnaryOp(Expression<?> expression,
+                      Operation op) implements Expression<ASObjet<?>> {
 
     @Override
     public String toString() {
@@ -37,18 +30,17 @@ public class UnaryOp implements Expression<ASObjet<?>> {
     }
 
 
-
     public enum Operation {
         /**
          * Gere |x|
          */
-        ABSOLUE(expr -> expr instanceof ASObjet.Decimal ?
-                new ASObjet.Decimal(Math.abs(((ASObjet.Decimal) expr).getValue())) :
+        ABSOLUE(expr -> expr instanceof ASObjet.Decimal decimal ?
+                new ASObjet.Decimal(Math.abs(decimal.getValue())) :
                 new ASObjet.Entier(Math.abs(((ASObjet.Entier) expr).getValue()))
         ),
 
         PLUS(expr -> {
-            if (expr instanceof ASObjet.Decimal || expr instanceof ASObjet.Entier) {
+            if (expr instanceof ASObjet.Nombre) {
                 return expr;
             } else {
                 String nb = expr.getValue().toString();
@@ -57,16 +49,16 @@ public class UnaryOp implements Expression<ASObjet<?>> {
                     if (estDecimal) return new ASObjet.Decimal(Double.parseDouble(nb));
                     else return new ASObjet.Entier(Integer.parseInt(nb));
                 } catch (NumberFormatException ignored) {
-                    throw new ASErreur.ErreurType("impossible de convertir '" + nb + "' en nombre decimal");
+                    throw new ASErreur.ErreurType("Il est impossible de convertir '" + nb + "' en nombre decimal");
                 }
             }
         }),
 
         NEGATION(expr -> {
-            if (expr instanceof ASObjet.Decimal) {
-                return new ASObjet.Decimal(-((ASObjet.Decimal) expr).getValue());
-            } else if (expr instanceof ASObjet.Entier) {
-                return new ASObjet.Entier(-((ASObjet.Entier) expr).getValue());
+            if (expr instanceof ASObjet.Decimal decimal) {
+                return new ASObjet.Decimal(-decimal.getValue());
+            } else if (expr instanceof ASObjet.Entier entier) {
+                return new ASObjet.Entier(-entier.getValue());
             } else {
                 String nb = expr.getValue().toString();
                 try {
@@ -81,16 +73,16 @@ public class UnaryOp implements Expression<ASObjet<?>> {
 
 
         PLUS_PLUS(expr -> {
-            if (expr instanceof ASObjet.Variable) {
-                return new BinOp((Expression<?>) expr, BinOp.Operation.PLUS, new ValeurConstante(new ASObjet.Entier(1))).eval();
+            if (expr instanceof ValeurConstante valeurConstante) {
+                return new BinOp(valeurConstante, BinOp.Operation.PLUS, new ValeurConstante(new ASObjet.Entier(1))).eval();
             }
             new Assigner((Expression<?>) expr, new ValeurConstante(new ASObjet.Entier(1)), BinOp.Operation.PLUS).execute();
             return ((Expression<?>) expr).eval();
         }),
 
         MOINS_MOINS(expr -> {
-            if (expr instanceof ValeurConstante) {
-                return new BinOp((Expression<?>) expr, BinOp.Operation.MOINS, new ValeurConstante(new ASObjet.Entier(1))).eval();
+            if (expr instanceof ValeurConstante valeurConstante) {
+                return new BinOp(valeurConstante, BinOp.Operation.MOINS, new ValeurConstante(new ASObjet.Entier(1))).eval();
             }
             new Assigner((Expression<?>) expr, new ValeurConstante(new ASObjet.Entier(1)), BinOp.Operation.MOINS).execute();
             return ((Expression<?>) expr).eval();

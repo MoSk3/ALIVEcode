@@ -114,7 +114,7 @@ public interface ASObjet<T> {
         public Variable(String nom, ASObjet<?> valeur, Type type) {
             this.type = type == null ? new Type("tout") : type;
             this.nom = FonctionManager.ajouterDansStructure(nom);
-            this.valeur = valeur instanceof Variable ? ((Variable) valeur).getValeurApresGetter() : valeur;
+            this.valeur = valeur instanceof Variable var ? var.getValeurApresGetter() : valeur;
         }
 
         private boolean nouvelleValeurValide(ASObjet<?> nouvelleValeur) {
@@ -422,12 +422,12 @@ public interface ASObjet<T> {
                  * ex: foo(param1=vrai)
                  */
                 for (ASObjet<?> param : paramsValeurs) {
-                    if (param instanceof Parametre) {
-                        if (Arrays.stream(parametres).noneMatch(p -> p.getNom().equals(((Parametre) param).getNom()))) {
-                            throw new ErreurAppelFonction("l'argument: " + ((Parametre) param).getNom() + " pass\u00E9 en param\u00E8tre" +
+                    if (param instanceof Parametre parametre) {
+                        if (Arrays.stream(parametres).noneMatch(p -> p.getNom().equals(parametre.getNom()))) {
+                            throw new ErreurAppelFonction("l'argument: " + parametre.getNom() + " pass\u00E9 en param\u00E8tre" +
                                     " ne correspond \u00E0 aucun param\u00E8tre d\u00E9fini dans la fonction '" + this.nom + "'");
                         }
-                        this.parametres_appel.put(((Parametre) param).getNom(), ((Parametre) param).getValeurParDefaut());
+                        this.parametres_appel.put(parametre.getNom(), parametre.getValeurParDefaut());
                     }
                 }
 
@@ -608,8 +608,7 @@ public interface ASObjet<T> {
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (!(o instanceof Entier)) return false;
-            Entier entier = (Entier) o;
+            if (!(o instanceof Entier entier)) return false;
             return valeur == entier.valeur;
         }
 
@@ -656,8 +655,7 @@ public interface ASObjet<T> {
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (!(o instanceof Decimal)) return false;
-            Decimal decimal = (Decimal) o;
+            if (!(o instanceof Decimal decimal)) return false;
             return Double.compare(decimal.valeur, valeur) == 0;
         }
 
@@ -705,8 +703,7 @@ public interface ASObjet<T> {
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (!(o instanceof Booleen)) return false;
-            Booleen booleen = (Booleen) o;
+            if (!(o instanceof Booleen booleen)) return false;
             return valeur == booleen.valeur;
         }
 
@@ -743,7 +740,7 @@ public interface ASObjet<T> {
 
         @Override
         public boolean equals(Object obj) {
-            return obj instanceof ASObjet<?> && ((ASObjet<?>) obj).getValue() == null;
+            return obj instanceof ASObjet<?> arrObj && arrObj.getValue() == null;
         }
     }
 
@@ -785,8 +782,8 @@ public interface ASObjet<T> {
 
         @Override
         public boolean contient(ASObjet<?> element) {
-            if (element.getValue() instanceof String) {
-                return this.valeur.contains((String) element.getValue());
+            if (element.getValue() instanceof String s) {
+                return this.valeur.contains(s);
             } else {
                 return false;
             }
@@ -820,8 +817,7 @@ public interface ASObjet<T> {
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (!(o instanceof Texte)) return false;
-            Texte texte = (Texte) o;
+            if (!(o instanceof Texte texte)) return false;
             return Objects.equals(valeur, texte.valeur);
         }
 
@@ -913,7 +909,7 @@ public interface ASObjet<T> {
             return openingSymbol +
                     String.join(", ", this.valeur
                             .stream()
-                            .map(e -> e instanceof Texte ? '"' + e.toString() + '"' : e.toString())
+                            .map(e -> e instanceof Texte ? "\"" + e + "\"" : e.toString())
                             .toArray(String[]::new))
                     + closingSymbol;
         }
@@ -936,8 +932,7 @@ public interface ASObjet<T> {
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (!(o instanceof Liste)) return false;
-            Liste liste = (Liste) o;
+            if (!(o instanceof Liste liste)) return false;
             return Objects.equals(valeur, liste.valeur);
         }
 

@@ -5,16 +5,12 @@ import interpreteur.as.Objets.ASObjet;
 import interpreteur.ast.buildingBlocs.Expression;
 import interpreteur.ast.buildingBlocs.programmes.Assigner;
 
-public class Incrementer implements Expression<ASObjet<?>> {
-    private final Expression<?> expr;
-    private final byte signe;
-
-    public Incrementer(Expression<?> expr, byte signe) {
+public record Incrementer(Expression<?> expr,
+                          byte signe) implements Expression<ASObjet<?>> {
+    public Incrementer {
         if (expr instanceof Incrementer) {
             throw new ASErreur.ErreurAssignement("Il est impossible de mettre plusieurs incr\u00E9mentations en chaine");
         }
-        this.expr = expr;
-        this.signe = signe;
     }
 
     @Override

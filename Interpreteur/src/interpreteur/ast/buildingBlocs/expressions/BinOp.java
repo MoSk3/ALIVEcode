@@ -5,17 +5,10 @@ import interpreteur.as.Objets.ASObjet;
 import interpreteur.ast.buildingBlocs.Expression;
 
 import java.util.function.BiFunction;
-import java.util.function.Predicate;
 
-public class BinOp implements Expression<ASObjet<?>> {
-    private final Expression<?> gauche, droite;
-    private final BinOp.Operation op;
-
-    public BinOp(Expression<?> gauche, BinOp.Operation op, Expression<?> droite) {
-        this.gauche = gauche;
-        this.droite = droite;
-        this.op = op;
-    }
+public record BinOp(Expression<?> gauche,
+                    Operation op,
+                    Expression<?> droite) implements Expression<ASObjet<?>> {
 
     @Override
     public ASObjet<?> eval() {
@@ -44,8 +37,8 @@ public class BinOp implements Expression<ASObjet<?>> {
         PLUS((gauche, droite) -> {
 
             /* append */
-            if (gauche instanceof ASObjet.Liste) {
-                ASObjet.Liste lst = ((ASObjet.Liste) gauche).sousSection(0, ((ASObjet.Liste) gauche).taille());
+            if (gauche instanceof ASObjet.Liste lstG) {
+                ASObjet.Liste lst = lstG.sousSection(0, lstG.taille());
                 lst.ajouterElement(droite);
                 return lst;
             }
@@ -68,13 +61,16 @@ public class BinOp implements Expression<ASObjet<?>> {
         MOINS((gauche, droite) -> {
 
             /* remove texte */
-            if (gauche instanceof ASObjet.Texte && droite instanceof ASObjet.Texte) {
-                return new ASObjet.Texte(String.valueOf(gauche.getValue()).replace(((ASObjet.Texte) droite).getValue(), ""));
+            if (gauche instanceof ASObjet.Texte txtG && droite instanceof ASObjet.Texte txtD) {
+                return new ASObjet.Texte(txtG.getValue().replace(txtD.getValue(), ""));
             }
 
             /* remove liste */
-            if (gauche instanceof ASObjet.Liste) {
-                return new ASObjet.Liste(((ASObjet.Liste) gauche).getValue().stream().filter(element -> !element.getValue().equals(droite.getValue())).toArray(ASObjet[]::new));
+            if (gauche instanceof ASObjet.Liste lstG) {
+                return new ASObjet.Liste(lstG
+                        .getValue()
+                        .stream()
+                        .filter(element -> !element.getValue().equals(droite.getValue())).toArray(ASObjet[]::new));
             }
 
             double result = ((Number) gauche.getValue()).doubleValue() - ((Number) droite.getValue()).doubleValue();
@@ -88,15 +84,15 @@ public class BinOp implements Expression<ASObjet<?>> {
          */
         MUL((gauche, droite) -> {
             /* repeat texte */
-            if (gauche instanceof ASObjet.Texte && droite instanceof ASObjet.Entier) {
-                return new ASObjet.Texte(gauche.toString().repeat((Integer) droite.getValue()));
+            if (gauche instanceof ASObjet.Texte txtG && droite instanceof ASObjet.Entier intD) {
+                return new ASObjet.Texte(txtG.getValue().repeat(intD.getValue()));
             }
 
             /* repeat liste */
-            if (gauche instanceof ASObjet.Liste && droite instanceof ASObjet.Entier) {
+            if (gauche instanceof ASObjet.Liste lstG && droite instanceof ASObjet.Entier intD) {
                 ASObjet.Liste liste = new ASObjet.Liste();
-                for (int i = 0; i < ((ASObjet.Entier) droite).getValue(); i++) {
-                    liste.ajouterTout((ASObjet.Liste) gauche);
+                for (int i = 0; i < intD.getValue(); i++) {
+                    liste.ajouterTout(lstG);
                 }
                 return liste;
             }
@@ -112,15 +108,15 @@ public class BinOp implements Expression<ASObjet<?>> {
          */
         DIV((gauche, droite) -> {
             /* remove all dans listes */
-            if (gauche instanceof ASObjet.Liste && droite instanceof ASObjet.Liste) {
-                return new ASObjet.Liste(((ASObjet.Liste) gauche)
+            if (gauche instanceof ASObjet.Liste lstG && droite instanceof ASObjet.Liste lstD) {
+                return new ASObjet.Liste(lstG
                         .getValue()
                         .stream()
-                        .filter(element -> !((ASObjet.Liste) droite).contient(element))
+                        .filter(element -> !lstD.contient(element))
                         .toArray(ASObjet[]::new));
             }
 
-            if (((Number) droite.getValue()).doubleValue() == 0){
+            if (((Number) droite.getValue()).doubleValue() == 0) {
                 throw new ASErreur.ErreurDivisionParZero("Division par z\u00E9ro impossible");
             }
             return new ASObjet.Decimal(((Number) gauche.getValue()).doubleValue() / ((Number) droite.getValue()).doubleValue());
@@ -159,8 +155,8 @@ public class BinOp implements Expression<ASObjet<?>> {
          */
         PIPE((gauche, droite) -> {
             /* unir listes */
-            if (gauche instanceof ASObjet.Liste && droite instanceof ASObjet.Liste) {
-                return new ASObjet.Liste((ASObjet.Liste) gauche).ajouterTout((ASObjet.Liste) droite);
+            if (gauche instanceof ASObjet.Liste lstG && droite instanceof ASObjet.Liste lstD) {
+                return new ASObjet.Liste(lstG).ajouterTout(lstD);
             }
             throw new ASErreur.ErreurAliveScript("", "");
         }, "union"),

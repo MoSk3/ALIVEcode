@@ -127,7 +127,7 @@ public class Executeur {
         String[] lines = """   
                 fonction additionner(num1: nombre, num2: nombre) -> liste
                     fonction f(a)
-                        afficher a
+                        retourner a
                     fin fonction
                     retourner [f, 1]
                 fin fonction

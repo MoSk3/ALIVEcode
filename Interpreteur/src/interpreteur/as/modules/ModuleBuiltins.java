@@ -81,8 +81,7 @@ public class ModuleBuiltins {
                 }, new Type("tout")) {
                     @Override
                     public ASObjet<?> executer() {
-                        if (this.getParamsValeursDict().get("choix") instanceof Liste) {
-                            Liste liste = (Liste) this.getParamsValeursDict().get("choix");
+                        if (this.getParamsValeursDict().get("choix") instanceof Liste liste) {
                             return liste.get((int) (Math.random() * liste.taille()));
                         } else {
                             Texte liste = (Texte) this.getParamsValeursDict().get("choix");

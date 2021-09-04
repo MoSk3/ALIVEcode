@@ -5,15 +5,9 @@ import interpreteur.ast.buildingBlocs.Expression;
 
 import java.util.function.BiFunction;
 
-public class BoolOp implements Expression<ASObjet<?>> {
-    private final Expression<?> gauche, droite;
-    private final Operateur op;
-
-    public BoolOp(Expression<?> gauche, Operateur op, Expression<?> droite) {
-        this.gauche = gauche;
-        this.droite = droite;
-        this.op = op;
-    }
+public record BoolOp(Expression<?> gauche,
+                     Operateur op,
+                     Expression<?> droite) implements Expression<ASObjet<?>> {
 
     @Override
     public String toString() {
@@ -58,7 +52,7 @@ public class BoolOp implements Expression<ASObjet<?>> {
             /*
              * TODO erreur si gauche.eval() et/ou droite.eval()~ n'est pas de type ASObjet.Booleen
              */
-            ASObjet<?> g =  gauche.eval();
+            ASObjet<?> g = gauche.eval();
             ASObjet<?> d = droite == null ? null : droite.eval();
             return this.eval.apply(g, d);
         }

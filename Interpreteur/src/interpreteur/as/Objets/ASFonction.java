@@ -210,11 +210,11 @@ public class ASFonction implements ASObjet<Object> {
             Coordonnee ancienneCoord = fonction.executeurInstance.obtenirCoordRunTime().copy();
 
             valeur = fonction.executeurInstance.executerScope(fonction.coordBlocName + fonction.nom, null, coordReprise == null ? null : coordReprise.toString());
-            if (valeur instanceof String) {
+            if (valeur instanceof String s) {
                 //System.out.println("valeur: " + valeur);
                 coordReprise = fonction.executeurInstance.obtenirCoordRunTime().copy();
                 fonction.executeurInstance.setCoordRunTime(ancienneCoord.toString());
-                throw new ASErreur.StopSendData((String) valeur);
+                throw new ASErreur.StopSendData(s);
 
             } else {
                 asValeur = (ASObjet<?>) valeur;

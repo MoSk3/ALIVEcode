@@ -5,15 +5,8 @@ import interpreteur.as.erreurs.ASErreur;
 import interpreteur.as.Objets.ASObjet;
 import interpreteur.ast.buildingBlocs.Expression;
 
-public class AppelFonc implements Expression<ASObjet<?>> {
-
-    private final Expression<?> var;
-    private final CreerListe args;
-
-    public AppelFonc(Expression<?> var, CreerListe args) {
-        this.var = var;
-        this.args = args;
-    }
+public record AppelFonc(Expression<?> var,
+                        CreerListe args) implements Expression<ASObjet<?>> {
 
     @Override
     public ASObjet<?> eval() {

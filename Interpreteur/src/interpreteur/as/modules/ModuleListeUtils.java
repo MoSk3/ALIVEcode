@@ -223,8 +223,8 @@ public class ModuleListeUtils extends ASModule {
             }, new Type("entier")) {
                 @Override
                 public ASObjet<?> executer() {
-                    Object val = this.getParamsValeursDict().get("iter").getValue();
-                    return new Entier(val instanceof String ? val.toString().length() : ((ArrayList<?>) val).size());
+                    Iterable val = (Iterable) this.getParamsValeursDict().get("iter");
+                    return new Entier(val.taille());
                 }
             },
 

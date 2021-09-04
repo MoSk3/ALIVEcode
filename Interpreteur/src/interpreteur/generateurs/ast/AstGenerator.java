@@ -128,7 +128,7 @@ public class AstGenerator {
             for (Object expr : expressions) {
                 expressionList.addAll(eval((ArrayList<Object>) expr, regleSyntaxeDispo));
             }
-            return ((ArrayList<?>) expressionList).stream().map(e -> (Expression<?>) e).collect(Collectors.toCollection(ArrayList::new));
+            return expressionList.stream().map(e -> (Expression<?>) e).collect(Collectors.toCollection(ArrayList::new));
         }
 
         ArrayList<Object> expressionArray = new ArrayList<>(expressions);
@@ -149,7 +149,7 @@ public class AstGenerator {
                     List<String> expressionNom = new ArrayList<>();
 
                     for (Object expr : expressionArray) {
-                        expressionNom.add(expr instanceof Token ? ((Token) expr).obtenirNom() : "expression");
+                        expressionNom.add(expr instanceof Token token ? token.obtenirNom() : "expression");
                     }
                     //System.out.println("Nom " + expressionNom);
                     Matcher match = memeStructureExpression(String.join(" ", expressionNom.subList(i, expressionNom.size())), regleSyntaxe);

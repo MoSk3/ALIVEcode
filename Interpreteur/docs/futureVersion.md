@@ -20,7 +20,12 @@
     -   ajouter une façon d'attraper les erreurs
 
 -   changements dans `afficher`
+
     -   styliser l'output pour changer la couleur, mettre le texte en italique, en gras, etc.
+
+-   nouveau mot clef `inclure`
+
+    -   permet d'accéder à du code situé dans d'autres fichiers
 
 ### Version 2
 
@@ -33,10 +38,6 @@
             afficher typeDe(autres) # liste
         fin fonction
         ```
-
--   nouveau mot clef `inclure`
-
-    -   permet d'accéder à du code situé dans d'autres fichiers
 
 -   changements dans `afficher`
 
@@ -62,17 +63,10 @@
     -   <s>Permettre d'afficher un message custom dans la console demandant un input</s>
     -   Permettre de preciser le type lu (optionnel, par défaut `texte`)
         -   syntaxe actuelle: lire dans `var`
-        -   syntaxe ajoutée: lire `type` dans `var`
+        -   syntaxe ajoutée: lire `fct` dans `var`
         -   ex:  
             lire entier dans var  
             afficher typeDe(var) # entier
-    -   _renommer `lire` pour `ecrire` ou `noter`_??
-        -   ex:  
-            ecrire dans var  
-            ecrire entier dans var  
-            **_OU_**  
-            noter dans var  
-            noter booleen dans var
 
 -   changements à `utiliser`
 

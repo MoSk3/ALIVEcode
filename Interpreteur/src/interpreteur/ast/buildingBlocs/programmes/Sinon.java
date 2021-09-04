@@ -15,12 +15,14 @@ public class Sinon extends Programme {
 
     @Override
     public NullType execute() {
+        assert executeurInstance != null;
         executeurInstance.obtenirCoordRunTime().finBloc();
         return null;
     }
 
     @Override
     public Coordonnee prochaineCoord(Coordonnee coord, List<Token> ligne) {
+        assert executeurInstance != null;
         return executeurInstance.obtenirCoordRunTime().remplacerBlocActuel("sinon");
     }
 

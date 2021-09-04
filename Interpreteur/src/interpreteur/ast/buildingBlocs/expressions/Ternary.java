@@ -1,16 +1,11 @@
-package interpreteur.ast.buildingBlocs.programmes;
+package interpreteur.ast.buildingBlocs.expressions;
 
 import interpreteur.as.Objets.ASObjet;
 import interpreteur.ast.buildingBlocs.Expression;
 
-public class Ternary implements Expression<ASObjet<?>> {
-    private final Expression<?> test, gauche, droite;
-
-    public Ternary(Expression<?> test, Expression<?> gauche, Expression<?> droite) {
-        this.test = test;
-        this.droite = droite;
-        this.gauche = gauche;
-    }
+public record Ternary(Expression<?> test,
+                      Expression<?> gauche,
+                      Expression<?> droite) implements Expression<ASObjet<?>> {
 
     @Override
     public ASObjet<?> eval() {
