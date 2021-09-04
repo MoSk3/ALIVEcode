@@ -15,4 +15,8 @@ export class LevelCodeEntity extends LevelEntity {
   @Column({ type: 'jsonb', nullable: false })
   @IsNotEmpty()
   testCases: string;
+
+  @Column({ nullable: true })
+  @IsOptional()
+  solution?: string;
 }

@@ -6,6 +6,6 @@ export enum LEVEL_RESOLUTION_MODE {
 
 export class LevelCode extends Level {
 	resolution: LEVEL_RESOLUTION_MODE;
-
 	testCases: string;
+	solution?: string;
 }
