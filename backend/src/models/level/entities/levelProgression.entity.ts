@@ -3,9 +3,15 @@ import { IsEmpty, IsOptional } from 'class-validator';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { UserEntity } from '../../user/entities/user.entity';
 
-export type LevelProgression = {
+export type LevelAliveProgressionData = {
   code?: string;
 };
+
+export type LevelCodeProgressionData = {
+  code?: string;
+};
+
+export type LevelProgressionData = LevelAliveProgressionData | LevelCodeProgressionData;
 
 @Entity()
 export class LevelProgressionEntity {
@@ -20,7 +26,7 @@ export class LevelProgressionEntity {
 
   @Column({ type: 'json', default: () => "'{}'" })
   @IsOptional()
-  data: LevelProgression;
+  data: LevelProgressionData;
 
   @ManyToOne(() => UserEntity, user => user.levelProgressions)
   user: UserEntity;
