@@ -3,6 +3,7 @@ export type LineInterfaceProps = {
 	handleChange: (content: any) => void;
 	hasTabs?: boolean;
 	tabs?: EditorTabModel[];
+	content?: string;
 };
 
 export type EditorTabModel = {

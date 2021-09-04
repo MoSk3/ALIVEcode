@@ -8,6 +8,7 @@ import { useState } from 'react';
 const LineInterface = ({
 	hasTabs,
 	tabs: initialTabs,
+	content,
 	handleChange,
 }: LineInterfaceProps) => {
 	const [tabs, setTabs] = useState<EditorTabModel[]>(() => {
@@ -34,8 +35,6 @@ const LineInterface = ({
 		tab && tab.onChange && tab.onChange(content);
 		handleChange(content);
 	};
-
-	console.log(tabs);
 
 	return (
 		<StyledLineInterface>
@@ -85,6 +84,7 @@ const LineInterface = ({
 					enableLiveAutocompletion
 					mode="alivescript"
 					theme="alive"
+					defaultValue={content}
 					onChange={content => onEditorChange(content)}
 					fontSize="large"
 					name="1nt3rf4c3" //"UNIQUE_ID_OF_DIV"

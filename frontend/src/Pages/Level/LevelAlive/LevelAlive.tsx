@@ -73,8 +73,6 @@ const LevelAlive = ({ level, editMode, setLevel }: LevelAliveProps) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, level]);
 
-	console.log(level);
-
 	const saveLevel = () => {
 		if (saveTimeout.current) clearTimeout(saveTimeout.current);
 
@@ -179,7 +177,10 @@ const LevelAlive = ({ level, editMode, setLevel }: LevelAliveProps) => {
 							handleChange={lineInterfaceContentChanges}
 						/>
 					) : (
-						<LineInterface handleChange={lineInterfaceContentChanges} />
+						<LineInterface
+							content={level.startingCode}
+							handleChange={lineInterfaceContentChanges}
+						/>
 					)}
 				</Col>
 				<Col md={6} style={{ resize: 'both', padding: '0' }}>
