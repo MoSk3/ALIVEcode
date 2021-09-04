@@ -28,6 +28,7 @@ import {
 	LEVEL_ACCESS,
 	LEVEL_DIFFICULTY,
 } from '../../../Models/Level/level.entity';
+import $ from 'jquery';
 
 const LevelAlive = ({ level, editMode, setLevel }: LevelAliveProps) => {
 	const { user } = useContext(UserContext);
@@ -48,13 +49,6 @@ const LevelAlive = ({ level, editMode, setLevel }: LevelAliveProps) => {
 	};
 
 	useEffect(() => {
-		return () => {
-			clearTimeout(saveTimeout.current);
-			clearTimeout(messageTimeout.current);
-		};
-	}, []);
-
-	useEffect(() => {
 		if (cmd && executor) executor.cmd = cmd;
 	}, [cmd, executor]);
 
@@ -73,28 +67,43 @@ const LevelAlive = ({ level, editMode, setLevel }: LevelAliveProps) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, level]);
 
-	const saveLevel = () => {
+	const saveLevel = async () => {
 		if (saveTimeout.current) clearTimeout(saveTimeout.current);
+		if (messageTimeout.current) clearTimeout(messageTimeout.current);
+		setSaving(true);
+		setSaved(false);
+		const updatedLevel = (await api.db.levels.update(level)) as LevelAliveModel;
+		messageTimeout.current = setTimeout(() => {
+			setSaving(false);
+			setSaved(true);
 
-		saveTimeout.current = setTimeout(async () => {
-			if (messageTimeout.current) clearTimeout(messageTimeout.current);
-			setSaving(true);
-			setSaved(false);
-			const updatedLevel = (await api.db.levels.update(
-				level,
-			)) as LevelAliveModel;
 			messageTimeout.current = setTimeout(() => {
-				setSaving(false);
-				setSaved(true);
-
-				messageTimeout.current = setTimeout(() => {
-					setSaved(false);
-				}, 5000);
-			}, 1000);
-			setLevel(updatedLevel);
-		}, 1000);
+				setSaved(false);
+			}, 5000);
+		}, 500);
+		setLevel(updatedLevel);
 	};
 
+	const saveLevelTimed = () => {
+		if (saveTimeout.current) clearTimeout(saveTimeout.current);
+		saveTimeout.current = setTimeout(saveLevel, 2000);
+	};
+
+	useEffect(() => {
+		$(document).on('keydown', e => {
+			if (e.keyCode === 83 && e.ctrlKey) {
+				e.preventDefault();
+				e.stopPropagation();
+				saveLevel();
+			}
+		});
+
+		return () => {
+			clearTimeout(saveTimeout.current);
+			clearTimeout(messageTimeout.current);
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 	if (!user) return <LoadingScreen />;
 
 	return (
@@ -157,7 +166,7 @@ const LevelAlive = ({ level, editMode, setLevel }: LevelAliveProps) => {
 											...level,
 										});
 										setLevel(newLevel);
-										saveLevel();
+										saveLevelTimed();
 									},
 								},
 								{
@@ -170,7 +179,7 @@ const LevelAlive = ({ level, editMode, setLevel }: LevelAliveProps) => {
 											...level,
 										});
 										setLevel(newLevel);
-										saveLevel();
+										saveLevelTimed();
 									},
 								},
 							]}
