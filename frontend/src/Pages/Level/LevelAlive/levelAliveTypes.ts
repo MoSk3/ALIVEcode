@@ -50,4 +50,19 @@ export const StyledAliveLevel = styled(FillContainer)`
 	.icon-button {
 		margin: 0px 3px 0px 3px;
 	}
+
+	.editors-tab {
+		display: flex;
+		background-color: rgba(var(--primary-color-rgb), 0.8);
+	}
+
+	.editors-tab::before {
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		background-color: black;
+		content: '';
+		z-index: -1;
+		border-bottom: 1px solid var(--foreground-color);
+	}
 `;

@@ -1,10 +1,27 @@
 import styled from 'styled-components';
 export type LineInterfaceProps = {
 	handleChange: (content: any) => void;
+	hasTabs?: boolean;
+	tabs?: EditorTabModel[];
+};
+
+export type EditorTabModel = {
+	title: string;
+	open: boolean;
+	content?: string;
+	onChange?: (content: string) => void;
 };
 
 export const StyledLineInterface = styled.div`
 	flex: 1 1 auto;
+
+	.hidden-editor {
+		display: none;
+	}
+
+	.ace-editor {
+		font-size: large;
+	}
 
 	.ace-alive .ace_gutter {
 		background: var(--primary-color);

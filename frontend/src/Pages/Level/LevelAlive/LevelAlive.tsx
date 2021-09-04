@@ -97,7 +97,6 @@ const LevelAlive = ({ level, editMode, setLevel }: LevelAliveProps) => {
 						)}
 						{!editMode && user.id === level.creator.id && (
 							<IconButton
-								onClick={() => console.log('a')}
 								to={routes.auth.level_edit.path.replace(':id', level.id)}
 								icon={faPencilAlt}
 								size="2x"
@@ -107,10 +106,34 @@ const LevelAlive = ({ level, editMode, setLevel }: LevelAliveProps) => {
 						<IconButton icon={faQuestionCircle} size="2x" />
 						<IconButton icon={faPlayCircle} size="2x" ref={playButton} />
 					</div>
-
-					<LineInterface handleChange={lineInterfaceContentChanges} />
+					{editMode ? (
+						<LineInterface
+							hasTabs
+							tabs={[
+								{
+									title: 'Initial Code',
+									open: true,
+									content: level.startingCode,
+									onChange: content => {
+										const newLevel = plainToClass(LevelAliveModel, {
+											...level,
+										});
+										newLevel.startingCode = content;
+										setLevel(newLevel);
+									},
+								},
+								{
+									title: 'Solution',
+									open: false,
+									onChange: content => {},
+								},
+							]}
+							handleChange={lineInterfaceContentChanges}
+						/>
+					) : (
+						<LineInterface handleChange={lineInterfaceContentChanges} />
+					)}
 				</Col>
-
 				<Col md={6} style={{ resize: 'both', padding: '0' }}>
 					<Row id="simulation-row" style={{ height: '60%' }}>
 						{executor && <Simulation init={s => executor.init(s)} />}
