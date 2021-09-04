@@ -37,6 +37,7 @@ const ALIVENavbar = ({ handleLogout }: NavbarProps) => {
 			<Navbar.Toggle aria-controls="basic-navbar-nav" />
 			<Navbar.Collapse id="basic-navbar-nav">
 				<Nav className="mr-auto">
+
 					<Nav.Link
 						className="nav-link"
 						onClick={() => history.push(routes.auth.dashboard.path)}
@@ -45,7 +46,7 @@ const ALIVENavbar = ({ handleLogout }: NavbarProps) => {
 					</Nav.Link>
 					<Nav.Link
 						className="nav-link"
-						onClick={() => history.push(routes.public.amc.path)}
+						onClick={() => history.push(routes.public.ai.path)}
 					>
 						{t('home.navbar.section.ai')}
 					</Nav.Link>
