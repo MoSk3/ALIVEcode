@@ -355,32 +355,37 @@
 
 ## Versioning
 
-> Légende:
+> Définitions  
+> _Majeur_:
 >
-> -   _italique_ = nombre
+> 1.  La nouvelle verison contient des changements incompatibles avec les anciennes versions _Majeur_ du langage
+> 2.  Déprécation de certaines fonctionnalités
+>
+> _Mineur_:
+>
+> 1. La nouvelle version est 100% backward compatible avec toutes les autres versions _Mineur_ à l'intérieur de la même version _Majeur_
+> 2. Les nouvelles fonctionnalités n'introduisent pas de problèmes de compatibilités
+>
+> _Bugfix_ (.bf):
+>
+> 1. Ne contient que des fix de bugs et aucune nouvelle fonctionnalité
+> 2. 100% backward compatible
+>
+> _Release Candidate_ (-rc):
+>
+> 1. Candidat pour le lancement d'une nouvelle verison mineur du langage
+>
+> _build_ :
+>
+> 1. numéro changeant chaque fois qu'il y a un commit dans le langage
 
-#### Alpha (a)
+---
 
--   Utilisé pour désigner une version du langage où les nouvelles fonctionnalités sont en train d'être implémentéees (hautement instable)
--   v*Majeur*._Mineur_-a._Version_
--   ex: v1.2-a.3
+Légende:
 
-#### Béta (b)
+> _italique_ = nombre
 
--   Utilisé pour désigner une version du langage possédant toutes les nouvelles fonctionnalités de la nouvelle version (instable)
--   v*Majeur*._Mineur_-b._Version_
--   ex: v1.1-b.0
-
-#### Release candidate (rc)
-
--   Utilisé pour désigner une version _suffisamment_ stable du langage, mais qui doit encore être rigoureusement testée avant d'être utilisée en production (stable)
--   v*Majeur*._Mineur_-rc._Version_
--   ex: v1.4-rc.1
-
-#### Version finale
-
--   Utilisé pour désigner une version finale du langage pouvant être utilisée en production (hautement stable)
--   v*Majeur*._Mineur_._Patch_
--   ex: v1.5.2
+v*Majeur*._Mineur_\[ ._bf_ | -rc._num_ | -_build_ ]  
+ex: v1.2.3-45
 
 <small>Auteur: Mathis Laroche</small>

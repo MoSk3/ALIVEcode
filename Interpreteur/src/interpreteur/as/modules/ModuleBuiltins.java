@@ -84,10 +84,9 @@ public class ModuleBuiltins {
                         if (this.getParamsValeursDict().get("choix") instanceof Liste liste) {
                             return liste.get((int) (Math.random() * liste.taille()));
                         } else {
-                            Texte liste = (Texte) this.getParamsValeursDict().get("choix");
-                            return new Texte(liste.getValue().charAt((int) (Math.random() * liste.getValue().length())));
+                            Texte texte = (Texte) this.getParamsValeursDict().get("choix");
+                            return new Texte(texte.getValue().charAt((int) (Math.random() * texte.taille())));
                         }
-
                     }
                 },
 

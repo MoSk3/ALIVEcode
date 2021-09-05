@@ -1,3 +1,5 @@
+package server;
+
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.executeur.Executeur;
 import org.json.JSONArray;
@@ -81,12 +83,13 @@ public class AliveScriptService {
             // we remove the '!' from the result
             result = result.substring(1);
         }
+
         return "{\"idToken\":\"" + getIdToken() + "\", \"result\":" + result + "}";
     }
 
     @Override
     public String toString() {
-        return "AliveScriptService{" +
+        return "server.AliveScriptService{" +
                 "idToken=" + idToken +
                 ", executeur=" + executeur +
                 ", resume=" + resume +

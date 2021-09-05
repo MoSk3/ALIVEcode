@@ -1,10 +1,11 @@
-import com.sun.net.httpserver.*;
+package server;
 
-import javax.net.ssl.SSLContext;
+import com.sun.net.httpserver.*;
+import server.AliveScriptApi;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.security.NoSuchAlgorithmException;
-import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -21,7 +22,7 @@ public class Server {
 
         context.setHandler(aliveScriptApi);
 
-        System.out.println("Server listening on port " + PORT);
+        System.out.println("server.Server listening on port " + PORT);
 
         ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
         server.setExecutor(threadPoolExecutor);

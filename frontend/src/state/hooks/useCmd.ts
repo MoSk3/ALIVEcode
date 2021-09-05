@@ -15,7 +15,7 @@ const useCmd = (): [ref: RefObject<HTMLDivElement>, cmd: CMD | null] => {
 		const $cmd = $(cmd.current);
 		msg = make_safe(msg);
 		//cmd.append(`<span><u><i>${heures}:${minutes}:${secondes}:</i></u> ${msg}</span><br>`)
-		$cmd.append(`<span>${msg}</span><br>`);
+		$cmd.append(`<pre>${msg}</pre>`);
 		$cmd.scrollTop(cmd.current.scrollHeight);
 	};
 
@@ -25,7 +25,7 @@ const useCmd = (): [ref: RefObject<HTMLDivElement>, cmd: CMD | null] => {
 		msg = make_safe(msg);
 
 		const errorName = msg.split(':', 1)[0];
-		const errorMsg = msg.substr(msg.indexOf(':') + 1);
+		const errorMsg = msg.substring(msg.indexOf(':') + 1);
 
 		//cmd.append(`<span style="color: red"><u><i>${heures}:${minutes}:${secondes}:</i></u> ${errorName}</span> à la ligne <strong>#${line} :<br></strong>"${msg}"<br>`)
 		const errorTitle = linkToLine(
@@ -52,7 +52,7 @@ const useCmd = (): [ref: RefObject<HTMLDivElement>, cmd: CMD | null] => {
 
 	function linkToLine(text: string, line: number) {
 		return `<a>
-            <span onclick="editor.gotoLine(${line}); editor.selection.selectLine()">
+            <span onclick="ace.edit('1nt3rf4c3').gotoLine(${line}); ace.edit('1nt3rf4c3').selection.selectLine()">
                     ${text}
             </span>
             </a>`;

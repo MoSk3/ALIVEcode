@@ -71,23 +71,6 @@ public record UnaryOp(Expression<?> expression,
             }
         }),
 
-
-        PLUS_PLUS(expr -> {
-            if (expr instanceof ValeurConstante valeurConstante) {
-                return new BinOp(valeurConstante, BinOp.Operation.PLUS, new ValeurConstante(new ASObjet.Entier(1))).eval();
-            }
-            new Assigner((Expression<?>) expr, new ValeurConstante(new ASObjet.Entier(1)), BinOp.Operation.PLUS).execute();
-            return ((Expression<?>) expr).eval();
-        }),
-
-        MOINS_MOINS(expr -> {
-            if (expr instanceof ValeurConstante valeurConstante) {
-                return new BinOp(valeurConstante, BinOp.Operation.MOINS, new ValeurConstante(new ASObjet.Entier(1))).eval();
-            }
-            new Assigner((Expression<?>) expr, new ValeurConstante(new ASObjet.Entier(1)), BinOp.Operation.MOINS).execute();
-            return ((Expression<?>) expr).eval();
-        }),
-
         ;
 
         private final Function<ASObjet<?>, ASObjet<?>> eval;

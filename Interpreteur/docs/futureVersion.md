@@ -61,8 +61,8 @@
 -   changements dans `lire`
 
     -   <s>Permettre d'afficher un message custom dans la console demandant un input</s>
-    -   Permettre de preciser le type lu (optionnel, par défaut `texte`)
-        -   syntaxe actuelle: lire dans `var`
+    -   Permettre de preciser une fonction à exécuter sur l'input avant d'assigner à la variable (optionnel)
+        -   syntaxe actuelle: lire `var`
         -   syntaxe ajoutée: lire `fct` dans `var`
         -   ex:  
             lire entier dans var  
@@ -85,6 +85,7 @@
     `(-:`  
     `documentation`  
     `:-)`
+    la documentation pourra être affiché grâce à la fonction builtin `info`
 
 ### Modifs
 

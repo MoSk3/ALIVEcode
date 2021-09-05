@@ -1,3 +1,5 @@
+package server;
+
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -14,7 +16,8 @@ public class AliveScriptApi implements HttpHandler {
         String requestParamValue;
 
         Headers headers = httpExchange.getResponseHeaders();
-        headers.set("Access-Control-Allow-Origin", "*");
+        headers.set("Access-Control-Allow-Origin", "http://localhost:3000");
+        headers.set("Access-Control-Allow-Credentials", "true");
         headers.set("Access-Control-Allow-Headers", "Authorization, Content-Type");
 
         requestParamValue = switch (httpExchange.getRequestMethod().toUpperCase()) {

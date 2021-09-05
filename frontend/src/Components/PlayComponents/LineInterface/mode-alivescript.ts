@@ -57,6 +57,12 @@ ace.define(
 					'\\bdans\\b',
 					'\\bconst\\b',
 				],
+				varBuiltin: [
+					'\\bfinl\\b',
+					'\\bvarGlobales\\b',
+					'\\bvarLocales\\b',
+					'\\bvarListe\\b',
+				],
 				fonctions: [
 					'\\bstructure\\b',
 					'\\bfonction\\b',
@@ -180,6 +186,10 @@ ace.define(
 					{
 						token: 'support.function.italic',
 						regex: reserved_words['fonctions_built_in'].join('|'),
+					},
+					{
+						token: 'support.function',
+						regex: reserved_words['varBuiltin'].join('|'),
 					},
 					{
 						token: function (name: string, parenthesis: string) {

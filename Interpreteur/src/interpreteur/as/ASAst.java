@@ -150,7 +150,7 @@ public class ASAst extends AstGenerator {
                             if (p.size() == 2) {
                                 return new Declarer((Expression<?>) p.get(1), new ValeurConstante(new Nul()), null, false);
                             }
-                            if (p.size() == 4 && ((Token) p.get(2)).obtenirNom().equals("DEUX_POINTS")) {
+                            if (p.size() == 4 && p.get(2) instanceof Token token2 && token2.obtenirNom().equals("DEUX_POINTS")) {
                                 // si le type précisisé n'est pas un type
                                 if (!(p.get(3) instanceof Type type))
                                     throw new ErreurType("Dans une d\u00E9claration de " +
@@ -436,6 +436,7 @@ public class ASAst extends AstGenerator {
                         return new Programme(executeurInstance) {
                             @Override
                             public NullType execute() {
+                                assert this.executeurInstance != null;
                                 this.executeurInstance.obtenirCoordRunTime().nouveauBloc("faire");
                                 return null;
                             }
@@ -616,10 +617,10 @@ public class ASAst extends AstGenerator {
         //            }
         //        });
 
-        ajouterExpression("BRACES_OUV #expression TROIS_POINTS #expression BRACES_FERM~" +
-                        "BRACES_OUV #expression TROIS_POINTS #expression BOND #expression BRACES_FERM~" +
-                        "CROCHET_OUV #expression TROIS_POINTS #expression BOND #expression CROCHET_FERM~" +
-                        "CROCHET_OUV #expression TROIS_POINTS #expression CROCHET_FERM",
+        ajouterExpression("BRACES_OUV #expression TROIS_POINTS #expression BRACES_FERM~"
+                        + "BRACES_OUV #expression TROIS_POINTS #expression BOND #expression BRACES_FERM~"
+                        + "CROCHET_OUV #expression TROIS_POINTS #expression BOND #expression CROCHET_FERM~"
+                        + "CROCHET_OUV #expression TROIS_POINTS #expression CROCHET_FERM",
                 new Ast<Suite>() {
                     /**
                      * {1...10} -> {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
@@ -649,6 +650,21 @@ public class ASAst extends AstGenerator {
                         }
 
                         return new Suite(debut, fin, bond);
+                    }
+                });
+
+        ajouterExpression("BRACES_OUV BRACES_FERM~"
+                        + "BRACES_OUV #expression BRACES_FERM~"
+                        + "CROCHET_OUV CROCHET_FERM~"
+                        + "!expression CROCHET_OUV #expression CROCHET_FERM",
+                new Ast<CreerListe>() {
+                    @Override
+                    public CreerListe apply(List<Object> p) {
+                        if (p.size() < 3) return new CreerListe();
+                        Expression<?> contenu = AstGenerator.evalOneExpr(new ArrayList<>(p.subList(1, p.size() - 1)), null);
+                        if (contenu instanceof CreerListe.Enumeration enumeration)
+                            return enumeration.build();
+                        return new CreerListe(contenu);
                     }
                 });
 
@@ -685,21 +701,6 @@ public class ASAst extends AstGenerator {
                             }
                             return new CreerListe.SousSection.CreerSousSection((Expression<?>) p.get(0), debut, fin);
                         }
-                    }
-                });
-
-        ajouterExpression("BRACES_OUV BRACES_FERM~" +
-                        "BRACES_OUV #expression BRACES_FERM~" +
-                        "!expression CROCHET_OUV CROCHET_FERM~" +
-                        "!expression CROCHET_OUV #expression CROCHET_FERM",
-                new Ast<CreerListe>() {
-                    @Override
-                    public CreerListe apply(List<Object> p) {
-                        if (p.size() < 3) return new CreerListe();
-                        Expression<?> contenu = AstGenerator.evalOneExpr(new ArrayList<>(p.subList(1, p.size() - 1)), null);
-                        if (contenu instanceof CreerListe.Enumeration enumeration)
-                            return enumeration.build();
-                        return new CreerListe(contenu);
                     }
                 });
 
