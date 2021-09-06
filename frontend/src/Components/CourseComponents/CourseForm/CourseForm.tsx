@@ -27,8 +27,7 @@ const CourseForm = (props: CourseFormProps) => {
 					history.push(routes.auth.course.path.replace(':id', course.id));
 					return alert.success('Cours créé avec succès');
 				}}
-				buttonText={t('form.submit.create_course')}
-				name="create_course"
+				name="course"
 				url="courses"
 				action="POST"
 				inputGroups={[

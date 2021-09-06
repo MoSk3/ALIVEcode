@@ -25,8 +25,7 @@ const IoTProjectCreate = () => {
 					history.push(routes.auth.iot_project.path.replace(':id', project.id));
 					return alert.success('Projet créé avec succès');
 				}}
-				buttonText={t('form.submit.create_iot_project')}
-				name="create_iot_project"
+				name="iot_project"
 				url="iot/projects"
 				action="POST"
 				inputGroups={[

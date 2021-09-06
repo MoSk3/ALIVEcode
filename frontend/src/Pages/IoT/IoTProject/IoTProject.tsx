@@ -99,8 +99,7 @@ const IoTProject = (props: IoTProjectProps) => {
 								setProject(updatedProject);
 							}}
 							action="UPDATE"
-							buttonText="update"
-							name="update_iot_project"
+							name="iot_project"
 							url={`iot/projects/${project.id}`}
 							inputGroups={[
 								{
@@ -166,7 +165,6 @@ const IoTProject = (props: IoTProjectProps) => {
 						>
 							<Form
 								action="POST"
-								buttonText="Create"
 								name="create_iot_route"
 								url={`iot/projects/${project.id}/routes`}
 								inputGroups={[

@@ -28,8 +28,7 @@ const LevelForm = ({ type }: LevelFormProps) => {
 							);
 							return alert.success('Niveau créé avec succès');
 						}}
-						buttonText={t('form.submit.create_classrooms')}
-						name="create_classroom"
+						name="level"
 						url="levels/alive"
 						action="POST"
 						inputGroups={[

@@ -258,8 +258,7 @@ const LevelAlive = ({
 			>
 				<Form
 					action="UPDATE"
-					buttonText="Update"
-					name="update_level"
+					name="level"
 					url={`levels/${level.id}`}
 					inputGroups={[
 						{

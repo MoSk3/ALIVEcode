@@ -24,8 +24,7 @@ const ClassroomForm = (props: ClassroomFormProps) => {
 					history.push(routes.auth.classroom.path.replace(':id', classroom.id));
 					return alert.success('Classe créée avec succès');
 				}}
-				buttonText={t('form.submit.create_classrooms')}
-				name="create_classroom"
+				name="classroom"
 				url="classrooms"
 				action="POST"
 				inputGroups={[
