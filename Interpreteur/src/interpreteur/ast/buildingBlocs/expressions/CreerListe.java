@@ -35,25 +35,19 @@ public class CreerListe implements Expression<ASObjet.Liste> {
     public interface SousSection extends Expression<ASObjet<?>> {
         Expression<?> getExpr();
 
-        class IndexSection implements SousSection {
-            private final Expression<?> expr;
-            private final Expression<?> idx;
-
-            public IndexSection(Expression<?> expr, Expression<?> idx) {
-                this.expr = expr;
-                this.idx = idx;
-            }
+        record IndexSection(Expression<?> expr,
+                            Expression<?> idx) implements SousSection {
 
             public Expression<?> getExpr() {
                 return expr;
             }
 
             public int getIdx() {
-                Object valueIdx = idx.eval().getValue();
-                if (!(valueIdx instanceof Integer)) {
+                Object valueIdx = this.idx.eval().getValue();
+                if (!(valueIdx instanceof Integer idx)) {
                     throw new ASErreur.ErreurIndex("Un index doit \u00EAtre un nombre entier");
                 }
-                return (Integer) valueIdx;
+                return idx;
             }
 
             @Override

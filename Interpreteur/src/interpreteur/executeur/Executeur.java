@@ -56,7 +56,7 @@ public class Executeur {
     // modules
     private final ASModuleManager asModuleManager = new ASModuleManager(this);
 
-    // data explaining the actions to do to the server
+    // data explaining the actions to do to the com.server
     private final ArrayList<Data> datas = new ArrayList<>();
 
     // data stack used when the program asks the site for information
@@ -126,15 +126,14 @@ public class Executeur {
 
         String[] lines = """   
                 fonction additionner(num1: nombre, num2: nombre) -> liste
-                    fonction f(a)
-                        retourner a
-                    fin fonction
-                    retourner [f, 1]
+                    retourner [num1 + num2]
                 fin fonction
                                 
                 var a <- "23.1"
                 var b <- '11'
-                afficher(additionner(decimal(a), decimal(b))[0] a)
+                afficher nombre(b)
+                afficher {1, 2}
+                afficher(additionner(nombre(a), nombre(b))[0])
                 """.split("\n");
 
 

@@ -13,9 +13,9 @@ const StyledDiv = styled.div`
 
 	pre {
 		font-family: Arial, Helvetica, sans-serif;
-		font-size: small;
+		font-size: large;
 		color: #dbdbdb;
-		line-height: 2rem;
+		line-height: 1.8rem;
 	}
 
 	a {

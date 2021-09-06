@@ -560,10 +560,10 @@ public class ASAst extends AstGenerator {
                     @Override
                     public AppelFonc apply(List<Object> p) {
                         if (p.size() == 3) {
-                            Expression<?> nom = p.get(0) instanceof Type type
-                                    ? new Var(type.getNom())
-                                    : (Expression<?>) p.get(0);
-                            return new AppelFonc(nom, new CreerListe());
+                            //Expression<?> nom = p.get(0) instanceof Type type
+                            //        ? new Var(type.nom())
+                            //        : (Expression<?>) p.get(0);
+                            return new AppelFonc((Expression<?>) p.get(0), new CreerListe());
                         }
                         Hashtable<String, Ast<?>> astParams = new Hashtable<>();
 
@@ -582,15 +582,14 @@ public class ASAst extends AstGenerator {
                                 new CreerListe(contenu);
 
 
-                        final Expression<?> nom;
+                        //final Expression<?> nom;
+                        //if (p.get(0) instanceof Type type) {
+                        //    nom = new Var(type.nom());
+                        //} else {
+                        //    nom = (Expression<?>) p.get(0);
+                        //}
 
-                        if (p.get(0) instanceof Type type) {
-                            nom = new Var(type.getNom());
-                        } else {
-                            nom = (Expression<?>) p.get(0);
-                        }
-
-                        return new AppelFonc(nom, args);
+                        return new AppelFonc((Expression<?>) p.get(0), args);
                     }
                 });
 
@@ -653,20 +652,6 @@ public class ASAst extends AstGenerator {
                     }
                 });
 
-        ajouterExpression("BRACES_OUV BRACES_FERM~"
-                        + "BRACES_OUV #expression BRACES_FERM~"
-                        + "CROCHET_OUV CROCHET_FERM~"
-                        + "!expression CROCHET_OUV #expression CROCHET_FERM",
-                new Ast<CreerListe>() {
-                    @Override
-                    public CreerListe apply(List<Object> p) {
-                        if (p.size() < 3) return new CreerListe();
-                        Expression<?> contenu = AstGenerator.evalOneExpr(new ArrayList<>(p.subList(1, p.size() - 1)), null);
-                        if (contenu instanceof CreerListe.Enumeration enumeration)
-                            return enumeration.build();
-                        return new CreerListe(contenu);
-                    }
-                });
 
         ajouterExpression("expression CROCHET_OUV DEUX_POINTS CROCHET_FERM~"
                         + "expression CROCHET_OUV #expression DEUX_POINTS #expression CROCHET_FERM~"
@@ -703,7 +688,20 @@ public class ASAst extends AstGenerator {
                         }
                     }
                 });
-
+        ajouterExpression("BRACES_OUV BRACES_FERM~"
+                        + "BRACES_OUV #expression BRACES_FERM~"
+                        + "!expression CROCHET_OUV CROCHET_FERM~"
+                        + "!expression CROCHET_OUV #expression CROCHET_FERM",
+                new Ast<CreerListe>() {
+                    @Override
+                    public CreerListe apply(List<Object> p) {
+                        if (p.size() < 3) return new CreerListe();
+                        Expression<?> contenu = AstGenerator.evalOneExpr(new ArrayList<>(p.subList(1, p.size() - 1)), null);
+                        if (contenu instanceof CreerListe.Enumeration enumeration)
+                            return enumeration.build();
+                        return new CreerListe(contenu);
+                    }
+                });
 
         ajouterExpression("expression PLUS PLUS~"
                         + "expression MOINS MOINS",

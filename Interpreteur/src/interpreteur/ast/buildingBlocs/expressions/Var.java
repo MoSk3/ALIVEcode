@@ -34,8 +34,7 @@ public class Var implements Expression<ASObjet<?>> {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Var)) return false;
-        Var var = (Var) o;
+        if (!(o instanceof Var var)) return false;
         return nom.equals(var.nom);
     }
 

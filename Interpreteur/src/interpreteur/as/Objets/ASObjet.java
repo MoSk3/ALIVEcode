@@ -62,16 +62,18 @@ public interface ASObjet<T> {
             return new Type(toString());
         }
 
+        /* previous toString
         @Override
         public String toString() {
             return aliases == null ? super.toString() : ArraysUtils.join("|", aliases);
         }
+        */
     }
 
     interface Nombre extends ASObjet<Number> {
         @Override
         default String obtenirNomType() {
-            return "Nombre";
+            return "nombre";
         }
     }
 
@@ -96,7 +98,7 @@ public interface ASObjet<T> {
 
         @Override
         default String obtenirNomType() {
-            return "it\u00E9rable";
+            return "iterable";
         }
     }
 

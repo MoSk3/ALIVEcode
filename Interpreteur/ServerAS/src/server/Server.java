@@ -1,7 +1,6 @@
 package server;
 
 import com.sun.net.httpserver.*;
-import server.AliveScriptApi;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -15,7 +14,7 @@ public class Server {
     public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
         HttpServer server = HttpServer.create(new InetSocketAddress("localhost", PORT), 2);
 
-        System.out.println("Starting server...");
+        System.out.println("Starting com.server...");
 
         AliveScriptApi aliveScriptApi = new AliveScriptApi();
         HttpContext context = server.createContext("/compile/");

@@ -355,37 +355,39 @@
 
 ## Versioning
 
-> Définitions  
-> _Majeur_:
->
-> 1.  La nouvelle verison contient des changements incompatibles avec les anciennes versions _Majeur_ du langage
-> 2.  Déprécation de certaines fonctionnalités
->
-> _Mineur_:
->
-> 1. La nouvelle version est 100% backward compatible avec toutes les autres versions _Mineur_ à l'intérieur de la même version _Majeur_
-> 2. Les nouvelles fonctionnalités n'introduisent pas de problèmes de compatibilités
->
-> _Bugfix_ (.bf):
->
-> 1. Ne contient que des fix de bugs et aucune nouvelle fonctionnalité
-> 2. 100% backward compatible
->
-> _Release Candidate_ (-rc):
->
-> 1. Candidat pour le lancement d'une nouvelle verison mineur du langage
->
-> _build_ :
->
-> 1. numéro changeant chaque fois qu'il y a un commit dans le langage
+-   Définitions
 
----
+    > _Majeur_:
+    >
+    > 1.  La nouvelle verison contient des changements incompatibles avec les anciennes versions _Majeur_ du langage
+    > 2.  Déprécation de certaines fonctionnalités
+    >
+    > _Mineur_:
+    >
+    > 1. La nouvelle version est 100% backward compatible avec toutes les autres versions _Mineur_ à l'intérieur de la même version _Majeur_
+    > 2. Les nouvelles fonctionnalités n'introduisent pas de problèmes de compatibilités
+    >
+    > _Bugfix_ (.bf):
+    >
+    > 1. Ne contient que des fix de bugs et aucune nouvelle fonctionnalité
+    > 2. 100% backward compatible
+    >
+    > _Release Candidate_ (-rc):
+    >
+    > 1. Candidat pour le lancement d'une nouvelle verison mineur du langage
+    >
+    > _build_ :
+    >
+    > 1. numéro changeant chaque fois qu'il y a un commit dans le langage
 
-Légende:
+    ***
 
-> _italique_ = nombre
+-   v*Majeur*._Mineur_\[ ._bf_ | -rc._num_ | -_build_ ]  
+     ex: `v1.2.3-45`  
+     -> 1: Majeur  
+     -> 2: Mineur  
+     -> 3: bugfix  
+     -> 45: build
 
-v*Majeur*._Mineur_\[ ._bf_ | -rc._num_ | -_build_ ]  
-ex: v1.2.3-45
-
-<small>Auteur: Mathis Laroche</small>
+<br>  
+Auteur: Mathis Laroche

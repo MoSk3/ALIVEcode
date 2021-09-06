@@ -8,5 +8,6 @@
 -   \[✔] dans un splice, le premier argument \(celui avant le : ) est ignoré
 -   \[✔] les getter ne marchent pas pour une raison obscure
 -   \[❌] les commentaires multi-lignes et de documentation sont détectés même dans les string
+-   \[❌] la fonction builtin "nombre" est transformée en 'entier|decimal'
 
 #### 24/08/2021 :
