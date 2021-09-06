@@ -36,10 +36,13 @@ const LevelForm = ({ type }: LevelFormProps) => {
 								name: 'name',
 								inputType: 'text',
 								required: true,
+								minLength: 3,
+								maxLength: 25,
 							},
 							{
 								name: 'description',
 								inputType: 'text',
+								maxLength: 200,
 							},
 							{
 								name: 'access',
