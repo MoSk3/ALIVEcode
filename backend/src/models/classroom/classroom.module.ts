@@ -11,6 +11,7 @@ import { UserEntity } from '../user/entities/user.entity';
 import { ProfessorEntity } from '../user/entities/professor.entity';
 import { StudentEntity } from '../user/entities/student.entity';
 import { UserService } from '../user/user.service';
+import { LevelEntity } from '../level/entities/level.entity';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { UserService } from '../user/user.service';
       CourseEntity,
       IoTProjectEntity,
       IoTObjectEntity,
+      LevelEntity,
     ]),
     DefaultAdminModule,
   ],

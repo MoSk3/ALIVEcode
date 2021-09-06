@@ -39,6 +39,7 @@
     "dotenv": "^10.0.0",
     "jsonwebtoken": "^8.5.1",
     "nestjs-admin": "^0.4.1",
+    "pg": "^8.7.1",
     "randomstring": "^1.2.1",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",

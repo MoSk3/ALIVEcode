@@ -25,7 +25,7 @@ const openPlaySocket = (): PlaySocket => {
 		socket.onclose = e => {
 			setTimeout(() => {
 				openPlaySocket();
-			}, 200);
+			}, 2000);
 		};
 		socket.onmessage = e => {
 			let parsed;

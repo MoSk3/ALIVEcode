@@ -4,10 +4,14 @@ import { plainToClass } from 'class-transformer';
 import { Course } from './Course/course.entity';
 import { Section } from './Course/section.entity';
 import { Classroom } from './Classroom/classroom.entity';
-import { Student } from './User/user.entity';
+import { Student, User } from './User/user.entity';
 import { IoTProject } from './Iot/IoTproject.entity';
 import { IoTObject } from './Iot/IoTobject.entity';
 import { IotRoute } from './Iot/IoTroute.entity';
+import { Level } from './Level/level.entity';
+import { LevelAlive } from './Level/levelAlive.entity';
+import { LevelCode } from './Level/levelCode.entity';
+import { LevelProgression } from './Level/levelProgression';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const apiGetter = <T extends {}>(url: string, target: T) => {
@@ -44,6 +48,15 @@ const api = {
 						plainToClass(IoTObject, d),
 					);
 				},
+			},
+			async getLevels(userId: string) {
+				return (await axios.get(`users/${userId}/levels`)).data.map(
+					(l: any) => {
+						if (l.layout) return plainToClass(LevelAlive, l);
+						if (l.testCases) return plainToClass(LevelCode, l);
+						return plainToClass(Level, l);
+					},
+				);
 			},
 			//get: apiGetter('users', User),
 			async getClassrooms(userId: string) {
@@ -96,6 +109,47 @@ const api = {
 				async getRoutes(projectId: string) {
 					return (await axios.get(`iot/projects/${projectId}/routes`)).data.map(
 						(d: any) => plainToClass(IotRoute, d),
+					);
+				},
+			},
+		},
+		levels: {
+			async get(levelId: string) {
+				const level = (await axios.get(`levels/${levelId}`)).data;
+				if (level.layout) return plainToClass(LevelAlive, level);
+				if (level.testCases) return plainToClass(LevelCode, level);
+				return plainToClass(Level, level);
+			},
+			async query() {
+				const levels: Array<any> = (await axios.get(`levels/query`)).data;
+				return levels.map((l: any) => {
+					if (l.layout) return plainToClass(LevelAlive, l);
+					if (l.testCases) return plainToClass(LevelCode, l);
+					return plainToClass(Level, l);
+				});
+			},
+			async update(level: Level | LevelAlive | LevelCode) {
+				const l = (await axios.patch(`levels/${level.id}`, level)).data;
+				if (l.layout) return plainToClass(LevelAlive, l);
+				if (l.testCases) return plainToClass(LevelCode, l);
+				return plainToClass(Level, l);
+			},
+			progressions: {
+				async get(levelId: string, user: User) {
+					return plainToClass(
+						LevelProgression,
+						(await axios.get(`levels/${levelId}/progressions/${user.id}`)).data,
+					);
+				},
+				async save(levelId: string, user: User, data: LevelProgression) {
+					return plainToClass(
+						LevelProgression,
+						(
+							await axios.patch(
+								`levels/${levelId}/progressions/${user.id}`,
+								data,
+							)
+						).data,
 					);
 				},
 			},
