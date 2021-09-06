@@ -16,17 +16,17 @@ public class BoucleTantQue extends Boucle {
     private final Scope scope;
     private boolean firstTime = true;
 
-    public BoucleTantQue(Expression<?> condition) {
-        super("tant que");
+    public BoucleTantQue(Expression<?> condition, Executeur executeurInstance) {
+        super("tant que", executeurInstance);
         this.condition = condition;
-        this.isBoucleFaire = Executeur.obtenirCoordRunTime().getBlocActuel().equals("faire");
+        this.isBoucleFaire = executeurInstance.obtenirCoordRunTime().getBlocActuel().equals("faire");
         this.scope = Scope.makeNewCurrentScope();
     }
 
     public void sortir() {
         sortir = false;
         firstTime = true;
-        if (isBoucleFaire) Executeur.obtenirCoordRunTime().finBloc();
+        if (isBoucleFaire) executeurInstance.obtenirCoordRunTime().finBloc();
         Scope.popCurrentScopeInstance();
     }
 
@@ -40,9 +40,9 @@ public class BoucleTantQue extends Boucle {
             Scope.popCurrentScopeInstance();
             Scope.pushCurrentScopeInstance(scope.makeScopeInstanceFromCurrentScope());
             if (isBoucleFaire)
-                Executeur.obtenirCoordRunTime().recommencerLeBlocActuel();
+                executeurInstance.obtenirCoordRunTime().recommencerLeBlocActuel();
             else
-                Executeur.obtenirCoordRunTime().nouveauBloc("tant_que");
+                executeurInstance.obtenirCoordRunTime().nouveauBloc("tant_que");
 
         } else sortir();
         return null;
@@ -51,9 +51,9 @@ public class BoucleTantQue extends Boucle {
     @Override
     public Coordonnee prochaineCoord(Coordonnee coord, List<Token> ligne) {
         if (isBoucleFaire)
-            return Executeur.obtenirCoordRunTime().finBloc();
+            return coord.finBloc();
 
-        return Executeur.obtenirCoordRunTime().nouveauBloc("tant_que");
+        return coord.nouveauBloc("tant_que");
     }
 
     @Override

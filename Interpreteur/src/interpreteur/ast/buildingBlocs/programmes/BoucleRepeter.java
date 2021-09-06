@@ -18,8 +18,8 @@ public class BoucleRepeter extends Boucle {
     private int current = 0;
     private final Scope scope;
 
-    public BoucleRepeter(Expression<?> nbFois) {
-        super("repeter");
+    public BoucleRepeter(Expression<?> nbFois, Executeur executeurInstance) {
+        super("repeter", executeurInstance);
         this.nbFois = nbFois;
         this.scope = Scope.makeNewCurrentScope();
     }
@@ -43,7 +43,7 @@ public class BoucleRepeter extends Boucle {
         if (current++ < end && !sortir) {
             Scope.popCurrentScopeInstance();
             Scope.pushCurrentScopeInstance(this.scope.makeScopeInstanceFromCurrentScope());
-            Executeur.obtenirCoordRunTime().nouveauBloc("repeter");
+            executeurInstance.obtenirCoordRunTime().nouveauBloc("repeter");
         }
         else sortir();
         return null;
@@ -51,7 +51,7 @@ public class BoucleRepeter extends Boucle {
 
     @Override
     public Coordonnee prochaineCoord(Coordonnee coord, List<Token> ligne) {
-        return Executeur.obtenirCoordRunTime().nouveauBloc("repeter");
+        return coord.nouveauBloc("repeter");
     }
 
     @Override

@@ -12,7 +12,8 @@ import java.util.List;
 
 public class FinGet extends Programme {
 
-    public FinGet() {
+    public FinGet(Executeur executeurInstance) {
+        super(executeurInstance);
         Scope.popCurrentScope();
     }
 
@@ -26,7 +27,7 @@ public class FinGet extends Programme {
         String nomFermeture = "get_";
         if (!coord.getScope().startsWith(nomFermeture))
             throw new ASErreur.ErreurFermeture(coord.getScope(), "fin get");
-        return new Coordonnee(Executeur.finScope());
+        return new Coordonnee(executeurInstance.finScope());
     }
 
     @Override

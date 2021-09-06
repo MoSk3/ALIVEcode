@@ -23,8 +23,8 @@ public class BouclePour extends Boucle {
     private Iterator<ASObjet<?>> iteration = null;
     private Type typeVar = new Type("tout");
 
-    public BouclePour(Var var, Expression<?> objItere) {
-        super("pour");
+    public BouclePour(Var var, Expression<?> objItere, Executeur executeurInstance) {
+        super("pour", executeurInstance);
         this.var = var;
         this.objItere = objItere;
         this.scope = Scope.makeNewCurrentScope();
@@ -66,7 +66,7 @@ public class BouclePour extends Boucle {
             } else {
                 variable.changerValeur(iteration.next());
             }
-            Executeur.obtenirCoordRunTime().nouveauBloc("pour");
+            executeurInstance.obtenirCoordRunTime().nouveauBloc("pour");
 
         } else sortir();
 
@@ -75,7 +75,7 @@ public class BouclePour extends Boucle {
 
     @Override
     public Coordonnee prochaineCoord(Coordonnee coord, List<Token> ligne) {
-        return Executeur.obtenirCoordRunTime().nouveauBloc("pour");
+        return executeurInstance.obtenirCoordRunTime().nouveauBloc("pour");
     }
 
     @Override

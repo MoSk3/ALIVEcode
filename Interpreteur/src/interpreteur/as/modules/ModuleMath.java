@@ -6,8 +6,12 @@ import interpreteur.ast.buildingBlocs.expressions.Type;
 
 public class ModuleMath extends ASModule {
 
-    public static void charger() {
-        ajouterModule("Math", new ASObjet.Fonction[]{
+    public ModuleMath(ASModuleManager moduleManager) {
+        super(moduleManager);
+    }
+
+    public void charger() {
+        moduleManager.ajouterModule("Math", new ASObjet.Fonction[]{
                 new ASObjet.Fonction("sin", new ASObjet.Fonction.Parametre[]{
                         new ASObjet.Fonction.Parametre(new Type("nombre"), "x", null)
                 }, new Type("decimal")) {

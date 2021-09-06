@@ -89,10 +89,11 @@ public class Declarer extends Programme {
 
     @Override
     public String toString() {
-        return "Assigner{" +
-                "var=" + var +
-                ", valeur=" + valeur +
+        return "Declarer{" +
+                "valeur=" + valeur +
                 ", constante=" + constante +
+                ", type=" + type +
+                ", var=" + var +
                 '}';
     }
 }

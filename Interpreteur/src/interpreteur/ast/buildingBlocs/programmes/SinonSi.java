@@ -6,9 +6,9 @@ import interpreteur.ast.buildingBlocs.Programme;
 import interpreteur.executeur.Coordonnee;
 import interpreteur.executeur.Executeur;
 import interpreteur.tokens.Token;
+import org.jetbrains.annotations.NotNull;
 
 import javax.lang.model.type.NullType;
-import java.util.Hashtable;
 import java.util.List;
 
 public class SinonSi extends Programme {
@@ -16,13 +16,15 @@ public class SinonSi extends Programme {
     private String coord;
     private int num;
 
-    public SinonSi(Expression<?> test) {
+    public SinonSi(Expression<?> test, @NotNull Executeur executeurInstance) {
+        super(executeurInstance);
         this.test = test;
     }
 
     @Override
     public NullType execute() {
-        Executeur.obtenirCoordRunTime().finBloc();
+        assert executeurInstance != null;
+        executeurInstance.obtenirCoordRunTime().finBloc();
         return null;
     }
 
@@ -42,16 +44,17 @@ public class SinonSi extends Programme {
 
         SinonSiTest sinonSiTest = new SinonSiTest(this);
 
-        coord = Executeur.obtenirCoordRunTime();
+        assert executeurInstance != null;
+        coord = executeurInstance.obtenirCoordRunTime();
         coord.finBloc();
 
-        Executeur.obtenirCoordCompileDict()
-                .get(Executeur.obtenirCoordRunTime().getScope())
-                .put("<" + this.num + ">sinon_si_test" + coord.getCoordAsString(), sinonSiTest);
+        executeurInstance.obtenirCoordCompileDict()
+                .get(executeurInstance.obtenirCoordRunTime().getScope())
+                .put("<" + this.num + ">sinon_si_test" + coord.toString(), sinonSiTest);
 
-        Executeur.obtenirCoordRunTime().nouveauBloc(this.coord);
+        executeurInstance.obtenirCoordRunTime().nouveauBloc(this.coord);
 
-        return Executeur.obtenirCoordRunTime();
+        return executeurInstance.obtenirCoordRunTime();
     }
 
     @Override
@@ -72,13 +75,14 @@ public class SinonSi extends Programme {
 
         @Override
         public Object execute() {
-            Coordonnee coord = Executeur.obtenirCoordRunTime();
+            assert parent.executeurInstance != null;
+            Coordonnee coord = parent.executeurInstance.obtenirCoordRunTime();
             coord.finBloc();
-            if (this.parent.test.eval().boolValue()) {
+            if (parent.test.eval().boolValue()) {
                 coord.nouveauBloc("sinon_si_" + this.parent.num);
-            } else if (Executeur.laCoordExiste("<" + (this.parent.num + 1) + ">sinon_si_test")) {
-                coord.setCoord("<" + this.parent.num + ">sinon_si_test" + coord.getCoordAsString());
-            } else if (Executeur.leBlocExiste("sinon")) {
+            } else if (parent.executeurInstance.laCoordExiste("<" + (this.parent.num + 1) + ">sinon_si_test")) {
+                coord.setCoord("<" + this.parent.num + ">sinon_si_test" + coord);
+            } else if (parent.executeurInstance.leBlocExiste("sinon")) {
                 coord.nouveauBloc("sinon");
             }
             return null;

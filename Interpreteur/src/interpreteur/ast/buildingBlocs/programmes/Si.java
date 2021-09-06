@@ -12,25 +12,27 @@ import java.util.List;
 public class Si extends Programme {
     private final Expression<?> test;
 
-    public Si(Expression<?> test) {
+    public Si(Expression<?> test, Executeur executeurInstance) {
+        super(executeurInstance);
         this.test = test;
     }
 
     @Override
     public NullType execute() {
+        assert executeurInstance != null;
         if (test.eval().boolValue()) {
-            Executeur.obtenirCoordRunTime().nouveauBloc("si");
-        } else if (Executeur.leBlocExiste("sinon_si_test")) {
-            Executeur.obtenirCoordRunTime().nouveauBloc("sinon_si_test");
-        } else if (Executeur.leBlocExiste("sinon")) {
-            Executeur.obtenirCoordRunTime().nouveauBloc("sinon");
+            executeurInstance.obtenirCoordRunTime().nouveauBloc("si");
+        } else if (executeurInstance.leBlocExiste("sinon_si_test")) {
+            executeurInstance.obtenirCoordRunTime().nouveauBloc("sinon_si_test");
+        } else if (executeurInstance.leBlocExiste("sinon")) {
+            executeurInstance.obtenirCoordRunTime().nouveauBloc("sinon");
         }
         return null;
     }
 
     @Override
     public Coordonnee prochaineCoord(Coordonnee coord, List<Token> ligne) {
-        return Executeur.obtenirCoordRunTime().nouveauBloc("si");
+        return coord.nouveauBloc("si");
     }
 
     @Override

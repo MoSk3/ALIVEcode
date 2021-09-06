@@ -51,6 +51,7 @@ const Dashboard = (props: DashboardProps) => {
 				/>
 			</Row>
 			<CardContainer
+				asRow
 				title="Mes classes"
 				style={{ marginTop: '20px' }}
 				onIconClick={() =>
@@ -69,7 +70,8 @@ const Dashboard = (props: DashboardProps) => {
 					  ))}
 			</CardContainer>
 
-			<CardContainer title="Niveaux">
+			<CardContainer asRow title="Niveaux">
+				<SmallCard to="/level" title="Mes niveaux" img={List} />
 				<SmallCard
 					to={routes.auth.level_list.path}
 					title="Mes niveaux"
@@ -87,7 +89,7 @@ const Dashboard = (props: DashboardProps) => {
 				/>
 			</CardContainer>
 
-			<CardContainer style={{ marginBottom: '100px' }} title="Niveaux">
+			<CardContainer asRow style={{ marginBottom: '100px' }} title="Niveaux">
 				<SmallCard to="/quiz" title="Mes quiz" img={List} />
 				<SmallCard to="/quiz/new" title="Créer un quiz" img={Sandbox} />
 				<SmallCard to="/quiz/browse" title="Jouer un quiz" img={Puzzle} />

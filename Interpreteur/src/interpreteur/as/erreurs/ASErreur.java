@@ -18,8 +18,8 @@ public interface ASErreur {
             this.nomErreur = nomErreur;
         }
 
-        public Data getAsData() {
-            int ligne = Executeur.getLineFromCoord(Executeur.obtenirCoordRunTime()) + 1;
+        public Data getAsData(Executeur executeurInstance) {
+            int ligne = executeurInstance.getLineFromCoord(executeurInstance.obtenirCoordRunTime()) + 1;
             return new Data(Data.Id.ERREUR).addParam(nomErreur).addParam(super.getMessage()).addParam(ligne);
         }
 
@@ -27,14 +27,14 @@ public interface ASErreur {
             return new Data(Data.Id.ERREUR).addParam(nomErreur).addParam(super.getMessage()).addParam(ligne);
         }
 
-        public void afficher() {
-            int ligne = Executeur.getLineFromCoord(Executeur.obtenirCoordRunTime()) + 1;
-            Executeur.ecrire(this.nomErreur + " (à la ligne " + ligne
+        public void afficher(Executeur executeurInstance) {
+            int ligne = executeurInstance.getLineFromCoord(executeurInstance.obtenirCoordRunTime()) + 1;
+            executeurInstance.ecrire(this.nomErreur + " (à la ligne " + ligne
                     + ") -> " + super.getMessage());
         }
 
-        public void afficher(int ligne) {
-            Executeur.ecrire(this.nomErreur + " (à la ligne " + ligne
+        public void afficher(Executeur executeurInstance, int ligne) {
+            executeurInstance.ecrire(this.nomErreur + " (à la ligne " + ligne
                     + ") -> " + super.getMessage());
         }
 
@@ -218,12 +218,11 @@ public interface ASErreur {
 
         public AlerteExecution(String message) {
             this.message = message;
-            this.afficher();
         }
 
-        public void afficher() {
-            int ligne = Executeur.getLineFromCoord(Executeur.obtenirCoordRunTime()) + 1;
-            Executeur.ecrire("Durant l'execution à la ligne " + ligne
+        public void afficher(Executeur executeurInstance) {
+            int ligne = executeurInstance.getLineFromCoord(executeurInstance.obtenirCoordRunTime()) + 1;
+            executeurInstance.ecrire("Durant l'execution à la ligne " + ligne
                     + " -> " + this.getClass().getSimpleName() + " : " + this.message);
         }
     }
