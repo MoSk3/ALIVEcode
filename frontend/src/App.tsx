@@ -129,7 +129,7 @@ const App = () => {
 					return Promise.reject(error);
 				}
 				// TODO : remove in production
-				if (error.response) console.log(error.response);
+				if (process.env.DEBUG && error.response) console.log(error.response);
 				if (
 					error.response &&
 					error.response.data.message === 'Not Authenticated' &&
@@ -145,7 +145,7 @@ const App = () => {
 
 						return axios(originalRequest);
 					} catch (err) {
-						console.error(err);
+						if (process.env.DEBUG) console.error(err);
 					}
 				}
 				return Promise.reject(error);

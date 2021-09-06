@@ -42,7 +42,6 @@ export class IoTProjectService {
   }
 
   async addRoute(project: IoTProjectEntity, routeDTO: IoTRouteEntity) {
-    console.log(routeDTO);
     const newRoute = this.routeRepository.create(routeDTO);
     await this.routeRepository.save(newRoute);
     project = await this.projectRepository.findOne(project.id, { relations: ['routes'] });

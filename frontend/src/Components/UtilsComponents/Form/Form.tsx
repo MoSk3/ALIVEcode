@@ -20,7 +20,7 @@ const Form = (props: FormProps) => {
 	const history = useHistory();
 
 	const onFormSubmit = async (formValues: any) => {
-		console.log(formValues);
+		if (process.env.DEBUG) console.log(formValues);
 		try {
 			let res;
 			switch (props.action) {

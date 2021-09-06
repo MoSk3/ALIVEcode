@@ -59,7 +59,7 @@ class LevelAliveExecutor implements PlayExecutor {
 		this.socket.onRobotReceive((data: any) => {
 			let car = s.car;
 
-			console.log(data);
+			if (process.env.DEBUG) console.log(data);
 
 			if (this.d1 == null || this.d2 == null || this.d3 == null) {
 				this.d1 = s.spawnRect(0, 0, 100, 5);
@@ -117,9 +117,9 @@ class LevelAliveExecutor implements PlayExecutor {
 				this.execution = true;
 				// Envoie le code à éxécuter au serveur
 				let lines: Array<string> = this.lineInterfaceContent.split('\n');
-				console.log(lines);
+				if (process.env.DEBUG) console.log(lines);
 				this.socket?.compile(lines, data => {
-					console.log(data);
+					if (process.env.DEBUG) console.log(data);
 					let car = s.car;
 
 					s.canvasCamera.setTarget(s.car.shape);
@@ -330,7 +330,7 @@ class LevelAliveExecutor implements PlayExecutor {
 												speed: car.speed,
 											};
 											res.push(infosCar);
-											console.log(res);
+											if (process.env.DEBUG) console.log(res);
 											perform_action(i + 1, res);
 											// eslint-disable-next-line no-labels
 											break id_switch;

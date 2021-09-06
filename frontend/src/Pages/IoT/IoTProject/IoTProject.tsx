@@ -51,11 +51,6 @@ const IoTProject = (props: IoTProjectProps) => {
 			setLightLevel(lightLevel / 1000);
 		});
 
-		// Notification test
-		socket.on('notification', msg => {
-			console.log(msg);
-		});
-
 		setSocket(socket);
 		return () => {
 			socket.close();
@@ -155,7 +150,6 @@ const IoTProject = (props: IoTProjectProps) => {
 							title="New route"
 							onSubmit={res => {
 								const resRoute: IotRoute = res.data;
-								console.log(resRoute);
 								project.routes.push(resRoute);
 								setProject(project);
 								setRouteModalOpen(false);
