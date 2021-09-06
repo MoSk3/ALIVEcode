@@ -17,8 +17,6 @@ const StyledDiv = styled.div`
 	}
 `;
 
-// Example course: http://localhost:3000/course/dd36ee8a-3ff5-4751-b8d4-b9495882f1fb
-
 const Course = (props: CourseProps) => {
 	const { user } = useContext(UserContext);
 	const [course, setCourse] = useState<CourseModel>();

@@ -9,7 +9,6 @@ import BackArrow from './Components/UtilsComponents/BackArrow/BackArrow';
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.css';
 import useRoutes from './state/hooks/useRoutes';
-import { SERVER_URL } from './appConfigs';
 import { ThemeContext, Theme, themes } from './state/contexts/ThemeContext';
 import styled, { createGlobalStyle } from 'styled-components';
 import { loadThemeFromCookies, setCookie } from './Types/cookies';
@@ -123,7 +122,8 @@ const App = () => {
 				if (
 					error.response &&
 					error.response.status === 401 &&
-					originalRequest.url === SERVER_URL + 'users/refreshToken'
+					originalRequest.url ===
+						process.env.REACT_APP_BACKEND_URL + 'users/refreshToken'
 				) {
 					if (user) await logout();
 					return Promise.reject(error);

@@ -1,3 +1,4 @@
+import "dotenv/config";
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
@@ -6,7 +7,6 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { transitions, positions, Provider as AlertProvider } from 'react-alert';
 import axios from 'axios';
-import { SERVER_URL } from './appConfigs';
 import AlertTemplate from 'react-alert-template-basic';
 import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
@@ -14,7 +14,7 @@ import HttpAPI from 'i18next-http-backend';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import LoadingScreen from './Components/UtilsComponents/LoadingScreen/LoadingScreen';
 
-axios.defaults.baseURL = SERVER_URL;
+axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL;
 axios.defaults.withCredentials = true;
 axios.defaults.timeout = 5000;
 axios.defaults.headers = {

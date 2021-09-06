@@ -16,7 +16,6 @@ const ClassroomForm = (props: ClassroomFormProps) => {
 	const history = useHistory();
 	const alert = useAlert();
 
-	// Exemple de classe: http://localhost:3000/classroom/0676da66-ce3a-4021-b96e-0d5aa7d78df0
 	return (
 		<FormContainer title={t('form.title.create_classroom')}>
 			<Form

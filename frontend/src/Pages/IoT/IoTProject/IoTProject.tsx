@@ -42,7 +42,8 @@ const IoTProject = (props: IoTProjectProps) => {
 
 	// Socket io
 	useEffect(() => {
-		const socket = io(`http://${window.location.hostname}:8888`);
+		if (!process.env.REACT_APP_IOT_URL) return;
+		const socket = io(process.env.REACT_APP_IOT_URL);
 
 		socket.emit('register_light');
 
