@@ -29,6 +29,7 @@ import {
 	LEVEL_DIFFICULTY,
 } from '../../../Models/Level/level.entity';
 import $ from 'jquery';
+import { useTranslation } from 'react-i18next';
 
 const LevelAlive = ({
 	level,
@@ -43,6 +44,7 @@ const LevelAlive = ({
 	const playButton = useRef<HTMLButtonElement>(null);
 	const history = useHistory();
 	const { routes } = useRoutes();
+	const { t } = useTranslation();
 	const [editTitle, setEditTitle] = useState(false);
 	const [settingsModalOpen, setSettingsModalOpen] = useState(false);
 	const [saving, setSaving] = useState(false);
@@ -246,7 +248,7 @@ const LevelAlive = ({
 				</Col>
 			</Row>
 			<FormModal
-				title="New route"
+				title={t('form.level.PATCH.title')}
 				onSubmit={res => {
 					const updatedLevel = plainToClass(LevelAliveModel, res.data);
 					updatedLevel.creator = level.creator;
@@ -257,7 +259,7 @@ const LevelAlive = ({
 				open={settingsModalOpen}
 			>
 				<Form
-					action="UPDATE"
+					action="PATCH"
 					name="level"
 					url={`levels/${level.id}`}
 					inputGroups={[

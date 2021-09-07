@@ -27,7 +27,7 @@ const Form = (props: FormProps) => {
 				case 'POST':
 					res = await axios.post(props.url, formValues);
 					break;
-				case 'UPDATE':
+				case 'PATCH':
 					res = await axios.patch(props.url, formValues);
 					break;
 				case 'DELETE':

@@ -93,7 +93,7 @@ const IoTProject = (props: IoTProjectProps) => {
 								updatedProject.routes = project.routes;
 								setProject(updatedProject);
 							}}
-							action="UPDATE"
+							action="PATCH"
 							name="iot_project"
 							url={`iot/projects/${project.id}`}
 							inputGroups={[

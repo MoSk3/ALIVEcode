@@ -13,6 +13,11 @@
 			"maxLength": "This field exceeds {{max}} characters",
 			"minLength": "This field should be at least {{min}} characters"
 		},
+		"level": {
+			"PATCH": {
+				"title": "Paramètres du niveau"
+			}
+		},
 		"title": {
 			"signin": "Sign in",
 			"signup": "Sign up"
