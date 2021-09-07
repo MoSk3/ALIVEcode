@@ -75,6 +75,16 @@
 			"account": "My account"
 		}
 	},
+	"menu": {
+		"signup": {
+			"professor": "Professor account",
+			"student": "Student account"
+		},
+		"level": {
+			"alive": "Level with ALIVE car",
+			"code": "Level with console"
+		}
+	},
 	"home": {
 		"msg1": "Learn programming",
 		"msg2": "Learn while playing",

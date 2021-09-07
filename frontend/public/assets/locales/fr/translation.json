@@ -58,8 +58,6 @@
 		"auth": {
 			"signin": "Se connecter",
 			"signup": "S'inscrire",
-			"signup_professor": "Compte professeur",
-			"signup_student": "Compte étudiant",
 			"signout": "Se déconnecter",
 			"already_registered": "Tu as déjà un compte?"
 		},
@@ -73,6 +71,16 @@
 			"avp": "Perception de véhicule augmentée",
 			"lrima": "Laboratoire de recherche LRIMA",
 			"account": "Mon compte"
+		}
+	},
+	"menu": {
+		"signup": {
+			"professor": "Compte professeur",
+			"student": "Compte étudiant"
+		},
+		"level": {
+			"alive": "Niveau avec voiture ALIVE",
+			"code": "Niveau avec console"
 		}
 	},
 	"home": {

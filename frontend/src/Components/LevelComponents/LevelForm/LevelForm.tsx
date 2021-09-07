@@ -25,7 +25,7 @@ const LevelForm = ({ type }: LevelFormProps) => {
 						onSubmit={res => {
 							const level: LevelAlive = res.data;
 							history.push(
-								routes.auth.level_play.path.replace(':id', level.id),
+								routes.auth.level_edit.path.replace(':id', level.id),
 							);
 							return alert.success('Niveau créé avec succès');
 						}}
@@ -66,7 +66,7 @@ const LevelForm = ({ type }: LevelFormProps) => {
 						onSubmit={res => {
 							const level: LevelCode = res.data;
 							history.push(
-								routes.auth.level_play.path.replace(':id', level.id),
+								routes.auth.level_edit.path.replace(':id', level.id),
 							);
 							return alert.success('Niveau créé avec succès');
 						}}
