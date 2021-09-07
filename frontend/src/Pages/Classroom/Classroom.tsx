@@ -34,12 +34,10 @@ const Classroom = (props: ClassroomProps) => {
 				const classroom: ClassroomModel = await api.db.classrooms.get(
 					props.match.params.id,
 				);
-				console.log(classroom);
 				await classroom.getStudents();
 				await classroom.getCourses();
 				setClassroom(classroom);
 			} catch (err) {
-				console.log(err);
 				history.push('/');
 				return alert.error(t('error.not_found', { obj: t('msg.course') }));
 			}

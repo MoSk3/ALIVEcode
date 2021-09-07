@@ -30,10 +30,11 @@ const LevelList = (props: LevelListProps) => {
 		return <></>;
 	}
 
+	console.log(levels);
 	return (
-		<CardContainer title="Mes niveaux">
+		<CardContainer title="Mes niveaux" height="300px">
 			{!levels ? (
-				<LoadingScreen />
+				<LoadingScreen relative />
 			) : (
 				<>
 					{levels.map((l, idx) => (

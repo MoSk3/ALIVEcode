@@ -1,6 +1,6 @@
 import { ChildEntity, Column } from 'typeorm';
 import { LevelEntity } from './level.entity';
-import { IsOptional, IsNotEmpty } from 'class-validator';
+import { IsOptional } from 'class-validator';
 
 export enum LEVEL_RESOLUTION_MODE {
   ANY = 'ANY',
@@ -16,8 +16,8 @@ export class LevelCodeEntity extends LevelEntity {
   @IsOptional()
   initialCode?: string;
 
-  @Column({ type: 'jsonb', nullable: false })
-  @IsNotEmpty()
+  @Column({ type: 'jsonb', default: () => "'[]'" })
+  @IsOptional()
   testCases: string;
 
   @Column({ nullable: true })

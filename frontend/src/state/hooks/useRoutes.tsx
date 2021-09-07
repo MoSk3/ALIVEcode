@@ -24,6 +24,7 @@ import IoTDashboard from '../../Pages/IoT/IoTDashboard/IoTDashboard';
 import LevelForm from '../../Components/LevelComponents/LevelForm/LevelForm';
 import LevelBrowse from '../../Pages/Level/LevelBrowse/LevelBrowse';
 import LevelList from '../../Pages/Level/LevelList/LevelList';
+import LevelFormMenu from '../../Pages/Level/LevelFormMenu/LevelFormMenu';
 
 type component =
 	| React.ComponentType<RouteComponentProps<any>>
@@ -183,7 +184,16 @@ const useRoutes = () => {
 		},
 		level_create: {
 			path: '/level/create',
+			exact: true,
+			component: LevelFormMenu,
+		},
+		level_create_alive: {
+			path: '/level/create/alive',
 			component: () => <LevelForm type="ALIVE" />,
+		},
+		level_create_code: {
+			path: '/level/create/code',
+			component: () => <LevelForm type="code" />,
 		},
 	});
 

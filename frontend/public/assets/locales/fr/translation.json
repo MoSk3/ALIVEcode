@@ -3,35 +3,84 @@
 		"logout": "Une erreur est survenue lors de la déconnexion, veuillez réesayer."
 	},
 	"form": {
-		"title": {
-			"signin": "Connexion"
+		"submit": {
+			"POST": "Créer {{name}}",
+			"PATCH": "Modifier {{name}}",
+			"DELETE": "Supprimer {{name}}"
 		},
-		"pwd": { "label": "Mot de passe", "placeholder": "*****" },
+		"error": {
+			"required": "Ce champs est requis",
+			"maxLength": "Ce champs dépasse {{max}} caractères",
+			"minLength": "Ce champs devrait être d'au moins {{min}} caractères"
+		},
+		"level": {
+			"PATCH": {
+				"title": "Level settings"
+			}
+		},
+		"title": {
+			"signin": "Connexion",
+			"signup": "Inscription"
+		},
+		"pwd": {
+			"label": "Mot de passe",
+			"placeholder": "*****",
+			"required": "Un mot de passe est requis"
+		},
 		"email": {
 			"label": "Adresse courriel",
-			"placeholder": "MonAdresse@alivecode.ca"
+			"placeholder": "MonAdresse@alivecode.ca",
+			"required": "Une adresse courriel est requise",
+			"info": "Nous ne partagerons pas votre adresse courriel"
 		},
-		"name": { "label": "Nom", "placeholder": "Nom" },
-		"firstName": { "label": "Prénom", "placeholder": "Prénom" },
-		"lastName": { "label": "Nom", "placeholder": "Nom" },
-		"scolarity": { "label": "Niveau scholaire", "placeholder": "4e année" }
+		"name": {
+			"label": "Nom",
+			"placeholder": "Enric",
+			"required": "Un pseudonyme est requis"
+		},
+		"firstName": {
+			"label": "Prénom",
+			"placeholder": "Enric",
+			"required": "Votre prénom est requis"
+		},
+		"lastName": {
+			"label": "Nom",
+			"placeholder": "Soldevila",
+			"required": "Votre nom est requis"
+		},
+		"scolarity": {
+			"label": "Niveau scholaire",
+			"placeholder": "4e année",
+			"required": "Votre niveau scholaire est requis"
+		}
 	},
 	"msg": {
 		"auth": {
 			"signin": "Se connecter",
 			"signup": "S'inscrire",
-			"signout": "Se déconnecter"
+			"signout": "Se déconnecter",
+			"already_registered": "Tu as déjà un compte?"
 		},
 		"section": {
 			"alive": "ALIVE Play",
 			"dashboard": "Tableau de bord",
-      "ai": "ALIVE intelligence artificielle",
+			"ai": "ALIVE intelligence artificielle",
 			"iot": "Internet des objets",
 			"amc": "Contrôle par la pensée",
 			"about": "À propos",
 			"avp": "Perception de véhicule augmentée",
 			"lrima": "Laboratoire de recherche LRIMA",
 			"account": "Mon compte"
+		}
+	},
+	"menu": {
+		"signup": {
+			"professor": "Compte professeur",
+			"student": "Compte étudiant"
+		},
+		"level": {
+			"alive": "Niveau avec voiture ALIVE",
+			"code": "Niveau avec console"
 		}
 	},
 	"home": {
@@ -60,7 +109,7 @@
 			"section": {
 				"dashboard": "$t(msg.section.dashboard)",
 				"iot": "$t(msg.section.iot)",
-        "ai": "$t(msg.section.ai)",
+				"ai": "$t(msg.section.ai)",
 				"amc": "$t(msg.section.amc)",
 				"about": "$t(msg.section.about)"
 			},
@@ -82,37 +131,37 @@
 			"copyright": "Copyright &copy; 2021 Touts droits réservés par"
 		}
 	},
-  "ai": {
-    "header": {
-        "title": "LE MONDE DE L'INTELLIGENCE ARTIFICIELLE AVEC ALIVESCRIPT",
-        "description": "L’intelligence artificielle est un domaine en constante évolution qui permet d’accomplir des tâches énormes en un temps record. L’efficacité des techniques qui en font partie est telle qu’on cherche maintenant à s’en servir dans toutes les sphères de la société, de l’agriculture à la robotique, en passant par le transport, les sciences, l’économie et bien plus! À l’aide de notre langage de programmation AliveScript, on te propose de découvrir les possibilités de l’intelligence artificielle d’un façon simple et captivante. Choisis un des cours disponibles et pars à la rencontre de cet univers fascinant!"
-    },
-    "section": {
-      "artificial-intelligence": {
-        "title": "Le potentiel de l'intelligence artificielle",
-        "paragraph1": "L’intelligence artificielle prend une place de plus en plus importante dans notre quotidien. En fait, nous pouvons déjà nous en apercevoir aujourd’hui : des assistants intelligents sont présents dans nos téléphones, nos ordinateurs ainsi que dans des haut-parleurs; de plus en plus d’essais avec des technologies d’IA sont effectués dans le domaine des transports, de l’agriculture, de la médecine et bien plus; les moteurs de recherche sur Internet ainsi que plusieurs sites utilisent l’IA pour des raison commerciales; et il existe bien d’autres exemples!",
-        "paragraph2": "Au fil des cours sur les différentes facettes de l’intelligence artificielle, tu apprendras comment peut-on s’en servir pour résoudre des problèmes variés :",
-        "point1": "Comment prédire la consommation d’une voiture si on fait varier son moteur, son poids et plusieurs autres caractéristiques?",
-        "point2": "Comment développer une formule qui saura prédire la grandeur maximale d’une personne?",
-        "point3": "Comment trouver la configuration optimale à un robot pour qu’il accomplisse une tâche précise?",
-        "point4": "Et plus encore!",
-        "paragraph3": "De plus, même si nous aurons couvert seulement quelques applications de l’intelligence artificielle, les possibilités sont infinies, si bien qu’il en reste encore énormément à découvrir!"
-      },
-      "machine-learning": {
-        "title": "L'apprentissage machine et sa place en IA",
-        "paragraph1": "Si tu n’es pas familier avec le domaine de l’intelligence artificielle, la première chose à savoir est qu’il existe plusieurs grandes branches qui se concentrent sur un sujet plus particulier de l’IA. Par exemple, la branche de la vision par ordinateur se spécialise dans la reconnaissance d’images, tandis que la branche de la reconnaissance vocale cherche plutôt à reconnaitre ou à générer des paroles humaines. L’apprentissage machine est justement une de ces catégories, mais elle contient plusieurs sous-branches, dont les fameux réseaux de neurones.",
-        "paragraph2": "L’apprentissage machine se spécialise surtout dans la prédiction de valeurs en se basant sur des données qui concernent la situation qu’on analyse. Elle permet de prédire des résultats à dans des situations qui demanderaient des calculs extrêmement complexes pour arriver au même résultat. Pour arriver à cela, l’algorithme s’entraîne sur des valeurs venant d’expériences précédentes et essaie de prédire leurs résultats avec un modèle aléatoire. Ensuite, on compare la prédiction avec la valeur réelle et on adapte le modèle en fonction de l’erreur dans le but de l’améliorer. Finalement, ce processus est répété jusqu’à atteindre un résultat satisfaisant. C’est ce processus qui est utilisé dans tous les algorithmes d’apprentissage machine, qu’il s’agisse de régressions ou même de réseaux de neurones."
-      },
-      "deep-learning": {
-        "title": "Les réseaux de neurones en IA",
-        "paragraph1": "On pourrait penser qu’il est très étrange d’associer des concepts liés au cerveau à l’informatique. Pourtant, l’idée d’associer les deux a complètement révolutionné le monde de l’intelligence artificielle! Les algorithmes les plus puissants au monde utilisent ce genre de processus pour accomplir des tâches qui auraient pris de nombreuses années à être accomplies par les humaines.",
-        "paragraph2": "Les réseaux de neurones dans ce domaine sont en fait une nouvelle façon de concevoir une formule pour modéliser les situations les plus complexes. Basés sur les réseaux de neurones existants dans notre cerveau, ces algorithmes sont constitués de plusieurs neurones réparties sur un certain nombre de couches. Chaque neurone de chaque couche est reliée à chaque neurone de la couche suivante et ces liaisons ont une valeur attribuée qu’on appelle un « poids ». Chaque neurone se voit également attribuer une valeur que nous appelons « biais ». Ces poids et ces biais constituent les paramètres du réseau, ceux qui vont déterminer le résultat sortant selon une certaine entrée.",
-        "paragraph3": "Cependant, la partie « intelligente » du réseau de neurones se situe dans l’ajustement de ces paramètres :",
-        "point1": "Le réseau commence par essayer de prédire la sortie d’un grand nombre d’entrée et compare son résultat avec le résultat qu’il aurait dû avoir.",
-        "point2": "Ensuite, il adapte l’ensemble de ses paramètres selon la grandeur de l’erreur, c’est-à-dire l’écart entre les deux valeurs grâce à des algorithmes complexes dont le plus populaire est la descente de gradient.",
-        "point3": "Finalement, il recommence tout le processus jusqu’à obtenir des résultats qui minimisent le plus possible l’erreur afin de pouvoir produire les meilleures prédictions possibles!",
-        "paragraph4": "Évidemment, les réseaux de neurones sont bien plus complexes que cela, et c’est pourquoi un cours à ce sujet sera bientôt disponible. Reste à l’affût!"
-      }
-    }
-  }
+	"ai": {
+		"header": {
+			"title": "LE MONDE DE L'INTELLIGENCE ARTIFICIELLE AVEC ALIVESCRIPT",
+			"description": "L’intelligence artificielle est un domaine en constante évolution qui permet d’accomplir des tâches énormes en un temps record. L’efficacité des techniques qui en font partie est telle qu’on cherche maintenant à s’en servir dans toutes les sphères de la société, de l’agriculture à la robotique, en passant par le transport, les sciences, l’économie et bien plus! À l’aide de notre langage de programmation AliveScript, on te propose de découvrir les possibilités de l’intelligence artificielle d’un façon simple et captivante. Choisis un des cours disponibles et pars à la rencontre de cet univers fascinant!"
+		},
+		"section": {
+			"artificial-intelligence": {
+				"title": "Le potentiel de l'intelligence artificielle",
+				"paragraph1": "L’intelligence artificielle prend une place de plus en plus importante dans notre quotidien. En fait, nous pouvons déjà nous en apercevoir aujourd’hui : des assistants intelligents sont présents dans nos téléphones, nos ordinateurs ainsi que dans des haut-parleurs; de plus en plus d’essais avec des technologies d’IA sont effectués dans le domaine des transports, de l’agriculture, de la médecine et bien plus; les moteurs de recherche sur Internet ainsi que plusieurs sites utilisent l’IA pour des raison commerciales; et il existe bien d’autres exemples!",
+				"paragraph2": "Au fil des cours sur les différentes facettes de l’intelligence artificielle, tu apprendras comment peut-on s’en servir pour résoudre des problèmes variés :",
+				"point1": "Comment prédire la consommation d’une voiture si on fait varier son moteur, son poids et plusieurs autres caractéristiques?",
+				"point2": "Comment développer une formule qui saura prédire la grandeur maximale d’une personne?",
+				"point3": "Comment trouver la configuration optimale à un robot pour qu’il accomplisse une tâche précise?",
+				"point4": "Et plus encore!",
+				"paragraph3": "De plus, même si nous aurons couvert seulement quelques applications de l’intelligence artificielle, les possibilités sont infinies, si bien qu’il en reste encore énormément à découvrir!"
+			},
+			"machine-learning": {
+				"title": "L'apprentissage machine et sa place en IA",
+				"paragraph1": "Si tu n’es pas familier avec le domaine de l’intelligence artificielle, la première chose à savoir est qu’il existe plusieurs grandes branches qui se concentrent sur un sujet plus particulier de l’IA. Par exemple, la branche de la vision par ordinateur se spécialise dans la reconnaissance d’images, tandis que la branche de la reconnaissance vocale cherche plutôt à reconnaitre ou à générer des paroles humaines. L’apprentissage machine est justement une de ces catégories, mais elle contient plusieurs sous-branches, dont les fameux réseaux de neurones.",
+				"paragraph2": "L’apprentissage machine se spécialise surtout dans la prédiction de valeurs en se basant sur des données qui concernent la situation qu’on analyse. Elle permet de prédire des résultats à dans des situations qui demanderaient des calculs extrêmement complexes pour arriver au même résultat. Pour arriver à cela, l’algorithme s’entraîne sur des valeurs venant d’expériences précédentes et essaie de prédire leurs résultats avec un modèle aléatoire. Ensuite, on compare la prédiction avec la valeur réelle et on adapte le modèle en fonction de l’erreur dans le but de l’améliorer. Finalement, ce processus est répété jusqu’à atteindre un résultat satisfaisant. C’est ce processus qui est utilisé dans tous les algorithmes d’apprentissage machine, qu’il s’agisse de régressions ou même de réseaux de neurones."
+			},
+			"deep-learning": {
+				"title": "Les réseaux de neurones en IA",
+				"paragraph1": "On pourrait penser qu’il est très étrange d’associer des concepts liés au cerveau à l’informatique. Pourtant, l’idée d’associer les deux a complètement révolutionné le monde de l’intelligence artificielle! Les algorithmes les plus puissants au monde utilisent ce genre de processus pour accomplir des tâches qui auraient pris de nombreuses années à être accomplies par les humaines.",
+				"paragraph2": "Les réseaux de neurones dans ce domaine sont en fait une nouvelle façon de concevoir une formule pour modéliser les situations les plus complexes. Basés sur les réseaux de neurones existants dans notre cerveau, ces algorithmes sont constitués de plusieurs neurones réparties sur un certain nombre de couches. Chaque neurone de chaque couche est reliée à chaque neurone de la couche suivante et ces liaisons ont une valeur attribuée qu’on appelle un « poids ». Chaque neurone se voit également attribuer une valeur que nous appelons « biais ». Ces poids et ces biais constituent les paramètres du réseau, ceux qui vont déterminer le résultat sortant selon une certaine entrée.",
+				"paragraph3": "Cependant, la partie « intelligente » du réseau de neurones se situe dans l’ajustement de ces paramètres :",
+				"point1": "Le réseau commence par essayer de prédire la sortie d’un grand nombre d’entrée et compare son résultat avec le résultat qu’il aurait dû avoir.",
+				"point2": "Ensuite, il adapte l’ensemble de ses paramètres selon la grandeur de l’erreur, c’est-à-dire l’écart entre les deux valeurs grâce à des algorithmes complexes dont le plus populaire est la descente de gradient.",
+				"point3": "Finalement, il recommence tout le processus jusqu’à obtenir des résultats qui minimisent le plus possible l’erreur afin de pouvoir produire les meilleures prédictions possibles!",
+				"paragraph4": "Évidemment, les réseaux de neurones sont bien plus complexes que cela, et c’est pourquoi un cours à ce sujet sera bientôt disponible. Reste à l’affût!"
+			}
+		}
+	}
 }

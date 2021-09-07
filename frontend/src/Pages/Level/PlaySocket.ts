@@ -59,12 +59,12 @@ const openPlaySocket = (): PlaySocket => {
 						}
 						break;
 					default:
-						console.log(data);
+						if (process.env.DEBUG) console.log(data);
 				}
 			}
 		};
 		socket.onerror = e => {
-			console.log('error:', e);
+			if (process.env.DEBUG) console.log('error:', e);
 		};
 
 		const compile = (
