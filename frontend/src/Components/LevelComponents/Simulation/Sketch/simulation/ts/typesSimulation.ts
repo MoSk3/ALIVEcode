@@ -1,16 +1,34 @@
-import { CanvasCamera } from '../Camera';
-
-export type TemplateNames<T> = 'templates' extends keyof T
-	? keyof T['templates']
-	: never;
+import { Shape } from "../Shape"
+import { SerializableShape } from './serializableShape';
 
 export type LevelTypes = 'simulation' | 'code';
 
+export type Template<
+	TemplateNames extends string,
+	Type extends Shape & SerializableShape<TemplateNames, Type>,
+> = {
+	[name in `${TemplateNames}`]: {
+		[name in keyof Omit<
+			Type,
+			keyof SerializableShape<TemplateNames, Type>
+		>]?: Type[name];
+	};
+};
+
+export type TemplateProperties<
+	Type extends Shape & SerializableShape<string, Type>,
+> = {
+	[Property in keyof Omit<
+		Type,
+		keyof SerializableShape<string, Type>
+	>]?: Type[Property];
+};
+
 export interface SerializedLevel {
-	version: number;
+	version: string;
 	type: LevelTypes;
 	'initial-code': string[];
-	layout: Layout | {};
+	layout: BaseLayoutObj[] | undefined;
 	winCondition?: {};
 }
 
@@ -19,6 +37,10 @@ export interface SerializedLevel {
  * @param rotation a vector {x, y} describing the rotation of the shape
  */
 export interface ShapeInfo {
+	position: {
+		x: number;
+		y: number;
+	};
 	vertices: {
 		x: number;
 		y: number;
@@ -30,32 +52,20 @@ export interface ShapeInfo {
 }
 
 /**
- * @param id unique identifier used while describing relationship between objects
- * @param idx the order in which the object will be place on the simulation at load time
- * @param templateName allow the deserializer to specify the good default properties
+ * @param id unique identifier used to describe relationship between objects
+ * @param shapeType the name of the class from wich the object must be created
+ * @param templateName tell the deserializer which template to use to build the object
  * @param shapeInfo stores the object's position, size and rotation
- * @param properties stores the properties proper to that object
+ * @param properties stores the properties unique to that object
  */
 export interface BaseLayoutObj {
 	id: number;
-	idx: number;
+	shapeType: string;
 	templateName: string;
 	shapeInfo: ShapeInfo;
-	properties?: {
+	properties: {
 		[key: string]: any;
 	};
-}
-
-export interface Layout {
-	Camera: CanvasCamera;
-	Car: BaseLayoutObj[];
-	Road: BaseLayoutObj[];
-	Terrain: BaseLayoutObj[];
-	Obstacle: BaseLayoutObj[];
-	Interactive: BaseLayoutObj[];
-	Decoration: BaseLayoutObj[];
-	Figure: BaseLayoutObj[];
-	Text: BaseLayoutObj[];
 }
 
 

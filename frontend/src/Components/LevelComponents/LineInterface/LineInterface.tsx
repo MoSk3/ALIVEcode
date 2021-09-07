@@ -1,6 +1,6 @@
 import { LineInterfaceProps, StyledLineInterface, EditorTabModel } from './lineInterfaceTypes';
 import AceEditor from 'react-ace';
-import 'ace-builds/src-noconflict/theme-alive';
+//import 'ace-builds/src-noconflict/theme-ambiance';
 import './mode-alivescript';
 import EditorTab from '../../AliveScriptComponents/EditorTab/EditorTab';
 import { useState } from 'react';
@@ -60,7 +60,7 @@ const LineInterface = ({
 								enableBasicAutocompletion
 								enableLiveAutocompletion
 								mode="alivescript"
-								theme="alive"
+								theme="simplifie"
 								onLoad={() => {
 									// To only hide the tab editor once it loaded
 									setTimeout(() => {

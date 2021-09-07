@@ -2,7 +2,6 @@ import { Vector } from './Vector';
 import { dist } from './functions';
 
 export class Shape {
-	templateName = '';
 	constructor(s, ...points) {
 		this.s = s;
 		this.id = s.id;
@@ -36,10 +35,6 @@ export class Shape {
 		this.calculateForward();
 		this.setBounds();
 		this.rememberBounds();
-	}
-
-	loadFromTemplate() {
-		throw new Error('must be override by a subclass');
 	}
 
 	setBounds() {
