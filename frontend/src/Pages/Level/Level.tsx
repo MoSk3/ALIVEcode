@@ -65,6 +65,7 @@ const Level = (props: LevelProps) => {
 	if (level instanceof LevelCodeModel)
 		return (
 			<LevelCode
+				setLevel={setLevel}
 				level={level}
 				progression={progression}
 				setProgression={setProgresion}

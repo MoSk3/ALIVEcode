@@ -58,6 +58,8 @@
 		"auth": {
 			"signin": "Se connecter",
 			"signup": "S'inscrire",
+			"signup_professor": "Compte professeur",
+			"signup_student": "Compte étudiant",
 			"signout": "Se déconnecter",
 			"already_registered": "Tu as déjà un compte?"
 		},
