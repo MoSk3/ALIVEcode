@@ -19,7 +19,7 @@ const apiGetter = <T extends {}, U extends boolean>(
 		(await loadObj(
 			url
 				.split('/')
-				.map(part => (part.startsWith(':') ? args[part.substr(1)] : part))
+				.map(part => (part.startsWith(':') ? args[part.substring(1)] : part))
 				.join('/'),
 			target,
 		)) as U extends true ? T[] : T;
