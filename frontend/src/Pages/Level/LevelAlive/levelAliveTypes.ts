@@ -6,7 +6,7 @@ import { LevelProgression } from '../../../Models/Level/levelProgression';
 export interface LevelAliveProps {
 	level: LevelAlive;
 	editMode: boolean;
-	progression: LevelProgression;
+	progression?: LevelProgression;
 	setProgression: (progression: LevelProgression) => void;
 	setLevel: (level: LevelAlive) => void;
 }

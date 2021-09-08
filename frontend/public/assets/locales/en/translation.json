@@ -61,7 +61,8 @@
 			"signup_professor": "Professor account",
 			"signup_student": "Student account",
 			"signout": "Sign out",
-			"already_registered": "Already have an account?"
+			"already_registered": "Already have an account?",
+			"account_required": "You need an account to do that"
 		},
 		"section": {
 			"alive": "ALIVE Play",

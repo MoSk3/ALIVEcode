@@ -120,6 +120,14 @@ const useRoutes = () => {
 			path: '/iot',
 			component: IoTHome,
 		},
+		level_alive: {
+			path: '/level/play/alive',
+			component: () => <Level type="ALIVE" editMode />,
+		},
+		level_code: {
+			path: '/level/play/code',
+			component: () => <Level type="code" editMode />,
+		},
 	});
 
 	const auth_routes = asAuthRoutes(SignIn, {

@@ -6,7 +6,7 @@ import FillContainer from '../../../Components/UtilsComponents/FillContainer/Fil
 export interface LevelCodeProps {
 	level: LevelCode;
 	editMode: boolean;
-	progression: LevelProgression;
+	progression?: LevelProgression;
 	setProgression: (progression: LevelProgression) => void;
 	setLevel: (level: LevelCode) => void;
 }
