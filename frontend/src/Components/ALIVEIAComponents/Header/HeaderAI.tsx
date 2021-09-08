@@ -1,6 +1,12 @@
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
+/**
+ * Ce composant correspond à l'en-tête de la page d'accueil de la section IA du site web. 
+ * Elle comprend donc le titre de la page, sa description et l'image de fond.
+ */
+
+//CSS de HeaderAI
 const StyledHeader = styled.div`
   & {
     width: 100%;
@@ -44,7 +50,11 @@ const StyledHeader = styled.div`
     }
   }
 `
-
+/**
+ * Méthode retournant le HeaderAI défini par cette méthode même et ses propriétés CSS.
+ * @param props aucune propriété pour ce composant.
+ * @returns un HeaderAI.
+ */
 const HeaderAI = (props:any) => {
   const {t} = useTranslation();
 
