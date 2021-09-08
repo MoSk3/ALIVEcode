@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import axios from 'axios';
-import { loadObj} from './utils';
+import { loadObj } from './utils';
 import { ClassConstructor, plainToClass } from 'class-transformer';
 import { Course } from './Course/course.entity';
 import { Section } from './Course/section.entity';
@@ -9,17 +10,26 @@ import { IoTProject } from './Iot/IoTproject.entity';
 import { IotRoute } from './Iot/IoTroute.entity';
 import { IoTObject } from './Iot/IoTobject.entity';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const apiGetter = <T extends {}, U extends boolean>(
-	url: string,
+type urlArgType<S extends string> = S extends `${infer _}:${infer A}/${infer B}`
+	? A | urlArgType<B>
+	: S extends `${infer _}:${infer A}`
+	? A
+	: never;
+
+const apiGetter = <T extends {}, U extends boolean, S extends string>(
+	url: S,
 	target: ClassConstructor<T>,
 	returnsArray: U,
 ) => {
-	return async (args: { [key: string]: string }) =>
+	return async (args: { [key in urlArgType<S>]: string }) =>
 		(await loadObj(
 			url
 				.split('/')
-				.map(part => (part.startsWith(':') ? args[part.substring(1)] : part))
+				.map(part =>
+					part.startsWith(':')
+						? args[part.substring(1) as urlArgType<S>]
+						: part,
+				)
 				.join('/'),
 			target,
 		)) as U extends true ? T[] : T;
