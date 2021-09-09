@@ -40,7 +40,6 @@ export class LevelEntity extends CreatedByUser {
   @IsOptional()
   hints: string[] = [];
 
-  // TODO: Switch to postgreSQL
   @Column({ enum: LEVEL_TAG, type: 'jsonb', default: () => "'[]'" })
   @IsOptional()
   tags: LEVEL_TAG[] = [];

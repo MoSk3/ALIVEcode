@@ -208,6 +208,10 @@ const useRoutes = () => {
 			path: '/level/create/code',
 			component: () => <LevelForm type="code" />,
 		},
+		level_create_ai: {
+			path: '/level/create/ai',
+			component: () => <LevelForm type="AI" />,
+		},
 	});
 
 	const non_auth_routes = asNonAuthRoutes(Home, {

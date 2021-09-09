@@ -11,6 +11,8 @@ import {
 } from '../../../Models/Level/level.entity';
 import FormContainer from '../../UtilsComponents/FormContainer/FormContainer';
 import { LevelCode } from '../../../Models/Level/levelCode.entity';
+import { LevelAI } from '../../../Models/Level/levelAI.entity';
+
 const LevelForm = ({ type }: LevelFormProps) => {
 	const { routes } = useRoutes();
 	const { t } = useTranslation();
@@ -31,6 +33,48 @@ const LevelForm = ({ type }: LevelFormProps) => {
 						}}
 						name="level"
 						url="levels/alive"
+						action="POST"
+						inputGroups={[
+							{
+								name: 'name',
+								inputType: 'text',
+								required: true,
+								minLength: 3,
+								maxLength: 25,
+							},
+							{
+								name: 'description',
+								inputType: 'text',
+								maxLength: 200,
+							},
+							{
+								name: 'access',
+								required: true,
+								inputType: 'select',
+								default: LEVEL_ACCESS.PRIVATE,
+								selectOptions: LEVEL_ACCESS,
+							},
+							{
+								name: 'difficulty',
+								required: true,
+								inputType: 'select',
+								selectOptions: LEVEL_DIFFICULTY,
+							},
+						]}
+					/>
+				);
+			case 'AI':
+				return (
+					<Form
+						onSubmit={res => {
+							const level: LevelAI = res.data;
+							history.push(
+								routes.auth.level_edit.path.replace(':id', level.id),
+							);
+							return alert.success('Niveau créé avec succès');
+						}}
+						name="level"
+						url="levels/ai"
 						action="POST"
 						inputGroups={[
 							{

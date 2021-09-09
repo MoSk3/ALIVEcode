@@ -7,6 +7,7 @@ import { LevelCodeEntity } from './entities/levelCode.entity';
 import { UserEntity } from '../user/entities/user.entity';
 import { LevelProgressionEntity } from './entities/levelProgression.entity';
 import { QueryDTO } from './dto/query.dto';
+import { LevelAIEntity } from './entities/levelAI.entity';
 
 @Injectable()
 export class LevelService {
@@ -14,6 +15,7 @@ export class LevelService {
     @InjectRepository(LevelEntity) private levelRepository: Repository<LevelEntity>,
     @InjectRepository(LevelAliveEntity) private levelAliveRepo: Repository<LevelAliveEntity>,
     @InjectRepository(LevelCodeEntity) private levelCodeRepo: Repository<LevelCodeEntity>,
+    @InjectRepository(LevelAIEntity) private levelAIRepo: Repository<LevelAIEntity>,
     @InjectRepository(LevelProgressionEntity) private levelProgressionRepo: Repository<LevelProgressionEntity>,
   ) {}
 
@@ -25,6 +27,11 @@ export class LevelService {
   async createLevelCode(creator: UserEntity, createLevelDto: LevelCodeEntity) {
     const level = this.levelCodeRepo.create({ ...createLevelDto, creator });
     return await this.levelCodeRepo.save(level);
+  }
+
+  async createLevelAI(creator: UserEntity, createLevelDto: LevelAIEntity) {
+    const level = this.levelAIRepo.create({ ...createLevelDto, creator });
+    return await this.levelAIRepo.save(level);
   }
 
   async findAll() {

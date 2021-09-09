@@ -13,6 +13,7 @@ import { LevelAlive } from './Level/levelAlive.entity';
 import { LevelCode } from './Level/levelCode.entity';
 import { LevelProgression } from './Level/levelProgression';
 import { BrowsingQuery } from '../Components/MainComponents/BrowsingMenu/browsingMenuTypes';
+import { LevelAI } from './Level/levelAI.entity';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const apiGetter = <T extends {}>(url: string, target: T) => {
@@ -55,6 +56,7 @@ const api = {
 					(l: any) => {
 						if (l.layout) return plainToClass(LevelAlive, l);
 						if (l.testCases) return plainToClass(LevelCode, l);
+						if (l.ai) return plainToClass(LevelAI, l);
 						return plainToClass(Level, l);
 					},
 				);
@@ -119,6 +121,7 @@ const api = {
 				const level = (await axios.get(`levels/${levelId}`)).data;
 				if (level.layout) return plainToClass(LevelAlive, level);
 				if (level.testCases) return plainToClass(LevelCode, level);
+				if (level.ai) return plainToClass(LevelAI, level);
 				return plainToClass(Level, level);
 			},
 			async query(query: BrowsingQuery) {
@@ -127,6 +130,7 @@ const api = {
 				return levels.map((l: any) => {
 					if (l.layout) return plainToClass(LevelAlive, l);
 					if (l.testCases) return plainToClass(LevelCode, l);
+					if (l.ai) return plainToClass(LevelAI, l);
 					return plainToClass(Level, l);
 				});
 			},
@@ -134,6 +138,7 @@ const api = {
 				const l = (await axios.patch(`levels/${level.id}`, level)).data;
 				if (l.layout) return plainToClass(LevelAlive, l);
 				if (l.testCases) return plainToClass(LevelCode, l);
+				if (l.ai) return plainToClass(LevelAI, l);
 				return plainToClass(Level, l);
 			},
 			progressions: {

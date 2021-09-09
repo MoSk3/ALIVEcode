@@ -7,11 +7,15 @@ export type LevelAliveProgressionData = {
   code?: string;
 };
 
+export type LevelAIProgressionData = {
+  code?: string;
+};
+
 export type LevelCodeProgressionData = {
   code?: string;
 };
 
-export type LevelProgressionData = LevelAliveProgressionData | LevelCodeProgressionData;
+export type LevelProgressionData = LevelAliveProgressionData | LevelCodeProgressionData | LevelAIProgressionData;
 
 @Entity()
 export class LevelProgressionEntity {
