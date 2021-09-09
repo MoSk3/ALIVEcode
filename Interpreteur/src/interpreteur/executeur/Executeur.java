@@ -385,7 +385,7 @@ public class Executeur {
             String line = lignes[i];
 
             // produit la liste de Token representant la ligne (voir lexer.lex)
-            List<Token> lineToken = lexer.lex(line.trim());
+            var lineToken = lexer.lex(line.trim());
 
             // obtiens la coordonne ainsi que le scope ou sera enregistree la ligne compilee
             String coordActuelle = coordCompileTime.get(coordCompileTime.size() - 1).toString();
