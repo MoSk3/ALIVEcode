@@ -1,6 +1,6 @@
 import { Injectable, HttpException, HttpStatus, Scope, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { ProfessorEntity } from './entities/professor.entity';
 import { StudentEntity } from './entities/student.entity';
 import { UserEntity } from './entities/user.entity';
@@ -15,6 +15,8 @@ import { CourseEntity } from 'src/models/course/entities/course.entity';
 import { ClassroomEntity } from '../classroom/entities/classroom.entity';
 import { IoTProjectEntity } from '../iot/IoTproject/entities/IoTproject.entity';
 import { IoTObjectEntity } from '../iot/IoTobject/entities/IoTobject.entity';
+import { LevelEntity } from '../level/entities/level.entity';
+import { QueryDTO } from '../level/dto/query.dto';
 
 @Injectable({ scope: Scope.REQUEST })
 export class UserService {
@@ -27,6 +29,7 @@ export class UserService {
     @InjectRepository(CourseEntity) private courseRepository: Repository<CourseEntity>,
     @InjectRepository(IoTProjectEntity) private iotProjectRepository: Repository<IoTProjectEntity>,
     @InjectRepository(IoTObjectEntity) private iotObjectRepository: Repository<IoTObjectEntity>,
+    @InjectRepository(LevelEntity) private levelRepository: Repository<LevelEntity>,
     @Inject(REQUEST) private req: MyRequest,
   ) {}
 
@@ -115,7 +118,9 @@ export class UserService {
   }
 
   async findById(id: string) {
-    return await this.userRepository.findOne(id);
+    const user = await this.userRepository.findOne(id);
+    if (!user) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    return user;
   }
 
   update(user: UserEntity, updateUserDto: UserEntity) {
@@ -146,5 +151,15 @@ export class UserService {
 
   async getIoTObjects(user: UserEntity) {
     return await this.iotObjectRepository.find({ where: { creator: user } });
+  }
+
+  async getLevels(user: UserEntity, query: QueryDTO) {
+    return await this.levelRepository.find({
+      where: { creator: user, name: ILike(`%${query?.txt ?? ''}%`) },
+      order: {
+        creationDate: 'DESC',
+        name: 'ASC',
+      },
+    });
   }
 }

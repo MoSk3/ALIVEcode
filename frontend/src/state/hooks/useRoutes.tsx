@@ -7,7 +7,7 @@ import Home from '../../Pages/Home/Home';
 import SignIn from '../../Pages/Account/SignIn/SignIn';
 import SignUp from '../../Pages/Account/SignUp/SignUp';
 import { USER_TYPES } from '../../Types/userTypes';
-import Level from '../../Pages/Level/SimulationLevel';
+import Level from '../../Pages/Level/Level';
 import SignUpMenu from '../../Pages/Account/SignUpMenu/SignUpMenu';
 import About from '../../Pages/About/About';
 import AliveIa from '../../Pages/ALIVEIA/AliveIa';
@@ -20,8 +20,12 @@ import Dashboard from '../../Pages/Dashboard/Dashboard';
 import IoTHome from '../../Pages/IoT/IoTHome/IoTHome';
 import IoTProject from '../../Pages/IoT/IoTProject/IoTProject';
 import IoTProjectCreate from '../../Components/IoTComponents/IoTProject/IotProjectForm/IoTProjectCreate';
-import CodeLevel from '../../Pages/Level/CodeLevel';
 import IoTDashboard from '../../Pages/IoT/IoTDashboard/IoTDashboard';
+import LevelForm from '../../Components/LevelComponents/LevelForm/LevelForm';
+import LevelBrowse from '../../Pages/Level/LevelBrowse/LevelBrowse';
+import LevelList from '../../Pages/Level/LevelList/LevelList';
+import LevelFormMenu from '../../Pages/Level/LevelFormMenu/LevelFormMenu';
+import Test from '../../Pages/Test/Test';
 
 type component =
 	| React.ComponentType<RouteComponentProps<any>>
@@ -85,6 +89,10 @@ const useRoutes = () => {
 	};
 
 	const public_routes = asRoutes({
+		test: {
+			path: '/test',
+			component: Test,
+		},
 		home: {
 			exact: true,
 			path: '/',
@@ -102,15 +110,6 @@ const useRoutes = () => {
 			path: '/amc',
 			component: NotFound,
 		},
-		// TODO : change to auth
-		level_play: {
-			path: '/level/play/:id',
-			component: Level,
-		},
-		code_play: {
-			path: '/code',
-			component: CodeLevel,
-		},
 		en: {
 			// Route for switching language to english
 			path: '/en',
@@ -125,6 +124,14 @@ const useRoutes = () => {
 			exact: true,
 			path: '/iot',
 			component: IoTHome,
+		},
+		level_alive: {
+			path: '/level/play/alive',
+			component: () => <Level type="ALIVE" editMode />,
+		},
+		level_code: {
+			path: '/level/play/code',
+			component: () => <Level type="code" editMode />,
 		},
 	});
 
@@ -170,6 +177,36 @@ const useRoutes = () => {
 		iot_project: {
 			path: '/iot/projects/:id',
 			component: IoTProject,
+		},
+		level_list: {
+			path: '/level',
+			exact: true,
+			component: LevelList,
+		},
+		level_edit: {
+			path: '/level/edit/:id',
+			component: () => <Level editMode />,
+		},
+		level_browse: {
+			path: '/level/browse',
+			component: LevelBrowse,
+		},
+		level_play: {
+			path: '/level/play/:id',
+			component: Level,
+		},
+		level_create: {
+			path: '/level/create',
+			exact: true,
+			component: LevelFormMenu,
+		},
+		level_create_alive: {
+			path: '/level/create/alive',
+			component: () => <LevelForm type="ALIVE" />,
+		},
+		level_create_code: {
+			path: '/level/create/code',
+			component: () => <LevelForm type="code" />,
 		},
 	});
 

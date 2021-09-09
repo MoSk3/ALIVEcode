@@ -16,7 +16,6 @@ const ClassroomForm = (props: ClassroomFormProps) => {
 	const history = useHistory();
 	const alert = useAlert();
 
-	// Exemple de classe: http://localhost:3000/classroom/0676da66-ce3a-4021-b96e-0d5aa7d78df0
 	return (
 		<FormContainer title={t('form.title.create_classroom')}>
 			<Form
@@ -25,8 +24,7 @@ const ClassroomForm = (props: ClassroomFormProps) => {
 					history.push(routes.auth.classroom.path.replace(':id', classroom.id));
 					return alert.success('Classe créée avec succès');
 				}}
-				buttonText={t('form.submit.create_classrooms')}
-				name="create_classroom"
+				name="classroom"
 				url="classrooms"
 				action="POST"
 				inputGroups={[
@@ -34,11 +32,13 @@ const ClassroomForm = (props: ClassroomFormProps) => {
 						name: 'name',
 						inputType: 'text',
 						required: true,
+						minLength: 3,
+						maxLength: 25,
 					},
 					{
 						name: 'description',
 						inputType: 'textarea',
-						required: false,
+						maxLength: 200,
 					},
 					{
 						name: 'subject',
