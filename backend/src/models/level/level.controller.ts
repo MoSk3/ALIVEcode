@@ -22,6 +22,7 @@ import { LevelAliveEntity } from './entities/levelAlive.entity';
 import { LevelCodeEntity } from './entities/levelCode.entity';
 import { UserService } from '../user/user.service';
 import { LevelProgressionEntity } from './entities/levelProgression.entity';
+import { QueryDTO } from './dto/query.dto';
 
 @Controller('levels')
 @UseInterceptors(new DTOInterceptor())
@@ -46,10 +47,10 @@ export class LevelController {
     return await this.levelService.findAll();
   }
 
-  @Get('query')
+  @Post('query')
   @Auth()
-  async findQuery() {
-    return await this.levelService.findQuery();
+  async findQuery(@Body() query: QueryDTO) {
+    return await this.levelService.findQuery(query);
   }
 
   @Get(':id')

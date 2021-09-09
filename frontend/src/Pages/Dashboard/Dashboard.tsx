@@ -15,9 +15,9 @@ import Voiture from '../../assets/images/Voiture.gif';
 import { Row } from 'react-bootstrap';
 import { Classroom } from '../../Models/Classroom/classroom.entity';
 import { plainToClass } from 'class-transformer';
-import axios from 'axios';
 import { Professor } from '../../Models/User/user.entity';
 import useRoutes from '../../state/hooks/useRoutes';
+import api from '../../Models/api';
 
 const Dashboard = (props: DashboardProps) => {
 	const { user } = useContext(UserContext);
@@ -27,13 +27,14 @@ const Dashboard = (props: DashboardProps) => {
 	const { routes } = useRoutes();
 
 	useEffect(() => {
+		if (!user) return;
 		const getClassrooms = async () => {
-			const data = (await axios.get('classrooms')).data;
+			const data = await api.db.users.getClassrooms(user.id);
 			setLoading(false);
 			setClassrooms(data.map((d: any) => plainToClass(Classroom, d)));
 		};
 		getClassrooms();
-	}, []);
+	}, [user]);
 
 	return (
 		<CenteredContainer
@@ -71,7 +72,6 @@ const Dashboard = (props: DashboardProps) => {
 			</CardContainer>
 
 			<CardContainer asRow title="Niveaux">
-				<SmallCard to="/level" title="Mes niveaux" img={List} />
 				<SmallCard
 					to={routes.auth.level_list.path}
 					title="Mes niveaux"

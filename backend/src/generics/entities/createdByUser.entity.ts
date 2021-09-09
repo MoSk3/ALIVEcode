@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { UserEntity } from '../../models/user/entities/user.entity';
 import { Exclude } from 'class-transformer';
-import { IsOptional, IsNotEmpty, Length, IsEmpty } from 'class-validator';
+import { IsOptional, IsNotEmpty, Length, IsEmpty, MaxLength } from 'class-validator';
 
 @Entity()
 export abstract class CreatedByUser {
@@ -27,5 +27,6 @@ export abstract class CreatedByUser {
 
   @Column({ nullable: true })
   @IsOptional()
+  @MaxLength(200)
   description: string;
 }

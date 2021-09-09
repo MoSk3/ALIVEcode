@@ -45,6 +45,7 @@ const Button = ({
 	to,
 	children,
 	padding,
+	className,
 }: ButtonProps) => {
 	const history = useHistory();
 
@@ -57,7 +58,7 @@ const Button = ({
 			case 'secondary':
 				return (
 					<SecondaryButton
-						className="btn"
+						className={'btn ' + className}
 						padding={padding}
 						type={type}
 						onClick={customOnClick}
@@ -68,7 +69,7 @@ const Button = ({
 			case 'danger':
 				return (
 					<DangerButton
-						className="btn"
+						className={'btn ' + className}
 						padding={padding}
 						type={type}
 						onClick={customOnClick}
@@ -79,7 +80,7 @@ const Button = ({
 			default:
 				return (
 					<PrimaryButton
-						className="btn"
+						className={'btn ' + className}
 						padding={padding}
 						type={type}
 						onClick={customOnClick}

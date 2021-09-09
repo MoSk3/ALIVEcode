@@ -33,7 +33,7 @@ export default class LevelCodeExecutor {
 			await axios({
 				method: 'POST',
 				url: '/compile/',
-				baseURL: 'http://localhost:8001',
+				baseURL: process.env.REACT_APP_AS_URL,
 				data,
 			})
 		).data;
@@ -49,7 +49,7 @@ export default class LevelCodeExecutor {
 				let { idToken, result: data } = await this.sendDataToAsServer({
 					lines,
 				});
-				console.log(idToken, data);
+				if (process.env.DEBUG) console.log(idToken, data);
 
 				while (true) {
 					let res = this.execute(data);

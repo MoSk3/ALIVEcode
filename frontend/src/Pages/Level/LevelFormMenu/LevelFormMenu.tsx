@@ -1,14 +1,13 @@
 import FillContainer from '../../../Components/UtilsComponents/FillContainer/FillContainer';
-import { SignUpMenuProps } from './signUpMenuTypes';
 import Card from '../../../Components/UtilsComponents/Cards/Card/Card';
 import { Row } from 'react-bootstrap';
 
-import StudentImg from '../../../assets/images/icons/student.png';
-import ProfessorImg from '../../../assets/images/icons/teacher.png';
+import Voiture from '../../../assets/images/Voiture.gif';
+import Code from '../../../assets/images/icons/sandboxblanc.png';
 import useRoutes from '../../../state/hooks/useRoutes';
 import { useTranslation } from 'react-i18next';
 
-const SignUpMenu = (props: SignUpMenuProps) => {
+const LevelFormMenu = () => {
 	const { routes } = useRoutes();
 	const { t } = useTranslation();
 
@@ -16,18 +15,18 @@ const SignUpMenu = (props: SignUpMenuProps) => {
 		<FillContainer startAtTop centered>
 			<Row>
 				<Card
-					img={StudentImg}
-					to={routes.non_auth.signup_student.path}
-					title={t('menu.signup.student')}
+					img={Voiture}
+					to={routes.auth.level_create_alive.path}
+					title={t('menu.level.alive')}
 				/>
 				<Card
-					img={ProfessorImg}
-					to={routes.non_auth.signup_professor.path}
-					title={t('menu.signup.professor')}
+					img={Code}
+					to={routes.auth.level_create_code.path}
+					title={t('menu.level.code')}
 				/>
 			</Row>
 		</FillContainer>
 	);
 };
 
-export default SignUpMenu;
+export default LevelFormMenu;

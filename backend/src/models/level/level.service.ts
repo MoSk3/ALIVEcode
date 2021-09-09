@@ -1,11 +1,12 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { LevelEntity, LEVEL_ACCESS } from './entities/level.entity';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LevelAliveEntity } from './entities/levelAlive.entity';
 import { LevelCodeEntity } from './entities/levelCode.entity';
 import { UserEntity } from '../user/entities/user.entity';
 import { LevelProgressionEntity } from './entities/levelProgression.entity';
+import { QueryDTO } from './dto/query.dto';
 
 @Injectable()
 export class LevelService {
@@ -30,8 +31,14 @@ export class LevelService {
     return await this.levelRepository.find();
   }
 
-  async findQuery() {
-    return await this.levelRepository.find({ where: { access: LEVEL_ACCESS.PUBLIC } });
+  async findQuery(query: QueryDTO) {
+    return await this.levelRepository.find({
+      where: { access: LEVEL_ACCESS.PUBLIC, name: ILike(`%${query?.txt ?? ''}%`) },
+      order: {
+        creationDate: 'DESC',
+        name: 'ASC',
+      },
+    });
   }
 
   async findOne(id: string) {

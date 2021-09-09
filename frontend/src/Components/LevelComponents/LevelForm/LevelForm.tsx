@@ -10,6 +10,7 @@ import {
 	LEVEL_DIFFICULTY,
 } from '../../../Models/Level/level.entity';
 import FormContainer from '../../UtilsComponents/FormContainer/FormContainer';
+import { LevelCode } from '../../../Models/Level/levelCode.entity';
 const LevelForm = ({ type }: LevelFormProps) => {
 	const { routes } = useRoutes();
 	const { t } = useTranslation();
@@ -24,12 +25,11 @@ const LevelForm = ({ type }: LevelFormProps) => {
 						onSubmit={res => {
 							const level: LevelAlive = res.data;
 							history.push(
-								routes.auth.level_play.path.replace(':id', level.id),
+								routes.auth.level_edit.path.replace(':id', level.id),
 							);
 							return alert.success('Niveau créé avec succès');
 						}}
-						buttonText={t('form.submit.create_classrooms')}
-						name="create_classroom"
+						name="level"
 						url="levels/alive"
 						action="POST"
 						inputGroups={[
@@ -37,10 +37,55 @@ const LevelForm = ({ type }: LevelFormProps) => {
 								name: 'name',
 								inputType: 'text',
 								required: true,
+								minLength: 3,
+								maxLength: 25,
 							},
 							{
 								name: 'description',
 								inputType: 'text',
+								maxLength: 200,
+							},
+							{
+								name: 'access',
+								required: true,
+								inputType: 'select',
+								default: LEVEL_ACCESS.PRIVATE,
+								selectOptions: LEVEL_ACCESS,
+							},
+							{
+								name: 'difficulty',
+								required: true,
+								inputType: 'select',
+								selectOptions: LEVEL_DIFFICULTY,
+							},
+						]}
+					/>
+				);
+			case 'code':
+				return (
+					<Form
+						onSubmit={res => {
+							const level: LevelCode = res.data;
+							history.push(
+								routes.auth.level_edit.path.replace(':id', level.id),
+							);
+							return alert.success('Niveau créé avec succès');
+						}}
+						name="level"
+						url="levels/code"
+						action="POST"
+						inputGroups={[
+							{
+								name: 'name',
+								inputType: 'text',
+								required: true,
+								minLength: 3,
+								maxLength: 25,
+							},
+							{
+								name: 'description',
+								inputType: 'text',
+								maxLength: 200,
 							},
 							{
 								name: 'access',

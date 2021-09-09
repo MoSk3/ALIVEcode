@@ -1,29 +1,23 @@
-import { useEffect, useContext, useState } from 'react';
+import { useState, useContext } from 'react';
+import { Level } from '../../../Models/Level/level.entity';
 import LoadingScreen from '../../../Components/UtilsComponents/LoadingScreen/LoadingScreen';
-import { LevelListProps } from './levelListTypes';
+import LevelCard from '../../../Components/LevelComponents/LevelCard/LevelCard';
+import BrowsingMenu from '../../../Components/MainComponents/BrowsingMenu/BrowsingMenu';
+import { BrowsingResults } from '../../../Components/MainComponents/BrowsingMenu/browsingMenuTypes';
+import api from '../../../Models/api';
 import { UserContext } from '../../../state/contexts/UserContext';
 import { useHistory } from 'react-router-dom';
-import api from '../../../Models/api';
-import { Level } from '../../../Models/Level/level.entity';
-import CardContainer from '../../../Components/UtilsComponents/CardContainer/CardContainer';
-import LevelCard from '../../../Components/LevelComponents/LevelCard/LevelCard';
-import { LevelAlive } from '../../../Models/Level/levelAlive.entity';
-import { LevelCode } from '../../../Models/Level/levelCode.entity';
+import {
+	LevelBrowseProps,
+	StyledLevelBrowse,
+} from '../LevelBrowse/levelBrowseTypes';
 
-const LevelList = (props: LevelListProps) => {
-	const [levels, setLevels] = useState<Array<LevelAlive | LevelCode | Level>>();
+const LevelBrowse = (props: LevelBrowseProps) => {
+	const [browsingResult, setBrowsingResult] =
+		useState<BrowsingResults<Level>>();
+	const levels = browsingResult?.results;
 	const { user } = useContext(UserContext);
 	const history = useHistory();
-
-	useEffect(() => {
-		if (!user) return;
-		const getLevels = async () => {
-			const levels = await api.db.users.getLevels(user?.id);
-			setLevels(levels);
-		};
-		getLevels();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
 
 	if (!user) {
 		history.push('/');
@@ -31,18 +25,25 @@ const LevelList = (props: LevelListProps) => {
 	}
 
 	return (
-		<CardContainer title="Mes niveaux">
-			{!levels ? (
-				<LoadingScreen />
-			) : (
-				<>
-					{levels.map((l, idx) => (
-						<LevelCard enterEdit level={l} key={idx} />
-					))}
-				</>
-			)}
-		</CardContainer>
+		<StyledLevelBrowse>
+			<BrowsingMenu<Level>
+				fetchOnSubmit
+				apiRequest={query => api.db.users.getLevels(user?.id, query)}
+				onChange={res => setBrowsingResult(res)}
+			/>
+			<div className="levels">
+				{!levels ? (
+					<LoadingScreen relative />
+				) : (
+					<>
+						{levels.map((l, idx) => (
+							<LevelCard level={l} key={idx} />
+						))}
+					</>
+				)}
+			</div>
+		</StyledLevelBrowse>
 	);
 };
 
-export default LevelList;
+export default LevelBrowse;

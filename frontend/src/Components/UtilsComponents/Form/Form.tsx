@@ -6,6 +6,7 @@ import { FormProps, InputGroup } from './formTypes';
 import axios, { AxiosError } from 'axios';
 import { useAlert } from 'react-alert';
 import { useHistory } from 'react-router';
+import { prettyField } from '../../../Types/formatting';
 
 const Form = (props: FormProps) => {
 	const { t } = useTranslation();
@@ -19,14 +20,14 @@ const Form = (props: FormProps) => {
 	const history = useHistory();
 
 	const onFormSubmit = async (formValues: any) => {
-		console.log(formValues);
+		if (process.env.DEBUG) console.log(formValues);
 		try {
 			let res;
 			switch (props.action) {
 				case 'POST':
 					res = await axios.post(props.url, formValues);
 					break;
-				case 'UPDATE':
+				case 'PATCH':
 					res = await axios.patch(props.url, formValues);
 					break;
 				case 'DELETE':
@@ -46,7 +47,11 @@ const Form = (props: FormProps) => {
 	};
 
 	const renderFormInput = (g: InputGroup) => {
-		const placeholderValue = t(`form.${props.name}.${g.name}.placeholder`);
+		const placeholderValue = t([
+			`form.${props.name}.${props.action}.${g.name}.placeholder`,
+			`form.${props.name}.${g.name}.placeholder`,
+			prettyField(g.name),
+		]);
 		const registerOptions = {
 			required: g.required,
 			minLength: g.minLength,
@@ -96,22 +101,51 @@ const Form = (props: FormProps) => {
 			{props.inputGroups.map((g, idx) => (
 				<BootForm.Group key={idx}>
 					<BootForm.Label>
-						{t(`form.${props.name}.${g.name}.label`)}
+						{t([
+							`form.${props.name}.${props.action}.${g.name}.label`,
+							`form.${props.name}.${g.name}.label`,
+							prettyField(g.name),
+						])}
 					</BootForm.Label>
 					{renderFormInput(g)}
 					{errors[g.name]?.type === 'required' &&
-						t(`form.${props.name}.${g.name}.error.required`)}
+						t([
+							`form.${props.name}.${props.action}.${g.name}.error.required`,
+							`form.${props.name}.${g.name}.error.required`,
+							'form.error.required',
+						])}
 					{errors[g.name]?.type === 'maxLength' &&
-						t(`form.${props.name}.${g.name}.error.maxLength`)}
+						t(
+							[
+								`form.${props.name}.${props.action}.${g.name}.error.maxLength`,
+								`form.${props.name}.${g.name}.error.maxLength`,
+								'form.error.maxLength',
+							],
+							{ max: g.maxLength },
+						)}
 					{errors[g.name]?.type === 'minLength' &&
-						t(`form.${props.name}.${g.name}.error.minLength`)}
+						t(
+							[
+								`form.${props.name}.${props.action}.${g.name}.error.minlength`,
+								`form.${props.name}.${g.name}.error.minLength`,
+								'form.error.minLength',
+							],
+							{ min: g.minLength },
+						)}
 				</BootForm.Group>
 			))}
 			<Button
 				variant={props.action === 'DELETE' ? 'danger' : 'primary'}
 				type="submit"
 			>
-				{props.buttonText}
+				{t(
+					[
+						`form.${props.name}.${props.action}.submit`,
+						`form.${props.name}.submit`,
+						`form.submit.${props.action}`,
+					],
+					{ name: prettyField(props.name) },
+				)}
 			</Button>
 		</BootForm>
 	);

@@ -3,35 +3,90 @@
 		"logout": "Something went wrong when logging out, please try again."
 	},
 	"form": {
+		"submit": {
+			"POST": "Create {{name}}",
+			"PATCH": "Modify {{name}}",
+			"DELETE": "Delete {{name}}"
+		},
+		"error": {
+			"required": "This field is required",
+			"maxLength": "This field exceeds {{max}} characters",
+			"minLength": "This field should be at least {{min}} characters"
+		},
+		"level": {
+			"PATCH": {
+				"title": "Level settings"
+			}
+		},
 		"title": {
-			"signin": "Sign in"
+			"signin": "Sign in",
+			"signup": "Sign up"
 		},
-		"pwd": { "label": "Password", "placeholder": "*****" },
+		"pwd": {
+			"label": "Password",
+			"placeholder": "*****",
+			"required": "The password is required"
+		},
 		"email": {
-			"label": "Email adress",
-			"placeholder": "MyEmailAdress@alivecode.ca"
+			"label": "Email address",
+			"placeholder": "MyEmailAdress@alivecode.ca",
+			"required": "An email address is required",
+			"info": "We will not share your email address with anyone"
 		},
-		"name": { "label": "Name", "placeholder": "Name" },
-		"firstName": { "label": "First name", "placeholder": "First name" },
-		"lastName": { "label": "Last name", "placeholder": "Last name" },
-		"scolarity": { "label": "Scholarity", "placeholder": "4th grade" }
+		"name": {
+			"label": "Name",
+			"placeholder": "Enric",
+			"required": "A username is required"
+		},
+		"firstName": {
+			"label": "First name",
+			"placeholder": "Enric",
+			"required": "Your first name is required"
+		},
+		"lastName": {
+			"label": "Last name",
+			"placeholder": "Soldevila",
+			"required": "Your last name is required"
+		},
+		"scholarity": {
+			"label": "Scholarity",
+			"placeholder": "4th grade",
+			"required": "Your school grade is required"
+		}
 	},
 	"msg": {
+		"desc": {
+			"empty": "No description available"
+		},
 		"auth": {
 			"signin": "Connect",
 			"signup": "Sign up",
-			"signout": "Sign out"
+			"signup_professor": "Professor account",
+			"signup_student": "Student account",
+			"signout": "Sign out",
+			"already_registered": "Already have an account?",
+			"account_required": "You need an account to do that"
 		},
 		"section": {
 			"alive": "ALIVE Play",
 			"dashboard": "Dashboard",
 			"iot": "Internet of Things",
 			"amc": "ALIVE Mind Controller",
-      "ai": "ALIVE Artificial Intelligence",
+			"ai": "ALIVE Artificial Intelligence",
 			"about": "About",
 			"avp": "Augmented Vehicle Perception",
 			"lrima": "LRIMA's research laboratory",
 			"account": "My account"
+		}
+	},
+	"menu": {
+		"signup": {
+			"professor": "Professor account",
+			"student": "Student account"
+		},
+		"level": {
+			"alive": "Level with ALIVE car",
+			"code": "Level with console"
 		}
 	},
 	"home": {
@@ -60,7 +115,7 @@
 			"section": {
 				"dashboard": "$t(msg.section.dashboard)",
 				"amc": "$t(msg.section.amc)",
-        "ai": "$t(msg.section.ai)",
+				"ai": "$t(msg.section.ai)",
 				"iot": "$t(msg.section.iot)",
 				"about": "$t(msg.section.about)"
 			},
@@ -82,37 +137,37 @@
 			"copyright": "Copyright &copy; 2021 All Rights Reserved by"
 		}
 	},
-  "ai": {
-    "header": {
-      "title": "THE WORLD OF ARTIFICIAL INTELLIGENCE WITH ALIVESCRIPT",
-      "description": "Artificial intelligence is a constantly evolving field that allow us to accomplish huge tasks in record times. The effectiveness of the techniques that are part of it is such that we are now seeking to use them in all spheres of society, from agriculture to robotics, including transport, science, the economy and much more! Using our programming language AliveScript, we invite you to discover the possibilities of artificial intelligence in a simple and entertaining way. Chosse one of the available courses and go meet this fascinating universe!"
-    },
-    "section": {
-      "artificial-intelligence": {
-        "title": "The Potential of Artificial Intelligence",
-        "paragraph1": "Artificial intelligence is taking an increasingly important place in our daily lives. In fact, we can already see it today: there are smart assiistants in our phones, computers and speakers; more and more experiments with AI technologies are carried out in the fiels of transport, agriculture, medicine and more; Internet search engines and many sites use AI for buisness purposes; and there are many more examples!",
-        "paragraph2": "While following the courses on the different facets of artificial intelligence, you will learn how it can be used to solve a variety of problems:",
-        "point1": "How to predict the fuel consumption of a car if we vary its engine, weight, and several other characteristics?",
-        "point2": "How to develop a formula that will predict the maximum height of a person",
-        "point3": "How to find the optimal configuration for a robot to accomplish a task?",
-        "point4": "And much more!",
-        "paragraph3": "Additionnaly, even if we have covered only a few applications of artificial intelligence, the possibilities are endless, so there is still so much to discover!"
-      },
-      "machine-learning": {
-        "title": "Machine Learning and Its Place in AI",
-        "paragraph1": "If you are not familiar with the field of artificial intelligence, the first thing to know is that there are multiple major branches that focus on a more specific topic of AI. For example, the computer vision branch specializes in image recognition, while the speech recognition branch seeks more to recognize or generate human speech. Machine learning is just one of these categories, but it contains several sub-branches, including the famous neural networks.",
-        "paragraph2": "Machine learning mainly specializes in predicting values based on data relevant to the situation being analyzed. It makes predicting results possible in situations which would require extremely complex calculations to arrive at the same results. To do this, the algorithm trains on values from previous experimets and tries to predict their results with a random model. Then, we compare the prediction with the real value and we adapt the model according to the error in order to improve it. Finally, this process is repeated until a satisfactory resolt is achieved. It is this process that is used in all machine learning algorithms, whether they are regressions or even neural networks."
-      },
-      "deep-learning": {
-        "title": "Deep Neural Networks in AI",
-        "paragraph1": "We might think that it is very strange to associate concepts related to the human brain with computer science. Yet the idea of combining the two has completely revolutionized the world of artificial intelligence! The most powerful algorithms in the world use this kind of process to accomplish tasks that would have taken many years to be performed by humans.",
-        "paragraph2": "Neural networks in this field are actually a new way of making a formula for modeling the most complex situations. Based on existing neural networks in our brain, these algorithms are made up of several neurons distributed over a number of layers. Each neuron in every layer is connected to each neuron in the next layer and these connections have an assigned value called a \"weight\". Each neuron is also assigned a value that we call “bias”. These weights and these biases constitute the parameters of the network, those which will determine the output result according to a certain input.",
-        "paragraph3": "However, the \"smart\" part of the neural network lies in adjusting these parameters:",
-        "point1": "The network begins by trying to predict the output of a large number of inputs and compares its results with the results it should have had.",
-        "point2": "Then, it adapts all of its parameters according to the size of the error, that is to say the difference between the two values thanks to complex algorithms, the most popular of which is gradient descent.",
-        "point3": "Finally, it starts the whole process again until it obtains results that minimize the error as much as possible in order to be able to produce the best possible predictions!",
-        "paragraph4": "Obviously, neural networks are much more complex than that, and that's why a course on this will be available soon. Stay tuned!"
-      }
-    }
-  }
+	"ai": {
+		"header": {
+			"title": "THE WORLD OF ARTIFICIAL INTELLIGENCE WITH ALIVESCRIPT",
+			"description": "Artificial intelligence is a constantly evolving field that allow us to accomplish huge tasks in record times. The effectiveness of the techniques that are part of it is such that we are now seeking to use them in all spheres of society, from agriculture to robotics, including transport, science, the economy and much more! Using our programming language AliveScript, we invite you to discover the possibilities of artificial intelligence in a simple and entertaining way. Chosse one of the available courses and go meet this fascinating universe!"
+		},
+		"section": {
+			"artificial-intelligence": {
+				"title": "The Potential of Artificial Intelligence",
+				"paragraph1": "Artificial intelligence is taking an increasingly important place in our daily lives. In fact, we can already see it today: there are smart assiistants in our phones, computers and speakers; more and more experiments with AI technologies are carried out in the fiels of transport, agriculture, medicine and more; Internet search engines and many sites use AI for buisness purposes; and there are many more examples!",
+				"paragraph2": "While following the courses on the different facets of artificial intelligence, you will learn how it can be used to solve a variety of problems:",
+				"point1": "How to predict the fuel consumption of a car if we vary its engine, weight, and several other characteristics?",
+				"point2": "How to develop a formula that will predict the maximum height of a person",
+				"point3": "How to find the optimal configuration for a robot to accomplish a task?",
+				"point4": "And much more!",
+				"paragraph3": "Additionnaly, even if we have covered only a few applications of artificial intelligence, the possibilities are endless, so there is still so much to discover!"
+			},
+			"machine-learning": {
+				"title": "Machine Learning and Its Place in AI",
+				"paragraph1": "If you are not familiar with the field of artificial intelligence, the first thing to know is that there are multiple major branches that focus on a more specific topic of AI. For example, the computer vision branch specializes in image recognition, while the speech recognition branch seeks more to recognize or generate human speech. Machine learning is just one of these categories, but it contains several sub-branches, including the famous neural networks.",
+				"paragraph2": "Machine learning mainly specializes in predicting values based on data relevant to the situation being analyzed. It makes predicting results possible in situations which would require extremely complex calculations to arrive at the same results. To do this, the algorithm trains on values from previous experimets and tries to predict their results with a random model. Then, we compare the prediction with the real value and we adapt the model according to the error in order to improve it. Finally, this process is repeated until a satisfactory resolt is achieved. It is this process that is used in all machine learning algorithms, whether they are regressions or even neural networks."
+			},
+			"deep-learning": {
+				"title": "Deep Neural Networks in AI",
+				"paragraph1": "We might think that it is very strange to associate concepts related to the human brain with computer science. Yet the idea of combining the two has completely revolutionized the world of artificial intelligence! The most powerful algorithms in the world use this kind of process to accomplish tasks that would have taken many years to be performed by humans.",
+				"paragraph2": "Neural networks in this field are actually a new way of making a formula for modeling the most complex situations. Based on existing neural networks in our brain, these algorithms are made up of several neurons distributed over a number of layers. Each neuron in every layer is connected to each neuron in the next layer and these connections have an assigned value called a \"weight\". Each neuron is also assigned a value that we call “bias”. These weights and these biases constitute the parameters of the network, those which will determine the output result according to a certain input.",
+				"paragraph3": "However, the \"smart\" part of the neural network lies in adjusting these parameters:",
+				"point1": "The network begins by trying to predict the output of a large number of inputs and compares its results with the results it should have had.",
+				"point2": "Then, it adapts all of its parameters according to the size of the error, that is to say the difference between the two values thanks to complex algorithms, the most popular of which is gradient descent.",
+				"point3": "Finally, it starts the whole process again until it obtains results that minimize the error as much as possible in order to be able to produce the best possible predictions!",
+				"paragraph4": "Obviously, neural networks are much more complex than that, and that's why a course on this will be available soon. Stay tuned!"
+			}
+		}
+	}
 }
