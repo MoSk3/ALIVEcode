@@ -21,7 +21,7 @@ import FormModal from '../../../Components/UtilsComponents/FormModal/FormModal';
 import Form from '../../../Components/UtilsComponents/Form/Form';
 import Button from '../../../Components/UtilsComponents/Button/Button';
 import { plainToClass } from 'class-transformer';
-import { LevelAlive as LevelAliveModel } from '../../../Models/Level/levelAlive.entity';
+import { LevelAI as LevelAIModel } from '../../../Models/Level/levelAI.entity';
 import api from '../../../Models/api';
 import {
 	LEVEL_ACCESS,
@@ -88,7 +88,7 @@ const LevelAI = ({
 		if (messageTimeout.current) clearTimeout(messageTimeout.current);
 		setSaving(true);
 		setSaved(false);
-		const updatedLevel = (await api.db.levels.update(level)) as LevelAliveModel;
+		const updatedLevel = (await api.db.levels.update(level)) as LevelAIModel;
 		messageTimeout.current = setTimeout(() => {
 			setSaving(false);
 			setSaved(true);
@@ -212,7 +212,7 @@ const LevelAI = ({
 										content: level.initialCode,
 										onChange: content => {
 											level.initialCode = content;
-											const newLevel = plainToClass(LevelAliveModel, {
+											const newLevel = plainToClass(LevelAIModel, {
 												...level,
 											});
 											setLevel(newLevel);
@@ -225,7 +225,7 @@ const LevelAI = ({
 										content: level.solution,
 										onChange: content => {
 											level.solution = content;
-											const newLevel = plainToClass(LevelAliveModel, {
+											const newLevel = plainToClass(LevelAIModel, {
 												...level,
 											});
 											setLevel(newLevel);
@@ -250,7 +250,7 @@ const LevelAI = ({
 
 					{/* Right Side of screen */}
 					<Col md={6} style={{ resize: 'both', padding: '0' }}>
-						<Row id="simulation-row" style={{ height: '60%' }}>
+						<Row style={{ height: '60%' }}>
 							<FillContainer
 								relative
 								centered
@@ -271,7 +271,7 @@ const LevelAI = ({
 				<FormModal
 					title={t('form.level.PATCH.title')}
 					onSubmit={res => {
-						const updatedLevel = plainToClass(LevelAliveModel, res.data);
+						const updatedLevel = plainToClass(LevelAIModel, res.data);
 						updatedLevel.creator = level.creator;
 						setLevel(updatedLevel);
 						setSettingsModalOpen(false);
