@@ -36,6 +36,16 @@ public class AliveScriptApi implements HttpHandler {
         return new JSONObject(inputData.toString());
     }
 
+    private boolean hasValidDataStructure(JSONObject data) {
+        List<String> mustHaveFields = Arrays.asList(
+                "metadata",
+                "lines"
+        );
+        boolean allFields = mustHaveFields.stream().allMatch(data::has);
+
+        return true;
+    }
+
     private String handlePostRequest(HttpExchange httpExchange) throws IOException {
         JSONObject data = byteArrayToJson(httpExchange.getRequestBody().readAllBytes());
         String host = httpExchange.getRemoteAddress().toString().substring(1);

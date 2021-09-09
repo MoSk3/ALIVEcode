@@ -1,35 +1,55 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import axios from 'axios';
-import { loadObj} from './utils';
-import { plainToClass } from 'class-transformer';
+import { loadObj } from './utils';
+import { ClassConstructor, plainToClass } from 'class-transformer';
 import { Course } from './Course/course.entity';
 import { Section } from './Course/section.entity';
 import { Classroom } from './Classroom/classroom.entity';
-import { Student } from './User/user.entity';
+import { Professor, Student } from './User/user.entity';
 import { IoTProject } from './Iot/IoTproject.entity';
-import { IoTObject } from './Iot/IoTobject.entity';
 import { IotRoute } from './Iot/IoTroute.entity';
+import { IoTObject } from './Iot/IoTobject.entity';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const apiGetter = <T extends {}>(url: string, target: T) => {
-	return async (id: string) =>
-		await loadObj(
-			url.includes(':id') ? url.replace(':id', id) : `${url}/${id}`,
+type urlArgType<S extends string> = S extends `${infer _}:${infer A}/${infer B}`
+	? A | urlArgType<B>
+	: S extends `${infer _}:${infer A}`
+	? A
+	: never;
+
+const apiGetter = <T extends {}, U extends boolean, S extends string>(
+	url: S,
+	target: ClassConstructor<T>,
+	returnsArray: U,
+) => {
+	return async (args: { [key in urlArgType<S>]: string }) =>
+		(await loadObj(
+			url
+				.split('/')
+				.map(part =>
+					part.startsWith(':')
+						? args[part.substring(1) as urlArgType<S>]
+						: part,
+				)
+				.join('/'),
 			target,
-		);
+		)) as U extends true ? T[] : T;
 };
 
 // TODO : add build object
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const apiCreate = <U extends {}>(moduleName: string, target: U) => {
-	return async <T extends U>(fields: T) => {
+const apiCreate = <U extends ClassConstructor<unknown>>(
+	moduleName: string,
+	target: U,
+) => {
+	return async <T extends U>(fields: T): Promise<unknown> => {
 		const data = (await axios.post(moduleName, fields)).data;
 		if (!data) {
 			return null;
 		}
-		//return buildObj(data, target);
+		return plainToClass(target, data);
 	};
 };
-
+/*
 const api = {
 	db: {
 		users: {
@@ -102,26 +122,38 @@ const api = {
 		},
 	},
 };
+*/
 
-/*
 const api = {
 	db: {
 		users: {
+			iot: {
+				getProjects: apiGetter('users/:id/iot/projects', IoTProject, true),
+				getObjects: apiGetter('users/:id/iot/objects', IoTObject, true),
+			},
 			//get: apiGetter('users', User),
-			getClassrooms: apiGetter('users/:id/classrooms', Classroom),
-			getCourses: apiGetter('users/:id/courses', Course),
-			createProfessor: apiCreate('users/professors', Professor),
-			createStudent: apiCreate('users/students', Student),
+			getClassrooms: apiGetter('users/:id/classrooms', Classroom, true),
+			getCourses: apiGetter('users/:id/courses', Course, true),
+			createProfessor: apiCreate('users/professors/:id', Professor),
+			createStudent: apiCreate('users/students/:id', Student),
 		},
 		classrooms: {
-			get: apiGetter('classrooms', Classroom),
-			getStudents: apiGetter('students', Student),
+			get: apiGetter('classrooms/:id/', Classroom, false),
+			getCourses: apiGetter('classrooms/:id/courses', Course, true),
+			getStudents: apiGetter('classrooms/:id/students', Student, true),
 			create: apiCreate('classrooms', Classroom),
 		},
 		courses: {
-			getSections: apiGetter('courses/:id/sections', Section),
+			get: apiGetter('courses/:id', Course, false),
+			getSections: apiGetter('courses/:id/sections', Section, true),
+		},
+		iot: {
+			projects: {
+				get: apiGetter('iot/projects/:id', IoTProject, false),
+				getRoutes: apiGetter('iot/projects/:id/routes', IotRoute, true),
+			},
 		},
 	},
 };
-*/
+
 export default api;

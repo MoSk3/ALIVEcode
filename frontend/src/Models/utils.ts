@@ -1,15 +1,15 @@
 import axios from 'axios';
-import { plainToClass } from 'class-transformer';
+import { plainToClass, ClassConstructor } from 'class-transformer';
 
 export const loadObj = async <T extends {}>(
 	url: string,
-	target: T,
+	target: ClassConstructor<T>,
 	body?: Object,
 ): Promise<T | T[]> => {
 	const data = (await axios.get(url, body)).data;
-	return Array.isArray(data)
-		? data.map(obj => plainToClass(obj, target))
-		: plainToClass(data, target);
+	return (Array.isArray(data)
+		? data.map(obj => plainToClass(target, obj))
+		: plainToClass(target, data)) as unknown as Promise<T | T[]>;
 };
 /*
 export const buildObj = <T extends Model & Function>(

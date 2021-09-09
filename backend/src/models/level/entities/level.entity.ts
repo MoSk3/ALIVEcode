@@ -1,11 +1,16 @@
 import { Exclude } from 'class-transformer';
-import { CreatedByUser } from 'src/generics/entities/createdByUser.entity';
-import { Entity, ManyToOne } from 'typeorm';
+import { Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import { UserEntity } from '../../user/entities/user.entity';
+import { CreatedByUser } from '../../../generics/entities/createdByUser.entity';
+import { AsScriptEntity } from '../../../as-script/entities/as-script.entity';
 
 @Entity()
 export class LevelEntity extends CreatedByUser {
   @Exclude({ toClassOnly: true })
   @ManyToOne(() => UserEntity, user => user.levels)
   creator: UserEntity;
+
+  @OneToOne(() => AsScriptEntity)
+  @JoinColumn()
+  code: AsScriptEntity;
 }
