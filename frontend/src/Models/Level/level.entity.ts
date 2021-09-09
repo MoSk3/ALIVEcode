@@ -1,6 +1,6 @@
-import { Exclude } from 'class-transformer';
+import { Exclude, Transform, Type, plainToClass } from 'class-transformer';
 import { CreatedByUser } from '../Generics/createdByUser.entity';
-import { User } from '../User/user.entity';
+import { User, Professor, Student } from '../User/user.entity';
 
 export enum LEVEL_TAG {}
 export enum LEVEL_ACCESS {
@@ -21,6 +21,15 @@ export enum LEVEL_DIFFICULTY {
 
 export class Level extends CreatedByUser {
 	@Exclude({ toPlainOnly: true })
+	@Type(() => User)
+	@Transform(
+		({ value }) => {
+			if (value.firstName) return plainToClass(Professor, value);
+			if (value.name) return plainToClass(Student, value);
+			return value;
+		},
+		{ toClassOnly: true },
+	)
 	creator: User;
 
 	access: LEVEL_ACCESS;
@@ -30,4 +39,13 @@ export class Level extends CreatedByUser {
 	hints: string[];
 
 	tags: LEVEL_TAG[];
+
+	getTypeDisplay() {
+		if (this instanceof LevelAlive) return 'Car coding';
+		if (this instanceof LevelCode) return 'Coding';
+		return;
+	}
 }
+
+const LevelAlive = require('./levelAlive.entity').LevelAlive;
+const LevelCode = require('./levelCode.entity').LevelCode;

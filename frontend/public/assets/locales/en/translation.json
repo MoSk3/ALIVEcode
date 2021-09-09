@@ -15,7 +15,7 @@
 		},
 		"level": {
 			"PATCH": {
-				"title": "Paramètres du niveau"
+				"title": "Level settings"
 			}
 		},
 		"title": {
@@ -55,13 +55,17 @@
 		}
 	},
 	"msg": {
+		"desc": {
+			"empty": "No description available"
+		},
 		"auth": {
 			"signin": "Connect",
 			"signup": "Sign up",
 			"signup_professor": "Professor account",
 			"signup_student": "Student account",
 			"signout": "Sign out",
-			"already_registered": "Already have an account?"
+			"already_registered": "Already have an account?",
+			"account_required": "You need an account to do that"
 		},
 		"section": {
 			"alive": "ALIVE Play",

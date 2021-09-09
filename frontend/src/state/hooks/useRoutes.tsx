@@ -25,6 +25,7 @@ import LevelForm from '../../Components/LevelComponents/LevelForm/LevelForm';
 import LevelBrowse from '../../Pages/Level/LevelBrowse/LevelBrowse';
 import LevelList from '../../Pages/Level/LevelList/LevelList';
 import LevelFormMenu from '../../Pages/Level/LevelFormMenu/LevelFormMenu';
+import Test from '../../Pages/Test/Test';
 
 type component =
 	| React.ComponentType<RouteComponentProps<any>>
@@ -88,6 +89,10 @@ const useRoutes = () => {
 	};
 
 	const public_routes = asRoutes({
+		test: {
+			path: '/test',
+			component: Test,
+		},
 		home: {
 			exact: true,
 			path: '/',
@@ -119,6 +124,14 @@ const useRoutes = () => {
 			exact: true,
 			path: '/iot',
 			component: IoTHome,
+		},
+		level_alive: {
+			path: '/level/play/alive',
+			component: () => <Level type="ALIVE" editMode />,
+		},
+		level_code: {
+			path: '/level/play/code',
+			component: () => <Level type="code" editMode />,
 		},
 	});
 
