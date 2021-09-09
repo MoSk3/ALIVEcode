@@ -1,34 +1,34 @@
-import { LevelBrowseProps } from './levelBrowseTypes';
-import { useState, useEffect } from 'react';
+import { LevelBrowseProps, StyledLevelBrowse } from './levelBrowseTypes';
+import { useState } from 'react';
 import { Level } from '../../../Models/Level/level.entity';
 import LoadingScreen from '../../../Components/UtilsComponents/LoadingScreen/LoadingScreen';
-import api from '../../../Models/api';
 import LevelCard from '../../../Components/LevelComponents/LevelCard/LevelCard';
-import CardContainer from '../../../Components/UtilsComponents/CardContainer/CardContainer';
+import BrowsingMenu from '../../../Components/MainComponents/BrowsingMenu/BrowsingMenu';
+import { BrowsingResults } from '../../../Components/MainComponents/BrowsingMenu/browsingMenuTypes';
 
 const LevelBrowse = (props: LevelBrowseProps) => {
-	const [levels, setLevels] = useState<Array<Level>>();
-
-	useEffect(() => {
-		const getLevels = async () => {
-			const levels = await api.db.levels.query();
-			setLevels(levels);
-		};
-		getLevels();
-	}, []);
+	const [browsingResult, setBrowsingResult] =
+		useState<BrowsingResults<Level>>();
+	const levels = browsingResult?.results;
 
 	return (
-		<CardContainer title="Users's levels">
-			{!levels ? (
-				<LoadingScreen />
-			) : (
-				<>
-					{levels.map((l, idx) => (
-						<LevelCard level={l} key={idx} />
-					))}
-				</>
-			)}
-		</CardContainer>
+		<StyledLevelBrowse>
+			<BrowsingMenu<Level>
+				fetchOnSubmit
+				onChange={res => setBrowsingResult(res)}
+			/>
+			<div className="levels">
+				{!levels ? (
+					<LoadingScreen relative />
+				) : (
+					<>
+						{levels.map((l, idx) => (
+							<LevelCard level={l} key={idx} />
+						))}
+					</>
+				)}
+			</div>
+		</StyledLevelBrowse>
 	);
 };
 

@@ -12,6 +12,7 @@ import { Level } from './Level/level.entity';
 import { LevelAlive } from './Level/levelAlive.entity';
 import { LevelCode } from './Level/levelCode.entity';
 import { LevelProgression } from './Level/levelProgression';
+import { BrowsingQuery } from '../Components/MainComponents/BrowsingMenu/browsingMenuTypes';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const apiGetter = <T extends {}>(url: string, target: T) => {
@@ -120,8 +121,9 @@ const api = {
 				if (level.testCases) return plainToClass(LevelCode, level);
 				return plainToClass(Level, level);
 			},
-			async query() {
-				const levels: Array<any> = (await axios.get(`levels/query`)).data;
+			async query(query: BrowsingQuery) {
+				const levels: Array<any> = (await axios.post(`levels/query`, query))
+					.data;
 				return levels.map((l: any) => {
 					if (l.layout) return plainToClass(LevelAlive, l);
 					if (l.testCases) return plainToClass(LevelCode, l);
