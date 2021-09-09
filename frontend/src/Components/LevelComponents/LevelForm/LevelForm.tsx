@@ -49,6 +49,7 @@ const LevelForm = ({ type }: LevelFormProps) => {
 								name: 'access',
 								required: true,
 								inputType: 'select',
+								default: LEVEL_ACCESS.PRIVATE,
 								selectOptions: LEVEL_ACCESS,
 							},
 							{

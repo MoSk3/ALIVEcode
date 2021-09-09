@@ -50,8 +50,8 @@ const api = {
 					);
 				},
 			},
-			async getLevels(userId: string) {
-				return (await axios.get(`users/${userId}/levels`)).data.map(
+			async getLevels(userId: string, query: BrowsingQuery) {
+				return (await axios.post(`users/${userId}/levels`, query)).data.map(
 					(l: any) => {
 						if (l.layout) return plainToClass(LevelAlive, l);
 						if (l.testCases) return plainToClass(LevelCode, l);

@@ -12,6 +12,7 @@ export type BrowsingQuery = {
 export type BrowsingMenuProps<T> = {
 	onChange: (arg: BrowsingResults<T>) => void;
 	fetchOnSubmit?: boolean;
+	apiRequest: (arg: BrowsingQuery) => Promise<T[]>;
 };
 
 export const StyledBrowsingMenu = styled.div`

@@ -15,7 +15,7 @@
 		},
 		"level": {
 			"PATCH": {
-				"title": "Level settings"
+				"title": "Paramètres du niveau"
 			}
 		},
 		"title": {
@@ -55,6 +55,9 @@
 		}
 	},
 	"msg": {
+		"desc": {
+			"empty": "Aucune description disponible"
+		},
 		"auth": {
 			"signin": "Se connecter",
 			"signup": "S'inscrire",

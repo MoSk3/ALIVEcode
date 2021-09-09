@@ -65,6 +65,7 @@ const Level = (props: LevelProps) => {
 					tags: [],
 					creationDate: new Date(),
 					updateDate: new Date(),
+					getTypeDisplay: () => 'Coding',
 				};
 			}
 			setLevel(level);

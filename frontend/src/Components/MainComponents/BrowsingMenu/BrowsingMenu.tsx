@@ -7,17 +7,17 @@ import api from '../../../Models/api';
 const BrowsingMenu = <T extends any>({
 	onChange,
 	fetchOnSubmit,
+	apiRequest,
 }: BrowsingMenuProps<T>) => {
 	const [query, setQuery] = useState<BrowsingQuery>({});
 	const [oldQuery, setOldQuery] = useState<BrowsingQuery>();
 
 	const getResults = async () => {
 		if (JSON.stringify(oldQuery) === JSON.stringify(query)) return;
-		console.log('NEW SEARCH');
-		const levels = await api.db.levels.query(query);
+		const levels = await apiRequest(query);
 		setOldQuery(query);
 		onChange({
-			results: levels as Array<T>,
+			results: levels,
 			nbResults: levels.length,
 		});
 	};

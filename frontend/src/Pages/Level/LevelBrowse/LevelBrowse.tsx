@@ -5,6 +5,7 @@ import LoadingScreen from '../../../Components/UtilsComponents/LoadingScreen/Loa
 import LevelCard from '../../../Components/LevelComponents/LevelCard/LevelCard';
 import BrowsingMenu from '../../../Components/MainComponents/BrowsingMenu/BrowsingMenu';
 import { BrowsingResults } from '../../../Components/MainComponents/BrowsingMenu/browsingMenuTypes';
+import api from '../../../Models/api';
 
 const LevelBrowse = (props: LevelBrowseProps) => {
 	const [browsingResult, setBrowsingResult] =
@@ -15,6 +16,7 @@ const LevelBrowse = (props: LevelBrowseProps) => {
 		<StyledLevelBrowse>
 			<BrowsingMenu<Level>
 				fetchOnSubmit
+				apiRequest={api.db.levels.query}
 				onChange={res => setBrowsingResult(res)}
 			/>
 			<div className="levels">
