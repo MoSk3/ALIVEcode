@@ -2,7 +2,6 @@ import { BrowsingMenuProps, StyledBrowsingMenu, BrowsingQuery } from './browsing
 import SearchBar from './SearchBar/SearchBar';
 import { useState, useEffect } from 'react';
 import Button from '../../UtilsComponents/Button/Button';
-import api from '../../../Models/api';
 
 const BrowsingMenu = <T extends any>({
 	onChange,
