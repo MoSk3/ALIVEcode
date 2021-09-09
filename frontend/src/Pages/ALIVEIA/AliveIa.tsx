@@ -3,6 +3,12 @@ import { useTranslation } from 'react-i18next';
 import HeaderAI from '../../Components/ALIVEIAComponents/Header/HeaderAI';
 import InfoBox from '../../Components/ALIVEIAComponents/InfoBox/InfoBox';
 
+/**
+ * Méthode retournant la page d'accueil de la section IA du site web. Elle instancie également 
+ * tous ses composants.
+ * @param props aucune propriété pour ce composant.
+ * @returns un AliveIA.
+ */
 const AliveIa = (props: AliveIaProps) => {
   const {t} = useTranslation();
 

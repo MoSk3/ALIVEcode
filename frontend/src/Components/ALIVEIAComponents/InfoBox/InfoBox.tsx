@@ -5,10 +5,16 @@ import { faCaretUp } from '@fortawesome/free-solid-svg-icons';
 import { Collapse } from 'react-bootstrap';
 import styled from 'styled-components';
 
+/**
+ * Ce composant définit une boîte d'information contenant un titre et une description.
+ * La description peut se rétracter à l'aide d'un bouton. Plus tard, la possibilité de
+ * rajouter des images sera ajoutée.
+ */
+
 const StyledDiv = styled.div`
 .container {
   width: auto;
-  margin: 7vh 10vw 7vh 10vw;
+  margin: 7vh 100px;
   border-style: solid;
   border-radius: 20px;
   border-width: 4px;
@@ -70,13 +76,13 @@ const StyledDiv = styled.div`
 }
 `
 
-/*
-Cette classe définit une boîte d'information Contenant un titre et une description.
-La description peut se rétracter à l'aide d'un bouton.
-Paramètres :
-- title = le titre de la boîte
-- description = la description à l'intérieur de la boîte
-*/
+/**
+ * Méthode retournant l'InfoBox défini par la méthode ci-dessous ainsi que ses propriétés CSS.
+ * @param props les propriétés de l'InfoBox :
+ *  - title: le titre de l'InfoBox.
+ *  - children: les éléments contenus dans l'InfoBox.
+ * @returns un Infobox.
+ */
 const InfoBox = (props: InfoBoxProps) => {
   const [open, setOpen] = useState(true);
 
