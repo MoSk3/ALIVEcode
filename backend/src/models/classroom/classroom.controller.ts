@@ -23,6 +23,7 @@ import { ProfessorEntity } from '../user/entities/professor.entity';
 import { StudentEntity } from '../user/entities/student.entity';
 import { UserEntity } from '../user/entities/user.entity';
 import { hasRole } from '../user/auth';
+import { JoinClassroomDTO } from './dto/joinClassroom.dto';
 
 @Controller('classrooms')
 @UseInterceptors(new DTOInterceptor())
@@ -75,6 +76,13 @@ export class ClassroomController {
       classroom = await this.classroomService.findClassroomOfUser(user, id);
     }
     return await this.classroomService.getStudents(classroom);
+  }
+
+  @Post('students')
+  @Auth(Role.STUDENT)
+  async joinClassroom(@User() student: StudentEntity, @Body() joinDTO: JoinClassroomDTO) {
+    const classroom = await this.classroomService.findOneByCode(joinDTO.code);
+    return await this.classroomService.joinClassroom(student, classroom);
   }
 
   @Get(':id')

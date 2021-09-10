@@ -86,7 +86,12 @@ const api = {
 					(d: any) => plainToClass(Course, d),
 				);
 			},
-			create() {},
+			async joinClassroom(code: string) {
+				return plainToClass(
+					Classroom,
+					(await axios.post(`classrooms/students`, { code })).data,
+				);
+			},
 		},
 		courses: {
 			async get(courseId: string) {

@@ -27,8 +27,18 @@ export class ClassroomService {
     return this.classroomRepository.find();
   }
 
-  findOne(id: string) {
-    return this.classroomRepository.findOne(id);
+  async findOne(id: string) {
+    if (!id) throw new HttpException('Bad request', HttpStatus.FORBIDDEN);
+    const classroom = await this.classroomRepository.findOne(id);
+    if (!classroom) throw new HttpException('Classroom not found', HttpStatus.NOT_FOUND);
+    return classroom;
+  }
+
+  async findOneByCode(code: string) {
+    if (!code) throw new HttpException('Bad request', HttpStatus.FORBIDDEN);
+    const classroom = await this.classroomRepository.findOne({ where: { code } });
+    if (!classroom) throw new HttpException('Classroom not found', HttpStatus.NOT_FOUND);
+    return classroom;
   }
 
   update(id: string, updateClassroomDto: ClassroomEntity) {
@@ -57,6 +67,13 @@ export class ClassroomService {
     }
 
     if (!classroom) throw new HttpException('Classe not found', HttpStatus.NOT_FOUND);
+    return classroom;
+  }
+
+  async joinClassroom(user: StudentEntity, classroom: ClassroomEntity) {
+    classroom = await this.classroomRepository.findOne(classroom.id, { relations: ['students'] });
+    classroom.students.push(user);
+    await this.classroomRepository.save(classroom);
     return classroom;
   }
 }

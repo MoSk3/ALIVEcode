@@ -50,6 +50,7 @@ const Classroom = (props: ClassroomProps) => {
 		return <LoadingScreen />;
 	}
 
+	console.log(classroom);
 	return (
 		<StyledDiv>
 			<ClassroomHeader classroom={classroom} />
