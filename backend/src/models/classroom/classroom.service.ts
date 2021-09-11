@@ -64,6 +64,9 @@ export class ClassroomService {
       classroom = await this.classroomRepository.findOne(id, { where: { creator: user } });
     // TODO: add find classroom of student
     else if (user instanceof StudentEntity) {
+      classroom = await this.classroomRepository.findOne(id, { relations: ['students'] });
+      if (!classroom.students.find(s => s.id === user.id))
+        throw new HttpException('Classe not found', HttpStatus.NOT_FOUND);
     }
 
     if (!classroom) throw new HttpException('Classe not found', HttpStatus.NOT_FOUND);
@@ -73,6 +76,13 @@ export class ClassroomService {
   async joinClassroom(user: StudentEntity, classroom: ClassroomEntity) {
     classroom = await this.classroomRepository.findOne(classroom.id, { relations: ['students'] });
     classroom.students.push(user);
+    await this.classroomRepository.save(classroom);
+    return classroom;
+  }
+
+  async removeStudent(studentId: string, classroom: ClassroomEntity) {
+    classroom = await this.classroomRepository.findOne(classroom.id, { relations: ['students'] });
+    classroom.students = classroom.students.filter(s => s.id !== studentId);
     await this.classroomRepository.save(classroom);
     return classroom;
   }

@@ -15,12 +15,13 @@ import Voiture from '../../assets/images/Voiture.gif';
 import { Row } from 'react-bootstrap';
 import { Classroom } from '../../Models/Classroom/classroom.entity';
 import { plainToClass } from 'class-transformer';
-import { Professor } from '../../Models/User/user.entity';
+import { Professor, Student } from '../../Models/User/user.entity';
 import useRoutes from '../../state/hooks/useRoutes';
 import api from '../../Models/api';
 import FormModal from '../../Components/UtilsComponents/FormModal/FormModal';
 import JoinClassroomForm from '../../Components/ClassroomComponents/JoinClassroomForm/JoinClassroomForm';
 import { useTranslation } from 'react-i18next';
+import LoadingScreen from '../../Components/UtilsComponents/LoadingScreen/LoadingScreen';
 
 const Dashboard = (props: DashboardProps) => {
 	const { user } = useContext(UserContext);
@@ -59,6 +60,7 @@ const Dashboard = (props: DashboardProps) => {
 				</Row>
 				<CardContainer
 					asRow
+					height="60px"
 					title="Mes classes"
 					style={{ marginTop: '20px' }}
 					onIconClick={() =>
@@ -68,11 +70,19 @@ const Dashboard = (props: DashboardProps) => {
 					}
 					icon={faPlus}
 				>
-					{loading
-						? 'Loading...'
-						: classrooms?.map((classroom, idx) => (
-								<ClassroomCard key={idx} classroom={classroom} />
-						  ))}
+					{loading ? (
+						<LoadingScreen />
+					) : classrooms.length <= 0 ? (
+						user instanceof Student ? (
+							t('dashboard.classrooms.empty.student')
+						) : (
+							t('dashboard.classrooms.empty.professor')
+						)
+					) : (
+						classrooms?.map((classroom, idx) => (
+							<ClassroomCard key={idx} classroom={classroom} />
+						))
+					)}
 				</CardContainer>
 
 				<CardContainer asRow title="Niveaux">

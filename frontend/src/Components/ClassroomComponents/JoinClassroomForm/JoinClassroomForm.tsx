@@ -4,12 +4,14 @@ import { useForm } from 'react-hook-form';
 import { Form, InputGroup } from 'react-bootstrap';
 import { useState, useEffect, useRef } from 'react';
 import Button from '../../UtilsComponents/Button/Button';
+import useRoutes from '../../../state/hooks/useRoutes';
 
 /**
  * Component used to join a classroom with a provided classroom code
  */
 const JoinClassroomForm = () => {
 	const { t } = useTranslation();
+	const { goTo, routes } = useRoutes();
 	const {
 		register,
 		handleSubmit,
@@ -28,7 +30,7 @@ const JoinClassroomForm = () => {
 	const SubmitForm = async (formValues: { code: string }) => {
 		try {
 			const classroom = await api.db.classrooms.joinClassroom(formValues.code);
-			console.log(classroom);
+			goTo(routes.auth.classroom.path.replace(':id', classroom.id));
 			setNotFound(false);
 		} catch {
 			setNotFound(true);

@@ -5,14 +5,16 @@ import { Row, Container, Badge } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { Col } from 'react-bootstrap';
 import styled from 'styled-components';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Classroom as ClassroomModel } from '../../Models/Classroom/classroom.entity';
-import { useHistory } from 'react-router-dom';
 import { useAlert } from 'react-alert';
 import api from '../../Models/api';
 import LoadingScreen from '../../Components/UtilsComponents/LoadingScreen/LoadingScreen';
 import StudentCard from '../../Components/ClassroomComponents/StudentCard/StudentCard';
 import ClassroomCard from '../../Components/DashboardComponents/ClassroomCard/ClassroomCard';
+import { UserContext } from '../../state/contexts/UserContext';
+import { prettyField } from '../../Types/formatting';
+import useRoutes from '../../state/hooks/useRoutes';
 
 const StyledDiv = styled.div`
 	.classroom-content {
@@ -24,8 +26,9 @@ const StyledDiv = styled.div`
 
 const Classroom = (props: ClassroomProps) => {
 	const { t } = useTranslation();
+	const { user } = useContext(UserContext);
 	const [classroom, setClassroom] = useState<ClassroomModel>();
-	const history = useHistory();
+	const { goBack } = useRoutes();
 	const alert = useAlert();
 
 	useEffect(() => {
@@ -38,7 +41,7 @@ const Classroom = (props: ClassroomProps) => {
 				await classroom.getCourses();
 				setClassroom(classroom);
 			} catch (err) {
-				history.push('/');
+				goBack();
 				return alert.error(t('error.not_found', { obj: t('msg.course') }));
 			}
 		};
@@ -46,50 +49,59 @@ const Classroom = (props: ClassroomProps) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [props.match.params.id]);
 
-	if (!classroom) {
+	if (!classroom || !user) {
 		return <LoadingScreen />;
 	}
 
-	console.log(classroom);
 	return (
 		<StyledDiv>
 			<ClassroomHeader classroom={classroom} />
 			<Container className="classroom-content">
-				<CardContainer title={t('classroom.container.courses')}>
-					{/* TODO: add course card */}
+				<CardContainer
+					title={t('classroom.container.courses.title')}
+					height="60px"
+				>
 					{classroom.courses && classroom.courses.length > 0 ? (
 						<ClassroomCard classroom={classroom} />
 					) : (
-						<p>{t('msg.classrooms.courses.empty')}</p>
+						<p>{t('classroom.container.courses.empty')}</p>
 					)}
 				</CardContainer>
 				<Row>
 					<Col lg>
-						<CardContainer title={t('classroom.container.details')}>
+						<CardContainer title={t('classroom.container.details.title')}>
 							<div>
 								<h4>
-									<Badge variant="primary">Matière</Badge>
+									<Badge variant="primary">{t('classroom.subject')}</Badge>
 								</h4>
 								{classroom.getSubjectDisplay()}
 								<h4>
-									<Badge variant="primary">Description</Badge>
+									<Badge variant="primary">
+										{prettyField(t('msg.description'))}
+									</Badge>
 								</h4>
 								<p>
 									{classroom.description
 										? classroom.description
-										: `Classe de ${classroom.getSubjectDisplay()}`}
+										: t('classroom.desc', {
+												professor: classroom.creator.getDisplayName(),
+										  })}
 								</p>
 							</div>
 						</CardContainer>
 					</Col>
 					<Col lg>
-						<CardContainer scrollY title={t('classroom.container.students')}>
+						<CardContainer
+							scrollY
+							title={t('classroom.container.students.title')}
+							height="60px"
+						>
 							{classroom.students && classroom.students.length > 0 ? (
 								classroom.students.map((s, idx) => (
 									<StudentCard key={idx} student={s} />
 								))
 							) : (
-								<p>{t('msg.classroom.students.empty')}</p>
+								<p>{t('classroom.container.students.empty')}</p>
 							)}
 						</CardContainer>
 					</Col>

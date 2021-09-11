@@ -92,6 +92,16 @@ const api = {
 					(await axios.post(`classrooms/students`, { code })).data,
 				);
 			},
+			async leaveClassroom(classroomId: string, studentId: string) {
+				return plainToClass(
+					Classroom,
+					(
+						await axios.delete(
+							`classrooms/${classroomId}/students/${studentId}`,
+						)
+					).data,
+				);
+			},
 		},
 		courses: {
 			async get(courseId: string) {

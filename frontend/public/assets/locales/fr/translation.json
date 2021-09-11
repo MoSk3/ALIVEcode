@@ -1,6 +1,7 @@
 {
 	"error": {
-		"logout": "Une erreur est survenue lors de la déconnexion, veuillez réesayer."
+		"logout": "Une erreur est survenue lors de la déconnexion, veuillez réesayer.",
+		"500": "Une erreur est survenue, veuillez réessayer"
 	},
 	"form": {
 		"submit": {
@@ -55,12 +56,18 @@
 		}
 	},
 	"msg": {
+		"professor": "professeur",
+		"student": "étudiant",
+		"understood": "C'est compris!",
+		"description": "description",
 		"desc": {
 			"empty": "Aucune description disponible"
 		},
 		"auth": {
 			"signin": "Se connecter",
 			"signup": "S'inscrire",
+			"signup_professor": "Compte professor",
+			"signup_student": "Compte étudiant",
 			"signout": "Se déconnecter",
 			"already_registered": "Tu as déjà un compte?",
 			"account_required": "Il te faut un compte pour faire ça"
@@ -75,6 +82,38 @@
 			"avp": "Perception de véhicule augmentée",
 			"lrima": "Laboratoire de recherche LRIMA",
 			"account": "Mon compte"
+		}
+	},
+	"dashboard": {
+		"classrooms": {
+			"empty": {
+				"student": "Tu ne fais parti d'aucune classe",
+				"professor": "Tu ne possède aucune classe"
+			}
+		}
+	},
+	"classroom": {
+		"add_students": "Ajoutez des étudiants",
+		"delete": "Supprimer la classe",
+		"leave": "Quitter la classe",
+		"container": {
+			"courses": {
+				"title": "Cours",
+				"empty": "Cette classe ne possède aucun cours"
+			},
+			"details": {
+				"title": "Détails"
+			},
+			"students": {
+				"title": "Élèves dans la classe",
+				"empty": "Il n'y a aucun élève dans la classe"
+			}
+		},
+		"desc": "Classe de {{professor}}",
+		"subject": "Sujet",
+		"code": {
+			"title": "Code de la classe",
+			"desc": "Donnez ce code aux élèves afin qu'ils puissent rejoindre la classe depuis le site!"
 		}
 	},
 	"menu": {
