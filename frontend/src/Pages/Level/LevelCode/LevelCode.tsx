@@ -266,11 +266,14 @@ const LevelAlive = ({
 								inputType: 'text',
 								required: true,
 								default: level.name,
+								minLength: 3,
+								maxLength: 25,
 							},
 							{
 								name: 'description',
 								inputType: 'text',
 								default: level.description,
+								maxLength: 200,
 							},
 							{
 								name: 'access',
