@@ -23,6 +23,10 @@ import { ProfessorEntity } from '../user/entities/professor.entity';
 import { StudentEntity } from '../user/entities/student.entity';
 import { UserEntity } from '../user/entities/user.entity';
 import { hasRole } from '../user/auth';
+import { JoinClassroomDTO } from './dto/joinClassroom.dto';
+import { UseGuards } from '@nestjs/common';
+import { InClassroomGuard } from '../../utils/guards/classroom.guard';
+import { Classroom } from 'src/utils/decorators/classroom.decorator';
 
 @Controller('classrooms')
 @UseInterceptors(new DTOInterceptor())
@@ -41,40 +45,42 @@ export class ClassroomController {
   }
 
   @Get()
+  @Auth(Role.STAFF)
   findAll() {
     return this.classroomService.findAll();
   }
 
   @Get(':id/courses')
+  @UseGuards(InClassroomGuard)
   @Auth()
-  async getCourses(@User() user: UserEntity, @Param('id') id: string) {
-    if (!id) throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
-
-    let classroom: ClassroomEntity;
-    if (hasRole(user, Role.STAFF)) classroom = await this.classroomService.findOne(id);
-    else {
-      if (!(user instanceof ProfessorEntity) && !(user instanceof StudentEntity))
-        throw new HttpException('', HttpStatus.FORBIDDEN);
-
-      classroom = await this.classroomService.findClassroomOfUser(user, id);
-    }
+  async getCourses(@Classroom() classroom: ClassroomEntity) {
     return await this.classroomService.getCourses(classroom);
   }
 
   @Get(':id/students')
+  @UseGuards(InClassroomGuard)
   @Auth()
-  async getStudents(@User() user: UserEntity, @Param('id') id: string) {
-    if (!id) throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
-
-    let classroom: ClassroomEntity;
-    if (hasRole(user, Role.STAFF)) classroom = await this.classroomService.findOne(id);
-    else {
-      if (!(user instanceof ProfessorEntity) && !(user instanceof StudentEntity))
-        throw new HttpException('', HttpStatus.FORBIDDEN);
-
-      classroom = await this.classroomService.findClassroomOfUser(user, id);
-    }
+  async getStudents(@Classroom() classroom: ClassroomEntity) {
     return await this.classroomService.getStudents(classroom);
+  }
+
+  @Delete(':id/students/:studentId')
+  @UseGuards(InClassroomGuard)
+  @Auth()
+  async leaveClassroom(
+    @User() user: UserEntity,
+    @Classroom() classroom: ClassroomEntity,
+    @Param('studentId') studentId: string,
+  ) {
+    if (!hasRole(user, Role.STAFF) && user.id !== studentId) throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    return await this.classroomService.removeStudent(studentId, classroom);
+  }
+
+  @Post('students')
+  @Auth(Role.STUDENT)
+  async joinClassroom(@User() student: StudentEntity, @Body() joinDTO: JoinClassroomDTO) {
+    const classroom = await this.classroomService.findOneByCode(joinDTO.code);
+    return await this.classroomService.joinClassroom(student, classroom);
   }
 
   @Get(':id')

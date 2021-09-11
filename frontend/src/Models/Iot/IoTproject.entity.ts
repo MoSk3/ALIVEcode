@@ -31,6 +31,6 @@ export class IoTProject extends CreatedByUser {
 	routes: IotRoute[];
 
 	async getRoutes() {
-		return await api.db.iot.projects.getRoutes({ id: this.id });
+		return await api.db.iot.projects.getRoutes(this.id);
 	}
 }

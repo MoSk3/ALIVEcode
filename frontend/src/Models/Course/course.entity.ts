@@ -44,7 +44,7 @@ export class Course extends CreatedByUser {
 	sections: Section[];
 
 	async getSections() {
-		this.sections = await api.db.courses.getSections({ id: this.id });
-		return api.db.courses.getSections({ id: this.id });
+		this.sections = await api.db.courses.getSections(this.id);
+		return api.db.courses.getSections(this.id);
 	}
 }

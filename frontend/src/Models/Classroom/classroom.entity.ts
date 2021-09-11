@@ -25,12 +25,12 @@ export class Classroom extends CreatedByUser {
 	courses?: Course[];
 
 	async getCourses() {
-		this.courses = await api.db.classrooms.getCourses({ id: this.id });
+		this.courses = await api.db.classrooms.getCourses(this.id);
 		return this.courses;
 	}
 
 	async getStudents() {
-		this.students = await api.db.classrooms.getStudents({ id: this.id });
+		this.students = await api.db.classrooms.getStudents(this.id);
 		return this.students;
 	}
 

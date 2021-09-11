@@ -12,12 +12,14 @@ import Link from '../../../Components/UtilsComponents/Link/Link';
 import { useTranslation } from 'react-i18next';
 import { User } from '../../../Models/User/user.entity';
 import { setAccessToken } from '../../../Types/accessToken';
+import useRoutes from '../../../state/hooks/useRoutes';
 
 /** Reusable form component to handle header creation */
 const SignIn = (props: SignInProps) => {
 	const { register, handleSubmit, formState: { errors } } = useForm();
 	const { setUser } = useContext(UserContext);
 	const { t } = useTranslation();
+	const { routes } = useRoutes();
 	const history = useHistory();
 	const alert = useAlert();
 
@@ -33,11 +35,13 @@ const SignIn = (props: SignInProps) => {
 
 			setUser(user);
 
-			if(history.location.pathname === '/signin') history.push('/dashboard');
+			if(history.location.pathname === '/signin') history.push(routes.auth.dashboard.path);
 			return alert.success("Vous êtes connecté!");
 
 		} catch (err) {
-			return alert.error("Erreur : " + ((err as AxiosError).response?.data.message ?? "veuillez réessayer"));
+			if(process.env.debug)
+				return alert.error("Erreur : " + ((err as AxiosError).response?.data.message ?? "veuillez réessayer"));
+			return alert.error("Erreur inconnue, veuillez réessayer");
 		}
 	};
 
@@ -52,7 +56,7 @@ const SignIn = (props: SignInProps) => {
 						placeholder={t('form.email.placeholder')}
 						{...register('email', { required: true })}
 					/>
-					{errors.email?.type === 'required' && "Une adresse courriel est requise"}
+					{errors.email?.type === 'required' && t('form.email.required')}
 				</Form.Group>
 
 				<Form.Group controlId="formBasicPassword">
@@ -61,9 +65,11 @@ const SignIn = (props: SignInProps) => {
 						type="password"
 						autoComplete="on"
 						placeholder={t('form.pwd.placeholder')}
-						{...register('password', { required: true })}
+						{...register('password', { required: true, minLength: 6, maxLength: 32 })}
 					/>
-					{errors.password?.type === 'required' && "Un mot de passe est requis"}
+					{errors.password?.type === 'required' && t('form.pwd.required')}
+					{errors.password?.type === 'minLength' && t('form.error.minLength', { min: 6})}
+					{errors.password?.type === 'maxLength' && t('form.error.maxLength', { max: 32 })}
 				</Form.Group>
 				<Button variant="primary" type="submit">
 					{t('msg.auth.signin')}
@@ -71,7 +77,7 @@ const SignIn = (props: SignInProps) => {
 
 				<br /><br />
 
-				{t('home.navbar.msg.non_auth.label')}<Link pale to="/signup">{t('home.navbar.msg.non_auth.link')}</Link>
+				{t('home.navbar.msg.non_auth.label')}<Link pale to="/signup">{t('msg.auth.signup')}</Link>
 			</Form>
 		</FormContainer>
 	);

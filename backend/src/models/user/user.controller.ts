@@ -21,6 +21,7 @@ import { User } from 'src/utils/decorators/user.decorator';
 import { Role } from 'src/utils/types/roles.types';
 import { hasRole } from './auth';
 import { DTOInterceptor } from '../../utils/interceptors/dto.interceptor';
+import { QueryDTO } from '../level/dto/query.dto';
 
 @Controller('users')
 @UseInterceptors(new DTOInterceptor())
@@ -144,5 +145,14 @@ export class UserController {
 
     if (user.id === id) return this.userService.getCourses(user);
     return this.userService.getClassrooms(await this.userService.findById(id));
+  }
+
+  @Post(':id/levels')
+  @Auth()
+  async getLevels(@User() user: UserEntity, @Param('id') id: string, @Body() query: QueryDTO) {
+    if (!hasRole(user, Role.MOD) && user.id !== id) throw new HttpException('You cannot do that', HttpStatus.FORBIDDEN);
+
+    if (user.id === id) return this.userService.getLevels(user, query);
+    return this.userService.getLevels(await this.userService.findById(id), query);
   }
 }

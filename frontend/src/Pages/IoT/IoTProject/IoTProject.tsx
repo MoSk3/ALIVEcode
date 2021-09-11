@@ -42,17 +42,13 @@ const IoTProject = (props: IoTProjectProps) => {
 
 	// Socket io
 	useEffect(() => {
-		const socket = io(`http://${window.location.hostname}:8888`);
+		if (!process.env.REACT_APP_IOT_URL) return;
+		const socket = io(process.env.REACT_APP_IOT_URL);
 
 		socket.emit('register_light');
 
 		socket.on('light', lightLevel => {
 			setLightLevel(lightLevel / 1000);
-		});
-
-		// Notification test
-		socket.on('notification', msg => {
-			console.log(msg);
 		});
 
 		setSocket(socket);
@@ -64,9 +60,9 @@ const IoTProject = (props: IoTProjectProps) => {
 	useEffect(() => {
 		const getProject = async () => {
 			try {
-				const project: ProjectModel = await api.db.iot.projects.get({
-					id: props.match.params.id,
-				});
+				const project: ProjectModel = await api.db.iot.projects.get(
+					props.match.params.id,
+				);
 				await project.getRoutes();
 				setProject(project);
 			} catch (err) {
@@ -97,9 +93,8 @@ const IoTProject = (props: IoTProjectProps) => {
 								updatedProject.routes = project.routes;
 								setProject(updatedProject);
 							}}
-							action="UPDATE"
-							buttonText="update"
-							name="update_iot_project"
+							action="PATCH"
+							name="iot_project"
 							url={`iot/projects/${project.id}`}
 							inputGroups={[
 								{
@@ -155,7 +150,6 @@ const IoTProject = (props: IoTProjectProps) => {
 							title="New route"
 							onSubmit={res => {
 								const resRoute: IotRoute = res.data;
-								console.log(resRoute);
 								project.routes.push(resRoute);
 								setProject(project);
 								setRouteModalOpen(false);
@@ -165,7 +159,6 @@ const IoTProject = (props: IoTProjectProps) => {
 						>
 							<Form
 								action="POST"
-								buttonText="Create"
 								name="create_iot_route"
 								url={`iot/projects/${project.id}/routes`}
 								inputGroups={[

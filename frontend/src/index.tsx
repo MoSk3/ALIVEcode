@@ -1,3 +1,4 @@
+import "dotenv/config";
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
@@ -6,7 +7,6 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { transitions, positions, Provider as AlertProvider } from 'react-alert';
 import axios from 'axios';
-import { SERVER_URL } from './appConfigs';
 import AlertTemplate from 'react-alert-template-basic';
 import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
@@ -14,7 +14,7 @@ import HttpAPI from 'i18next-http-backend';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import LoadingScreen from './Components/UtilsComponents/LoadingScreen/LoadingScreen';
 
-axios.defaults.baseURL = SERVER_URL;
+axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL;
 axios.defaults.withCredentials = true;
 axios.defaults.timeout = 5000;
 axios.defaults.headers = {
@@ -73,4 +73,4 @@ ReactDOM.render(
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+process.env.DEBUG ? reportWebVitals(console.log) : reportWebVitals();

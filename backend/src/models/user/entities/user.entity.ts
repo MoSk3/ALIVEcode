@@ -1,10 +1,11 @@
 import { Exclude } from 'class-transformer';
-import { IsEmail, IsEmpty, IsNotEmpty, MinLength } from 'class-validator';
+import { IsEmail, IsEmpty, IsNotEmpty, Length } from 'class-validator';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn, TableInheritance } from 'typeorm';
 import { LevelEntity } from '../../level/entities/level.entity';
 import { IoTObjectEntity } from '../../iot/IoTobject/entities/IoTobject.entity';
 import { IoTProjectEntity } from '../../iot/IoTproject/entities/IoTproject.entity';
 import { AsScriptEntity } from 'src/as-script/entities/as-script.entity';
+import { LevelProgressionEntity } from '../../level/entities/levelProgression.entity';
 
 @Entity()
 @TableInheritance({ column: { type: 'varchar', name: 'type' } })
@@ -15,7 +16,7 @@ export class UserEntity {
 
   @Column({ nullable: false })
   @Exclude({ toPlainOnly: true })
-  @MinLength(6)
+  @Length(6, 32)
   @IsNotEmpty()
   password: string;
 
@@ -53,4 +54,7 @@ export class UserEntity {
 
   @OneToMany(() => IoTProjectEntity, iot => iot.creator, { cascade: true })
   collabIoTProjects: IoTProjectEntity[];
+
+  @OneToMany(() => LevelProgressionEntity, prog => prog.user, { cascade: true })
+  levelProgressions: LevelProgressionEntity[];
 } 

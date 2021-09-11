@@ -7,11 +7,14 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+p {
+  margin-bottom: 0 !important;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
-
 
 .card {
   border-radius: 15px;

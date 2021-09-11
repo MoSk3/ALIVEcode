@@ -25,7 +25,7 @@ const openPlaySocket = (): PlaySocket => {
 		socket.onclose = e => {
 			setTimeout(() => {
 				openPlaySocket();
-			}, 200);
+			}, 2000);
 		};
 		socket.onmessage = e => {
 			let parsed;
@@ -59,12 +59,12 @@ const openPlaySocket = (): PlaySocket => {
 						}
 						break;
 					default:
-						console.log(data);
+						if (process.env.DEBUG) console.log(data);
 				}
 			}
 		};
 		socket.onerror = e => {
-			console.log('error:', e);
+			if (process.env.DEBUG) console.log('error:', e);
 		};
 
 		const compile = (

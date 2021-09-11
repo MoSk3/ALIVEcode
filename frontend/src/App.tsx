@@ -9,7 +9,6 @@ import BackArrow from './Components/UtilsComponents/BackArrow/BackArrow';
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.css';
 import useRoutes from './state/hooks/useRoutes';
-import { SERVER_URL } from './appConfigs';
 import { ThemeContext, Theme, themes } from './state/contexts/ThemeContext';
 import styled, { createGlobalStyle } from 'styled-components';
 import { loadThemeFromCookies, setCookie } from './Types/cookies';
@@ -123,13 +122,14 @@ const App = () => {
 				if (
 					error.response &&
 					error.response.status === 401 &&
-					originalRequest.url === SERVER_URL + 'users/refreshToken'
+					originalRequest.url ===
+						process.env.REACT_APP_BACKEND_URL + 'users/refreshToken'
 				) {
 					if (user) await logout();
 					return Promise.reject(error);
 				}
 				// TODO : remove in production
-				if (error.response) console.log(error.response);
+				if (process.env.DEBUG && error.response) console.log(error.response);
 				if (
 					error.response &&
 					error.response.data.message === 'Not Authenticated' &&
@@ -145,7 +145,7 @@ const App = () => {
 
 						return axios(originalRequest);
 					} catch (err) {
-						console.error(err);
+						if (process.env.DEBUG) console.error(err);
 					}
 				}
 				return Promise.reject(error);

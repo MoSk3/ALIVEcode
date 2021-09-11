@@ -5,12 +5,13 @@ import { useForm } from 'react-hook-form';
 import { USER_TYPES } from '../../../Types/userTypes';
 import FormContainer from '../../../Components/UtilsComponents/FormContainer/FormContainer';
 import Link from '../../../Components/UtilsComponents/Link/Link';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { useContext } from 'react';
 import { UserContext } from '../../../state/contexts/UserContext';
 import { User } from '../../../Models/User/user.entity';
 import { useHistory } from 'react-router';
 import { setAccessToken } from '../../../Types/accessToken';
+import { useTranslation } from 'react-i18next';
 
 const SignUp = ({ userType }: SignUpProps) => {
 	const { setUser } = useContext(UserContext);
@@ -19,6 +20,7 @@ const SignUp = ({ userType }: SignUpProps) => {
 		handleSubmit,
 		formState: { errors },
 	} = useForm();
+	const { t } = useTranslation();
 	const alert = useAlert();
 	const history = useHistory();
 
@@ -51,92 +53,127 @@ const SignUp = ({ userType }: SignUpProps) => {
 			if (history.location.pathname === '/signin') history.push('/dashboard');
 			return alert.success('Vous êtes connecté avec votre nouveau compte!');
 		} catch (err) {
-			console.error(err);
-			return alert.error('Une erreur est survenue');
+			if (process.env.debug)
+				return alert.error(
+					'Erreur : ' +
+						((err as AxiosError).response?.data.message ??
+							'veuillez réessayer'),
+				);
+			return alert.error('Erreur inconnue, veuillez réessayer');
 		}
 	};
 
 	return (
-		<FormContainer title="Inscription">
+		<FormContainer title={t('form.title.signup')}>
 			<Form onSubmit={handleSubmit(onSignIn)}>
 				<Form.Group controlId="formBasicEmail">
-					<Form.Label>Adresse courriel</Form.Label>
+					<Form.Label>{t('form.email.label')}</Form.Label>
 					<Form.Control
 						type="email"
 						autoComplete="on"
-						placeholder="Adresse courriel"
-						{...register('email')}
+						placeholder={t('form.email.placeholder')}
+						{...register('email', { required: true })}
 					/>
-					{errors.email?.type === 'required' &&
-						'Une adresse courriel est requise'}
-					<Form.Text>
-						Nous n'allons jamais partager votre adresse courriel.
-					</Form.Text>
+					{errors.email?.type === 'required' && t('form.email.required')}
+					<Form.Text>{t('form.email.info')}</Form.Text>
 				</Form.Group>
 				{userType === USER_TYPES.PROFESSOR ? (
 					<Form.Row>
 						<Form.Group as={Col}>
-							<Form.Label>Nom</Form.Label>
+							<Form.Label>{t('form.firstName.label')}</Form.Label>
 							<Form.Control
-								placeholder="Enric"
+								placeholder={t('form.firstName.placeholder')}
 								autoComplete="on"
-								{...register('firstName', { required: true })}
+								{...register('firstName', {
+									required: true,
+									minLength: 3,
+									maxLength: 25,
+								})}
 							/>
-							{errors.professor?.first_name?.type === 'required' &&
-								'Un nom est requis'}
+							{errors.firstName?.type === 'required' &&
+								t('form.firstName.required')}
+							{errors.firstName?.type === 'minLength' &&
+								t('form.error.minLength', { min: 3 })}
+							{errors.firstName?.type === 'maxLength' &&
+								t('form.error.maxLength', { max: 25 })}
 						</Form.Group>
 						<Form.Group as={Col}>
-							<Form.Label>Nom de famille</Form.Label>
+							<Form.Label>{t('form.lastName.label')}</Form.Label>
 							<Form.Control
 								placeholder="Soldevila"
 								autoComplete="on"
-								{...register('lastName', { required: true })}
+								{...register('lastName', {
+									required: true,
+									minLength: 3,
+									maxLength: 25,
+								})}
 							/>
-							{errors.professor?.last_name?.type === 'required' &&
-								'Un nom de famille est requis'}
+							{errors.lastName?.type === 'required' &&
+								t('form.lastName.required')}
+							{errors.lastName?.type === 'minLength' &&
+								t('form.error.minLength', { min: 3 })}
+							{errors.lastName?.type === 'maxLength' &&
+								t('form.error.maxLength', { max: 25 })}
 						</Form.Group>
 					</Form.Row>
 				) : (
 					<>
 						<Form.Group>
-							<Form.Label>Pseudonyme</Form.Label>
+							<Form.Label>{t('form.name.label')}</Form.Label>
 							<Form.Control
-								placeholder="pseudo"
-								{...register('name', { required: true })}
+								placeholder={t('form.name.placeholder')}
+								{...register('name', {
+									required: true,
+									minLength: 3,
+									maxLength: 20,
+								})}
 							/>
-							{errors.student?.name?.type === 'required' &&
-								'Un pseudonyme est requis'}
+							{errors.name?.type === 'required' && t('form.name.required')}
+							{errors.name?.type === 'minLength' &&
+								t('form.error.minLength', { min: 3 })}
+							{errors.name?.type === 'maxLength' &&
+								t('form.error.maxLength', { max: 20 })}
 						</Form.Group>
+						{/*
 						<Form.Group>
-							<Form.Label>Scholarité</Form.Label>
+							<Form.Label>{t('form.scholarity.label')}</Form.Label>
 							<Form.Control
-								placeholder="*****"
+								placeholder={t('form.scholarity.placeholder')}
 								autoComplete="on"
 								{...register('scholarity', { required: true })}
 							/>
-							{errors.student?.scholarity?.type === 'required' &&
-								'Le niveau scholaire est requis'}
+							{errors.scholarity?.type === 'required' &&
+								t('form.scholarity.required')}
 						</Form.Group>
+						*/}
 					</>
 				)}
 				<Form.Group>
-					<Form.Label>Mot de passe</Form.Label>
+					<Form.Label>{t('form.pwd.label')}</Form.Label>
 					<Form.Control
 						type="password"
 						autoComplete="current-password"
-						placeholder="*****"
-						{...register('password', { required: true })}
+						placeholder={t('form.pwd.placeholder')}
+						{...register('password', {
+							required: true,
+							minLength: 6,
+							maxLength: 32,
+						})}
 					/>
-					{errors.password?.type === 'required' && 'Un mot de passe est requis'}
+					{errors.password?.type === 'required' && t('form.pwd.required')}
+					{errors.password?.type === 'minLength' &&
+						t('form.error.minLength', { min: 6 })}
+					{errors.password?.type === 'maxLength' &&
+						t('form.error.maxLength', { max: 32 })}
 				</Form.Group>
 				<Button variant="primary" type="submit">
-					Inscription
+					{t('msg.auth.signup')}
 				</Button>
 				<br />
 				<br />
-				Vous avez déjà un compte?{' '}
+				{t('msg.auth.already_registered')}{' '}
 				<Link pale to="/signin">
-					Se connecter
+					{t('msg.auth.signin')}
 				</Link>
 			</Form>
 		</FormContainer>
