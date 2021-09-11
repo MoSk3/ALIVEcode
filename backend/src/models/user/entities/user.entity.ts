@@ -1,5 +1,5 @@
 import { Exclude } from 'class-transformer';
-import { IsEmail, IsEmpty, IsNotEmpty, IsOptional, Length, MinLength } from 'class-validator';
+import { IsEmail, IsEmpty, IsNotEmpty, IsOptional, Length, Matches, MinLength } from 'class-validator';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn, TableInheritance } from 'typeorm';
 import { LevelEntity } from '../../level/entities/level.entity';
 import { IoTObjectEntity } from '../../iot/IoTobject/entities/IoTobject.entity';
@@ -17,6 +17,7 @@ export class UserEntity {
   @Exclude({ toPlainOnly: true })
   @Length(6, 32)
   @IsNotEmpty()
+  @Matches(/^[A-Za-z0-9!@#\$&*~]*$/)
   password: string;
 
   @Column({ unique: true, nullable: false })

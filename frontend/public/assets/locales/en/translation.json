@@ -12,7 +12,10 @@
 		"error": {
 			"required": "This field is required",
 			"maxLength": "This field exceeds {{max}} characters",
-			"minLength": "This field should be at least {{min}} characters"
+			"minLength": "This field should be at least {{min}} characters",
+			"match": {
+				"name": "This field should only contains alphanumeric characters"
+			}
 		},
 		"level": {
 			"PATCH": {
