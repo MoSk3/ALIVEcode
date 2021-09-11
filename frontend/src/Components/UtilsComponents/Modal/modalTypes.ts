@@ -6,7 +6,9 @@ export interface ModalProps extends BootModalProps {
 	open: boolean;
 	size?: 'sm' | 'lg' | 'xl';
 	buttonVariant?: ButtonVariants;
-	closeButton?: boolean;
+	closeCross?: boolean;
+	hideCloseButton?: boolean;
+	submitText?: string;
 	children?: React.ReactNode;
 	hideFooter?: boolean;
 	onClose: () => void;

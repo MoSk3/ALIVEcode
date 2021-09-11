@@ -8,37 +8,12 @@ import { AuthPayload } from '../types/auth.payload';
 import { UserEntity } from 'src/models/user/entities/user.entity';
 import { hasRole } from '../../models/user/auth';
 import { Role } from '../types/roles.types';
+import { ClassroomEntity } from '../../models/classroom/entities/classroom.entity';
 
 export interface MyRequest extends Request {
   user: UserEntity;
+  classroom?: ClassroomEntity;
 }
-
-/*@Injectable({ scope: Scope.REQUEST })
-export class isAuth implements CanActivate {
-  constructor(
-    private reflector: Reflector,
-    @InjectRepository(UserEntity) private userRepository: Repository<UserEntity>,
-    @Inject(REQUEST) private req: MyRequest,
-  ) {}
-
-  async canActivate(): Promise<boolean> {
-    try {
-      const authorization = this.req.headers['authorization'];
-      if (!authorization) throw Error('Not Authenticated');
-
-      const accessToken = authorization.split(' ')[1];
-      const payload = verify(accessToken, process.env.ACCESS_TOKEN_SECRET_KEY);
-      if (!payload) throw Error('Not Authenticated');
-
-      const authPayload = payload as AuthPayload;
-      const user = await this.userRepository.findOne(authPayload.id);
-      this.req.user = user;
-    } catch {
-      return false;
-    }
-    return true;
-  }
-}*/
 
 @Injectable({ scope: Scope.REQUEST })
 export class RolesGuard implements CanActivate {

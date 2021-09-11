@@ -18,6 +18,8 @@ import { plainToClass } from 'class-transformer';
 import { User } from '../../Models/User/user.entity';
 import LevelAlive from './LevelAlive/LevelAlive';
 import useRoutes from '../../state/hooks/useRoutes';
+import { LevelAI as LevelAIModel } from '../../Models/Level/levelAI.entity';
+import LevelAI from './LevelAI/LevelAI';
 
 const Level = (props: LevelProps) => {
 	const { id } = useParams<{ id: string }>();
@@ -100,6 +102,20 @@ const Level = (props: LevelProps) => {
 					props.editMode && user != null && level.creator.id === user.id
 				}
 			></LevelCode>
+		);
+
+	console.log(level);
+	if (level instanceof LevelAIModel || props.type === 'ai')
+		return (
+			<LevelAI
+				setLevel={setLevel}
+				level={level as LevelAIModel}
+				progression={progression}
+				setProgression={setProgresion}
+				editMode={
+					props.editMode && user != null && level.creator.id === user.id
+				}
+			></LevelAI>
 		);
 
 	history.push(routes.public.home.path);

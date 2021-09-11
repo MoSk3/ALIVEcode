@@ -26,6 +26,7 @@ import LevelBrowse from '../../Pages/Level/LevelBrowse/LevelBrowse';
 import LevelList from '../../Pages/Level/LevelList/LevelList';
 import LevelFormMenu from '../../Pages/Level/LevelFormMenu/LevelFormMenu';
 import Test from '../../Pages/Test/Test';
+import { useHistory } from 'react-router';
 
 type component =
 	| React.ComponentType<RouteComponentProps<any>>
@@ -49,6 +50,7 @@ export interface RoutesGroup<T extends Route> {
 
 const useRoutes = () => {
 	const { user } = useContext(UserContext);
+	const history = useHistory();
 
 	const asRoutes = <T extends RoutesGroup<Route>>(routeGroup: T): T => {
 		Object.values(routeGroup).forEach(route => {
@@ -208,6 +210,10 @@ const useRoutes = () => {
 			path: '/level/create/code',
 			component: () => <LevelForm type="code" />,
 		},
+		level_create_ai: {
+			path: '/level/create/ai',
+			component: () => <LevelForm type="AI" />,
+		},
 	});
 
 	const non_auth_routes = asNonAuthRoutes(Home, {
@@ -243,7 +249,11 @@ const useRoutes = () => {
 		error: error_routes,
 	};
 
-	return { routes };
+	return {
+		routes,
+		goTo: (path: string) => history.push(path),
+		goBack: () => history.goBack(),
+	};
 };
 
 export default useRoutes;

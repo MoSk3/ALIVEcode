@@ -14,7 +14,7 @@ const SignUpMenu = (props: SignUpMenuProps) => {
 
 	return (
 		<FillContainer startAtTop centered>
-			<Row>
+			<Row style={{ justifyContent: 'center' }}>
 				<Card
 					img={StudentImg}
 					to={routes.non_auth.signup_student.path}

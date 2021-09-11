@@ -134,6 +134,7 @@ const SignUp = ({ userType }: SignUpProps) => {
 							{errors.name?.type === 'maxLength' &&
 								t('form.error.maxLength', { max: 20 })}
 						</Form.Group>
+						{/*
 						<Form.Group>
 							<Form.Label>{t('form.scholarity.label')}</Form.Label>
 							<Form.Control
@@ -144,6 +145,7 @@ const SignUp = ({ userType }: SignUpProps) => {
 							{errors.scholarity?.type === 'required' &&
 								t('form.scholarity.required')}
 						</Form.Group>
+						*/}
 					</>
 				)}
 				<Form.Group>
@@ -165,7 +167,7 @@ const SignUp = ({ userType }: SignUpProps) => {
 						t('form.error.maxLength', { max: 32 })}
 				</Form.Group>
 				<Button variant="primary" type="submit">
-					{t('msg.auth.signin')}
+					{t('msg.auth.signup')}
 				</Button>
 				<br />
 				<br />
