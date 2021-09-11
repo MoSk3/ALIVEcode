@@ -1,30 +1,39 @@
-import { CMD } from "../../../Components/LevelComponents/Cmd/cmdTypes";
-import { PlaySocket } from '../PlaySocket';
-import $ from 'jquery';
 import axios from 'axios';
-import { User } from '../../../Models/User/user.entity';
+import { LevelExecutor } from '../LevelExecutor';
 
-export default class LevelCodeExecutor {
-	public playButton: JQuery;
-	public socket?: PlaySocket;
-	public cmd?: CMD;
-	public lineInterfaceContent: string = '';
-	public timeouts: Array<NodeJS.Timeout> = [];
-	public execution: boolean = false;
+export default class LevelCodeExecutor extends LevelExecutor {
+	public async onRun() {
+		// Envoie le code à exécuter au serveur
+		const lines: string = this.lineInterfaceContent;
 
-	public levelName?: string;
-	public creator?: User | undefined;
+		try {
+			let { idToken, result: data } = await this.sendDataToAsServer({
+				lines,
+			});
+			if (process.env.DEBUG) console.log(idToken, data);
 
-	constructor(
-		creator: User | undefined,
-		levelName: string,
-		playButton: HTMLButtonElement,
-	) {
-		this.creator = creator;
-		this.levelName = levelName;
-		this.playButton = $(playButton);
-		this.init();
+			while (true) {
+				let res = this.execute(data);
+				if ((Array.isArray(res) && res.length === 0) || res === undefined) {
+					break;
+				} else {
+					({ idToken, result: data } = await this.sendDataToAsServer({
+						idToken,
+						'response-data': res,
+					}));
+				}
+			}
+		} catch {
+			this.cmd?.error(
+				"Une erreur semble être survenue lors de la compilation de votre code, il se peut que les services d'alivescript soient présentement hors-service",
+				0,
+			);
+			this.stop();
+		}
 	}
+
+	public onStop() {}
+	public init(s: any) {}
 
 	private async sendDataToAsServer(
 		data: { lines: string } | { idToken: string; 'response-data': string[] },
@@ -39,46 +48,7 @@ export default class LevelCodeExecutor {
 		).data;
 	}
 
-	allo() {
-		console.log(this.lineInterfaceContent);
-	}
-
-	private init() {
-		this.playButton.on('click', async (e: any) => {
-			if (!this.execution) {
-				this.execution = true;
-				// Envoie le code à exécuter au serveur
-				const lines: string = this.lineInterfaceContent;
-
-				let { idToken, result: data } = await this.sendDataToAsServer({
-					lines,
-				});
-				if (process.env.DEBUG) console.log(idToken, data);
-
-				while (true) {
-					let res = this.execute(data);
-					if ((Array.isArray(res) && res.length === 0) || res === undefined) {
-						break;
-					} else {
-						({ idToken, result: data } = await this.sendDataToAsServer({
-							idToken,
-							'response-data': res,
-						}));
-					}
-				}
-			} else {
-				this.cmd?.clear();
-				this.execution = false;
-
-				// Clear tous les timeouts de la simulation
-				for (let timeout of this.timeouts) {
-					clearTimeout(timeout);
-				}
-			}
-		});
-	}
-
-	private execute(data: any) {
+	public execute(data: any) {
 		const res: any = [];
 		const ID = 'id';
 		const DODO = 'd';
@@ -98,6 +68,7 @@ export default class LevelCodeExecutor {
 		const perform_action = (i: number) => {
 			if (i >= data.length) {
 				//this.socket?.response(res);
+				this.stop();
 				return;
 			}
 			const action = data[i];

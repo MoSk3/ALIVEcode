@@ -5,7 +5,6 @@ import { Shape } from '../../../Components/LevelComponents/Simulation/Sketch/sim
 import { Vector } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/Vector';
 import openPlaySocket from '../PlaySocket';
 import $ from 'jquery';
-import { PlayExecutor } from '../../../Models/Executor/PlayExecutor';
 import { PlaySocket } from '../PlaySocket';
 import { CMD } from '../../../Components/LevelComponents/Cmd/cmdTypes';
 import { Professor, Student } from '../../../Models/User/user.entity';
@@ -13,7 +12,7 @@ import { Professor, Student } from '../../../Models/User/user.entity';
 // TODO: robotConnected
 const robotConnected = false;
 
-class LevelAliveExecutor implements PlayExecutor {
+class LevelAliveExecutor {
 	public s: any;
 	public playButton: JQuery;
 	public socket?: PlaySocket;
