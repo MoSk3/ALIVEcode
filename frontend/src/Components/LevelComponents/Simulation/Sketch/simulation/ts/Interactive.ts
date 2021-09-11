@@ -21,6 +21,7 @@ export class Interactive
 	isCollectable?: boolean = false;
 	isObjectif?: boolean = false;
 	isButton?: boolean = false;
+
 	linkedId!: any[];
 
 	// Classe Collectable concerne tout les "shapes" comme les objets à collecter afin de compléter un niveau par exemple.

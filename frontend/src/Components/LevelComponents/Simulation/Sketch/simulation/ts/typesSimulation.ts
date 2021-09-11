@@ -52,6 +52,11 @@ export interface ShapeInfo {
 }
 
 /**
+ * theme/name/variant
+ */
+export type imagePathType = `${string}/${string}/${string}`;
+
+/**
  * @param id unique identifier used to describe relationship between objects
  * @param shapeType the name of the class from wich the object must be created
  * @param templateName tell the deserializer which template to use to build the object
