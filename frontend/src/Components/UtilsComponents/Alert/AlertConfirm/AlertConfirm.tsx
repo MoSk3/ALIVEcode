@@ -22,8 +22,12 @@ const StyledModal = styled(Modal)`
 	}
 `;
 
-const AlertConfirm = (props: AlertConfirmProps) => {
-	const { onClose, onConfirm, onCancel, ...other } = props;
+const AlertConfirm = ({
+	onClose,
+	onConfirm,
+	onCancel,
+	...other
+}: AlertConfirmProps) => {
 	const { t } = useTranslation();
 
 	return (

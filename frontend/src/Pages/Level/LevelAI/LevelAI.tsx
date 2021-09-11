@@ -1,3 +1,4 @@
+import { LevelAIProps, StyledAliveLevel } from './levelAITypes';
 import { useEffect, useState, useContext, useRef } from 'react';
 import LineInterface from '../../../Components/LevelComponents/LineInterface/LineInterface';
 import { UserContext } from '../../../state/contexts/UserContext';
@@ -11,14 +12,16 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import IconButton from '../../../Components/DashboardComponents/IconButton/IconButton';
 import Cmd from '../../../Components/LevelComponents/Cmd/Cmd';
+import LevelAliveExecutor from './LevelAIExecutor';
 import useCmd from '../../../state/hooks/useCmd';
 import { Professor } from '../../../Models/User/user.entity';
 import { useHistory } from 'react-router-dom';
 import useRoutes from '../../../state/hooks/useRoutes';
 import FormModal from '../../../Components/UtilsComponents/FormModal/FormModal';
 import Form from '../../../Components/UtilsComponents/Form/Form';
+import Button from '../../../Components/UtilsComponents/Button/Button';
 import { plainToClass } from 'class-transformer';
-import { LevelCode as LevelCodeModel } from '../../../Models/Level/levelCode.entity';
+import { LevelAI as LevelAIModel } from '../../../Models/Level/levelAI.entity';
 import api from '../../../Models/api';
 import {
 	LEVEL_ACCESS,
@@ -26,19 +29,18 @@ import {
 } from '../../../Models/Level/level.entity';
 import $ from 'jquery';
 import { useTranslation } from 'react-i18next';
-import { LevelCodeProps, StyledCodeLevel } from './levelCodeTypes';
-import LevelCodeExecutor from './LevelCodeExecutor';
 import Modal from '../../../Components/UtilsComponents/Modal/Modal';
+import FillContainer from '../../../Components/UtilsComponents/FillContainer/FillContainer';
 
-const LevelAlive = ({
+const LevelAI = ({
 	level,
 	editMode,
 	progression,
 	setLevel,
 	setProgression,
-}: LevelCodeProps) => {
+}: LevelAIProps) => {
 	const { user } = useContext(UserContext);
-	const [executor, setExecutor] = useState<LevelCodeExecutor>();
+	const [executor, setExecutor] = useState<LevelAliveExecutor>();
 	const [cmdRef, cmd] = useCmd();
 	const playButton = useRef<HTMLButtonElement>(null);
 	const history = useHistory();
@@ -72,7 +74,7 @@ const LevelAlive = ({
 
 		if (!playButton.current) return;
 		setExecutor(
-			new LevelCodeExecutor(
+			new LevelAliveExecutor(
 				user ?? ({} as Professor),
 				level.name,
 				playButton.current,
@@ -86,7 +88,7 @@ const LevelAlive = ({
 		if (messageTimeout.current) clearTimeout(messageTimeout.current);
 		setSaving(true);
 		setSaved(false);
-		const updatedLevel = (await api.db.levels.update(level)) as LevelCodeModel;
+		const updatedLevel = (await api.db.levels.update(level)) as LevelAIModel;
 		messageTimeout.current = setTimeout(() => {
 			setSaving(false);
 			setSaved(true);
@@ -150,9 +152,11 @@ const LevelAlive = ({
 
 	return (
 		<>
-			<StyledCodeLevel editMode={editMode}>
+			<StyledAliveLevel editMode={editMode}>
 				<Row className="h-100">
+					{/* Left Side of screen */}
 					<Col className="left-col" md={6}>
+						{/* Barre d'infos du niveau */}
 						<div className="tools-bar">
 							{editMode && editTitle ? (
 								<input
@@ -195,7 +199,10 @@ const LevelAlive = ({
 								</label>
 							)}
 						</div>
+
+						{/* Interface de code */}
 						{editMode ? (
+							/* Interface du code avec les tabs */
 							<LineInterface
 								hasTabs
 								tabs={[
@@ -205,7 +212,7 @@ const LevelAlive = ({
 										content: level.initialCode,
 										onChange: content => {
 											level.initialCode = content;
-											const newLevel = plainToClass(LevelCodeModel, {
+											const newLevel = plainToClass(LevelAIModel, {
 												...level,
 											});
 											setLevel(newLevel);
@@ -218,7 +225,7 @@ const LevelAlive = ({
 										content: level.solution,
 										onChange: content => {
 											level.solution = content;
-											const newLevel = plainToClass(LevelCodeModel, {
+											const newLevel = plainToClass(LevelAIModel, {
 												...level,
 											});
 											setLevel(newLevel);
@@ -229,26 +236,42 @@ const LevelAlive = ({
 								handleChange={lineInterfaceContentChanges}
 							/>
 						) : (
+							/* Interface de code sans les tabs */
 							<LineInterface
 								content={
 									progression?.data.code
-										? progression?.data.code
+										? progression.data.code
 										: level.initialCode
 								}
 								handleChange={lineInterfaceContentChanges}
 							/>
 						)}
 					</Col>
+
+					{/* Right Side of screen */}
 					<Col md={6} style={{ resize: 'both', padding: '0' }}>
-						<Row className="h-100">
+						<Row style={{ height: '60%' }}>
+							<FillContainer
+								relative
+								centered
+								style={{ backgroundColor: 'black' }}
+							>
+								<label>TO IMPLEMENT</label>
+							</FillContainer>
+						</Row>
+						<Row style={{ height: '40%' }}>
 							<Cmd ref={cmdRef}></Cmd>
 						</Row>
 					</Col>
 				</Row>
+
+				{/*
+					Update level form
+				*/}
 				<FormModal
 					title={t('form.level.PATCH.title')}
 					onSubmit={res => {
-						const updatedLevel = plainToClass(LevelCodeModel, res.data);
+						const updatedLevel = plainToClass(LevelAIModel, res.data);
 						updatedLevel.creator = level.creator;
 						setLevel(updatedLevel);
 						setSettingsModalOpen(false);
@@ -292,16 +315,36 @@ const LevelAlive = ({
 						]}
 					/>
 				</FormModal>
-			</StyledCodeLevel>
+			</StyledAliveLevel>
+
+			{/*
+				No account modal
+			*/}
 			<Modal
-				title="Need to create an account"
+				title={t('msg.auth.account_required')}
 				open={accountModalOpen}
 				onClose={() => setAccountModalOpen(false)}
 			>
-				<label>SIKE</label>
+				<Button
+					variant="primary"
+					to={routes.non_auth.signup.path}
+					className="mb-2"
+				>
+					{t('msg.auth.signup')}
+				</Button>
+				<br />
+				or
+				<br />
+				<Button
+					variant="primary"
+					to={routes.non_auth.signin.path}
+					className="mt-2"
+				>
+					{t('msg.auth.signin')}
+				</Button>
 			</Modal>
 		</>
 	);
 };
 
-export default LevelAlive;
+export default LevelAI;

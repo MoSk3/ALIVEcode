@@ -30,6 +30,7 @@ const StyledDiv = styled.div`
 		background-color: rgba(var(--background-color-rgb), 0.75);
 		box-shadow: 0px 15px 30px 0px rgb(170, 170, 170);
 		min-height: ${({ height }: StyledCardContainerProps) => height ?? 'auto'};
+		padding: 20px;
 	}
 
 	.card-container-body-centered {
@@ -73,7 +74,7 @@ const CardContainer = ({
 					horizontally
 				>
 					{asRow ? (
-						<Row className="mt-4 pb-4 pt-2 card-container-row">{children}</Row>
+						<Row className="card-container-row">{children}</Row>
 					) : (
 						<>{children}</>
 					)}

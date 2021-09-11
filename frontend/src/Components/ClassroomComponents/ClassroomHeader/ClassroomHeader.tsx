@@ -1,99 +1,85 @@
-import styled from 'styled-components';
-import { ClassroomHeaderProps } from './classroomHeaderTypes';
-import { Badge, Col, Container, Row } from 'react-bootstrap';
+import { ClassroomHeaderProps, StyledClassroomHeader } from './classroomHeaderTypes';
+import { Alert, Badge, Col, Row } from 'react-bootstrap';
 import Button from '../../UtilsComponents/Button/Button';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { UserContext } from '../../../state/contexts/UserContext';
 import { Professor } from '../../../Models/User/user.entity';
-
-const StyledClassroomHeader = styled.div`
-	color: white;
-	border-radius: 15px;
-	background-color: rgba(var(--primary-color-rgb), 0.92);
-	margin-top: 25px;
-	width: 85%;
-	padding: 50px;
-	box-shadow: 0px 5px 15px rgb(95 95 95);
-
-	span {
-		margin-top: 10px;
-		font-size: 20px;
-		background-color: var(--secondary-color);
-	}
-
-	#classroom-buttons {
-		text-align: right;
-	}
-
-	#classroom-buttons button {
-		margin: 10px;
-		font-size: 16px;
-		font-weight: bold;
-	}
-
-	@media screen and (max-width: 991px) {
-		#classroom-title {
-			text-align: center;
-		}
-
-		#classroom-buttons {
-			margin-top: 15px;
-			text-align: center;
-		}
-
-		#classroom-courses {
-			margin-top: 50px;
-		}
-
-		/*
-		#classroom-details-header {
-				margin-top: 25px;  
-		}
-		#classroom-students-header {
-				margin-top: 25px;   
-		}
-		*/
-
-		#classroom-students-body {
-			height: calc(50vh - 110px);
-		}
-
-		#classroom-courses-body {
-			height: calc(55vh - 110px);
-		}
-	}
-`;
+import api from '../../../Models/api';
+import { useHistory } from 'react-router';
+import useRoutes from '../../../state/hooks/useRoutes';
+import { useTranslation } from 'react-i18next';
+import { useAlert } from 'react-alert';
+import Modal from '../../UtilsComponents/Modal/Modal';
+import { prettyField } from '../../../Types/formatting';
 
 const ClassroomHeader = ({ classroom }: ClassroomHeaderProps) => {
 	const { user } = useContext(UserContext);
+	const { routes } = useRoutes();
+	const { t } = useTranslation();
+	const history = useHistory();
+	const alert = useAlert();
+	const [codeModalOpen, setCodeModalOpen] = useState(false);
+
+	const leaveClassroom = async () => {
+		if (!user) return;
+		try {
+			await api.db.classrooms.leaveClassroom(classroom.id, user.id);
+			history.push(routes.auth.dashboard.path);
+		} catch {
+			return alert.error(t('error.505'));
+		}
+	};
 
 	return (
-		<StyledClassroomHeader as={Container}>
+		<StyledClassroomHeader>
 			<Row>
 				<Col lg id="classroom-title">
 					<h2>{classroom.name}</h2>
 					<h5>
-						<Badge variant="primary">Professeur</Badge>
+						<Badge variant="primary">{prettyField(t('msg.professor'))}</Badge>
 						{' Enric, Soldevila'}
 					</h5>
 				</Col>
 				{user instanceof Professor ? (
 					<Col lg id="classroom-buttons">
 						<div>
-							<Button variant="primary">Ajouter des étudiants</Button>
+							<Button onClick={() => setCodeModalOpen(true)} variant="primary">
+								{t('classroom.add_students')}
+							</Button>
 						</div>
 						<div>
-							<Button variant="danger">Supprimer la classe</Button>
+							<Button variant="danger">{t('classroom.delete')}</Button>
 						</div>
 					</Col>
 				) : (
 					<Col lg id="classroom-buttons">
 						<div>
-							<Button variant="danger">Quitter la classe</Button>
+							<Button onClick={leaveClassroom} variant="danger">
+								{t('classroom.leave')}
+							</Button>
 						</div>
 					</Col>
 				)}
 			</Row>
+
+			<Modal
+				title={t('classroom.code.title')}
+				open={codeModalOpen}
+				onClose={() => setCodeModalOpen(false)}
+				submitText={t('msg.understood')}
+				button
+				hideCloseButton
+				closeCross
+			>
+				{t('classroom.code.desc')}
+				<Alert
+					className="mt-4"
+					style={{ fontSize: '3em', textAlign: 'center' }}
+					variant="success"
+				>
+					{classroom.code}
+				</Alert>
+			</Modal>
 		</StyledClassroomHeader>
 	);
 };

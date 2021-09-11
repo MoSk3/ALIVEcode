@@ -1,8 +1,8 @@
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { Form as BootForm } from 'react-bootstrap';
+import { Form as BootForm, InputGroup } from 'react-bootstrap';
 import Button from '../Button/Button';
-import { FormProps, InputGroup } from './formTypes';
+import { FormProps, InputGroup as InputGroupModel } from './formTypes';
 import axios, { AxiosError } from 'axios';
 import { useAlert } from 'react-alert';
 import { useHistory } from 'react-router';
@@ -46,7 +46,7 @@ const Form = (props: FormProps) => {
 		}
 	};
 
-	const renderFormInput = (g: InputGroup) => {
+	const renderFormInput = (g: InputGroupModel) => {
 		const placeholderValue = t([
 			`form.${props.name}.${props.action}.${g.name}.placeholder`,
 			`form.${props.name}.${g.name}.placeholder`,
@@ -61,6 +61,8 @@ const Form = (props: FormProps) => {
 			case 'select':
 				return (
 					<BootForm.Control
+						style={{ paddingRight: 0 }}
+						isInvalid={errors[g.name]?.type}
 						as="select"
 						placeholder={placeholderValue}
 						defaultValue={g.default}
@@ -87,6 +89,8 @@ const Form = (props: FormProps) => {
 			default:
 				return (
 					<BootForm.Control
+						style={{ paddingRight: 0 }}
+						isInvalid={errors[g.name]?.type}
 						type={g.inputType}
 						defaultValue={g.default}
 						placeholder={placeholderValue}
@@ -107,31 +111,44 @@ const Form = (props: FormProps) => {
 							prettyField(g.name),
 						])}
 					</BootForm.Label>
-					{renderFormInput(g)}
-					{errors[g.name]?.type === 'required' &&
-						t([
-							`form.${props.name}.${props.action}.${g.name}.error.required`,
-							`form.${props.name}.${g.name}.error.required`,
-							'form.error.required',
-						])}
-					{errors[g.name]?.type === 'maxLength' &&
-						t(
-							[
-								`form.${props.name}.${props.action}.${g.name}.error.maxLength`,
-								`form.${props.name}.${g.name}.error.maxLength`,
-								'form.error.maxLength',
-							],
-							{ max: g.maxLength },
+					<InputGroup
+						hasValidation={
+							g.maxLength != null || g.minLength != null || g.required
+						}
+					>
+						{renderFormInput(g)}
+						{(g.maxLength != null || g.minLength != null || g.required) && (
+							<BootForm.Control.Feedback
+								style={{ wordWrap: 'break-word' }}
+								type="invalid"
+							>
+								{errors[g.name]?.type === 'required' &&
+									t([
+										`form.${props.name}.${props.action}.${g.name}.error.required`,
+										`form.${props.name}.${g.name}.error.required`,
+										'form.error.required',
+									])}
+								{errors[g.name]?.type === 'maxLength' &&
+									t(
+										[
+											`form.${props.name}.${props.action}.${g.name}.error.maxLength`,
+											`form.${props.name}.${g.name}.error.maxLength`,
+											'form.error.maxLength',
+										],
+										{ max: g.maxLength },
+									)}
+								{errors[g.name]?.type === 'minLength' &&
+									t(
+										[
+											`form.${props.name}.${props.action}.${g.name}.error.minlength`,
+											`form.${props.name}.${g.name}.error.minLength`,
+											'form.error.minLength',
+										],
+										{ min: g.minLength },
+									)}
+							</BootForm.Control.Feedback>
 						)}
-					{errors[g.name]?.type === 'minLength' &&
-						t(
-							[
-								`form.${props.name}.${props.action}.${g.name}.error.minlength`,
-								`form.${props.name}.${g.name}.error.minLength`,
-								'form.error.minLength',
-							],
-							{ min: g.minLength },
-						)}
+					</InputGroup>
 				</BootForm.Group>
 			))}
 			<Button
