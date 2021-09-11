@@ -16,39 +16,57 @@ type urlArgType<S extends string> = S extends `${infer _}:${infer A}/${infer B}`
 	? A
 	: never;
 
-const apiGetter = <T extends {}, U extends boolean, S extends string>(
+const formatUrl = <S extends string>(
+	url: string,
+	args: { [key in urlArgType<S>]: string },
+) => {
+	return url
+		.split('/')
+		.map(part =>
+			part.startsWith(':') ? args[part.substring(1) as urlArgType<S>] : part,
+		)
+		.join('/');
+};
+
+const apiGet = <T extends {}, S extends string, U extends boolean>(
 	url: S,
 	target: ClassConstructor<T>,
 	returnsArray: U,
 ) => {
-	return async (args: { [key in urlArgType<S>]: string }) =>
-		(await loadObj(
-			url
-				.split('/')
-				.map(part =>
-					part.startsWith(':')
-						? args[part.substring(1) as urlArgType<S>]
-						: part,
-				)
-				.join('/'),
-			target,
-		)) as U extends true ? T[] : T;
-};
-
-// TODO : add build object
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const apiCreate = <U extends ClassConstructor<unknown>>(
-	moduleName: string,
-	target: U,
-) => {
-	return async <T extends U>(fields: T): Promise<unknown> => {
-		const data = (await axios.post(moduleName, fields)).data;
-		if (!data) {
-			return null;
-		}
-		return plainToClass(target, data);
+	return async (args: { [key in urlArgType<S>]: string }) => {
+		return (await loadObj(formatUrl(url, args), target)) as U extends true
+			? T[]
+			: T;
 	};
 };
+
+const apiDelete = <S extends string>(url: S) => {
+	return async (args: { [key in urlArgType<S>]: string }) => {
+		return await axios.delete(formatUrl(url, args));
+	};
+};
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const apiCreate = <T>(moduleName: string, target: ClassConstructor<T>) => {
+	return async (fields: any): Promise<T> => {
+		const data = (await axios.post(moduleName, fields)).data;
+		return plainToClass(target, data) as T;
+	};
+};
+
+const apiUpdate = <T, S extends string>(
+	url: S,
+	target: ClassConstructor<T>,
+) => {
+	return async (
+		args: { [key in urlArgType<S>]: string },
+		fields: object,
+	): Promise<T> => {
+		const data = (await axios.patch(formatUrl(url, args), fields)).data;
+		return plainToClass(target, data) as T;
+	};
+};
+
 /*
 const api = {
 	db: {
@@ -128,29 +146,32 @@ const api = {
 	db: {
 		users: {
 			iot: {
-				getProjects: apiGetter('users/:id/iot/projects', IoTProject, true),
-				getObjects: apiGetter('users/:id/iot/objects', IoTObject, true),
+				getProjects: apiGet('users/:id/iot/projects', IoTProject, true),
+				getObjects: apiGet('users/:id/iot/objects', IoTObject, true),
 			},
 			//get: apiGetter('users', User),
-			getClassrooms: apiGetter('users/:id/classrooms', Classroom, true),
-			getCourses: apiGetter('users/:id/courses', Course, true),
-			createProfessor: apiCreate('users/professors/:id', Professor),
-			createStudent: apiCreate('users/students/:id', Student),
+			getClassrooms: apiGet('users/:id/classrooms', Classroom, true),
+			getCourses: apiGet('users/:id/courses', Course, true),
+			createProfessor: apiCreate('users/professors', Professor),
+			createStudent: apiCreate('users/students', Student),
+			delete: apiDelete('users/:id'),
 		},
 		classrooms: {
-			get: apiGetter('classrooms/:id/', Classroom, false),
-			getCourses: apiGetter('classrooms/:id/courses', Course, true),
-			getStudents: apiGetter('classrooms/:id/students', Student, true),
+			get: apiGet('classrooms/:id/', Classroom, false),
+			getCourses: apiGet('classrooms/:id/courses', Course, true),
+			getStudents: apiGet('classrooms/:id/students', Student, true),
 			create: apiCreate('classrooms', Classroom),
+			delete: apiDelete('classrooms/:id'),
 		},
 		courses: {
-			get: apiGetter('courses/:id', Course, false),
-			getSections: apiGetter('courses/:id/sections', Section, true),
+			get: apiGet('courses/:id', Course, false),
+			getSections: apiGet('courses/:id/sections', Section, true),
+			delete: apiDelete('courses/:id'),
 		},
 		iot: {
 			projects: {
-				get: apiGetter('iot/projects/:id', IoTProject, false),
-				getRoutes: apiGetter('iot/projects/:id/routes', IotRoute, true),
+				get: apiGet('iot/projects/:id', IoTProject, false),
+				getRoutes: apiGet('iot/projects/:id/routes', IotRoute, true),
 			},
 		},
 	},
