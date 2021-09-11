@@ -33,6 +33,7 @@ public class ModuleBuiltins {
      */
     //public static List<ASObjet.Fonction> fonctions =
     public static List<ASObjet.Variable> variables = Arrays.asList(
+            new ASObjet.Constante("bob", new ASObjet.Texte("(~°3°)~")),
             new ASObjet.Constante("finl", new ASObjet.Texte("\n")),
             new ASObjet.Variable("varLocales", new ASObjet.Liste(), ASObjet.TypeBuiltin.liste.asType()).setGetter(getVarsLocales).setReadOnly(),
             new ASObjet.Variable("varGlobales", new ASObjet.Liste(), ASObjet.TypeBuiltin.liste.asType()).setGetter(getVarsGlobales).setReadOnly(),

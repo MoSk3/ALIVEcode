@@ -10,9 +10,9 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="lib" level="project" />
     <orderEntry type="module-library">
-      <library>
+      <library name="annotations-19.0.0">
         <CLASSES>
-          <root url="jar://$MAVEN_REPOSITORY$/org/jetbrains/annotations/19.0.0/annotations-19.0.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/annotations-19.0.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
