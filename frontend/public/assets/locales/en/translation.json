@@ -123,7 +123,8 @@
 		},
 		"level": {
 			"alive": "Level with ALIVE car",
-			"code": "Level with console"
+			"code": "Level with console",
+			"ai": "Level with artificial intelligence"
 		}
 	},
 	"home": {

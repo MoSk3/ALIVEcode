@@ -13,7 +13,7 @@ const LevelFormMenu = () => {
 
 	return (
 		<FillContainer startAtTop centered>
-			<Row>
+			<Row style={{ justifyContent: 'center' }}>
 				<Card
 					img={Voiture}
 					to={routes.auth.level_create_alive.path}
