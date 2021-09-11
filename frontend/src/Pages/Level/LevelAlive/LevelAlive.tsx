@@ -15,7 +15,6 @@ import IconButton from '../../../Components/DashboardComponents/IconButton/IconB
 import Cmd from '../../../Components/LevelComponents/Cmd/Cmd';
 import LevelAliveExecutor from './LevelAliveExecutor';
 import useCmd from '../../../state/hooks/useCmd';
-import { Professor } from '../../../Models/User/user.entity';
 import { useHistory } from 'react-router-dom';
 import useRoutes from '../../../state/hooks/useRoutes';
 import FormModal from '../../../Components/UtilsComponents/FormModal/FormModal';
@@ -31,6 +30,7 @@ import {
 import $ from 'jquery';
 import { useTranslation } from 'react-i18next';
 import Modal from '../../../Components/UtilsComponents/Modal/Modal';
+import useExecutor from '../../../state/hooks/useExecutor';
 
 const LevelAlive = ({
 	level,
@@ -40,9 +40,11 @@ const LevelAlive = ({
 	setProgression,
 }: LevelAliveProps) => {
 	const { user } = useContext(UserContext);
-	const [executor, setExecutor] = useState<LevelAliveExecutor>();
+
 	const [cmdRef, cmd] = useCmd();
-	const playButton = useRef<HTMLButtonElement>(null);
+	const { executor, setExecutor, setExecutorLines, toggleExecution } =
+		useExecutor<LevelAliveExecutor>(LevelAliveExecutor, cmd);
+
 	const history = useHistory();
 	const { routes } = useRoutes();
 	const { t } = useTranslation();
@@ -55,7 +57,7 @@ const LevelAlive = ({
 	const messageTimeout = useRef<any>(null);
 
 	const lineInterfaceContentChanges = (content: any) => {
-		if (executor) executor.lineInterfaceContent = content;
+		setExecutorLines(content);
 		if (!editMode && progression) {
 			progression.data.code = content;
 			const updatedProgression = progression;
@@ -65,21 +67,10 @@ const LevelAlive = ({
 	};
 
 	useEffect(() => {
-		if (cmd && executor) executor.cmd = cmd;
-	}, [cmd, executor]);
-
-	useEffect(() => {
 		if (user && editMode && level.creator.id !== user.id)
 			return history.push(routes.public.home.path);
 
-		if (!playButton.current) return;
-		setExecutor(
-			new LevelAliveExecutor(
-				user ?? ({} as Professor),
-				level.name,
-				playButton.current,
-			),
-		);
+		setExecutor(new LevelAliveExecutor(level.name, user ?? undefined));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, level]);
 
@@ -189,7 +180,11 @@ const LevelAlive = ({
 							)}
 							<IconButton icon={faBookOpen} size="2x" />
 							<IconButton icon={faQuestionCircle} size="2x" />
-							<IconButton icon={faPlayCircle} size="2x" ref={playButton} />
+							<IconButton
+								onClick={toggleExecution}
+								icon={faPlayCircle}
+								size="2x"
+							/>
 							{(saving || saved) && (
 								<label className="save-message">
 									{saving && 'Sauvegarde en cours...'}
