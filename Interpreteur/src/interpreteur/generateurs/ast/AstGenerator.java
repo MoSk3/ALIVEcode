@@ -101,7 +101,7 @@ public class AstGenerator {
     }
 
     public static Expression<?> evalOneExpr(ArrayList<Object> expressions, Hashtable<String, Ast<?>> sous_ast) {
-        ArrayList<Expression<?>> result = eval(expressions, sous_ast);
+        var result = eval(expressions, sous_ast);
         if (result.size() != 1) {
             throw new ASErreur.ErreurSyntaxe("Erreur ligne 106 dans AstGenerator");
         } else {
@@ -111,8 +111,8 @@ public class AstGenerator {
 
     public static ArrayList<Expression<?>> eval(ArrayList<Object> expressions, Hashtable<String, Ast<?>> sous_ast) {
 
-        Hashtable<String, Ast<?>> regleSyntaxeDispo = new Hashtable<>(expressionsDict);
-        ArrayList<String> ordreRegleSyntaxe = new ArrayList<>(ordreExpressions);
+        var regleSyntaxeDispo = new Hashtable<>(expressionsDict);
+        var ordreRegleSyntaxe = new ArrayList<>(ordreExpressions);
 
         if (sous_ast != null) {
             regleSyntaxeDispo.putAll(sous_ast);
@@ -128,7 +128,7 @@ public class AstGenerator {
             for (Object expr : expressions) {
                 expressionList.addAll(eval((ArrayList<Object>) expr, regleSyntaxeDispo));
             }
-            return ((ArrayList<?>) expressionList).stream().map(e -> (Expression<?>) e).collect(Collectors.toCollection(ArrayList::new));
+            return expressionList.stream().map(e -> (Expression<?>) e).collect(Collectors.toCollection(ArrayList::new));
         }
 
         ArrayList<Object> expressionArray = new ArrayList<>(expressions);
@@ -149,7 +149,7 @@ public class AstGenerator {
                     List<String> expressionNom = new ArrayList<>();
 
                     for (Object expr : expressionArray) {
-                        expressionNom.add(expr instanceof Token ? ((Token) expr).obtenirNom() : "expression");
+                        expressionNom.add(expr instanceof Token token ? token.obtenirNom() : "expression");
                     }
                     //System.out.println("Nom " + expressionNom);
                     Matcher match = memeStructureExpression(String.join(" ", expressionNom.subList(i, expressionNom.size())), regleSyntaxe);
@@ -342,7 +342,7 @@ public class AstGenerator {
 		 */
 
         for (String programme : pattern.split("~")) {
-            Hashtable<String, Ast<?>> sousAstCopy = new Hashtable<>(fonction.getSousAst());
+            var sousAstCopy = new Hashtable<>(fonction.getSousAst());
             for (String p : sousAstCopy.keySet()) {
                 fonction.getSousAst().remove(p);
                 fonction.getSousAst().put(remplacerCategoriesParMembre(p), sousAstCopy.get(p));
@@ -412,13 +412,13 @@ public class AstGenerator {
         }
         //System.out.println("Programme trouvé: " + programme);
 
-        ArrayList<ArrayList<Token>> expressions_programme = obtenirDivisionExpressionsProgramme(listToken, programme);
+        var expressions_programme = obtenirDivisionExpressionsProgramme(listToken, programme);
 
-        ArrayList<ArrayList<Token>> expressions = new ArrayList<>(expressions_programme.subList(0, expressions_programme.size() - 1));
-        ArrayList<Token> programmeToken = expressions_programme.get(expressions_programme.size() - 1);
+        var expressions = new ArrayList<>(expressions_programme.subList(0, expressions_programme.size() - 1));
+        var programmeToken = expressions_programme.get(expressions_programme.size() - 1);
 
 
-        ArrayList<Expression<?>> arbre = eval(
+        var arbre = eval(
                 expressions.stream().map(e -> (Object) e).collect(Collectors.toCollection(ArrayList::new)),
                 programmesDict.get(programme).getSousAst()
         );

@@ -1,12 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import axios from 'axios';
-import { loadObj} from './utils';
-import { plainToClass } from 'class-transformer';
+import { loadObj } from './utils';
+import { ClassConstructor, plainToClass } from 'class-transformer';
 import { Course } from './Course/course.entity';
 import { Section } from './Course/section.entity';
 import { Classroom } from './Classroom/classroom.entity';
-import { Student, User } from './User/user.entity';
+import { Professor, Student, User } from './User/user.entity';
 import { IoTProject } from './Iot/IoTproject.entity';
-import { IoTObject } from './Iot/IoTobject.entity';
 import { IotRoute } from './Iot/IoTroute.entity';
 import { Level } from './Level/level.entity';
 import { LevelAlive } from './Level/levelAlive.entity';
@@ -14,25 +14,43 @@ import { LevelCode } from './Level/levelCode.entity';
 import { LevelProgression } from './Level/levelProgression';
 import { BrowsingQuery } from '../Components/MainComponents/BrowsingMenu/browsingMenuTypes';
 import { LevelAI } from './Level/levelAI.entity';
+import { IoTObject } from './Iot/IoTobject.entity';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const apiGetter = <T extends {}>(url: string, target: T) => {
-	return async (id: string) =>
-		await loadObj(
-			url.includes(':id') ? url.replace(':id', id) : `${url}/${id}`,
+type urlArgType<S extends string> = S extends `${infer _}:${infer A}/${infer B}`
+	? A | urlArgType<B>
+	: S extends `${infer _}:${infer A}`
+	? A
+	: never;
+
+const apiGetter = <T extends {}, U extends boolean, S extends string>(
+	url: S,
+	target: ClassConstructor<T>,
+	returnsArray: U,
+) => {
+	return async (args: { [key in urlArgType<S>]: string }) =>
+		(await loadObj(
+			url
+				.split('/')
+				.map(part =>
+					part.startsWith(':')
+						? args[part.substring(1) as urlArgType<S>]
+						: part,
+				)
+				.join('/'),
 			target,
-		);
+		)) as U extends true ? T[] : T;
 };
 
-// TODO : add build object
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const apiCreate = <U extends {}>(moduleName: string, target: U) => {
-	return async <T extends U>(fields: T) => {
+const apiCreate = <U extends ClassConstructor<unknown>>(
+	moduleName: string,
+	target: U,
+) => {
+	return async <T extends U>(fields: T): Promise<unknown> => {
 		const data = (await axios.post(moduleName, fields)).data;
 		if (!data) {
 			return null;
 		}
-		//return buildObj(data, target);
+		return plainToClass(target, data);
 	};
 };
 
@@ -183,21 +201,89 @@ const api = {
 const api = {
 	db: {
 		users: {
+			iot: {
+				getProjects: apiGetter('users/:id/iot/projects', IoTProject, true),
+				getObjects: apiGetter('users/:id/iot/objects', IoTObject, true),
+			},
 			//get: apiGetter('users', User),
-			getClassrooms: apiGetter('users/:id/classrooms', Classroom),
-			getCourses: apiGetter('users/:id/courses', Course),
-			createProfessor: apiCreate('users/professors', Professor),
-			createStudent: apiCreate('users/students', Student),
+			getClassrooms: apiGetter('users/:id/classrooms', Classroom, true),
+			getCourses: apiGetter('users/:id/courses', Course, true),
+			createProfessor: apiCreate('users/professors/:id', Professor),
+			createStudent: apiCreate('users/students/:id', Student),
 		},
 		classrooms: {
-			get: apiGetter('classrooms', Classroom),
-			getStudents: apiGetter('students', Student),
+			get: apiGetter('classrooms/:id/', Classroom, false),
+			getCourses: apiGetter('classrooms/:id/courses', Course, true),
+			getStudents: apiGetter('classrooms/:id/students', Student, true),
 			create: apiCreate('classrooms', Classroom),
+			joinClassroom: apiCreate('classrooms/students', Classroom),
+			async leaveClassroom(classroomId: string, studentId: string) {
+				return plainToClass(
+					Classroom,
+					(
+						await axios.delete(
+							`classrooms/${classroomId}/students/${studentId}`,
+						)
+					).data,
+				);
+			},
 		},
 		courses: {
-			getSections: apiGetter('courses/:id/sections', Section),
+			get: apiGetter('courses/:id', Course, false),
+			getSections: apiGetter('courses/:id/sections', Section, true),
+		},
+		iot: {
+			projects: {
+				get: apiGetter('iot/projects/:id', IoTProject, false),
+				getRoutes: apiGetter('iot/projects/:id/routes', IotRoute, true),
+			},
+		},
+		levels: {
+			async get(levelId: string) {
+				const level = (await axios.get(`levels/${levelId}`)).data;
+				if (level.layout) return plainToClass(LevelAlive, level);
+				if (level.testCases) return plainToClass(LevelCode, level);
+				if (level.ai) return plainToClass(LevelAI, level);
+				return plainToClass(Level, level);
+			},
+			async query(query: BrowsingQuery) {
+				const levels: Array<any> = (await axios.post(`levels/query`, query))
+					.data;
+				return levels.map((l: any) => {
+					if (l.layout) return plainToClass(LevelAlive, l);
+					if (l.testCases) return plainToClass(LevelCode, l);
+					if (l.ai) return plainToClass(LevelAI, l);
+					return plainToClass(Level, l);
+				});
+			},
+			async update(level: Level | LevelAlive | LevelCode) {
+				const l = (await axios.patch(`levels/${level.id}`, level)).data;
+				if (l.layout) return plainToClass(LevelAlive, l);
+				if (l.testCases) return plainToClass(LevelCode, l);
+				if (l.ai) return plainToClass(LevelAI, l);
+				return plainToClass(Level, l);
+			},
+			progressions: {
+				get: apiGetter(
+					'levels/:levelId/progressions/:userId',
+					LevelProgression,
+					false,
+				),
+				async save(levelId: string, user: User, data: LevelProgression) {
+					return plainToClass(
+						LevelProgression,
+						(
+							await axios.patch(
+								`levels/${levelId}/progressions/${user.id}`,
+								data,
+							)
+						).data,
+					);
+				},
+			},
 		},
 	},
 };
 */
+
 export default api;

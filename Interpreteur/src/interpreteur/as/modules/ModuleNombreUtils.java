@@ -47,14 +47,13 @@ public class ModuleNombreUtils extends ASModule {
             }, new Type("decimal")) {
                 @Override
                 public Nombre executer() {
-                    try {
-                        String nb = this.getParamsValeursDict().get("txt").toString();
-                        boolean estDecimal = nb.contains(".");
-                        if (estDecimal) return new Decimal(Double.parseDouble(nb));
-                        else return new Entier(Integer.parseInt(nb));
-                    } catch (NumberFormatException ignored) {
-                        throw new ASErreur.ErreurType("impossible de convertir '" + this.getParamsValeursDict().get("element").toString() + "' en nombre decimal");
-                    }
+                    String nb = this.getParamsValeursDict().get("txt").toString();
+                    if (!Nombre.estNumerique(nb))
+                        throw new ASErreur.ErreurType("Impossible de convertir " + nb + " en nombre entier ou d\u00E9cimal.");
+
+                    boolean estDecimal = nb.contains(".");
+                    if (estDecimal) return new Decimal(Double.parseDouble(nb));
+                    else return new Entier(Integer.parseInt(nb));
                 }
             },
 

@@ -1,28 +1,6 @@
 # Futures versions d'aliveScript
 
-### Version 4
-
--   opérateur
-
-### Version 3
-
--   Types personnalisés
--   Objets ?
--   Classes ?
-
--   Text blocks (avec `"""`)
-
-    -   Comme des strings, mais l'indentation est préservée
-
--   Système de gestion des erreurs
-
-    -   ajouter un mot clef pour lancer des erreurs
-    -   ajouter une façon d'attraper les erreurs
-
--   changements dans `afficher`
-    -   styliser l'output pour changer la couleur, mettre le texte en italique, en gras, etc.
-
-### Version 2
+### Version 1.2
 
 -   changement dans les fonctions
 
@@ -33,10 +11,6 @@
             afficher typeDe(autres) # liste
         fin fonction
         ```
-
--   nouveau mot clef `inclure`
-
-    -   permet d'accéder à du code situé dans d'autres fichiers
 
 -   changements dans `afficher`
 
@@ -59,20 +33,21 @@
 
 -   changements dans `lire`
 
-    -   <s>Permettre d'afficher un message custom dans la console demandant un input</s>
-    -   Permettre de preciser le type lu (optionnel, par défaut `texte`)
-        -   syntaxe actuelle: lire dans `var`
-        -   syntaxe ajoutée: lire `type` dans `var`
+    -   Permettre d'afficher un message custom dans la console demandant un input
+    -   Permettre de preciser une fonction à exécuter sur l'input avant d'assigner à la variable (optionnel)
+        -   syntaxe actuelle: lire `var`
+        -   syntaxe ajoutée: lire `fct` dans `var`
         -   ex:  
             lire entier dans var  
             afficher typeDe(var) # entier
-    -   _renommer `lire` pour `ecrire` ou `noter`_??
-        -   ex:  
-            ecrire dans var  
-            ecrire entier dans var  
-            **_OU_**  
-            noter dans var  
-            noter booleen dans var
+
+-   documentation dans les fonctions avec  
+    `(-:`  
+    `documentation`  
+    `:-)`
+    la documentation pourra être affiché grâce à la fonction builtin `info`
+
+### Version 1.3
 
 -   changements à `utiliser`
 
@@ -87,13 +62,29 @@
             utiliser Voiture alias \*  
             vitesse = 255
 
--   documentation dans les fonctions avec  
-    `(-:`  
-    `documentation`  
-    `:-)`
+### Version 2
 
-### Modifs
+-   Types personnalisés
+-   Objets ?
+-   Classes ?
 
--   lire dans -> lire
--   affectation: <- et =
--   ajouter un alors optionnel après si
+-   Text blocks (avec `"""`)
+
+    -   Comme des strings, mais l'indentation est préservée
+
+-   Système de gestion des erreurs
+
+    -   ajouter un mot clef pour lancer des erreurs
+    -   ajouter une façon d'attraper les erreurs
+
+-   changements dans `afficher`
+
+    -   styliser l'output pour changer la couleur, mettre le texte en italique, en gras, etc.
+
+-   nouveau mot clef `inclure`
+
+    -   permet d'accéder à du code situé dans d'autres fichiers
+
+### Version 4
+
+-   opérateur
