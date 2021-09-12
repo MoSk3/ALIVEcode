@@ -47,6 +47,7 @@ const IoTDashboard = (props: iotDashboardProps) => {
 			</div>
 			<div>
 				<CardContainer
+					asRow
 					icon={faPlus}
 					onIconClick={() => history.push(routes.auth.create_iot_project.path)}
 					height="200px"
@@ -66,6 +67,7 @@ const IoTDashboard = (props: iotDashboardProps) => {
 					)}
 				</CardContainer>
 				<CardContainer
+					asRow
 					icon={faPlus}
 					onIconClick={() => setOpenObjectCreate(!openObjectCreate)}
 					height="200px"

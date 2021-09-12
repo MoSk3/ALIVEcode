@@ -1,15 +1,12 @@
 package interpreteur.tokens;
 
 
-/**
- * @author Mathis Laroche
- */
-
 import interpreteur.generateurs.lexer.Regle;
 
 /**
- * 
- * Les explications vont être rajouté quand j'aurai la motivation de les écrire XD
+ * Les explications vont Ãªtre rajoutÃ© quand j'aurai la motivation de les Ã©crire XD
+ * @author Mathis Laroche
+ *
  *
  */
 

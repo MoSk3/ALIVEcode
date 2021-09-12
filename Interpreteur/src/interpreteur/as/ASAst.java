@@ -35,9 +35,12 @@ import javax.lang.model.type.NullType;
 
 
 public class ASAst extends AstGenerator {
-    public ASAst() {
+    private final Executeur executeurInstance;
+
+    public ASAst(Executeur executeurInstance) {
         ajouterProgrammes();
         ajouterExpressions();
+        this.executeurInstance = executeurInstance;
     }
 
 
@@ -57,8 +60,8 @@ public class ASAst extends AstGenerator {
                         if (p.get(1) instanceof ValeurConstante && ((ValeurConstante) p.get(1)).eval() instanceof Texte) {
                             String msg = (String) ((ValeurConstante) p.get(1)).eval().getValue();
                             if (msg.equalsIgnoreCase("experimental")) {
-                                Executeur.setAst(new ASAstExperimental());
-                                return new Utiliser(new Var("experimental"));
+                                executeurInstance.setAst(new ASAstExperimental(executeurInstance));
+                                return new Utiliser(new Var("experimental"), executeurInstance);
                             } else {
                                 throw new ErreurSyntaxe("Les noms de modules ne doivent pas \u00EAtre \u00E9crits avec des \" \" ou des ' '");
                             }
@@ -71,9 +74,9 @@ public class ASAst extends AstGenerator {
                             } else {
                                 sous_modules = new Var[]{(Var) p.get(3)};
                             }
-                            return new Utiliser((Var) p.get(1), sous_modules);
+                            return new Utiliser((Var) p.get(1), sous_modules, executeurInstance);
                         }
-                        return new Utiliser((Var) p.get(1));
+                        return new Utiliser((Var) p.get(1), executeurInstance);
                     }
                 });
         /*
@@ -86,29 +89,33 @@ public class ASAst extends AstGenerator {
          */
 
         ajouterProgramme("LIRE expression~"
-                        + "LIRE expression DEUX_POINTS expression",
+                        + "LIRE expression DANS expression~"
+                        + "LIRE expression VIRGULE expression~"
+                        + "LIRE expression DANS expression VIRGULE expression",
                 new Ast<Lire>() {
                     @Override
                     public Lire apply(List<Object> p) {
 
-                        if (p.size() == 4) {
-                            if (!(p.get(3) instanceof Type)) {
-                                throw new ErreurInputOutput("Un type est attendue apr\u00E8s le deux points ':' dans la commande 'lire', mais '" +
-                                        p.get(2).getClass().getSimpleName() + "' a \u00E9t\u00E9 trouv\u00E9.");
-                            } else {
-                                //TODO le truc avec le type
-                            }
-                        }
+                        boolean hasPromptMessage = p.stream()
+                                .anyMatch(e -> e instanceof Token && ((Token) e).obtenirNom().equals("VIRGULE"));
+                        boolean hasAppliedFunction = p.stream()
+                                .anyMatch(e -> e instanceof Token && ((Token) e).obtenirNom().equals("DANS"));
 
-                        if (!(p.get(1) instanceof Var)) {
+                        Expression<?> message = null, fonction = null;
+
+                        int idxVar = 1;
+                        if (hasAppliedFunction) {
+                            fonction = (Expression<?>) p.get(1);
+                            idxVar = 3;
+                        }
+                        if (hasPromptMessage) message = (Expression<?>) p.get(p.size() - 1);
+
+                        if (!(p.get(idxVar) instanceof Var)) {
                             throw new ErreurInputOutput("Une variable est attendue apr\u00E8s la commande 'lire', mais '" +
-                                    p.get(2).getClass().getSimpleName() + "' a \u00E9t\u00E9 trouv\u00E9.");
-                        } else {
-                            // TODO convertion automatique
+                                    p.get(idxVar).getClass().getSimpleName() + "' a \u00E9t\u00E9 trouv\u00E9.");
                         }
 
-
-                        return new Lire((Var) p.get(2), null);
+                        return new Lire((Var) p.get(idxVar), message, fonction, executeurInstance);
                     }
                 });
         /*
@@ -175,7 +182,8 @@ public class ASAst extends AstGenerator {
                                 idxAssignement = 2;
                             }
                             // si on tente de déclarer une constante avec autre chose que = (ex: +=, *=, -=, etc.)
-                            if (!((Token) p.get(idxAssignement)).obtenirNom().equals("ASSIGNEMENT")) {
+                            String nomAssignement = ((Token) p.get(idxAssignement)).obtenirNom();
+                            if (!nomAssignement.equals("ASSIGNEMENT") && !(nomAssignement.equals("ASSIGNEMENT_FLECHE"))) {
                                 if (estConst)
                                     throw new ErreurAssignement("Impossible de modifier la valeur d'une constante");
                                 else
@@ -202,7 +210,8 @@ public class ASAst extends AstGenerator {
                             }
 
                             // si on tente d'assigner avec un opérateur spécial (ex: +=, *=, -=, etc.)
-                            if (!((Token) p.get(idxAssignement)).obtenirNom().equals("ASSIGNEMENT")) {
+                            String nomAssignement = ((Token) p.get(idxAssignement)).obtenirNom();
+                            if (!nomAssignement.equals("ASSIGNEMENT") && !(nomAssignement.equals("ASSIGNEMENT_FLECHE"))) {
                                 op = BinOp.Operation.valueOf(((Token) p.get(idxAssignement)).obtenirNom().split("_")[0]);
                             }
 
@@ -210,7 +219,7 @@ public class ASAst extends AstGenerator {
                             // on forme une liste avec la suite d'éléments
                             if (p.get(idxValeur) instanceof CreerListe.Enumeration)
                                 p.set(idxValeur, ((CreerListe.Enumeration) p.get(idxValeur)).build());
-                            return new Assigner((Expression<?>) p.get(0), (Expression<?>) p.get(idxValeur), false, op);
+                            return new Assigner((Expression<?>) p.get(0), (Expression<?>) p.get(idxValeur), op);
                         }
                     }
                 });
@@ -253,7 +262,7 @@ public class ASAst extends AstGenerator {
                             }
                             type = (Type) p.get(3);
                         }
-                        return new CreerGetter(new Var(((Token) p.get(1)).obtenirValeur()), type);
+                        return new CreerGetter(new Var(((Token) p.get(1)).obtenirValeur()), type, executeurInstance);
                     }
                 });
 
@@ -261,7 +270,7 @@ public class ASAst extends AstGenerator {
                 new Ast<FinGet>() {
                     @Override
                     public FinGet apply(List<Object> p) {
-                        return new FinGet();
+                        return new FinGet(executeurInstance);
                     }
                 });
 
@@ -285,7 +294,7 @@ public class ASAst extends AstGenerator {
                             }
                             type = (Type) p.get(5);
                         }
-                        return new CreerSetter(new Var(((Token) p.get(1)).obtenirValeur()), new Var(((Token) p.get(3)).obtenirValeur()), type);
+                        return new CreerSetter(new Var(((Token) p.get(1)).obtenirValeur()), new Var(((Token) p.get(3)).obtenirValeur()), type, executeurInstance);
                     }
                 });
 
@@ -293,7 +302,7 @@ public class ASAst extends AstGenerator {
                 new Ast<FinSet>() {
                     @Override
                     public FinSet apply(List<Object> p) {
-                        return new FinSet();
+                        return new FinSet(executeurInstance);
                     }
                 });
 
@@ -354,7 +363,7 @@ public class ASAst extends AstGenerator {
 
                         if (p.get(p.size() - 1) == null && p.get(3) instanceof Type) {
                             typeRetour = (Type) p.get(3);
-                            return new CreerFonction((Var) p.get(1), params, typeRetour);
+                            return new CreerFonction((Var) p.get(1), params, typeRetour, executeurInstance);
                         }
 
                         if (p.get(3) != null && !(p.get(3) instanceof Token)) {
@@ -374,7 +383,7 @@ public class ASAst extends AstGenerator {
                             }
                         }
 
-                        return new CreerFonction((Var) p.get(1), params, typeRetour);
+                        return new CreerFonction((Var) p.get(1), params, typeRetour, executeurInstance);
                     }
                 });
 
@@ -393,7 +402,7 @@ public class ASAst extends AstGenerator {
         ajouterProgramme("FIN FONCTION", new Ast<FinFonction>(0) {
             @Override
             public FinFonction apply(List<Object> p) {
-                return new FinFonction();
+                return new FinFonction(executeurInstance);
             }
         });
 
@@ -404,7 +413,7 @@ public class ASAst extends AstGenerator {
                 new Ast<Si>() {
                     @Override
                     public Si apply(List<Object> p) {
-                        return new Si((Expression<?>) p.get(1));
+                        return new Si((Expression<?>) p.get(1), executeurInstance);
                     }
                 });
 
@@ -413,7 +422,7 @@ public class ASAst extends AstGenerator {
                 new Ast<SinonSi>() {
                     @Override
                     public SinonSi apply(List<Object> p) {
-                        return new SinonSi((Expression<?>) p.get(2));
+                        return new SinonSi((Expression<?>) p.get(2), executeurInstance);
                     }
                 });
 
@@ -422,14 +431,14 @@ public class ASAst extends AstGenerator {
                 new Ast<Sinon>(0) {
                     @Override
                     public Sinon apply(List<Object> p) {
-                        return new Sinon();
+                        return new Sinon(executeurInstance);
                     }
                 });
 
         ajouterProgramme("FIN SI", new Ast<FinSi>() {
             @Override
             public FinSi apply(List<Object> p) {
-                return new FinSi();
+                return new FinSi(executeurInstance);
             }
         });
 
@@ -437,16 +446,16 @@ public class ASAst extends AstGenerator {
                 new Ast<Programme>() {
                     @Override
                     public Programme apply(List<Object> p) {
-                        return new Programme() {
+                        return new Programme(executeurInstance) {
                             @Override
                             public NullType execute() {
-                                Executeur.obtenirCoordRunTime().nouveauBloc("faire");
+                                this.executeurInstance.obtenirCoordRunTime().nouveauBloc("faire");
                                 return null;
                             }
 
                             @Override
                             public Coordonnee prochaineCoord(Coordonnee coord, List<Token> ligne) {
-                                return Executeur.obtenirCoordRunTime().nouveauBloc("faire");
+                                return coord.nouveauBloc("faire");
                             }
 
                             @Override
@@ -461,14 +470,14 @@ public class ASAst extends AstGenerator {
                 new Ast<BoucleTantQue>(0) {
                     @Override
                     public BoucleTantQue apply(List<Object> p) {
-                        return new BoucleTantQue((Expression<?>) p.get(1));
+                        return new BoucleTantQue((Expression<?>) p.get(1), executeurInstance);
                     }
                 });
 
         ajouterProgramme("REPETER expression", new Ast<BoucleRepeter>() {
             @Override
             public BoucleRepeter apply(List<Object> p) {
-                return new BoucleRepeter((Expression<?>) p.get(1));
+                return new BoucleRepeter((Expression<?>) p.get(1), executeurInstance);
             }
         });
 
@@ -480,10 +489,10 @@ public class ASAst extends AstGenerator {
                     public BouclePour apply(List<Object> p) {
                         // boucle pour sans déclaration
                         if (p.size() == 4) {
-                            return new BouclePour((Var) p.get(1), (Expression<?>) p.get(3));
+                            return new BouclePour((Var) p.get(1), (Expression<?>) p.get(3), executeurInstance);
                         } else {
                             boolean estConst = ((Token) p.get(1)).obtenirNom().equals("CONSTANTE");
-                            return new BouclePour((Var) p.get(2), (Expression<?>) p.get(4)).setDeclarerVar(estConst, null);
+                            return new BouclePour((Var) p.get(2), (Expression<?>) p.get(4), executeurInstance).setDeclarerVar(estConst, null);
                         }
                     }
                 });
@@ -491,14 +500,14 @@ public class ASAst extends AstGenerator {
         ajouterProgramme("SORTIR", new Ast<Boucle.Sortir>() {
             @Override
             public Boucle.Sortir apply(List<Object> p) {
-                return new Boucle.Sortir();
+                return new Boucle.Sortir(executeurInstance);
             }
         });
 
         ajouterProgramme("CONTINUER", new Ast<Boucle.Continuer>() {
             @Override
             public Boucle.Continuer apply(List<Object> p) {
-                return new Boucle.Continuer();
+                return new Boucle.Continuer(executeurInstance);
             }
         });
 
@@ -508,7 +517,7 @@ public class ASAst extends AstGenerator {
                 new Ast<FinBoucle>() {
                     @Override
                     public FinBoucle apply(List<Object> p) {
-                        return new FinBoucle(((Token) p.get(1)).obtenirValeur());
+                        return new FinBoucle(((Token) p.get(1)).obtenirValeur(), executeurInstance);
                     }
                 });
 
@@ -595,9 +604,9 @@ public class ASAst extends AstGenerator {
                     }
                 });
 
-        ajouterExpression("!expression PARENT_OUV #expression PARENT_FERM~"
-                        + "!expression PARENT_OUV expression PARENT_FERM~"
-                        + "!expression PARENT_OUV PARENT_FERM",
+        ajouterExpression("PARENT_OUV #expression PARENT_FERM~"
+                        + "PARENT_OUV expression PARENT_FERM~"
+                        + "PARENT_OUV PARENT_FERM",
                 new Ast<Expression<?>>() {
                     @Override
                     public Expression<?> apply(List<Object> p) {
@@ -726,6 +735,14 @@ public class ASAst extends AstGenerator {
                     }
                 });
 
+        ajouterExpression("!expression PLUS expression",
+                new Ast<UnaryOp>() {
+                    @Override
+                    public UnaryOp apply(List<Object> p) {
+                        return new UnaryOp((Expression<?>) p.get(1), UnaryOp.Operation.PLUS);
+                    }
+                });
+
 
         ajouterExpression("expression MOD expression", new Ast<BinOp>() {
             @Override
@@ -828,20 +845,24 @@ public class ASAst extends AstGenerator {
         });
 
 
-        ajouterExpression("expression {porte_logique} expression~"
-                + "{porte_logique} expression", new Ast<BoolOp>() {
-            @Override
-            public BoolOp apply(List<Object> p) {
-                if (p.size() == 3) {
-                    return new BoolOp(
-                            (Expression<?>) p.get(0),
-                            BoolOp.Operateur.valueOf(((Token) p.get(1)).obtenirNom()),
-                            (Expression<?>) p.get(2));
-                } else {
-                    return new BoolOp((Expression<?>) p.get(1), BoolOp.Operateur.PAS, null);
-                }
-            }
-        });
+        ajouterExpression("expression {porte_logique} expression",
+                new Ast<BoolOp>() {
+                    @Override
+                    public BoolOp apply(List<Object> p) {
+                        return new BoolOp(
+                                (Expression<?>) p.get(0),
+                                BoolOp.Operateur.valueOf(((Token) p.get(1)).obtenirNom()),
+                                (Expression<?>) p.get(2));
+                    }
+                });
+
+        ajouterExpression("PAS expression",
+                new Ast<BoolOp>() {
+                    @Override
+                    public BoolOp apply(List<Object> p) {
+                        return new BoolOp((Expression<?>) p.get(1), BoolOp.Operateur.PAS, null);
+                    }
+                });
 
         ajouterExpression("expression SI expression SINON expression",
                 new Ast<Ternary>() {
@@ -852,8 +873,7 @@ public class ASAst extends AstGenerator {
                 });
 
 
-        ajouterExpression("expression VIRGULE expression~" +
-                        "expression VIRGULE",
+        ajouterExpression("expression VIRGULE expression~",
                 new Ast<CreerListe.Enumeration>() {
                     @Override
                     public CreerListe.Enumeration apply(List<Object> p) {

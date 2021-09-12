@@ -2,11 +2,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import FillContainer from '../FillContainer/FillContainer';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
+import { useEffect, useState } from 'react';
 
 const StyledSpinner = styled.div`
-	& {
-		color: var(--primary-color);
-	}
+	color: var(--primary-color);
 
 	@-webkit-keyframes rotating /* Safari and Chrome */ {
 		from {
@@ -45,16 +44,31 @@ const StyledSpinner = styled.div`
 	}
 `;
 
-const LoadingScreen = () => {
+const LoadingScreen = ({ relative }: { relative?: boolean }) => {
+	const [loading, setLoading] = useState(false);
+
+	useEffect(() => {
+		const timeout = setTimeout(() => {
+			setLoading(true);
+		}, 300);
+
+		return () => {
+			clearTimeout(timeout);
+		};
+	}, []);
+
 	return (
-		<FillContainer centered startAtTop style={{ textAlign: 'center' }}>
+		<FillContainer
+			relative={relative}
+			centered
+			startAtTop
+			style={{ textAlign: 'center' }}
+		>
 			<div>
 				<StyledSpinner>
-					<FontAwesomeIcon
-						className="rotating"
-						size="5x"
-						icon={faSpinner}
-					></FontAwesomeIcon>
+					{loading && (
+						<FontAwesomeIcon className="rotating" size="5x" icon={faSpinner} />
+					)}
 				</StyledSpinner>
 			</div>
 		</FillContainer>

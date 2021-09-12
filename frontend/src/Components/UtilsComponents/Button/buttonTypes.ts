@@ -7,6 +7,7 @@ export type StyledButtonProps = {
 
 export type ButtonProps = {
 	to?: string;
+	className?: string;
 	variant: ButtonVariants;
 	type?: 'button' | 'submit' | 'reset';
 	onClick?: () => void;

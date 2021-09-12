@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 import javax.lang.model.type.NullType;
 
 import interpreteur.as.erreurs.ASErreur;
-import interpreteur.as.modules.ASModule;
 //import interpreteur.ast.buildingBlocs.expressions.Type;
 import interpreteur.ast.buildingBlocs.expressions.Type;
 import interpreteur.executeur.Coordonnee;
@@ -288,11 +287,7 @@ public interface ASObjet<T> {
         }
 
         public static void reset() {
-            FonctionManager.structure = "";
-            for (Fonction fonction : ASModule.getModuleBuiltins().getFonctions()) ajouterFonction(fonction);
-            for (Variable variable : ASModule.getModuleBuiltins().getVariables()) {
-                Scope.getCurrentScope().declarerVariable(variable);
-            }
+            structure = "";
         }
     }
 
@@ -301,7 +296,7 @@ public interface ASObjet<T> {
         private final Parametre[] parametres; //String[] de forme {nomDuParam�tre, typeDuParam�tre (ou null s'il n'en poss�de pas)}
         private final String nom;
         private Hashtable<String, ASObjet<?>> parametres_appel = new Hashtable<>();  // Object[][] de forme {{nom_param, valeur}, {nom_param2, valeur2}}
-        private Coordonnee coordReprise = null;
+        private final Coordonnee coordReprise = null;
         private String scopeName;
 
         /**
@@ -525,7 +520,7 @@ public interface ASObjet<T> {
              */
             public Parametre(Type type, String nom, ASObjet<?> valeurParDefaut) {
                 this.nom = nom;
-                this.type = type == null ? new Type("tout") : type;
+                this.type = type == null ? ASObjet.TypeBuiltin.tout.asType() : type;
                 this.valeurParDefaut = valeurParDefaut;
             }
 

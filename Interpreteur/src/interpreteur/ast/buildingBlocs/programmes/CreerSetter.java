@@ -20,7 +20,8 @@ public class CreerSetter extends Programme {
     private final Type type;
     private final Scope scope;
 
-    public CreerSetter(Var var, Var nomArg, Type type) {
+    public CreerSetter(Var var, Var nomArg, Type type, Executeur executeurInstance) {
+        super(executeurInstance);
         this.var = var;
         this.nomArg = nomArg;
         this.type = type;
@@ -46,7 +47,7 @@ public class CreerSetter extends Programme {
 
             ASFonction set = new ASFonction(this.var.getNom(), new ASObjet.Fonction.Parametre[]{
                     new ASObjet.Fonction.Parametre(this.type, this.nomArg.getNom(), null)
-            }, this.type);
+            }, this.type, executeurInstance);
 
             scope.declarerVariable(new ASObjet.Variable(this.nomArg.getNom(), null, this.type));
 
@@ -64,7 +65,7 @@ public class CreerSetter extends Programme {
 
     @Override
     public Coordonnee prochaineCoord(Coordonnee coord, List<Token> ligne) {
-        return new Coordonnee(Executeur.nouveauScope("set_" +
+        return new Coordonnee(executeurInstance.nouveauScope("set_" +
                 (ASObjet.FonctionManager.obtenirStructure().isBlank() ? "" : ASObjet.FonctionManager.obtenirStructure() + ".") + ligne.get(1).obtenirValeur()));
     }
 }

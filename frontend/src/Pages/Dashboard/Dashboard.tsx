@@ -15,9 +15,9 @@ import Voiture from '../../assets/images/Voiture.gif';
 import { Row } from 'react-bootstrap';
 import { Classroom } from '../../Models/Classroom/classroom.entity';
 import { plainToClass } from 'class-transformer';
-import axios from 'axios';
 import { Professor } from '../../Models/User/user.entity';
 import useRoutes from '../../state/hooks/useRoutes';
+import api from '../../Models/api';
 
 const Dashboard = (props: DashboardProps) => {
 	const { user } = useContext(UserContext);
@@ -27,20 +27,14 @@ const Dashboard = (props: DashboardProps) => {
 	const { routes } = useRoutes();
 
 	useEffect(() => {
+		if (!user) return;
 		const getClassrooms = async () => {
-			const data = (await axios.get('classrooms')).data;
-			console.log(data);
+			const data = await api.db.users.getClassrooms(user.id);
 			setLoading(false);
 			setClassrooms(data.map((d: any) => plainToClass(Classroom, d)));
 		};
 		getClassrooms();
-	}, []);
-
-	const createLevel = async () => {
-		// TODO : axios request to return new level with id
-		// const level: Level;
-		// history.push(`/level/play/${level.id}`)
-	};
+	}, [user]);
 
 	return (
 		<CenteredContainer
@@ -58,6 +52,7 @@ const Dashboard = (props: DashboardProps) => {
 				/>
 			</Row>
 			<CardContainer
+				asRow
 				title="Mes classes"
 				style={{ marginTop: '20px' }}
 				onIconClick={() =>
@@ -76,17 +71,25 @@ const Dashboard = (props: DashboardProps) => {
 					  ))}
 			</CardContainer>
 
-			<CardContainer title="Niveaux">
-				<SmallCard to="/level" title="Mes niveaux" img={List} />
+			<CardContainer asRow title="Niveaux">
 				<SmallCard
-					onClick={() => createLevel}
+					to={routes.auth.level_list.path}
+					title="Mes niveaux"
+					img={List}
+				/>
+				<SmallCard
+					to={routes.auth.level_create.path}
 					title="Créer un niveau"
 					img={Sandbox}
 				/>
-				<SmallCard to="/level/browse" title="Jouer un niveau" img={Voiture} />
+				<SmallCard
+					to={routes.auth.level_browse.path}
+					title="Jouer un niveau"
+					img={Voiture}
+				/>
 			</CardContainer>
 
-			<CardContainer style={{ marginBottom: '100px' }} title="Niveaux">
+			<CardContainer asRow style={{ marginBottom: '100px' }} title="Niveaux">
 				<SmallCard to="/quiz" title="Mes quiz" img={List} />
 				<SmallCard to="/quiz/new" title="Créer un quiz" img={Sandbox} />
 				<SmallCard to="/quiz/browse" title="Jouer un quiz" img={Puzzle} />

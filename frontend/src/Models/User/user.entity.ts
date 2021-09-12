@@ -10,26 +10,26 @@ export class User {
 	id: string;
 
 	@Exclude({ toPlainOnly: true })
-	password: string;
+	password?: string;
 
 	email: string;
 
 	@Exclude({ toPlainOnly: true })
-	is_mod: boolean;
+	is_mod?: boolean;
 
 	@Exclude({ toPlainOnly: true })
-	is_admin: boolean;
+	is_admin?: boolean;
 
 	@Exclude({ toPlainOnly: true })
-	is_super_user: boolean;
+	is_super_user?: boolean;
 
-	levels: Level[];
+	levels?: Level[];
 
-	IoTObjects: IoTObject[];
+	IoTObjects?: IoTObject[];
 
-	IoTProjects: IoTProject[];
+	IoTProjects?: IoTProject[];
 
-	collabIoTProjects: IoTProject[];
+	collabIoTProjects?: IoTProject[];
 
 	public getDisplayName() {
 		return this.email;

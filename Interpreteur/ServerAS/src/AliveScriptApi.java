@@ -5,8 +5,7 @@ import interpreteur.executeur.Executeur;
 import org.json.JSONObject;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.List;
+import java.util.UUID;
 
 public class AliveScriptApi implements HttpHandler {
 
@@ -47,11 +46,25 @@ public class AliveScriptApi implements HttpHandler {
 
     private String handlePostRequest(HttpExchange httpExchange) throws IOException {
         JSONObject data = byteArrayToJson(httpExchange.getRequestBody().readAllBytes());
+        String host = httpExchange.getRemoteAddress().toString().substring(1);
 
-        if (data.has("lines")) {
-            String[] lignes = ((String) data.get("lines")).split("\n");
-            Executeur.compiler(lignes, true);
-            return Executeur.executerMain(false);
+        AliveScriptService aliveScriptService = data.has("idToken")
+                ? AliveScriptService.get(UUID.fromString(data.getString("idToken")))
+                : AliveScriptService.create();
+
+        if (data.has("response-data")) {
+            aliveScriptService.pushDataToExecuteur(data.getJSONArray("response-data"));
+            return aliveScriptService.execute();
+
+        } else if (data.has("lines")) {
+            String[] lignes = data.getString("lines").split("\n");
+            String compileResult = aliveScriptService.compile(lignes);
+
+            return compileResult.equals("[]")
+                    ? aliveScriptService.execute()
+                    : "{\"idToken\":\"" + aliveScriptService.getIdToken() + "\", \"result\":" + compileResult + "}";
+        } else {
+            aliveScriptService.destroy();
         }
         return "{}";
     }
@@ -70,7 +83,6 @@ public class AliveScriptApi implements HttpHandler {
         outputStream.close();
 
     }
-
 }
 
 

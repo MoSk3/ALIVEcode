@@ -20,8 +20,8 @@ public class ModuleListeUtils extends ASModule {
              *
              * 		@return une liste où chaque élément est la lettre du string passé en paramètre
              */
-            new ASObjet.Fonction("sep", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(new Type("texte"), "txt", null),
+            new ASObjet.Fonction("liste", new ASObjet.Fonction.Parametre[]{
+                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.texte.asType(), "txt", null),
             }, new Type("liste")) {
                 @Override
                 public ASObjet<?> executer() {
@@ -104,8 +104,8 @@ public class ModuleListeUtils extends ASModule {
              * 		@return la liste formee des elements de la liste initiale pour lesquels la fonction f a retourne vrai
              */
             new ASObjet.Fonction("filtrer", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(new Type("fonction"), "f", null),
-                    new ASObjet.Fonction.Parametre(new Type("liste"), "lst", null)
+                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.fonctionType.asType(), "f", null),
+                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.liste.asType(), "lst", null)
             }, new Type("liste")) {
                 @Override
                 public ASObjet<?> executer() {
@@ -113,7 +113,7 @@ public class ModuleListeUtils extends ASModule {
                     Fonction f = (Fonction) this.getParamsValeursDict().get("f");
                     Liste nouvelleListe = new Liste();
                     for (ASObjet<?> element : liste.getValue()) {
-                        if ((Boolean) f.setParamPuisExecute(new ArrayList<>(Arrays.asList(element))).getValue())
+                        if ((Boolean) f.setParamPuisExecute(new ArrayList<>(Collections.singletonList(element))).getValue())
                             nouvelleListe.ajouterElement(element);
                     }
 
@@ -136,8 +136,8 @@ public class ModuleListeUtils extends ASModule {
              * 		@return le texte forme en joignant chaque elements de la liste initiale avec le separateur entre chaque element
              */
             new ASObjet.Fonction("joindre", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(new Type("liste"), "lst", null),
-                    new ASObjet.Fonction.Parametre(new Type("texte"), "separateur", new ASObjet.Texte(""))
+                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.liste.asType(), "lst", null),
+                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.texte.asType(), "separateur", new ASObjet.Texte(""))
             }, new Type("texte")) {
                 @Override
                 public ASObjet<?> executer() {
@@ -243,6 +243,15 @@ public class ModuleListeUtils extends ASModule {
 
 
     public static List<ASObjet.Constante> constantes = Collections.emptyList();
+
+    public ModuleListeUtils(ASModuleManager moduleManager) {
+        super(moduleManager);
+    }
+
+    @Override
+    public void charger() {
+
+    }
 }
 
 

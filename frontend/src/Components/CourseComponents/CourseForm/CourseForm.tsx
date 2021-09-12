@@ -27,8 +27,7 @@ const CourseForm = (props: CourseFormProps) => {
 					history.push(routes.auth.course.path.replace(':id', course.id));
 					return alert.success('Cours créé avec succès');
 				}}
-				buttonText={t('form.submit.create_course')}
-				name="create_course"
+				name="course"
 				url="courses"
 				action="POST"
 				inputGroups={[
@@ -36,11 +35,13 @@ const CourseForm = (props: CourseFormProps) => {
 						name: 'name',
 						required: true,
 						inputType: 'text',
+						minLength: 3,
+						maxLength: 25,
 					},
 					{
 						name: 'description',
-						required: false,
 						inputType: 'text',
+						maxLength: 200,
 					},
 					{
 						name: 'subject',

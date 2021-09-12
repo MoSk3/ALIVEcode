@@ -11,7 +11,6 @@ import interpreteur.executeur.Executeur;
 import interpreteur.tokens.Token;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class CreerGetter extends Programme {
@@ -19,7 +18,8 @@ public class CreerGetter extends Programme {
     private final Type type;
     private final Scope scope;
 
-    public CreerGetter(Var var, Type type) {
+    public CreerGetter(Var var, Type type, Executeur executeurInstance) {
+        super(executeurInstance);
         this.var = var;
         this.type = type;
         this.addGetter();
@@ -42,7 +42,7 @@ public class CreerGetter extends Programme {
             Scope scope = new Scope(this.scope);
             scope.setParent(Scope.getCurrentScopeInstance());
 
-            ASFonction get = new ASFonction(this.var.getNom(), this.type);
+            ASFonction get = new ASFonction(this.var.getNom(), this.type, executeurInstance);
             get.setScope(scope);
             get.setCoordBlocName("get_");
             return get.makeInstance().executer(new ArrayList<>());
@@ -56,7 +56,7 @@ public class CreerGetter extends Programme {
 
     @Override
     public Coordonnee prochaineCoord(Coordonnee coord, List<Token> ligne) {
-        return new Coordonnee(Executeur.nouveauScope("get_" + ligne.get(1).obtenirValeur()));
+        return new Coordonnee(executeurInstance.nouveauScope("get_" + ligne.get(1).obtenirValeur()));
     }
 
     @Override

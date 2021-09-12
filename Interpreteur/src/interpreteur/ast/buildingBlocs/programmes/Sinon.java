@@ -9,15 +9,19 @@ import javax.lang.model.type.NullType;
 import java.util.List;
 
 public class Sinon extends Programme {
+    public Sinon(Executeur executeurInstance) {
+        super(executeurInstance);
+    }
+
     @Override
     public NullType execute() {
-        Executeur.obtenirCoordRunTime().finBloc();
+        executeurInstance.obtenirCoordRunTime().finBloc();
         return null;
     }
 
     @Override
     public Coordonnee prochaineCoord(Coordonnee coord, List<Token> ligne) {
-        return Executeur.obtenirCoordRunTime().remplacerBlocActuel("sinon");
+        return executeurInstance.obtenirCoordRunTime().remplacerBlocActuel("sinon");
     }
 
     @Override

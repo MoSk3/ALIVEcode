@@ -12,8 +12,8 @@ public class ModuleNombreUtils extends ASModule {
 
     public static List<ASObjet.Fonction> fonctions = Arrays.asList(
             new ASObjet.Fonction("entier", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(new Type("texte"), "txt", null),
-                    new ASObjet.Fonction.Parametre(new Type("entier"), "base", new ASObjet.Entier(10))
+                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.texte.asType(), "txt", null),
+                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.entier.asType(), "base", new ASObjet.Entier(10))
             }, new Type("entier")) {
                 @Override
                 public Entier executer() {
@@ -29,7 +29,7 @@ public class ModuleNombreUtils extends ASModule {
 
 
             new ASObjet.Fonction("decimal", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(new Type("texte"), "txt", null)
+                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.texte.asType(), "txt", null)
             }, new Type("decimal")) {
                 @Override
                 public Decimal executer() {
@@ -43,7 +43,7 @@ public class ModuleNombreUtils extends ASModule {
 
 
             new ASObjet.Fonction("nombre", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(new Type("texte"), "txt", null)
+                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.texte.asType(), "txt", null)
             }, new Type("decimal")) {
                 @Override
                 public Nombre executer() {
@@ -70,6 +70,15 @@ public class ModuleNombreUtils extends ASModule {
 
     );
     public static List<ASObjet.Constante> constantes = Collections.emptyList();
+
+    public ModuleNombreUtils(ASModuleManager moduleManager) {
+        super(moduleManager);
+    }
+
+    @Override
+    public void charger() {
+
+    }
 }
 
 

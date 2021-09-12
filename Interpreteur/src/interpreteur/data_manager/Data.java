@@ -11,12 +11,37 @@ import java.util.function.Consumer;
 
 public class Data extends JSONObject {
     /*----------------------------- ID de data -----------------------------*/
+
+    /**
+     * {
+     * "id": @(id de la data),
+     * "m": @(valeur de la methode de la data),
+     * "d": @(temps en secondes pendant lesquels le programme va s'arreter),
+     * "p": [ @(valeur du param1) , @(valeur du param2), ...]
+     * }
+     */
+    public Data(Id id) {
+        this.put("id", id.getId());
+        this.put("d", 0.0);
+        this.put("p", new JSONArray());
+    }
+
+    public Data addParam(Object val) {
+        this.getJSONArray("p").put(val);
+        return this;
+    }
+
+    public Data addDodo(double dodo) {
+        this.put("d", dodo);
+        return this;
+    }
+
     /**
      * MOTEUR = 1xx
      * SENSEUR = 2xx
      * UTILITAIRE = 3xx
      * ERREUR = 400 à 449: erreur execution
-     *          450 à 499: erreur compilation
+     * 450 à 499: erreur compilation
      */
     public enum Id {
         ARRETER(Categorie.MOTEUR),          // 0
@@ -50,7 +75,7 @@ public class Data extends JSONObject {
             this.id = this.categorie.getNext();
         }
 
-        Id(Categorie categorie, int manualId){
+        Id(Categorie categorie, int manualId) {
             this.categorie = categorie;
             categorie.getNext();
             this.id = manualId;
@@ -86,45 +111,15 @@ public class Data extends JSONObject {
             public int getNext() {
                 return (this.ordinal() + 1) * 100 + this.count++;
             }
+
             public int getCount() {
                 return this.count;
             }
+
             public int getCategorieId() {
                 return (this.ordinal() + 1) * 100;
             }
         }
-    }
-
-
-
-    public static Consumer<String> respond = null;
-    public static final Stack<Object> response = new Stack<>();
-
-    /**
-     *
-     * {
-     *      "id": @(id de la data),
-     *      "m": @(valeur de la methode de la data),
-     *      "d": @(temps en secondes pendant lesquels le programme va s'arreter),
-     *      "p": [ @(valeur du param1) , @(valeur du param2), ...]
-     * }
-     *
-     */
-    public Data(Id id) {
-        this.put("id", id.getId());
-        this.put("d", 0.0);
-        this.put("p", new JSONArray());
-    }
-
-
-    public Data addParam(Object val) {
-        this.getJSONArray("p").put(val);
-        return this;
-    }
-
-    public Data addDodo(double dodo) {
-        this.put("d", dodo);
-        return this;
     }
 }
 
