@@ -2,7 +2,6 @@ import { Exclude } from 'class-transformer';
 import { Entity, ManyToOne, TableInheritance, Column } from 'typeorm';
 import { UserEntity } from '../../user/entities/user.entity';
 import { CreatedByUser } from '../../../generics/entities/createdByUser.entity';
-import { AsScriptEntity } from '../../../as-script/entities/as-script.entity';
 import { IsNotEmpty, IsOptional } from 'class-validator';
 
 export enum LEVEL_TAG {}
