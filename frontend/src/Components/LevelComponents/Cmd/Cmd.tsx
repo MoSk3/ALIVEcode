@@ -13,12 +13,7 @@ const StyledDiv = styled.div`
 
 	pre {
 		font-family: Arial, Helvetica, sans-serif;
-<<<<<<< HEAD:frontend/src/Components/LevelComponents/Cmd/Cmd.tsx
 		font-size: large;
-		letter-spacing: 1px;
-=======
-		font-size: small;
->>>>>>> dev:frontend/src/Components/PlayComponents/Cmd/Cmd.tsx
 		color: var(--foreground-color);
 		line-height: 2rem;
 	}
