@@ -1,5 +1,9 @@
 ## AliveScript
 
+<small>[v1.2.0](#versioning)</small>  
+<small>Auteur: Mathis Laroche</small>  
+<br>
+
 #### Commentaires
 
 -   simple ligne: <code># _commentaire_</code>
@@ -310,34 +314,35 @@
 
             -   ~~info~~
 
-            -   aleatoire(choix: iterable) -> tout
-            -   typeDe(element: tout) -> texte
+            -   [aleatoire(choix: iterable) -> tout](bultins.md/#aleatoire)
+            -   [typeDe(element: tout) -> texte](bultins.md/#typeDe)
 
-            -   sep(txt: texte) -> liste
-            -   joindre(lst: liste, separateur: texte = " ") -> texte
-            -   inverser(iter: iterable) -> iterable
-            -   map(f: fonctionType, lst: liste) -> liste
-            -   filtrer(f: fonctionType, lst: liste) -> liste
-            -   somme(lst: liste) -> nombre
-            -   max(lst: liste) -> nombre
-            -   min(lst: liste) -> nombre
-            -   unir(lst1: liste, lst2: liste) -> liste
-            -   tailleDe(iter: iterable) -> entier
+            -   [joindre(lst: liste, separateur: texte = " ") -> texte](bultins.md/#joindre)
+            -   [inv(iter: iterable) -> iterable](bultins.md/#inv)
+            -   [map(f: fonctionType, lst: liste) -> liste](bultins.md/#map)
+            -   [filtrer(f: fonctionType, lst: liste) -> liste](bultins.md/#filtrer)
+            -   [somme(lst: liste) -> nombre](bultins.md/#somme)
+            -   [max(lst: liste) -> nombre](bultins.md/#max)
+            -   [min(lst: liste) -> nombre](bultins.md/#min)
+            -   [unir(lst1: liste, lst2: liste) -> liste](bultins.md/#unir)
+            -   [tailleDe(iter: iterable) -> entier](bultins.md/#taillDe)
 
-            -   bin(nb: entier) -> texte
-            -   maj(txt: texte) -> texte
-            -   minus(txt: texte) -> texte
-            -   estNumerique(txt: texte) -> booleen
-            -   format(txt: texte, valeurs: liste) -> texte
-            -   remplacer(txt: texte, pattern: texte, remplacement: texte) -> texte
-            -   remplacerRe(txt: texte, pattern: texte, remplacement: texte) -> texte
-            -   match(txt: texte, pattern: texte) -> booleen
+            -   [bin(nb: entier) -> texte](bultins.md/#bin)
+            -   [maj(txt: texte) -> texte](bultins.md/#maj)
+            -   [minus(txt: texte) -> texte](bultins.md/#minus)
+            -   [estNumerique(txt: texte) -> booleen](bultins.md/#estNumerique)
+            -   [format(txt: texte, valeurs: liste) -> texte](bultins.md/#format)
+            -   [remplacer(txt: texte, pattern: texte, remplacement: texte) -> texte](bultins.md/#remplacer)
+            -   [remplacerRe(txt: texte, pattern: texte, remplacement: texte) -> texte](bultins.md/#remplacerRe)
+            -   [match(txt: texte, pattern: texte) -> booleen](bultins.md/#match)
 
-            -   texte(element: tout) -> texte
-            -   entier(txt: texte, base: entier = 10) -> entier
-            -   nombre(txt: texte) -> nombre
-            -   decimal(txt: texte) -> decimal
-            -   booleen(element: tout) -> booleen
+            -   [liste(txt: texte) -> liste](bultins.md/#liste)
+            -   [texte(element: tout) -> texte](bultins.md/#texte)
+            -   [entier(txt: texte, base: entier = 10) -> entier](bultins.md/#entier)
+            -   [nombre(txt: texte) -> nombre](bultins.md/#nombre)
+            -   [decimal(txt: texte) -> decimal](bultins.md/#decimal)
+            -   [booleen(element: tout) -> booleen](bultins.md/#booleen)
+            -   [auto(txt: texte) -> tout](bultins.md/#auto)
 
         -   constantes:
             -   **AUCUNE**
@@ -388,6 +393,3 @@
      -> 2: Mineur  
      -> 3: bugfix  
      -> 45: build
-
-<br>  
-Auteur: Mathis Laroche

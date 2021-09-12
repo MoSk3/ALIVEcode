@@ -586,8 +586,9 @@ public class Executeur {
             // boolean servant a indique que l'execution est terminee
             executionActive = false;
             reset();
+            String resultatString = resultat.toString();
             // ajoute un '!' devant le résultat pour indiquer que l'exécution est terminée
-            resultat = "!" + resultat.toString();
+            resultat = "!" + resultatString.substring(0, resultatString.length()-1) + ", " + Data.endOfExecution() + "]";
         }
         datas.clear();
 
