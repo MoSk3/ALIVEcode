@@ -7,6 +7,7 @@ import { Row, Col } from 'react-bootstrap';
 import {
 	faBookOpen,
 	faCog,
+	faPauseCircle,
 	faPencilAlt,
 	faPlayCircle,
 	faQuestionCircle,
@@ -42,7 +43,7 @@ const LevelAlive = ({
 	const { user } = useContext(UserContext);
 
 	const [cmdRef, cmd] = useCmd();
-	const { executor, setExecutor, setExecutorLines, toggleExecution } =
+	const { executor, setExecutor, setExecutorLines } =
 		useExecutor<LevelAliveExecutor>(LevelAliveExecutor, cmd);
 
 	const history = useHistory();
@@ -180,9 +181,10 @@ const LevelAlive = ({
 							)}
 							<IconButton icon={faBookOpen} size="2x" />
 							<IconButton icon={faQuestionCircle} size="2x" />
+							{/* Do not change the onClick method!! it MUST be a method that calls the toggleExecution */}
 							<IconButton
-								onClick={toggleExecution}
-								icon={faPlayCircle}
+								onClick={() => executor?.toggleExecution()}
+								icon={executor?.execution ? faPauseCircle : faPlayCircle}
 								size="2x"
 							/>
 							{(saving || saved) && (

@@ -25,7 +25,7 @@ export default class LevelCodeExecutor extends LevelExecutor {
 			}
 		} catch {
 			this.cmd?.error(
-				"Une erreur semble être survenue lors de la compilation de votre code, il se peut que les services d'alivescript soient présentement hors-service",
+				"Une erreur semble être survenue lors de la compilation de votre code, il se peut qu'une erreur inconnue se trouve dans votre code ou que les services d'alivescript soient présentement hors-ligne",
 				0,
 			);
 			this.stop();
