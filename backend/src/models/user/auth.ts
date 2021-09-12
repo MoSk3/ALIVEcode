@@ -30,6 +30,7 @@ export const createRefreshToken = (user: UserEntity) => {
 
 export const setRefreshToken = (res: Response, token: string) => {
   res.cookie('wif', token, {
+    expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
     httpOnly: true,
   });
 };
