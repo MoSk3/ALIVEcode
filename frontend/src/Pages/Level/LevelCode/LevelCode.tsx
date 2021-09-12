@@ -185,7 +185,7 @@ const LevelAlive = ({
 							<IconButton icon={faQuestionCircle} size="2x" />
 							{/* Do not change the onClick method!! it MUST be a method that calls the toggleExecution */}
 							<IconButton
-								onClick={executor?.toggleExecution}
+								onClick={() => executor?.toggleExecution()}
 								icon={executor?.execution ? faPauseCircle : faPlayCircle}
 								size="2x"
 							/>
@@ -231,7 +231,7 @@ const LevelAlive = ({
 							/>
 						) : (
 							<LineInterface
-								content={
+								defaultContent={
 									progression?.data.code
 										? progression?.data.code
 										: level.initialCode

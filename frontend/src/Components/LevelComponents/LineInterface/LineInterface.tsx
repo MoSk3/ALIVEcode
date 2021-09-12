@@ -1,6 +1,6 @@
 import { LineInterfaceProps, StyledLineInterface, EditorTabModel } from './lineInterfaceTypes';
 import AceEditor from 'react-ace';
-import 'ace-builds/src-noconflict/theme-alive';
+import 'ace-builds/src-noconflict/theme-cobalt';
 import './mode-alivescript';
 import EditorTab from '../../AliveScriptComponents/EditorTab/EditorTab';
 import { useState } from 'react';
@@ -8,7 +8,7 @@ import { useState } from 'react';
 const LineInterface = ({
 	hasTabs,
 	tabs: initialTabs,
-	content: defaultContent,
+	defaultContent,
 	handleChange,
 }: LineInterfaceProps) => {
 	/* Content for a multiple tabs interface */
@@ -28,7 +28,7 @@ const LineInterface = ({
 
 	const setOpenedTab = (idx: number) => {
 		const updatedTabs = tabs.map((t, i) => {
-			if (i === idx) handleChange(t.defaultContent);
+			if (i === idx) handleChange(t.content);
 			t.open = i === idx;
 			return t;
 		});
@@ -44,11 +44,9 @@ const LineInterface = ({
 		<StyledLineInterface>
 			{hasTabs && (
 				<div className="editors-tab w-100">
-					{tabs.map((t, idx) => {
-						return (
-							<EditorTab key={idx} tab={t} setOpen={() => setOpenedTab(idx)} />
-						);
-					})}
+					{tabs.map((t, idx) => (
+						<EditorTab key={idx} tab={t} setOpen={() => setOpenedTab(idx)} />
+					))}
 				</div>
 			)}
 			{hasTabs ? (
@@ -62,22 +60,27 @@ const LineInterface = ({
 									(!t.open && t.loaded ? 'hidden-editor' : '')
 								}
 								defaultValue={t.defaultContent}
+								value={t.content}
 								enableSnippets
 								enableBasicAutocompletion
 								enableLiveAutocompletion
 								mode="alivescript"
-								theme="alive"
+								theme="cobalt"
 								onLoad={() => {
 									// To only hide the tab editor once it loaded
 									setTimeout(() => {
 										// Set default content in parent prop
 										if (t.open) handleChange(t.defaultContent);
-
+										tabs[idx].content = t.defaultContent;
 										tabs[idx].loaded = true;
 										setTabs([...tabs]);
 									}, 100);
 								}}
-								onChange={content => onEditorChange(content, t)}
+								onChange={content => {
+									onEditorChange(content, t);
+									tabs[idx].content = content;
+									setTabs([...tabs]);
+								}}
 								fontSize="large"
 								name="1nt3rf4c3" //"UNIQUE_ID_OF_DIV"
 								editorProps={{ $blockScrolling: true }}
@@ -92,7 +95,7 @@ const LineInterface = ({
 					enableBasicAutocompletion
 					enableLiveAutocompletion
 					mode="alivescript"
-					theme="alive"
+					theme="cobalt"
 					defaultValue={defaultContent}
 					value={content}
 					onChange={content => {

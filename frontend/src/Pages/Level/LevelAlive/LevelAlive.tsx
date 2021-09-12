@@ -233,7 +233,7 @@ const LevelAlive = ({
 							/>
 						) : (
 							<LineInterface
-								content={
+								defaultContent={
 									progression?.data.code
 										? progression.data.code
 										: level.initialCode

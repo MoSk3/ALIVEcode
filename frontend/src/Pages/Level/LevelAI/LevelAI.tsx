@@ -242,7 +242,7 @@ const LevelAI = ({
 						) : (
 							/* Interface de code sans les tabs */
 							<LineInterface
-								content={
+								defaultContent={
 									progression?.data.code
 										? progression.data.code
 										: level.initialCode
