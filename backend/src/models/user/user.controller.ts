@@ -147,7 +147,7 @@ export class UserController {
     return this.userService.getClassrooms(await this.userService.findById(id));
   }
 
-  @Post(':id/levels')
+  @Get(':id/levels')
   @Auth()
   async getLevels(@User() user: UserEntity, @Param('id') id: string, @Body() query: QueryDTO) {
     if (!hasRole(user, Role.MOD) && user.id !== id) throw new HttpException('You cannot do that', HttpStatus.FORBIDDEN);

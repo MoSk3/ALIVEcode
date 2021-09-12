@@ -33,12 +33,21 @@ const formatUrl = <S extends string>(
 		.join('/');
 };
 
-const apiGet = <T extends {}, S extends string, U extends boolean>(
+const apiGet = <T extends object, S extends string, U extends boolean>(
 	url: S,
 	target: ClassConstructor<T>,
 	returnsArray: U,
+	overrideCast?: (data: any) => T | T[],
 ) => {
 	return async (args: { [key in urlArgType<S>]: string }) => {
+		if (overrideCast !== undefined) {
+			const data = await (await axios.get(formatUrl(url, args))).data;
+			return (
+				Array.isArray(data)
+					? data.map(d => overrideCast(d))
+					: overrideCast(data)
+			) as U extends true ? T[] : T;
+		}
 		return (await loadObj(formatUrl(url, args), target)) as U extends true
 			? T[]
 			: T;
@@ -208,11 +217,17 @@ const api = {
 			//get: apiGetter('users', User),
 			getClassrooms: apiGet('users/:id/classrooms', Classroom, true),
 			getCourses: apiGet('users/:id/courses', Course, true),
+			getLevels: apiGet('users/:id/levels', Level, true, level => {
+				if (level.layout) return plainToClass(LevelAlive, level);
+				else if (level.testCases) return plainToClass(LevelCode, level);
+				return plainToClass(Level, level);
+			}),
 			createProfessor: apiCreate('users/professors', Professor),
 			createStudent: apiCreate('users/students', Student),
 			delete: apiDelete('users/:id'),
 		},
 		classrooms: {
+			all: apiGet('classrooms', Classroom, true),
 			get: apiGet('classrooms/:id/', Classroom, false),
 			getCourses: apiGet('classrooms/:id/courses', Course, true),
 			getStudents: apiGet('classrooms/:id/students', Student, true),
@@ -223,6 +238,19 @@ const api = {
 			get: apiGet('courses/:id', Course, false),
 			getSections: apiGet('courses/:id/sections', Section, true),
 			delete: apiDelete('courses/:id'),
+		},
+		levels: {
+			progressions: {
+				get: apiGet('levels/:id/progressions/:userId', LevelProgression, false),
+				save: apiUpdate('levels/:id/progressions/:userId', LevelProgression),
+			},
+			get: apiGet('levels/:id', Level, false, level => {
+				if (level.layout) return plainToClass(LevelAlive, level);
+				else if (level.testCases) return plainToClass(LevelCode, level);
+				return plainToClass(Level, level);
+			}),
+			update: apiUpdate('levels/:id', Level),
+			query: apiGet('levels', Level, true),
 		},
 		iot: {
 			projects: {

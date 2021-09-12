@@ -34,7 +34,7 @@ const Level = (props: LevelProps) => {
 
 			if (id) {
 				try {
-					level = await api.db.levels.get(id);
+					level = await api.db.levels.get({ id });
 				} catch (err) {
 					alert.error('Niveau introuvable');
 					history.push('/');
@@ -43,7 +43,10 @@ const Level = (props: LevelProps) => {
 				if (user) {
 					let progression;
 					try {
-						progression = await api.db.levels.progressions.get(level.id, user);
+						progression = await api.db.levels.progressions.get({
+							id: level.id,
+							userId: user.id,
+						});
 					} catch {
 						progression = plainToClass(LevelProgression, {
 							data: {},
