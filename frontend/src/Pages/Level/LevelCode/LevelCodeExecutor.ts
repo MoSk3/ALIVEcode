@@ -24,10 +24,6 @@ export default class LevelCodeExecutor extends LevelExecutor {
 				}
 			}
 		} catch {
-			this.cmd?.error(
-				"Une erreur semble être survenue lors de la compilation de votre code, il se peut qu'une erreur inconnue se trouve dans votre code ou que les services d'alivescript soient présentement hors-ligne",
-				0,
-			);
 			this.stop();
 		}
 	}
@@ -38,14 +34,21 @@ export default class LevelCodeExecutor extends LevelExecutor {
 	private async sendDataToAsServer(
 		data: { lines: string } | { idToken: string; 'response-data': string[] },
 	) {
-		return (
-			await axios({
-				method: 'POST',
-				url: '/compile/',
-				baseURL: process.env.REACT_APP_AS_URL,
-				data,
-			})
-		).data;
+		try {
+			return (
+				await axios({
+					method: 'POST',
+					url: '/compile/',
+					baseURL: process.env.REACT_APP_AS_URL,
+					data,
+				})
+			).data;
+		} catch {
+			this.cmd?.error(
+				"Une erreur inconnue est survenue. Vérifiez pour des erreurs dans votre code, sinon, les services d'alivescript sont hors-ligne.",
+				0,
+			);
+		}
 	}
 
 	public execute(data: any) {

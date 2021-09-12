@@ -44,7 +44,7 @@ const LevelAI = ({
 	const [cmdRef, cmd] = useCmd();
 	const playButton = useRef<HTMLButtonElement>(null);
 	const history = useHistory();
-	const { routes } = useRoutes();
+	const { routes, goToNewTab } = useRoutes();
 	const { t } = useTranslation();
 	const [editTitle, setEditTitle] = useState(false);
 	const [settingsModalOpen, setSettingsModalOpen] = useState(false);
@@ -189,9 +189,13 @@ const LevelAI = ({
 									size="2x"
 								/>
 							)}
-							<IconButton icon={faBookOpen} size="2x" />
+							<IconButton
+								onClick={() => goToNewTab(routes.public.asDocs.path)}
+								icon={faBookOpen}
+								size="2x"
+							/>
 							<IconButton icon={faQuestionCircle} size="2x" />
-							<IconButton icon={faPlayCircle} size="2x" ref={playButton} />
+							<IconButton icon={faPlayCircle} size="2x" />
 							{(saving || saved) && (
 								<label className="save-message">
 									{saving && 'Sauvegarde en cours...'}
@@ -209,7 +213,7 @@ const LevelAI = ({
 									{
 										title: 'Initial Code',
 										open: true,
-										content: level.initialCode,
+										defaultContent: level.initialCode,
 										onChange: content => {
 											level.initialCode = content;
 											const newLevel = plainToClass(LevelAIModel, {
@@ -222,7 +226,7 @@ const LevelAI = ({
 									{
 										title: 'Solution',
 										open: false,
-										content: level.solution,
+										defaultContent: level.solution,
 										onChange: content => {
 											level.solution = content;
 											const newLevel = plainToClass(LevelAIModel, {

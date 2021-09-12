@@ -9,17 +9,21 @@ const useExecutor = <T extends LevelExecutor>(
 ) => {
 	const [executor, setExecutor] = useState<T>();
 	const [lines, setLines] = useState<string>('');
+	const [sketch, setSketch] = useState<any>();
 
 	useEffect(() => {
-		if (executor) executor.lineInterfaceContent = lines;
-	}, [executor, lines]);
+		if (executor) {
+			executor.lineInterfaceContent = lines;
+			if (sketch) (executor as any).s = sketch;
+		}
+	}, [executor, lines, sketch]);
 
 	if (executor && cmd) executor.cmd = cmd;
 
-	const toggleExecution = (ex: LevelExecutor) => {
-		if (!ex) return;
-		ex.execution = !ex.execution;
-		const updatedExecutor = Object.assign(new U(), { ...ex });
+	const toggleExecution = (exec: T) => {
+		if (!exec) return;
+		exec.execution = !exec.execution;
+		const updatedExecutor = Object.assign(new U(), { ...exec });
 		setExecutor(updatedExecutor);
 	};
 
@@ -33,6 +37,7 @@ const useExecutor = <T extends LevelExecutor>(
 	return {
 		executor,
 		setExecutor,
+		setSketch,
 		setExecutorLines,
 	};
 };

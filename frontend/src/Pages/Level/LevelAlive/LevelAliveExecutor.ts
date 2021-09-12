@@ -1,10 +1,10 @@
 /* eslint-disable no-labels */
+import LevelCodeExecutor from '../LevelCode/LevelCodeExecutor';
 import { images } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/assets';
 import { InteractiveObject } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/InteractiveObject';
 import { Shape } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/Shape';
 import { Vector } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/Vector';
 import $ from 'jquery';
-import LevelCodeExecutor from '../LevelCode/LevelCodeExecutor';
 
 // TODO: robotConnected
 const robotConnected = false;
@@ -108,6 +108,7 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 	}
 
 	public onStop() {
+		if (!this.s) return;
 		const s = this.s;
 
 		//if(!robotConnected) {
@@ -164,12 +165,14 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 	}
 
 	public execute(data: any) {
+		if (!this.s) return;
+		const s = this.s;
+
 		const res: any = [];
 		const ID = 'id';
 		const DODO = 'd';
 		const PARAMS = 'p';
 
-		const s = this.s;
 		const angleDroit = 90;
 		const car = s.car;
 
@@ -237,7 +240,6 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 						/*----     tourner     ----*/
 						if (!robotConnected) {
 							if (params.length > 0 && typeof params[0] === 'number') {
-								console.log('HERE');
 								car.turn(-params[0], () => {
 									perform_action(i + 1);
 								});
@@ -417,6 +419,7 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 	// TODO: typing events
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	private reset(e: any) {
+		if (!this.s) return;
 		if (e.collidingWith === this.s.car) {
 			//this.playButton.trigger('click');
 		}
@@ -427,7 +430,8 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 	//s.robotConnectButton = null
 
 	private spawnEditorButton() {
-		let s = this.s;
+		if (!this.s) return;
+		const s = this.s;
 		this.editorButton = s.spawnFixedRect(
 			s.width / 2 - 35,
 			-s.height / 2 + 95,
@@ -451,6 +455,7 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 	}
 
 	private spawnRobotConnectButton() {
+		if (!this.s) return;
 		this.robotConnectButton = this.s.spawnFixedRect(
 			this.s.width / 2 - 35,
 			-this.s.height / 2 + 35,

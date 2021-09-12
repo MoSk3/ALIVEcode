@@ -8,9 +8,10 @@ import { useState } from 'react';
 const LineInterface = ({
 	hasTabs,
 	tabs: initialTabs,
-	content,
+	content: defaultContent,
 	handleChange,
 }: LineInterfaceProps) => {
+	/* Content for a multiple tabs interface */
 	const [tabs, setTabs] = useState<EditorTabModel[]>(() => {
 		if (!hasTabs) return [];
 		return (
@@ -22,9 +23,12 @@ const LineInterface = ({
 			]
 		);
 	});
+	/* Content for a single tab interface */
+	const [content, setContent] = useState<string>(defaultContent ?? '');
 
 	const setOpenedTab = (idx: number) => {
 		const updatedTabs = tabs.map((t, i) => {
+			if (i === idx) handleChange(t.defaultContent);
 			t.open = i === idx;
 			return t;
 		});
@@ -57,7 +61,7 @@ const LineInterface = ({
 									'ace-editor relative w-100 h-100 ' +
 									(!t.open && t.loaded ? 'hidden-editor' : '')
 								}
-								defaultValue={t.content}
+								defaultValue={t.defaultContent}
 								enableSnippets
 								enableBasicAutocompletion
 								enableLiveAutocompletion
@@ -67,7 +71,7 @@ const LineInterface = ({
 									// To only hide the tab editor once it loaded
 									setTimeout(() => {
 										// Set default content in parent prop
-										if (t.open) handleChange(t.content);
+										if (t.open) handleChange(t.defaultContent);
 
 										tabs[idx].loaded = true;
 										setTabs([...tabs]);
@@ -89,10 +93,14 @@ const LineInterface = ({
 					enableLiveAutocompletion
 					mode="alivescript"
 					theme="alive"
-					defaultValue={content}
-					onChange={content => onEditorChange(content)}
+					defaultValue={defaultContent}
+					value={content}
+					onChange={content => {
+						setContent(content);
+						onEditorChange(content);
+					}}
 					onLoad={() => {
-						handleChange(content);
+						handleChange(defaultContent);
 					}}
 					fontSize="large"
 					name="1nt3rf4c3" //"UNIQUE_ID_OF_DIV"

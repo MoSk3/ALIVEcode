@@ -43,11 +43,11 @@ const LevelAlive = ({
 	const { user } = useContext(UserContext);
 
 	const [cmdRef, cmd] = useCmd();
-	const { executor, setExecutor, setExecutorLines } =
+	const { executor, setExecutor, setExecutorLines, setSketch } =
 		useExecutor<LevelAliveExecutor>(LevelAliveExecutor, cmd);
 
 	const history = useHistory();
-	const { routes } = useRoutes();
+	const { routes, goToNewTab } = useRoutes();
 	const { t } = useTranslation();
 	const [editTitle, setEditTitle] = useState(false);
 	const [settingsModalOpen, setSettingsModalOpen] = useState(false);
@@ -179,7 +179,11 @@ const LevelAlive = ({
 									size="2x"
 								/>
 							)}
-							<IconButton icon={faBookOpen} size="2x" />
+							<IconButton
+								onClick={() => goToNewTab(routes.public.asDocs.path)}
+								icon={faBookOpen}
+								size="2x"
+							/>
 							<IconButton icon={faQuestionCircle} size="2x" />
 							{/* Do not change the onClick method!! it MUST be a method that calls the toggleExecution */}
 							<IconButton
@@ -201,7 +205,7 @@ const LevelAlive = ({
 									{
 										title: 'Initial Code',
 										open: true,
-										content: level.initialCode,
+										defaultContent: level.initialCode,
 										onChange: content => {
 											level.initialCode = content;
 											const newLevel = plainToClass(LevelAliveModel, {
@@ -214,7 +218,7 @@ const LevelAlive = ({
 									{
 										title: 'Solution',
 										open: false,
-										content: level.solution,
+										defaultContent: level.solution,
 										onChange: content => {
 											level.solution = content;
 											const newLevel = plainToClass(LevelAliveModel, {
@@ -240,7 +244,14 @@ const LevelAlive = ({
 					</Col>
 					<Col md={6} style={{ resize: 'both', padding: '0' }}>
 						<Row id="simulation-row" style={{ height: '60%' }}>
-							{executor && <Simulation init={s => executor.init(s)} />}
+							{executor && (
+								<Simulation
+									init={s => {
+										executor.init(s);
+										setSketch(s);
+									}}
+								/>
+							)}
 						</Row>
 						<Row style={{ height: '40%' }}>
 							<Cmd ref={cmdRef}></Cmd>

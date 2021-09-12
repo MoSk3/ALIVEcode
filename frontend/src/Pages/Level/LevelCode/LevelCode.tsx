@@ -45,7 +45,7 @@ const LevelAlive = ({
 		useExecutor<LevelCodeExecutor>(LevelCodeExecutor, cmd);
 
 	const history = useHistory();
-	const { routes } = useRoutes();
+	const { routes, goToNewTab } = useRoutes();
 	const { t } = useTranslation();
 	const [editTitle, setEditTitle] = useState(false);
 	const [settingsModalOpen, setSettingsModalOpen] = useState(false);
@@ -177,7 +177,11 @@ const LevelAlive = ({
 									size="2x"
 								/>
 							)}
-							<IconButton icon={faBookOpen} size="2x" />
+							<IconButton
+								onClick={() => goToNewTab(routes.public.asDocs.path)}
+								icon={faBookOpen}
+								size="2x"
+							/>
 							<IconButton icon={faQuestionCircle} size="2x" />
 							{/* Do not change the onClick method!! it MUST be a method that calls the toggleExecution */}
 							<IconButton
@@ -199,7 +203,7 @@ const LevelAlive = ({
 									{
 										title: 'Initial Code',
 										open: true,
-										content: level.initialCode,
+										defaultContent: level.initialCode,
 										onChange: content => {
 											level.initialCode = content;
 											const newLevel = plainToClass(LevelCodeModel, {
@@ -212,7 +216,7 @@ const LevelAlive = ({
 									{
 										title: 'Solution',
 										open: false,
-										content: level.solution,
+										defaultContent: level.solution,
 										onChange: content => {
 											level.solution = content;
 											const newLevel = plainToClass(LevelCodeModel, {

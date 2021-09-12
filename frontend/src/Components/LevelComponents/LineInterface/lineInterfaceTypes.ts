@@ -10,6 +10,7 @@ export type EditorTabModel = {
 	title: string;
 	open: boolean;
 	loaded?: boolean;
+	defaultContent?: string;
 	content?: string;
 	onChange?: (content: string) => void;
 };
