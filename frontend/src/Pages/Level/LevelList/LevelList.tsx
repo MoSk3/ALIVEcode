@@ -28,7 +28,12 @@ const LevelBrowse = (props: LevelBrowseProps) => {
 		<StyledLevelBrowse>
 			<BrowsingMenu<Level>
 				fetchOnSubmit
-				apiRequest={query => api.db.users.getLevels({ id: user.id })}
+				apiRequest={query =>
+					api.db.users.getLevels(
+						{ id: user.id },
+						query.txt ? { search: query.txt } : undefined,
+					)
+				}
 				onChange={res => setBrowsingResult(res)}
 			/>
 			<div className="levels">

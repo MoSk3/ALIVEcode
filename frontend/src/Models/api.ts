@@ -21,16 +21,28 @@ type urlArgType<S extends string> = S extends `${infer _}:${infer A}/${infer B}`
 	? A
 	: never;
 
+const formatQuery = (query: { [name: string]: string }) => {
+	return (
+		'?' +
+		Object.entries(query)
+			.map(([name, value]) => `${name}=${value}`)
+			.join('&')
+	);
+};
+
 const formatUrl = <S extends string>(
 	url: string,
 	args: { [key in urlArgType<S>]: string },
+	query?: { [name: string]: string },
 ) => {
-	return url
-		.split('/')
-		.map(part =>
-			part.startsWith(':') ? args[part.substring(1) as urlArgType<S>] : part,
-		)
-		.join('/');
+	return (
+		url
+			.split('/')
+			.map(part =>
+				part.startsWith(':') ? args[part.substring(1) as urlArgType<S>] : part,
+			)
+			.join('/') + (query === undefined ? '' : formatQuery(query))
+	);
 };
 
 const apiGet = <T extends object, S extends string, U extends boolean>(
@@ -39,9 +51,12 @@ const apiGet = <T extends object, S extends string, U extends boolean>(
 	returnsArray: U,
 	overrideCast?: (data: any) => T | T[],
 ) => {
-	return async (args: { [key in urlArgType<S>]: string }) => {
+	return async (
+		args: { [key in urlArgType<S>]: string },
+		query?: { [name: string]: string },
+	) => {
 		if (overrideCast !== undefined) {
-			const data = await (await axios.get(formatUrl(url, args))).data;
+			const data = await (await axios.get(formatUrl(url, args, query))).data;
 			return (
 				Array.isArray(data)
 					? data.map(d => overrideCast(d))
@@ -55,8 +70,11 @@ const apiGet = <T extends object, S extends string, U extends boolean>(
 };
 
 const apiDelete = <S extends string>(url: S) => {
-	return async (args: { [key in urlArgType<S>]: string }) => {
-		return await axios.delete(formatUrl(url, args));
+	return async (
+		args: { [key in urlArgType<S>]: string },
+		query?: { [name: string]: string },
+	) => {
+		return await axios.delete(formatUrl(url, args, query));
 	};
 };
 
@@ -75,8 +93,9 @@ const apiUpdate = <T, S extends string>(
 	return async (
 		args: { [key in urlArgType<S>]: string },
 		fields: object,
+		query?: { [name: string]: string },
 	): Promise<T> => {
-		const data = (await axios.patch(formatUrl(url, args), fields)).data;
+		const data = (await axios.patch(formatUrl(url, args, query), fields)).data;
 		return plainToClass(target, data) as T;
 	};
 };
