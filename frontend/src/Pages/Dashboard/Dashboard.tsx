@@ -29,7 +29,9 @@ const Dashboard = (props: DashboardProps) => {
 	useEffect(() => {
 		if (!user) return;
 		const getClassrooms = async () => {
-			const data = await api.db.users.getClassrooms(user.id);
+			const data = await api.db.users.getClassrooms({
+				id: user.id,
+			});
 			setLoading(false);
 			setClassrooms(data.map((d: any) => plainToClass(Classroom, d)));
 		};

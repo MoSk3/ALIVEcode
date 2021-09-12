@@ -41,7 +41,7 @@ export class ClassroomController {
   }
 
   @Get()
-  findAll() {
+  async findAll() {
     return this.classroomService.findAll();
   }
 

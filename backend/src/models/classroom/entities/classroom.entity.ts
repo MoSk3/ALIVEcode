@@ -26,7 +26,7 @@ export class ClassroomEntity extends CreatedByUser {
   code: string;
 
   @IsNotEmpty()
-  @Column({ enum: CLASSROOM_SUBJECT })
+  @Column({ enum: CLASSROOM_SUBJECT, nullable: false })
   subject: CLASSROOM_SUBJECT;
 
   @Exclude({ toClassOnly: true })

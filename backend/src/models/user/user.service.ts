@@ -16,7 +16,6 @@ import { ClassroomEntity } from '../classroom/entities/classroom.entity';
 import { IoTProjectEntity } from '../iot/IoTproject/entities/IoTproject.entity';
 import { IoTObjectEntity } from '../iot/IoTobject/entities/IoTobject.entity';
 import { LevelEntity } from '../level/entities/level.entity';
-import { QueryDTO } from '../level/dto/query.dto';
 
 @Injectable({ scope: Scope.REQUEST })
 export class UserService {
@@ -153,9 +152,9 @@ export class UserService {
     return await this.iotObjectRepository.find({ where: { creator: user } });
   }
 
-  async getLevels(user: UserEntity, query: QueryDTO) {
+  async getLevels(user: UserEntity, query: string) {
     return await this.levelRepository.find({
-      where: { creator: user, name: ILike(`%${query?.txt ?? ''}%`) },
+      where: { creator: user, name: ILike(`%${query ?? ''}%`) },
       order: {
         creationDate: 'DESC',
         name: 'ASC',
