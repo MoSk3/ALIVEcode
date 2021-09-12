@@ -6,21 +6,23 @@ export abstract class LevelExecutor {
 	public lineInterfaceContent: string = '';
 	public timeouts: Array<NodeJS.Timeout> = [];
 	public execution: boolean = false;
+	public onToggleExecution?: (ex: LevelExecutor) => void;
 
 	constructor(public levelName: string, public creator?: User) {}
 
 	public toggleExecution() {
-		this.execution ? this.stop() : this.run();
+		this.onToggleExecution && this.onToggleExecution(this);
+		this.execution ? this.run() : this.stop();
 	}
 
 	public run() {
-		this.execution = true;
+		!this.execution && this.onToggleExecution && this.onToggleExecution(this);
 		this.cmd?.clear();
 		this.onRun();
 	}
 
 	public stop() {
-		this.execution = false;
+		this.execution && this.onToggleExecution && this.onToggleExecution(this);
 		// Clear all the timouts of the execution
 		for (let timeout of this.timeouts) {
 			clearTimeout(timeout);

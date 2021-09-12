@@ -111,11 +111,30 @@ public class ModuleBuiltins {
                 },
 
                 new ASObjet.Fonction("booleen", new ASObjet.Fonction.Parametre[]{
-                        new ASObjet.Fonction.Parametre(new Type("tout"), "element", null)
+                        new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.tout.asType(), "element", null)
                 }, ASObjet.TypeBuiltin.booleen.asType()) {
                     @Override
                     public ASObjet<?> executer() {
                         return new Booleen(this.getParamsValeursDict().get("element").boolValue());
+                    }
+                },
+
+                new ASObjet.Fonction("auto", new ASObjet.Fonction.Parametre[]{
+                        new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.texte.asType(), "txt", null)
+                }, ASObjet.TypeBuiltin.tout.asType()) {
+                    @Override
+                    public ASObjet<?> executer() {
+                        var txt = ((Texte) this.getValeurParam("txt")).getValue().trim();
+                        if (Nombre.estNumerique(txt)) {
+                            if (txt.contains(".")) {
+                                return new Decimal(Double.parseDouble(txt));
+                            } else {
+                                return new Entier(Integer.parseInt(txt));
+                            }
+                        } else if (Booleen.estBooleen(txt)) {
+                            return new Booleen(txt);
+                        }
+                        return new Texte(txt);
                     }
                 },
 

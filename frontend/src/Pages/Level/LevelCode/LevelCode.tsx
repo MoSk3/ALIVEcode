@@ -41,7 +41,7 @@ const LevelAlive = ({
 	const { user } = useContext(UserContext);
 
 	const [cmdRef, cmd] = useCmd();
-	const { executor, setExecutor, setExecutorLines, toggleExecution } =
+	const { executor, setExecutor, setExecutorLines } =
 		useExecutor<LevelCodeExecutor>(LevelCodeExecutor, cmd);
 
 	const history = useHistory();
@@ -179,8 +179,9 @@ const LevelAlive = ({
 							)}
 							<IconButton icon={faBookOpen} size="2x" />
 							<IconButton icon={faQuestionCircle} size="2x" />
+							{/* Do not change the onClick method!! it MUST be a method that calls the toggleExecution */}
 							<IconButton
-								onClick={toggleExecution}
+								onClick={executor?.toggleExecution}
 								icon={executor?.execution ? faPauseCircle : faPlayCircle}
 								size="2x"
 							/>

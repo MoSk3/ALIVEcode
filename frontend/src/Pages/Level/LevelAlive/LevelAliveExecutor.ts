@@ -28,8 +28,6 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 	public init(s: any) {
 		this.s = s;
 
-		this.execution = false;
-
 		/*this.socket.onRobotReceive((data: any) => {
 			let car = s.car;
 
@@ -112,7 +110,6 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 	public onStop() {
 		const s = this.s;
 
-		this.execution = false;
 		//if(!robotConnected) {
 		s.car.reset();
 		//}
@@ -191,8 +188,6 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 
 		const perform_action = (i: number) => {
 			if (i >= data.length) {
-				//this.socket?.response(res);
-				this.stop();
 				return;
 			}
 			const action = data[i];
@@ -242,6 +237,7 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 						/*----     tourner     ----*/
 						if (!robotConnected) {
 							if (params.length > 0 && typeof params[0] === 'number') {
+								console.log('HERE');
 								car.turn(-params[0], () => {
 									perform_action(i + 1);
 								});
@@ -358,7 +354,7 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 						switch (params[0]) {
 							case 'read': {
 								/*----     lire     ----*/
-								let input = prompt("Entrez l'input");
+								let input = prompt(params[1]);
 								res.push(input);
 								perform_action(i + 1);
 								// eslint-disable-next-line no-labels

@@ -71,6 +71,17 @@ public interface ASObjet<T> {
     }
 
     interface Nombre extends ASObjet<Number> {
+        static boolean estNumerique(String txt) {
+            try {
+                var estDecimal = txt.contains(".");
+                if (estDecimal) Double.parseDouble(txt);
+                else Integer.parseInt(txt);
+                return true;
+            } catch (NumberFormatException err) {
+                return false;
+            }
+        }
+
         @Override
         default String obtenirNomType() {
             return "nombre";
@@ -297,8 +308,8 @@ public interface ASObjet<T> {
         private final Type typeRetour;
         private final Parametre[] parametres; //String[] de forme {nomDuParam�tre, typeDuParam�tre (ou null s'il n'en poss�de pas)}
         private final String nom;
-        private Hashtable<String, ASObjet<?>> parametres_appel = new Hashtable<>();  // Object[][] de forme {{nom_param, valeur}, {nom_param2, valeur2}}
         private final Coordonnee coordReprise = null;
+        private Hashtable<String, ASObjet<?>> parametres_appel = new Hashtable<>();  // Object[][] de forme {{nom_param, valeur}, {nom_param2, valeur2}}
         private String scopeName;
 
         /**
@@ -586,6 +597,14 @@ public interface ASObjet<T> {
             }
         }
 
+        public Entier(String valeur) {
+            try {
+                this.valeur = Integer.parseInt(valeur);
+            } catch (NumberFormatException err) {
+                throw new ErreurType("La valeur " + valeur + " ne peut pas \u00EAtre convertie en nombre entier.");
+            }
+        }
+
 
         @Override
         public String toString() {
@@ -634,6 +653,14 @@ public interface ASObjet<T> {
             this.valeur = valeur.doubleValue();
         }
 
+        public Decimal(String valeur) {
+            try {
+                this.valeur = Double.parseDouble(valeur);
+            } catch (NumberFormatException err) {
+                throw new ErreurType("La valeur " + valeur + " ne peut pas \u00EAtre convertie en nombre d\u00E9cimal.");
+            }
+        }
+
         @Override
         public String toString() {
             return this.getValue().toString();
@@ -680,6 +707,18 @@ public interface ASObjet<T> {
 
         public Booleen(Boolean valeur) {
             this.valeur = valeur;
+        }
+
+        public Booleen(String valeur) {
+            this.valeur = switch (valeur) {
+                case "vrai" -> true;
+                case "faux" -> false;
+                default -> throw new ErreurType("La valeur " + valeur + " ne peut pas \u00EAtre convertie en bool\u00E9en.");
+            };
+        }
+
+        public static boolean estBooleen(String txt) {
+            return txt.equals("vrai") || txt.equals("faux");
         }
 
         @Override

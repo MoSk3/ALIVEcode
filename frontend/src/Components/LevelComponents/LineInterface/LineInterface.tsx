@@ -40,9 +40,11 @@ const LineInterface = ({
 		<StyledLineInterface>
 			{hasTabs && (
 				<div className="editors-tab w-100">
-					{tabs.map((t, idx) => (
-						<EditorTab key={idx} tab={t} setOpen={() => setOpenedTab(idx)} />
-					))}
+					{tabs.map((t, idx) => {
+						return (
+							<EditorTab key={idx} tab={t} setOpen={() => setOpenedTab(idx)} />
+						);
+					})}
 				</div>
 			)}
 			{hasTabs ? (
@@ -64,6 +66,9 @@ const LineInterface = ({
 								onLoad={() => {
 									// To only hide the tab editor once it loaded
 									setTimeout(() => {
+										// Set default content in parent prop
+										if (t.open) handleChange(t.content);
+
 										tabs[idx].loaded = true;
 										setTabs([...tabs]);
 									}, 100);
@@ -86,6 +91,9 @@ const LineInterface = ({
 					theme="alive"
 					defaultValue={content}
 					onChange={content => onEditorChange(content)}
+					onLoad={() => {
+						handleChange(content);
+					}}
 					fontSize="large"
 					name="1nt3rf4c3" //"UNIQUE_ID_OF_DIV"
 					editorProps={{ $blockScrolling: true }}
