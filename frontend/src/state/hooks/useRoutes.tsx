@@ -66,8 +66,10 @@ const useRoutes = () => {
 				!route.maintenanceExempt &&
 				route.hasAccess
 			) {
-				route.component = MaintenanceError;
-				route.hasAccess = false;
+				if (!user || !user.isAdmin) {
+					route.component = MaintenanceError;
+					route.hasAccess = false;
+				}
 			}
 		});
 		return routeGroup;

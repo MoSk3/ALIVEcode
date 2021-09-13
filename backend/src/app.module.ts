@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -13,9 +13,14 @@ import { LevelModule } from './models/level/level.module';
 import { IoTGateway } from './socket/iotSocket/iot.gateway';
 import { AdminModule } from './models/admin/admin.module';
 import { MaintenanceModule } from './models/maintenance/maintenance.module';
+import { MaintenanceMiddleware } from './utils/middlewares/maintenance.middleware';
+import { MaintenanceEntity } from './models/maintenance/entities/maintenance.entity';
+import { UserEntity } from './models/user/entities/user.entity';
+import { AuthMiddleware } from './utils/middlewares/auth.middleware';
 
 @Module({
   imports: [
+    TypeOrmModule.forFeature([MaintenanceEntity]),
     TypeOrmModule.forRoot(config),
     UserModule,
     ClassroomModule,
@@ -31,4 +36,17 @@ import { MaintenanceModule } from './models/maintenance/maintenance.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(AuthMiddleware).forRoutes({ path: '*', method: RequestMethod.ALL });
+    consumer
+      .apply(MaintenanceMiddleware)
+      .exclude(
+        { path: '/users/login', method: RequestMethod.POST },
+        { path: '/users/me', method: RequestMethod.GET },
+        { path: '/users/refreshToken', method: RequestMethod.POST },
+        'maintenances/(.*)',
+      )
+      .forRoutes({ path: '*', method: RequestMethod.ALL });
+  }
+}

@@ -28,15 +28,7 @@ export class RolesGuard implements CanActivate {
       let roles = this.reflector.get<Role[]>('roles', context.getHandler());
       if (!roles) roles = [];
 
-      const authorization = this.req.headers['authorization'];
-      if (!authorization) throw new HttpException('Not Authenticated', HttpStatus.UNAUTHORIZED);
-
-      const accessToken = authorization.split(' ')[1];
-      const payload = verify(accessToken, process.env.ACCESS_TOKEN_SECRET_KEY);
-      if (!payload) throw new HttpException('Not Authenticated', HttpStatus.UNAUTHORIZED);
-
-      const authPayload = payload as AuthPayload;
-      const user = await this.userRepository.findOne(authPayload.id);
+      const user = this.req.user;
       if (!user) throw new HttpException('Not Authenticated', HttpStatus.UNAUTHORIZED);
 
       if (!hasRole(user, ...roles)) throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
