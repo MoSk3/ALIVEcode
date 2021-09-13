@@ -40,13 +40,13 @@ export const hasRole = (user: UserEntity, ...roles: Array<Role>): boolean => {
   return roles.some(role => {
     switch (role) {
       case Role.SUPER_USER:
-        return user.is_super_user;
+        return user.isSuperUser;
       case Role.ADMIN:
-        return user.is_admin || user.is_super_user;
+        return user.isAdmin || user.isSuperUser;
       case Role.MOD:
-        return user.is_mod || user.is_admin || user.is_super_user;
+        return user.isMod || user.isAdmin || user.isSuperUser;
       case Role.STAFF:
-        return user.is_super_user || user.is_admin || user.is_mod;
+        return user.isSuperUser || user.isAdmin || user.isMod;
       case Role.PROFESSOR:
         return user instanceof ProfessorEntity;
       case Role.STUDENT:

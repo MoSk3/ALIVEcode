@@ -28,17 +28,17 @@ export class UserEntity {
   @Column({ default: false })
   @IsEmpty()
   @Exclude()
-  is_mod: boolean;
+  isMod: boolean;
 
   @Column({ default: false })
   @IsEmpty()
   @Exclude()
-  is_admin: boolean;
+  isAdmin: boolean;
 
   @Column({ default: false })
   @IsEmpty()
   @Exclude()
-  is_super_user: boolean;
+  isSuperUser: boolean;
 
   @OneToMany(() => LevelEntity, level => level.creator, { cascade: true })
   levels: LevelEntity[];
