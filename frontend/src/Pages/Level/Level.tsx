@@ -41,16 +41,23 @@ const Level = (props: LevelProps) => {
 					return;
 				}
 				if (user) {
-					let progression;
+					let progression: LevelProgression;
 					try {
 						progression = await api.db.levels.progressions.get({
 							id: level.id,
 							userId: user.id,
 						});
 					} catch {
-						progression = plainToClass(LevelProgression, {
-							data: {},
-						});
+						//progression = plainToClass(LevelProgression, {
+						//	data: {},
+						//});
+						progression = await api.db.levels.progressions.save(
+							{
+								id: level.id,
+								userId: user.id,
+							},
+							level,
+						);
 					}
 					setProgresion(progression);
 				}

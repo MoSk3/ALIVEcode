@@ -136,7 +136,7 @@ const LevelAlive = ({
 
 	useEffect(() => {
 		$(document).on('keydown', e => {
-			if (e.keyCode === 83 && e.ctrlKey) {
+			if (e.key === 's' && e.ctrlKey) {
 				e.preventDefault();
 				e.stopPropagation();
 				if (!user) return setAccountModalOpen(true);

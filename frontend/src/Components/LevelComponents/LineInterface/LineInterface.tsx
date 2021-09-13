@@ -1,6 +1,8 @@
 import { LineInterfaceProps, StyledLineInterface, EditorTabModel } from './lineInterfaceTypes';
+import ace from 'ace-builds/src-noconflict/ace';
+import { autocomplete, setAutocomplete } from './autocomplete';
 import AceEditor from 'react-ace';
-//import 'ace-builds/src-noconflict/theme-alive';
+import 'ace-builds/src-noconflict/theme-monokai';
 import './mode-alivescript';
 import EditorTab from '../../AliveScriptComponents/EditorTab/EditorTab';
 import { useState } from 'react';
@@ -60,13 +62,16 @@ const LineInterface = ({
 								enableBasicAutocompletion
 								enableLiveAutocompletion
 								mode="alivescript"
-								theme="alive"
+								theme="monokai"
 								onLoad={() => {
 									// To only hide the tab editor once it loaded
 									setTimeout(() => {
 										tabs[idx].loaded = true;
 										setTabs([...tabs]);
 									}, 100);
+									const editor = ace.edit('1nt3rf4c3');
+									setAutocomplete(editor);
+									editor.keyBinding.addKeyboardHandler(autocomplete, 0);
 								}}
 								onChange={content => onEditorChange(content, t)}
 								fontSize="large"
@@ -83,7 +88,7 @@ const LineInterface = ({
 					enableBasicAutocompletion
 					enableLiveAutocompletion
 					mode="alivescript"
-					theme="alive"
+					theme="monokai"
 					defaultValue={content}
 					onChange={content => onEditorChange(content)}
 					fontSize="large"

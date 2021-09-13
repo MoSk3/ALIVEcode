@@ -45,7 +45,7 @@ const formatUrl = <S extends string>(
 	);
 };
 
-const apiGet = <T extends object, S extends string, U extends boolean>(
+const apiGet = <T, S extends string, U extends boolean>(
 	url: S,
 	target: ClassConstructor<T>,
 	returnsArray: U,
@@ -82,13 +82,14 @@ const apiDelete = <S extends string>(url: S) => {
 const apiCreate = <T>(moduleName: string, target: ClassConstructor<T>) => {
 	return async (fields: any): Promise<T> => {
 		const data = (await axios.post(moduleName, fields)).data;
-		return plainToClass(target, data) as T;
+		return plainToClass(target, data);
 	};
 };
 
 const apiUpdate = <T, S extends string>(
 	url: S,
 	target: ClassConstructor<T>,
+	overrideCast?: (data: any) => T,
 ) => {
 	return async (
 		args: { [key in urlArgType<S>]: string },
@@ -96,7 +97,8 @@ const apiUpdate = <T, S extends string>(
 		query?: { [name: string]: string },
 	): Promise<T> => {
 		const data = (await axios.patch(formatUrl(url, args, query), fields)).data;
-		return plainToClass(target, data) as T;
+		if (overrideCast !== undefined) return overrideCast(data);
+		return plainToClass(target, data);
 	};
 };
 
@@ -268,7 +270,11 @@ const api = {
 				else if (level.testCases) return plainToClass(LevelCode, level);
 				return plainToClass(Level, level);
 			}),
-			update: apiUpdate('levels/:id', Level),
+			update: apiUpdate('levels/:id', Level, level => {
+				if (level.layout) return plainToClass(LevelAlive, level);
+				else if (level.testCases) return plainToClass(LevelCode, level);
+				return plainToClass(Level, level);
+			}),
 			query: apiGet('levels', Level, true),
 		},
 		iot: {

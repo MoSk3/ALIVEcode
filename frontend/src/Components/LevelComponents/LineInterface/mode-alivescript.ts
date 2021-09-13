@@ -1,8 +1,5 @@
 import ace from 'ace-builds/src-noconflict/ace'
-import autocomplete from './autocomplete';
-import $ from 'jquery';
 
-let editor: any;
 
 ace.define(
 	'ace/mode/alivescript',
@@ -248,13 +245,8 @@ ace.define(
 				],
 			};
 		};
-		$(() => {
-			editor = ace.edit('1nt3rf4c3');
-			editor.keyBinding.addKeyboardHandler(autocomplete, 0);
-		});
+
 		oop.inherits(CustomHighlightRules, TextHighlightRules);
 		exports.CustomHighlightRules = CustomHighlightRules;
 	},
 );
-
-export { editor };

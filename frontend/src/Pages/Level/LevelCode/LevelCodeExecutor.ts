@@ -1,12 +1,10 @@
 import { CMD } from "../../../Components/LevelComponents/Cmd/cmdTypes";
-import { PlaySocket } from '../PlaySocket';
 import $ from 'jquery';
 import axios from 'axios';
 import { User } from '../../../Models/User/user.entity';
 
 export default class LevelCodeExecutor {
 	public playButton: JQuery;
-	public socket?: PlaySocket;
 	public cmd?: CMD;
 	public lineInterfaceContent: string = '';
 	public timeouts: Array<NodeJS.Timeout> = [];
