@@ -1,0 +1,12 @@
+{
+	"name": "alivecodeapi",
+	"version": "0.0.1",
+	"description": "",
+	"author": "LRIMa",
+	"private": true,
+	"license": "UNLICENSED",
+	"scripts": {
+		"alivescript:build": "javac -sourcepath ./src/ -d ./out/production/Interpreteur/ ./src/interpreteur/executeur/Executeur.java -cp \"./lib/json-20140107.jar;./lib/snakeyaml-1.28.jar;./lib/annotations-19.0.0.jar\" && javac -sourcepath ./ServerAS/src/ -d ./out/production/ServerAS/ ./ServerAS/src/server/Server.java -cp \"./lib/json-20140107.jar;./lib/snakeyaml-1.28.jar;./lib/annotations-19.0.0.jar;./lib/javax.websocket-api-1.1.jar;./out/production/Interpreteur/\" && mkdir ./out/production/Interpreteur/interpreteur/regle_et_grammaire && cp ./src/interpreteur/regle_et_grammaire/ASGrammaire.yaml ./out/production/Interpreteur/interpreteur/regle_et_grammaire/",
+		"alivescript": "java -cp \"./out/production/Interpreteur;./out/production/ServerAs/;./lib/json-20140107.jar;./lib/snakeyaml-1.28.jar;./lib/annotations-19.0.0.jar;./lib/javax.websocket-api-1.1.jar\" server.Server"
+	}
+}
