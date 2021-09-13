@@ -1,10 +1,9 @@
 import { Injectable, CanActivate, ExecutionContext, Scope, Inject, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Request } from 'express';
-import { JsonWebTokenError, verify } from 'jsonwebtoken';
+import { JsonWebTokenError } from 'jsonwebtoken';
 import { Repository } from 'typeorm';
 import { Reflector, REQUEST } from '@nestjs/core';
-import { AuthPayload } from '../types/auth.payload';
 import { UserEntity } from 'src/models/user/entities/user.entity';
 import { hasRole } from '../../models/user/auth';
 import { Role } from '../types/roles.types';

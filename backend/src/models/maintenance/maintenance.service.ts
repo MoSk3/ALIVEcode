@@ -6,6 +6,8 @@ import { Raw, Repository } from 'typeorm';
 @Injectable()
 export class MaintenanceService {
   constructor(@InjectRepository(MaintenanceEntity) private maintenanceRepo: Repository<MaintenanceEntity>) {}
+  private currentMaintenance: MaintenanceEntity | null = null;
+  private lastCheck: number | null = null;
 
   async create(createMaintenanceDto: MaintenanceEntity) {
     return await this.maintenanceRepo.save(this.maintenanceRepo.create(createMaintenanceDto));
@@ -41,5 +43,23 @@ export class MaintenanceService {
 
   async remove(id: string) {
     return await this.maintenanceRepo.delete(id);
+  }
+
+  async getCurrentMaintenance() {
+    if (!this.currentMaintenance || (this.lastCheck && Date.now() - this.lastCheck >= 1000 * 30)) {
+      this.currentMaintenance = await this.maintenanceRepo.findOne({ where: { started: true, finished: false } });
+      this.lastCheck = Date.now();
+    }
+    return this.currentMaintenance;
+  }
+
+  async startMaintenance(maintenance: MaintenanceEntity) {
+    this.currentMaintenance = await this.maintenanceRepo.save({ ...maintenance, started: true });
+    return this.currentMaintenance;
+  }
+
+  async stopMaintenance(maintenance: MaintenanceEntity) {
+    this.currentMaintenance = await this.maintenanceRepo.save({ ...maintenance, finished: true, started: false });
+    return this.currentMaintenance;
   }
 }

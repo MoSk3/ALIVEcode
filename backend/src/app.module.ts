@@ -15,8 +15,8 @@ import { AdminModule } from './models/admin/admin.module';
 import { MaintenanceModule } from './models/maintenance/maintenance.module';
 import { MaintenanceMiddleware } from './utils/middlewares/maintenance.middleware';
 import { MaintenanceEntity } from './models/maintenance/entities/maintenance.entity';
-import { UserEntity } from './models/user/entities/user.entity';
 import { AuthMiddleware } from './utils/middlewares/auth.middleware';
+import { MaintenanceService } from './models/maintenance/maintenance.service';
 
 @Module({
   imports: [
@@ -34,7 +34,7 @@ import { AuthMiddleware } from './utils/middlewares/auth.middleware';
     MaintenanceModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, MaintenanceService],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer): void {
@@ -43,9 +43,10 @@ export class AppModule {
       .apply(MaintenanceMiddleware)
       .exclude(
         { path: '/users/login', method: RequestMethod.POST },
-        { path: '/users/me', method: RequestMethod.GET },
         { path: '/users/refreshToken', method: RequestMethod.POST },
         'maintenances/(.*)',
+        'admin/(.*)',
+        'admin',
       )
       .forRoutes({ path: '*', method: RequestMethod.ALL });
   }
