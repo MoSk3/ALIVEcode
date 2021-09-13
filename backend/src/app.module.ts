@@ -12,6 +12,7 @@ import { UserModule } from './models/user/user.module';
 import { LevelModule } from './models/level/level.module';
 import { IoTGateway } from './socket/iotSocket/iot.gateway';
 import { AdminModule } from './models/admin/admin.module';
+import { MaintenanceModule } from './models/maintenance/maintenance.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { AdminModule } from './models/admin/admin.module';
     IoTRouteModule,
     IoTGateway,
     AdminModule,
+    MaintenanceModule,
   ],
   controllers: [AppController],
   providers: [AppService],

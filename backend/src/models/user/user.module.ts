@@ -13,7 +13,7 @@ import { IoTObjectEntity } from '../iot/IoTobject/entities/IoTobject.entity';
 import { LevelEntity } from '../level/entities/level.entity';
 import { LevelProgressionEntity } from '../level/entities/levelProgression.entity';
 import { AdminModule } from '../admin/admin.module';
-import { UserAdmin } from './user.admin';
+import { UserAdmin } from './entities/user.admin';
 
 @Module({
   imports: [

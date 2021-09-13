@@ -1,5 +1,5 @@
 import { AdminEntity } from "nestjs-admin";
-import { UserEntity } from './entities/user.entity';
+import { UserEntity } from './user.entity';
 
 export class UserAdmin extends AdminEntity {
   entity = UserEntity;
