@@ -19,6 +19,8 @@ import { User, Student, Professor } from './Models/User/user.entity';
 import LoadingScreen from './Components/UtilsComponents/LoadingScreen/LoadingScreen';
 import background_image_light from './assets/images/backgroundImage4.png';
 import api from './Models/api';
+import { Maintenance } from './Models/Maintenance/maintenance.entity';
+import MaintenanceBar from './Components/MainComponents/MaintenanceBar/MaintenanceBar';
 
 type GlobalStyleProps = {
 	theme: Theme;
@@ -66,13 +68,17 @@ const App = () => {
 	const [user, setUser] = useState<Student | Professor | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [theme, setTheme] = useState(themes.light);
+	const [maintenance, setMaintenance] = useState<Maintenance | null>(null);
 
 	const { routes } = useRoutes();
 	const { t } = useTranslation();
 	const alert = useAlert();
 
 	const history = useHistory();
-	const providerValue = useMemo(() => ({ user, setUser }), [user, setUser]);
+	const providerValue = useMemo(
+		() => ({ user, setUser, maintenance }),
+		[user, setUser, maintenance],
+	);
 
 	const handleSetTheme = (theme: Theme) => {
 		setCookie('theme', theme.name, 365);
@@ -153,6 +159,14 @@ const App = () => {
 				return Promise.reject(error);
 			},
 		);
+
+		const getUpcomingMaintenance = async () => {
+			try {
+				const maintenance = await api.db.maintenances.getUpcoming();
+				setMaintenance(maintenance);
+			} catch {}
+		};
+		getUpcomingMaintenance();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -174,7 +188,17 @@ const App = () => {
 							<StyledApp theme={theme} className="m-auto my-4">
 								<RouterSwitch />
 							</StyledApp>
-							<BackArrow />
+							{maintenance && !maintenance.hidden && (
+								<MaintenanceBar
+									onClose={() =>
+										setMaintenance({ ...maintenance, hidden: true })
+									}
+									maintenance={maintenance}
+								/>
+							)}
+							<BackArrow
+								maintenancePopUp={maintenance != null && !maintenance.hidden}
+							/>
 						</UserContext.Provider>
 					</Router>
 				)}

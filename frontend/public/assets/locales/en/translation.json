@@ -1,7 +1,14 @@
 {
 	"error": {
+		"sorry": "Sorry.",
+		"back": "Go back",
+		"home": "Back to the main page",
 		"logout": "Something went wrong when logging out, please try again.",
-		"500": "Something went wrong, please try again"
+		"500": "Something went wrong, please try again",
+		"page404": "This page does not exist.",
+		"maintenance": {
+			"ongoing": "The website is under maintenance since {{startDate}} and will finish at {{finishDate}}, this page could not be loaded."
+		}
 	},
 	"form": {
 		"submit": {
@@ -85,6 +92,10 @@
 			"avp": "Augmented Vehicle Perception",
 			"lrima": "LRIMA's research laboratory",
 			"account": "My account"
+		},
+		"maintenance": {
+			"ongoing": "The website is currently undergoing a maintenance from {{startDate}} to {{finishDate}}. You cannot use your account or see other users' levels during this period of time. Sorry for the incovenience.",
+			"upcoming": "The website will be undergoing a maintenance from {{startDate}} to {{finishDate}}. You will not be able to use your account or see other users' levels during this period of time. Sorry for the inconvenience."
 		}
 	},
 	"dashboard": {

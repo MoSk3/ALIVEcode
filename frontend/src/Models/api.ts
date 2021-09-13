@@ -14,6 +14,7 @@ import { LevelCode } from './Level/levelCode.entity';
 import { LevelProgression } from './Level/levelProgression';
 import { BrowsingQuery } from '../Components/MainComponents/BrowsingMenu/browsingMenuTypes';
 import { LevelAI } from './Level/levelAI.entity';
+import { Maintenance } from './Maintenance/maintenance.entity';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const apiGetter = <T extends {}>(url: string, target: T) => {
@@ -40,7 +41,10 @@ const api = {
 	db: {
 		maintenances: {
 			async getUpcoming() {
-				return (await axios.get('maintenances/upcoming')).data;
+				return plainToClass(
+					Maintenance,
+					(await axios.get('maintenances/upcoming')).data,
+				);
 			},
 		},
 		users: {

@@ -23,7 +23,6 @@ export class MaintenanceController {
   }
 
   @Get('upcoming')
-  @Auth()
   async findUpcoming() {
     return await this.maintenanceService.findUpcoming();
   }

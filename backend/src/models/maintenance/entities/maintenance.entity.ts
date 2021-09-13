@@ -1,12 +1,21 @@
 import { Exclude } from 'class-transformer';
-import { IsNotEmpty, IsOptional } from 'class-validator';
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { IsNotEmpty, IsOptional, MaxLength } from 'class-validator';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class MaintenanceEntity {
   @PrimaryGeneratedColumn('increment')
   @Exclude()
   id: string;
+
+  @Column({ nullable: false })
+  @MaxLength(50)
+  @IsNotEmpty()
+  name: string;
+
+  @Column({ nullable: true })
+  @MaxLength(500)
+  description?: string;
 
   @Column({ type: 'timestamp' })
   @IsNotEmpty()
