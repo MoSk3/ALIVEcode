@@ -1,4 +1,4 @@
-import { Exclude } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 import { IsEmail, IsEmpty, IsNotEmpty, IsOptional, Length, Matches, MinLength } from 'class-validator';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn, TableInheritance } from 'typeorm';
 import { LevelEntity } from '../../level/entities/level.entity';
@@ -27,17 +27,20 @@ export class UserEntity {
 
   @Column({ default: false })
   @IsEmpty()
-  @Exclude()
+  @Exclude({ toClassOnly: true })
+  @Expose({ groups: ['admin', 'user'] })
   isMod: boolean;
 
   @Column({ default: false })
   @IsEmpty()
-  @Exclude()
+  @Exclude({ toClassOnly: true })
+  @Expose({ groups: ['admin', 'user'] })
   isAdmin: boolean;
 
   @Column({ default: false })
   @IsEmpty()
-  @Exclude()
+  @Exclude({ toClassOnly: true })
+  @Expose({ groups: ['admin', 'user'] })
   isSuperUser: boolean;
 
   @OneToMany(() => LevelEntity, level => level.creator, { cascade: true })

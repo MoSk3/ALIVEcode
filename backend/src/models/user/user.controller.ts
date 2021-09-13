@@ -22,9 +22,10 @@ import { Role } from 'src/utils/types/roles.types';
 import { hasRole } from './auth';
 import { DTOInterceptor } from '../../utils/interceptors/dto.interceptor';
 import { QueryDTO } from '../level/dto/query.dto';
+import { Group } from '../../utils/decorators/group.decorator';
 
 @Controller('users')
-@UseInterceptors(new DTOInterceptor())
+@UseInterceptors(DTOInterceptor)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -87,6 +88,7 @@ export class UserController {
 
   @Get('me')
   @Auth()
+  @Group('user')
   me(@User() user: UserEntity) {
     return user;
   }
