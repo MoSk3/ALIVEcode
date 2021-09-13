@@ -38,6 +38,11 @@ const apiCreate = <U extends {}>(moduleName: string, target: U) => {
 
 const api = {
 	db: {
+		maintenances: {
+			async getUpcoming() {
+				return (await axios.get('maintenances/upcoming')).data;
+			},
+		},
 		users: {
 			iot: {
 				async getProjects() {

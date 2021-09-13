@@ -24,7 +24,9 @@ export class MaintenanceService {
 
   async findUpcoming() {
     const maintenance = await this.maintenanceRepo.findOne({
-      where: { startDate: Raw(alias => `${alias} > :date`, { date: Date.now() - 1000 * 60 * 60 * 24 }) },
+      where: {
+        startDate: Raw(alias => `:date > ${alias}`, { date: new Date(Date.now() + 1000 * 60 * 60 * 24) }),
+      },
     });
     if (!maintenance) throw new HttpException('Not found', HttpStatus.NOT_FOUND);
     return maintenance;

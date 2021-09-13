@@ -18,6 +18,7 @@ import { setAccessToken } from './Types/accessToken';
 import { User, Student, Professor } from './Models/User/user.entity';
 import LoadingScreen from './Components/UtilsComponents/LoadingScreen/LoadingScreen';
 import background_image_light from './assets/images/backgroundImage4.png';
+import api from './Models/api';
 
 type GlobalStyleProps = {
 	theme: Theme;
@@ -106,6 +107,7 @@ const App = () => {
 				const loadedTheme = loadThemeFromCookies();
 				if (loadedTheme && loadedTheme !== theme) setTheme(loadedTheme);
 				setUser(loadedUser);
+				await api.db.maintenances.getUpcoming();
 			} catch {
 				const loadedTheme = loadThemeFromCookies();
 				if (loadedTheme && loadedTheme !== theme) setTheme(loadedTheme);
