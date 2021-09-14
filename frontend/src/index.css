@@ -7,9 +7,16 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+p {
+  margin-bottom: 0 !important;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+  font-size: 87.5% !important;
+  color: #e83e8c !important;
+  word-wrap: break-word !important;
 }
 
 .card {

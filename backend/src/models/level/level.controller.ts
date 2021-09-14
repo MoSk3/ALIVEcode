@@ -23,9 +23,10 @@ import { LevelCodeEntity } from './entities/levelCode.entity';
 import { UserService } from '../user/user.service';
 import { LevelProgressionEntity } from './entities/levelProgression.entity';
 import { QueryDTO } from './dto/query.dto';
+import { LevelAIEntity } from './entities/levelAI.entity';
 
 @Controller('levels')
-@UseInterceptors(new DTOInterceptor())
+@UseInterceptors(DTOInterceptor)
 export class LevelController {
   constructor(private readonly levelService: LevelService, private readonly userService: UserService) {}
 
@@ -39,6 +40,12 @@ export class LevelController {
   @Auth()
   async createLevelCode(@User() user: UserEntity, @Body() createLevelDto: LevelCodeEntity) {
     return await this.levelService.createLevelCode(user, createLevelDto);
+  }
+
+  @Post('ai')
+  @Auth()
+  async createLevelAI(@User() user: UserEntity, @Body() createLevelDto: LevelAIEntity) {
+    return await this.levelService.createLevelAI(user, createLevelDto);
   }
 
   @Get()
@@ -89,30 +96,8 @@ export class LevelController {
   async update(
     @User() user: UserEntity,
     @Param('id') id: string,
-    @Body() updateLevelDto: LevelEntity | LevelCodeEntity | LevelAliveEntity,
+    @Body() updateLevelDto: LevelEntity | LevelCodeEntity | LevelAliveEntity | LevelAIEntity,
   ) {
-    const level = await this.levelService.findOne(id);
-
-    if (level.creator.id !== user.id && !hasRole(user, Role.STAFF))
-      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
-
-    return await this.levelService.update(id, updateLevelDto);
-  }
-
-  @Patch('alive/:id')
-  @Auth()
-  async updateAlive(@User() user: UserEntity, @Param('id') id: string, @Body() updateLevelDto: LevelAliveEntity) {
-    const level = await this.levelService.findOne(id);
-
-    if (level.creator.id !== user.id && !hasRole(user, Role.STAFF))
-      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
-
-    return await this.levelService.update(id, updateLevelDto);
-  }
-
-  @Patch('code/:id')
-  @Auth()
-  async updateCode(@User() user: UserEntity, @Param('id') id: string, @Body() updateLevelDto: LevelCodeEntity) {
     const level = await this.levelService.findOne(id);
 
     if (level.creator.id !== user.id && !hasRole(user, Role.STAFF))

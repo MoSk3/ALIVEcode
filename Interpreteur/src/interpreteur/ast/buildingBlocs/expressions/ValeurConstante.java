@@ -3,12 +3,7 @@ package interpreteur.ast.buildingBlocs.expressions;
 import interpreteur.as.Objets.ASObjet;
 import interpreteur.ast.buildingBlocs.Expression;
 
-public class ValeurConstante implements Expression<ASObjet<?>> {
-    private final ASObjet<?> val;
-
-    public ValeurConstante(ASObjet<?> val) {
-        this.val = val;
-    }
+public record ValeurConstante(ASObjet<?> val) implements Expression<ASObjet<?>> {
 
     @Override
     public ASObjet<?> eval() {

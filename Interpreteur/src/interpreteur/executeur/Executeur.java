@@ -56,7 +56,7 @@ public class Executeur {
     // modules
     private final ASModuleManager asModuleManager = new ASModuleManager(this);
 
-    // data explaining the actions to do to the server
+    // data explaining the actions to do to the com.server
     private final ArrayList<Data> datas = new ArrayList<>();
 
     // data stack used when the program asks the site for information
@@ -126,15 +126,14 @@ public class Executeur {
 
         String[] lines = """   
                 fonction additionner(num1: nombre, num2: nombre) -> liste
-                    fonction f(a)
-                        afficher a
-                    fin fonction
-                    retourner [f, 1]
+                    retourner [num1 + num2]
                 fin fonction
                                 
                 var a <- "23.1"
                 var b <- '11'
-                afficher(additionner(decimal(a), decimal(b))[0] a)
+                afficher nombre(b)
+                afficher {1, 2}
+                afficher(additionner(nombre(a), nombre(b))[0])
                 """.split("\n");
 
 
@@ -386,7 +385,7 @@ public class Executeur {
             String line = lignes[i];
 
             // produit la liste de Token representant la ligne (voir lexer.lex)
-            List<Token> lineToken = lexer.lex(line.trim());
+            var lineToken = lexer.lex(line.trim());
 
             // obtiens la coordonne ainsi que le scope ou sera enregistree la ligne compilee
             String coordActuelle = coordCompileTime.get(coordCompileTime.size() - 1).toString();
@@ -587,8 +586,9 @@ public class Executeur {
             // boolean servant a indique que l'execution est terminee
             executionActive = false;
             reset();
+            String resultatString = resultat.toString();
             // ajoute un '!' devant le résultat pour indiquer que l'exécution est terminée
-            resultat = "!" + resultat.toString();
+            resultat = "!" + resultatString.substring(0, resultatString.length()-1) + ", " + Data.endOfExecution() + "]";
         }
         datas.clear();
 

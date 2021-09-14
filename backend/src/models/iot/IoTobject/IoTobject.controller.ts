@@ -20,7 +20,7 @@ import { UserEntity } from '../../user/entities/user.entity';
 import { DTOInterceptor } from '../../../utils/interceptors/dto.interceptor';
 
 @Controller('iot/objects')
-@UseInterceptors(new DTOInterceptor())
+@UseInterceptors(DTOInterceptor)
 export class IoTObjectController {
   constructor(private readonly IoTObjectService: IoTObjectService) {}
 

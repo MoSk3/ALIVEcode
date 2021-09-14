@@ -62,16 +62,29 @@ public interface ASObjet<T> {
             return new Type(toString());
         }
 
+        /* previous toString
         @Override
         public String toString() {
             return aliases == null ? super.toString() : ArraysUtils.join("|", aliases);
         }
+        */
     }
 
     interface Nombre extends ASObjet<Number> {
+        static boolean estNumerique(String txt) {
+            try {
+                var estDecimal = txt.contains(".");
+                if (estDecimal) Double.parseDouble(txt);
+                else Integer.parseInt(txt);
+                return true;
+            } catch (NumberFormatException err) {
+                return false;
+            }
+        }
+
         @Override
         default String obtenirNomType() {
-            return "Nombre";
+            return "nombre";
         }
     }
 
@@ -96,7 +109,7 @@ public interface ASObjet<T> {
 
         @Override
         default String obtenirNomType() {
-            return "it\u00E9rable";
+            return "iterable";
         }
     }
 
@@ -114,7 +127,7 @@ public interface ASObjet<T> {
         public Variable(String nom, ASObjet<?> valeur, Type type) {
             this.type = type == null ? new Type("tout") : type;
             this.nom = FonctionManager.ajouterDansStructure(nom);
-            this.valeur = valeur instanceof Variable ? ((Variable) valeur).getValeurApresGetter() : valeur;
+            this.valeur = valeur instanceof Variable var ? var.getValeurApresGetter() : valeur;
         }
 
         private boolean nouvelleValeurValide(ASObjet<?> nouvelleValeur) {
@@ -295,8 +308,8 @@ public interface ASObjet<T> {
         private final Type typeRetour;
         private final Parametre[] parametres; //String[] de forme {nomDuParam�tre, typeDuParam�tre (ou null s'il n'en poss�de pas)}
         private final String nom;
-        private Hashtable<String, ASObjet<?>> parametres_appel = new Hashtable<>();  // Object[][] de forme {{nom_param, valeur}, {nom_param2, valeur2}}
         private final Coordonnee coordReprise = null;
+        private Hashtable<String, ASObjet<?>> parametres_appel = new Hashtable<>();  // Object[][] de forme {{nom_param, valeur}, {nom_param2, valeur2}}
         private String scopeName;
 
         /**
@@ -422,12 +435,12 @@ public interface ASObjet<T> {
                  * ex: foo(param1=vrai)
                  */
                 for (ASObjet<?> param : paramsValeurs) {
-                    if (param instanceof Parametre) {
-                        if (Arrays.stream(parametres).noneMatch(p -> p.getNom().equals(((Parametre) param).getNom()))) {
-                            throw new ErreurAppelFonction("l'argument: " + ((Parametre) param).getNom() + " pass\u00E9 en param\u00E8tre" +
+                    if (param instanceof Parametre parametre) {
+                        if (Arrays.stream(parametres).noneMatch(p -> p.getNom().equals(parametre.getNom()))) {
+                            throw new ErreurAppelFonction("l'argument: " + parametre.getNom() + " pass\u00E9 en param\u00E8tre" +
                                     " ne correspond \u00E0 aucun param\u00E8tre d\u00E9fini dans la fonction '" + this.nom + "'");
                         }
-                        this.parametres_appel.put(((Parametre) param).getNom(), ((Parametre) param).getValeurParDefaut());
+                        this.parametres_appel.put(parametre.getNom(), parametre.getValeurParDefaut());
                     }
                 }
 
@@ -584,6 +597,14 @@ public interface ASObjet<T> {
             }
         }
 
+        public Entier(String valeur) {
+            try {
+                this.valeur = Integer.parseInt(valeur);
+            } catch (NumberFormatException err) {
+                throw new ErreurType("La valeur " + valeur + " ne peut pas \u00EAtre convertie en nombre entier.");
+            }
+        }
+
 
         @Override
         public String toString() {
@@ -608,8 +629,7 @@ public interface ASObjet<T> {
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (!(o instanceof Entier)) return false;
-            Entier entier = (Entier) o;
+            if (!(o instanceof Entier entier)) return false;
             return valeur == entier.valeur;
         }
 
@@ -631,6 +651,14 @@ public interface ASObjet<T> {
 
         public Decimal(Number valeur) {
             this.valeur = valeur.doubleValue();
+        }
+
+        public Decimal(String valeur) {
+            try {
+                this.valeur = Double.parseDouble(valeur);
+            } catch (NumberFormatException err) {
+                throw new ErreurType("La valeur " + valeur + " ne peut pas \u00EAtre convertie en nombre d\u00E9cimal.");
+            }
         }
 
         @Override
@@ -656,8 +684,7 @@ public interface ASObjet<T> {
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (!(o instanceof Decimal)) return false;
-            Decimal decimal = (Decimal) o;
+            if (!(o instanceof Decimal decimal)) return false;
             return Double.compare(decimal.valeur, valeur) == 0;
         }
 
@@ -680,6 +707,18 @@ public interface ASObjet<T> {
 
         public Booleen(Boolean valeur) {
             this.valeur = valeur;
+        }
+
+        public Booleen(String valeur) {
+            this.valeur = switch (valeur) {
+                case "vrai" -> true;
+                case "faux" -> false;
+                default -> throw new ErreurType("La valeur " + valeur + " ne peut pas \u00EAtre convertie en bool\u00E9en.");
+            };
+        }
+
+        public static boolean estBooleen(String txt) {
+            return txt.equals("vrai") || txt.equals("faux");
         }
 
         @Override
@@ -705,8 +744,7 @@ public interface ASObjet<T> {
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (!(o instanceof Booleen)) return false;
-            Booleen booleen = (Booleen) o;
+            if (!(o instanceof Booleen booleen)) return false;
             return valeur == booleen.valeur;
         }
 
@@ -743,7 +781,7 @@ public interface ASObjet<T> {
 
         @Override
         public boolean equals(Object obj) {
-            return obj instanceof ASObjet<?> && ((ASObjet<?>) obj).getValue() == null;
+            return obj instanceof ASObjet<?> arrObj && arrObj.getValue() == null;
         }
     }
 
@@ -785,8 +823,8 @@ public interface ASObjet<T> {
 
         @Override
         public boolean contient(ASObjet<?> element) {
-            if (element.getValue() instanceof String) {
-                return this.valeur.contains((String) element.getValue());
+            if (element.getValue() instanceof String s) {
+                return this.valeur.contains(s);
             } else {
                 return false;
             }
@@ -820,8 +858,7 @@ public interface ASObjet<T> {
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (!(o instanceof Texte)) return false;
-            Texte texte = (Texte) o;
+            if (!(o instanceof Texte texte)) return false;
             return Objects.equals(valeur, texte.valeur);
         }
 
@@ -913,7 +950,7 @@ public interface ASObjet<T> {
             return openingSymbol +
                     String.join(", ", this.valeur
                             .stream()
-                            .map(e -> e instanceof Texte ? '"' + e.toString() + '"' : e.toString())
+                            .map(e -> e instanceof Texte ? "\"" + e + "\"" : e.toString())
                             .toArray(String[]::new))
                     + closingSymbol;
         }
@@ -936,8 +973,7 @@ public interface ASObjet<T> {
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (!(o instanceof Liste)) return false;
-            Liste liste = (Liste) o;
+            if (!(o instanceof Liste liste)) return false;
             return Objects.equals(valeur, liste.valeur);
         }
 

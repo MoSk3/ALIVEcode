@@ -27,8 +27,18 @@ export class ClassroomService {
     return this.classroomRepository.find();
   }
 
-  findOne(id: string) {
-    return this.classroomRepository.findOne(id);
+  async findOne(id: string) {
+    if (!id) throw new HttpException('Bad request', HttpStatus.FORBIDDEN);
+    const classroom = await this.classroomRepository.findOne(id);
+    if (!classroom) throw new HttpException('Classroom not found', HttpStatus.NOT_FOUND);
+    return classroom;
+  }
+
+  async findOneByCode(code: string) {
+    if (!code) throw new HttpException('Bad request', HttpStatus.FORBIDDEN);
+    const classroom = await this.classroomRepository.findOne({ where: { code } });
+    if (!classroom) throw new HttpException('Classroom not found', HttpStatus.NOT_FOUND);
+    return classroom;
   }
 
   update(id: string, updateClassroomDto: ClassroomEntity) {
@@ -54,9 +64,26 @@ export class ClassroomService {
       classroom = await this.classroomRepository.findOne(id, { where: { creator: user } });
     // TODO: add find classroom of student
     else if (user instanceof StudentEntity) {
+      classroom = await this.classroomRepository.findOne(id, { relations: ['students'] });
+      if (!classroom.students.find(s => s.id === user.id))
+        throw new HttpException('Classe not found', HttpStatus.NOT_FOUND);
     }
 
     if (!classroom) throw new HttpException('Classe not found', HttpStatus.NOT_FOUND);
+    return classroom;
+  }
+
+  async joinClassroom(user: StudentEntity, classroom: ClassroomEntity) {
+    classroom = await this.classroomRepository.findOne(classroom.id, { relations: ['students'] });
+    classroom.students.push(user);
+    await this.classroomRepository.save(classroom);
+    return classroom;
+  }
+
+  async removeStudent(studentId: string, classroom: ClassroomEntity) {
+    classroom = await this.classroomRepository.findOne(classroom.id, { relations: ['students'] });
+    classroom.students = classroom.students.filter(s => s.id !== studentId);
+    await this.classroomRepository.save(classroom);
     return classroom;
   }
 }

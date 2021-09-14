@@ -16,6 +16,7 @@ public class FinSi extends Programme {
 
     @Override
     public NullType execute() {
+        assert executeurInstance != null;
         executeurInstance.obtenirCoordRunTime().finBloc();
         return null;
     }

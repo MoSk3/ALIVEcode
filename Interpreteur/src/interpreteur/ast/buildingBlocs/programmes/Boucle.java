@@ -7,6 +7,7 @@ import interpreteur.executeur.Executeur;
 import javax.lang.model.type.NullType;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 public abstract class Boucle extends Programme {
     private final String nomBoucle;
@@ -35,6 +36,7 @@ public abstract class Boucle extends Programme {
         }
         @Override
         public NullType execute() {
+            assert executeurInstance != null;
             switch (executeurInstance.obtenirCoordRunTime().getBoucleActuelle()) {
                 case "pour" -> BouclePour.sortir = true;
                 case "repeter" -> BoucleRepeter.sortir = true;
@@ -52,6 +54,7 @@ public abstract class Boucle extends Programme {
         }
         @Override
         public NullType execute() {
+            assert executeurInstance != null;
             if (executeurInstance.obtenirCoordRunTime().getBoucleActuelle() == null) {
                 throw new ASErreur.ErreurSyntaxe("Il faut \u00EAtre dans une boucle pour pouvoir utiliser le mot clef 'continuer'");
             }
