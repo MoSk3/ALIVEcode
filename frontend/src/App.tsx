@@ -127,6 +127,9 @@ const App = () => {
 			response => response,
 			async error => {
 				const originalRequest = error.config;
+				console.log(process.env.REACT_APP_DEBUG);
+				if (process.env.REACT_APP_DEBUG && error.response)
+					console.log(error.response);
 				if (
 					error.response &&
 					error.response.status === 401 &&
@@ -137,7 +140,6 @@ const App = () => {
 					return Promise.reject(error);
 				}
 				// TODO : remove in production
-				if (process.env.DEBUG && error.response) console.log(error.response);
 				if (
 					error.response &&
 					error.response.data.message === 'Not Authenticated' &&
@@ -155,6 +157,14 @@ const App = () => {
 					} catch (err) {
 						if (process.env.DEBUG) console.error(err);
 					}
+				}
+				if (
+					error.response &&
+					error.response.data.message === 'Server is in maintenance' &&
+					error.response.status === 503
+				) {
+					//setMaintenance({ ...maintenance, hidden: false });
+					alert.error(t('error.maintenance.short'));
 				}
 				return Promise.reject(error);
 			},

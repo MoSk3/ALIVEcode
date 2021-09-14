@@ -27,6 +27,7 @@ export class MaintenanceService {
   async findUpcoming() {
     const maintenance = await this.maintenanceRepo.findOne({
       where: {
+        finished: false,
         startDate: Raw(alias => `:date > ${alias}`, { date: new Date(Date.now() + 1000 * 60 * 60 * 24) }),
       },
     });

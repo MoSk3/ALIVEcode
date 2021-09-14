@@ -7,7 +7,8 @@
 		"500": "Une erreur est survenue, veuillez réessayer",
 		"page404": "Cette page n'existe pas.",
 		"maintenance": {
-			"ongoing": "Une maintenance est en cours du {{startDate}} et prend fin le {{finishDate}}, cette page n'a pas pu être affichée."
+			"ongoing": "Une maintenance est en cours du {{startDate}} et prend fin le {{finishDate}}, cette page n'a pas pu être affichée.",
+			"short": "La requête n'a pas pu être faite, le site est présentement en maintenance"
 		}
 	},
 	"form": {
