@@ -40,6 +40,11 @@ const apiCreate = <U extends {}>(moduleName: string, target: U) => {
 const api = {
 	db: {
 		maintenances: {
+			async getMaintenances() {
+				return (await axios.get('maintenances')).data.map((d: any) =>
+					plainToClass(Maintenance, d),
+				);
+			},
 			async getUpcoming() {
 				return plainToClass(
 					Maintenance,

@@ -1,4 +1,4 @@
-import { Exclude } from 'class-transformer';
+import { Exclude, Type } from 'class-transformer';
 
 export class Maintenance {
 	@Exclude()
@@ -7,8 +7,12 @@ export class Maintenance {
 	name: string;
 	description?: string;
 
+	@Type(() => Date)
 	startDate: Date;
+
+	@Type(() => Date)
 	finishDate: Date;
+
 	started: boolean;
 	finished: boolean;
 

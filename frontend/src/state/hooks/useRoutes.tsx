@@ -28,6 +28,7 @@ import LevelFormMenu from '../../Pages/Level/LevelFormMenu/LevelFormMenu';
 import Test from '../../Pages/Test/Test';
 import { useHistory } from 'react-router';
 import { MaintenanceError } from '../../Pages/Errors/MaintenanceError/MaintenanceError';
+import MaintenanceMenu from '../../Pages/SiteStatus/MaintenanceMenu/MaintenanceMenu';
 
 type component =
 	| React.ComponentType<RouteComponentProps<any>>
@@ -154,6 +155,12 @@ const useRoutes = () => {
 		level_code: {
 			path: '/level/play/code',
 			component: () => <Level type="code" editMode />,
+		},
+		maintenances: {
+			path: '/maintenances',
+			exact: true,
+			maintenanceExempt: true,
+			component: MaintenanceMenu,
 		},
 	});
 

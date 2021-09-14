@@ -20,7 +20,7 @@ import LoadingScreen from './Components/UtilsComponents/LoadingScreen/LoadingScr
 import background_image_light from './assets/images/backgroundImage4.png';
 import api from './Models/api';
 import { Maintenance } from './Models/Maintenance/maintenance.entity';
-import MaintenanceBar from './Components/MainComponents/MaintenanceBar/MaintenanceBar';
+import MaintenanceBar from './Components/SiteStatusComponents/MaintenanceBar/MaintenanceBar';
 
 type GlobalStyleProps = {
 	theme: Theme;

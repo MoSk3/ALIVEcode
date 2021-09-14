@@ -18,7 +18,6 @@ export class MaintenanceController {
   }
 
   @Get()
-  @Auth(Role.ADMIN)
   async findAll() {
     return await this.maintenanceService.findAll();
   }

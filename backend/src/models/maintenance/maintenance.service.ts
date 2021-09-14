@@ -14,7 +14,7 @@ export class MaintenanceService {
   }
 
   async findAll() {
-    return await this.maintenanceRepo.find();
+    return await this.maintenanceRepo.find({ order: { startDate: 'DESC' } });
   }
 
   async findOne(id: string) {

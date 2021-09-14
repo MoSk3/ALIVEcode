@@ -93,7 +93,12 @@
 		},
 		"maintenance": {
 			"ongoing": "Une maintenance est présentement en cours du {{startDate}} au {{finishDate}}. Vous ne pouvez pas utiliser votre compte ou voir les niveaux des utilisateurs durant cette période. Désolé pour cet inconvénient.",
-			"upcoming": "Une maintenance est prévue du {{startDate}} au {{finishDate}}. Vous ne pourrez pas utiliser votre compte ou voir les niveaux des utilisateurs durant cette période. Désolé pour cet inconvénient."
+			"upcoming": "Une maintenance est prévue du {{startDate}} au {{finishDate}}. Vous ne pourrez pas utiliser votre compte ou voir les niveaux des utilisateurs durant cette période. Désolé pour cet inconvénient.",
+			"status": {
+				"ongoing": "En cours",
+				"finished": "Terminée",
+				"upcoming": "Prochainement"
+			}
 		}
 	},
 	"dashboard": {
