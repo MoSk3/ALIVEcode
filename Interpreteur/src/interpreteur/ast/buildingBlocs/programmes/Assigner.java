@@ -20,13 +20,10 @@ public class Assigner extends Programme {
 
     public Assigner(Expression<?> expr, Expression<?> valeur, BinOp.Operation op) {
         // get la variable
-        if (expr instanceof Var) var = (Var) expr;
-        else if (expr instanceof CreerListe.SousSection && ((CreerListe.SousSection) expr).getExpr() instanceof Var) {
-            var = (Var) ((CreerListe.SousSection) expr).getExpr();
+        if (expr instanceof Var var) this.var = var;
+        else if (expr instanceof CreerListe.SousSection sousSection && sousSection.getExpr() instanceof Var var) {
+            this.var = var;
         } else {
-            /*
-            TODO message d'erreur si expr n'est pas var ou expr.getExpr() retourne autre chose qu'une Var
-            */
             throw new ASErreur.ErreurSyntaxe("Il est impossible d'assigner \u00E0 autre chose qu'une variable");
         }
         this.expr = expr;
@@ -51,19 +48,19 @@ public class Assigner extends Programme {
 
             // si l'assignement est de forme
             // var[debut:fin] = valeur
-            if (expr instanceof CreerListe.SousSection.CreerSousSection) {
+            if (expr instanceof CreerListe.SousSection.CreerSousSection sousSection) {
                 if (!(valeur instanceof ASObjet.Liste)) {
                     // TODO ERREUR peut pas assigner une sous liste à autre chose qu'à une liste
                     throw new ASErreur.ErreurAssignement("un interval de valeur doit \u00EAtre assign\u00E9 \u00E0 une liste");
                 }
-                int fin = ((CreerListe.SousSection.CreerSousSection) expr).getFin();
-                int debut = ((CreerListe.SousSection.CreerSousSection) expr).getDebut();
+                int fin = sousSection.getFin();
+                int debut = sousSection.getDebut();
                 valeur = listeInitial.remplacerRange(debut, fin, (ASObjet.Liste) valeur);
             }
             // si l'assignement est de forme
             // var[idx] = valeur
-            else if (expr instanceof CreerListe.SousSection.IndexSection) {
-                int idx = ((CreerListe.SousSection.IndexSection) expr).getIdx();
+            else if (expr instanceof CreerListe.SousSection.IndexSection indexSection) {
+                int idx = indexSection.getIdx();
                 if (op != null) {
                     valeur = op.apply(expr, new ValeurConstante(valeur));
                 }

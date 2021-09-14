@@ -24,69 +24,83 @@ Plateforme Web faite par le laboraoire LRIMa du collège Maisonneuve touchant pl
 
 
 # Installation
-- ### Setup de python
-    **Version de python requise: 3.8.0 - 3.8.8**
+- ### Setup de Nodejs
+    **Version de nodejs recommandée: v.14.7.5 ou supérieure**
     - ##### Installation des librairies
       ```cmd
-      pip install -r requirements.txt
-      ```
-    - ##### Librairie Pyjnius
-      Permet d'éxécuter du code java à partir de python
+      cd backend
+      npm install
       
-      Pyjnius requiert C++ build tools sur la machine:
-      https://visualstudio.microsoft.com/fr/visual-cpp-build-tools/
-      
-      Pyjnius requiert un JDK (Java Development Kit)
-      La version 15.0.2 est **fortement** recommandée:
-      https://www.oracle.com/java/technologies/javase/jdk15-archive-downloads.html
-     
-      ```cmd
-      pip install pyjnius
+      cd frontend
+      npm install
       ```
-      ou
-      ```cmd
-      python -m pip install pyjnius
-      ```
+    - 
       
       En cas d'erreur(s):
       
-      1. Changer la version du JDK pour la version 15.0.2  
+      1. S'assurer que la version de node est v.14.7.5 ou supérieure
+        ```cmd
+         node --version
+       ```
       
-      2. S'assurer que la version de python est de 3.8.0 à 3.8.8
-         ```cmd
-         python --version
-         ```
-      
-      2. Ajouter aux variables d'environnement système la variable JAVA_HOME ET JDK_HOME qui pointe au dossier contenant le JDK. Exemple: (C:\Program Files\Java\jdk-15.0.2)  
-         ![image](https://user-images.githubusercontent.com/62816157/116499802-0861c100-a87b-11eb-87dc-aa5205bbf797.png)
-         ![image](https://user-images.githubusercontent.com/62816157/116497096-8ec6d480-a874-11eb-8a5d-e2a8facdd4d4.png)
-       
-      3. Si dans le message d'erreur on retrouve à quelque part PermissionError: [WinError 5] Accès refusé, il faut changer de place l'emplacement du JDK à un emplacement qui ne requiert pas de permissions windows. Exemple: (C:\Program Files\Java\jdk-15.0.2)  
-      
-      4. Si le problème persiste, demandez à @MoSk3 ou @Ecoral360, ou postez une issue sur le repo.
+      2. Si le problème persiste, demandez à @MoSk3 ou @Ecoral360, ou postez une issue sur le repo.
 
 - ### Setup des fichiers
-  - ##### .env
-    1.  Copiez-collez le fichier *.env.example* et renommez le *.env*.
-    2.  Si vous ne possédez pas encore de secret key, ne touchez pas à la valeur *SECRET_KEY* et continuez de suivre le guide d'installation.
-    3.  Modifiez certaines valeurs au besoin.
+  - #### .env (backend ET frontend!)
+
+    ##### .env backend
+      1.  Allez dans le répertoire ALIVEcode/backend
+      2.  Copiez-collez dans le même répertoire le fichier *.env.example* et renommez le *.env*.
+      3.  Modifiez certaines valeurs au besoin.
+
+    ##### .env frontend
+      1.  Allez dans le répertoire ALIVEcode/frontend
+      2.  Copiez-collez dans le même répertoire le fichier *.env.example* et renommez le *.env*.
+      3.  Modifiez certaines valeurs au besoin.
+
+- ### Setup de la base de données (postgreSQL)
+  - ##### Setup avec docker (recommandé)
+    1. Installer docker desktop: https://docs.docker.com/desktop/windows/install/
+    2. Installer wsl (Windows subsystem for linux) ça permet d'exécuter des applications linux avec docker https://docs.microsoft.com/en-us/windows/wsl/install-win10#step-4---download-the-linux-kernel-update-package
+    3. Ouvrir le cmd et faire les commandes suivantes:
+      ```
+      docker pull postgres
+      docker run -p 5432:5432 -td --name alivecode-backend-postgres -e POSTGRES_PASSWORD=motdepasse -d postgres
+    ```
+    6. Selon votre mot de passe mis dans la commande, changez les infos dans le .env du backend
+    7. Sur docker desktop vous verrez maintenant dans vos containers une instance du serveur postgreSQL en cours, vous pouvez la démarrer ou la stopper à votre guise
+    ![image](https://user-images.githubusercontent.com/62816157/133109379-a30dccd0-a93f-406c-bc36-51540d93efc5.png)
+  
+  - ##### Setup sans docker
+    1. Installer postgres https://www.postgresql.org/download/
+    2. Les prochaines étapes dépendent beaucoup plus de vous, fournissez les informations que vous souhaitez à l'installateur et référez vous à un guide d'installation de posgtreSQL 
+
     
 # Premier Pas
 1. Démarrage du serveur localement
+  - #### Démarrage du backend
    ```cmd
-   python manage.py runserver
+   cd backend
    ```
-   - ### Erreur de SECRET_KEY
-     Si vous possédez une erreur comme quoi vous ne possédez pas de secret key, une secret key sera générée automatiquement. Copiez celle-ci, allez dans le .env et retirez la        ligne SECRET_KEY qui est en commentaire et collez la valeur à droite de **SECRET_KEY=**. La ligne devrait ressembler à:
-     
-     ```.env
-     SECRET_KEY=your-secret-key-goes-here
-     ```
-     Une fois fait, lancez à nouveau le site.
+   Si vous souhaitez exécuter le backend avec toutes les fonctionnalités de développement (file watcher, console logs):
+   ```
+    npm run dev
+   ```
+   Sinon :
+   ```
+    npm start
+   ```
+   - #### Démarrage du frontend
+   ```cmd
+    cd frontend
+    npm start
+   ```
+   
+   Une fois fait, lancez à nouveau le site.
    
    **Si aucune erreur n'apparaît:**
    Allez sur un navigateur web moderne et essayer d'entrer dans la barre de recherche l'addresse suivante:  
     
-   **localhost:8000**  
+   **localhost:3000**  
     
-   Si toute l'installation s'est bien passée, la page d'accueil du site devrait apparaître! Bravo vous avez maintenant le site et pouvez commencer à prendre part au développement de la plateforme! 🎉🎉🎉
+   Si toute l'installation s'est bien passée, la page d'accueil du site devrait apparaître et vous devriez pouvoir vous créer un compte! Bravo vous avez maintenant le site et pouvez commencer à prendre part au développement de la plateforme! 🎉🎉🎉

@@ -164,6 +164,38 @@
 			"desc": "Give this code to your students so that they can join the classroom from the website!"
 		}
 	},
+	"dashboard": {
+		"classrooms": {
+			"empty": {
+				"student": "You are not part of any classroom",
+				"professor": "You do not have any classroom"
+			}
+		}
+	},
+	"classroom": {
+		"add_students": "Add students",
+		"delete": "Delete classroom",
+		"leave": "Leave classroom",
+		"container": {
+			"courses": {
+				"title": "Courses",
+				"empty": "This classroom has no courses"
+			},
+			"details": {
+				"title": "Details"
+			},
+			"students": {
+				"title": "Students in this classroom",
+				"empty": "There are no students in this classroom"
+			}
+		},
+		"desc": "Classroom of {{professor}}",
+		"subject": "Subject",
+		"code": {
+			"title": "Code of the classroom",
+			"desc": "Give this code to your students so that they can join the classroom from the website!"
+		}
+	},
 	"menu": {
 		"signup": {
 			"professor": "Professor account",

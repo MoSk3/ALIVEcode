@@ -80,10 +80,10 @@ public class Declarer extends Programme {
     public Object execute() {
         //ASObjet.Variable variable = ASObjet.VariableManager.obtenirVariable(var.getNom());
         ASObjet.Variable variable = Scope.getCurrentScopeInstance().getVariable(var.getNom());
-        ASObjet<?> valeur = this.valeur.eval();
-
-        variable.changerValeur(valeur);
-
+        if (this.valeur != null) {
+            ASObjet<?> valeur = this.valeur.eval();
+            variable.changerValeur(valeur);
+        }
         return null;
     }
 

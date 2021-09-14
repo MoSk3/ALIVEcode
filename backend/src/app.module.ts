@@ -3,12 +3,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import config from '../ormconfig';
+import { AsScriptModule } from './as-script/as-script.module';
 import { ClassroomModule } from './models/classroom/classroom.module';
 import { CourseModule } from './models/course/course.module';
 import { IoTObjectModule } from './models/iot/IoTobject/IoTobject.module';
 import { IoTProjectModule } from './models/iot/IoTproject/IoTproject.module';
 import { IoTRouteModule } from './models/iot/IoTroute/IoTroute.module';
-import { UserModule } from './models/user/user.module';
 import { LevelModule } from './models/level/level.module';
 import { IoTGateway } from './socket/iotSocket/iot.gateway';
 import { AdminModule } from './models/admin/admin.module';
@@ -17,6 +17,7 @@ import { MaintenanceMiddleware } from './utils/middlewares/maintenance.middlewar
 import { MaintenanceEntity } from './models/maintenance/entities/maintenance.entity';
 import { AuthMiddleware } from './utils/middlewares/auth.middleware';
 import { MaintenanceService } from './models/maintenance/maintenance.service';
+import { UserModule } from './models/user/user.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { MaintenanceService } from './models/maintenance/maintenance.service';
     IoTGateway,
     AdminModule,
     MaintenanceModule,
+    AsScriptModule,
   ],
   controllers: [AppController],
   providers: [AppService, MaintenanceService],

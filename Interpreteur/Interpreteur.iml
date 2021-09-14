@@ -10,15 +10,24 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="lib" level="project" />
     <orderEntry type="module-library">
-      <library>
+      <library name="annotations-19.0.0">
         <CLASSES>
-          <root url="jar://$MAVEN_REPOSITORY$/org/jetbrains/annotations/19.0.0/annotations-19.0.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/annotations-19.0.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="javax.websocket:javax.websocket-api:1.1" level="project" />
+    <orderEntry type="module-library">
+      <library name="javax.websocket-1.1" type="repository">
+        <properties maven-id="javax.websocket:javax.websocket-api:1.1" />
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/javax.websocket-api-1.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
     <orderEntry type="module-library" scope="TEST">
       <library name="JUnit5.4">
         <CLASSES>

@@ -1,9 +1,10 @@
 import { Exclude, Expose } from 'class-transformer';
-import { IsEmail, IsEmpty, IsNotEmpty, IsOptional, Length, Matches, MinLength } from 'class-validator';
+import { IsEmail, IsEmpty, IsNotEmpty, Length, Matches } from 'class-validator';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn, TableInheritance } from 'typeorm';
 import { LevelEntity } from '../../level/entities/level.entity';
 import { IoTObjectEntity } from '../../iot/IoTobject/entities/IoTobject.entity';
 import { IoTProjectEntity } from '../../iot/IoTproject/entities/IoTproject.entity';
+import { AsScriptEntity } from 'src/as-script/entities/as-script.entity';
 import { LevelProgressionEntity } from '../../level/entities/levelProgression.entity';
 
 @Entity()
@@ -45,6 +46,9 @@ export class UserEntity {
 
   @OneToMany(() => LevelEntity, level => level.creator, { cascade: true })
   levels: LevelEntity[];
+
+  @OneToMany(() => AsScriptEntity, asScript => asScript.creator, { cascade: true })
+  asScripts: AsScriptEntity[];
 
   @OneToMany(() => IoTObjectEntity, iot => iot.creator, { cascade: true })
   IoTObjects: IoTObjectEntity[];

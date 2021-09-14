@@ -1,5 +1,6 @@
 package interpreteur.as.modules;
 
+import interpreteur.as.Objets.ASFonction;
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.as.Objets.ASObjet;
 import interpreteur.ast.buildingBlocs.expressions.Type;
@@ -109,14 +110,14 @@ public class ModuleListeUtils extends ASModule {
             }, new Type("liste")) {
                 @Override
                 public ASObjet<?> executer() {
-                    Liste liste = (Liste) this.getParamsValeursDict().get("lst");
-                    Fonction f = (Fonction) this.getParamsValeursDict().get("f");
+                    ArrayList<ASObjet<?>> liste = new ArrayList<>(List.of(this.getParamsValeursDict().get("lst")));
                     Liste nouvelleListe = new Liste();
-                    for (ASObjet<?> element : liste.getValue()) {
-                        if ((Boolean) f.setParamPuisExecute(new ArrayList<>(Collections.singletonList(element))).getValue())
-                            nouvelleListe.ajouterElement(element);
+                    ASObjet<?> f = this.getParamsValeursDict().get("f");
+                    if (f instanceof ASFonction fonction) {
+                        nouvelleListe.ajouterElement(fonction.makeInstance().executer(liste));
+                    } else {
+                        nouvelleListe.ajouterElement(((ASObjet.Fonction) f).setParamPuisExecute(liste));
                     }
-
                     return nouvelleListe;
                 }
             },
@@ -223,8 +224,8 @@ public class ModuleListeUtils extends ASModule {
             }, new Type("entier")) {
                 @Override
                 public ASObjet<?> executer() {
-                    Object val = this.getParamsValeursDict().get("iter").getValue();
-                    return new Entier(val instanceof String ? val.toString().length() : ((ArrayList<?>) val).size());
+                    Iterable val = (Iterable) this.getParamsValeursDict().get("iter");
+                    return new Entier(val.taille());
                 }
             },
 

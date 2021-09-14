@@ -4,11 +4,11 @@ import interpreteur.as.erreurs.ASErreur;
 import interpreteur.as.Objets.ASObjet;
 import interpreteur.ast.buildingBlocs.Expression;
 
-public class Suite implements Expression<ASObjet.Liste> {
+public record Suite(Expression<?> debut,
+                    Expression<?> fin,
+                    Expression<?> bond) implements Expression<ASObjet.Liste> {
 
     private static final String alphabet = "abcdefghijklmnopqrstuvwxyz";
-
-    private final Expression<?> debut, fin, bond;
 
     public Suite(Expression<?> debut, Expression<?> fin, Expression<?> bond) {
         this.debut = debut;

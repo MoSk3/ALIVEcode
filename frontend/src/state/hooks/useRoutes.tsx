@@ -27,6 +27,7 @@ import LevelList from '../../Pages/Level/LevelList/LevelList';
 import LevelFormMenu from '../../Pages/Level/LevelFormMenu/LevelFormMenu';
 import Test from '../../Pages/Test/Test';
 import { useHistory } from 'react-router';
+import ASDocs from '../../Components/AliveScriptComponents/ASDocs/ASDocs';
 import { MaintenanceError } from '../../Pages/Errors/MaintenanceError/MaintenanceError';
 import MaintenanceMenu from '../../Pages/SiteStatus/MaintenanceMenu/MaintenanceMenu';
 
@@ -118,6 +119,10 @@ const useRoutes = () => {
 			path: '/',
 			component: Home,
 			maintenanceExempt: true,
+		},
+		asDocs: {
+			path: '/as',
+			component: ASDocs,
 		},
 		ai: {
 			path: '/aliveai',
@@ -281,6 +286,7 @@ const useRoutes = () => {
 	return {
 		routes,
 		goTo: (path: string) => history.push(path),
+		goToNewTab: (path: string) => window.open(path, '_blank'),
 		goBack: () => history.goBack(),
 	};
 };
