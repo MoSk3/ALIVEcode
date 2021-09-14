@@ -31,6 +31,7 @@ import $ from 'jquery';
 import { useTranslation } from 'react-i18next';
 import Modal from '../../../Components/UtilsComponents/Modal/Modal';
 import FillContainer from '../../../Components/UtilsComponents/FillContainer/FillContainer';
+import LevelGraph from '../../../Components/LevelComponents/LevelGraph/LevelGraph';
 
 const LevelAI = ({
 	level,
@@ -63,6 +64,31 @@ const LevelAI = ({
 			saveProgressionTimed();
 		}
 	};
+
+	//Set the data for the level
+	const [chartData, setChartData] = useState({});
+
+  
+  useEffect(() => {
+    const dataTest = {
+      labels: ['Red', 'Orange', 'Blue'],
+      // datasets is an array of objects where each object represents a set of data to display corresponding to the labels above. for brevity, we'll keep it at one object
+      datasets: [
+        {
+          label: 'Popularity of colours',
+          data: [55, 23, 96],
+          // you can set indiviual colors for each bar
+          backgroundColor: [
+            'rgba(255, 0, 0, 0.6)',
+            'rgba(255, 145, 0, 0.6)',
+            'rgba(0, 26, 255, 0.6)'
+            ],
+          borderWidth: 1,
+        }
+      ]
+    };
+    setChartData(dataTest);
+  }, []);
 
 	useEffect(() => {
 		if (cmd && executor) executor.cmd = cmd;
@@ -134,6 +160,7 @@ const LevelAI = ({
 
 	useEffect(() => {
 		$(document).on('keydown', e => {
+			//If ctrl + s are pressed together
 			if (e.keyCode === 83 && e.ctrlKey) {
 				e.preventDefault();
 				e.stopPropagation();
@@ -248,15 +275,18 @@ const LevelAI = ({
 						)}
 					</Col>
 
-					{/* Right Side of screen */}
+					{/* Right Side of screen 
+							Contains the graph and the console
+					*/}
 					<Col md={6} style={{ resize: 'both', padding: '0' }}>
 						<Row style={{ height: '60%' }}>
 							<FillContainer
-								relative
+								className="graphContainer"
 								centered
-								style={{ backgroundColor: 'black' }}
+								relative
+								
 							>
-								<label>TO IMPLEMENT</label>
+								<LevelGraph data={chartData}/>
 							</FillContainer>
 						</Row>
 						<Row style={{ height: '40%' }}>

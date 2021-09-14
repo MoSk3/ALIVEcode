@@ -66,4 +66,8 @@ export const StyledAliveLevel = styled(FillContainer)`
 		z-index: -1;
 		border-bottom: 1px solid var(--foreground-color);
 	}
+
+	.graphContainer {
+		background-color: rgb(140, 230, 230);
+	}
 `;
