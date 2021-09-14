@@ -40,6 +40,7 @@ export interface Route {
 	exact?: boolean;
 	component?: component;
 	maintenanceExempt?: boolean;
+	adminOnly?: boolean;
 
 	// Do not set manually
 	hasAccess?: boolean;
@@ -60,6 +61,11 @@ const useRoutes = () => {
 
 	const asRoutes = <T extends RoutesGroup<Route>>(routeGroup: T): T => {
 		Object.values(routeGroup).forEach(route => {
+			if (route.adminOnly && !user?.isAdmin) {
+				route.component = NotFound;
+				route.hasAccess = false;
+			}
+
 			route.hasAccess = route.hasAccess ?? true;
 			if (
 				maintenance &&
@@ -152,6 +158,7 @@ const useRoutes = () => {
 			exact: true,
 			path: '/iot',
 			component: IoTHome,
+			adminOnly: true,
 		},
 		level_alive: {
 			path: '/level/play/alive',
@@ -191,10 +198,12 @@ const useRoutes = () => {
 		create_course: {
 			path: '/course/create',
 			component: CourseForm,
+			adminOnly: true,
 		},
 		course: {
 			path: '/course/:id',
 			component: Course,
+			adminOnly: true,
 		},
 		account: {
 			path: '/account',
@@ -203,14 +212,17 @@ const useRoutes = () => {
 		iot_dashboard: {
 			path: '/iot/dashboard',
 			component: IoTDashboard,
+			adminOnly: true,
 		},
 		create_iot_project: {
 			path: '/iot/projects/create',
 			component: IoTProjectCreate,
+			adminOnly: true,
 		},
 		iot_project: {
 			path: '/iot/projects/:id',
 			component: IoTProject,
+			adminOnly: true,
 		},
 		level_list: {
 			path: '/level',
