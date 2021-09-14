@@ -44,7 +44,9 @@ const MaintenanceCard = ({ maintenance }: MaintenanceCardProps) => {
 						{formatDate(maintenance.finishDate, t)}
 					</label>
 				</div>
-				<div className="maintenance-description">{maintenance.description}</div>
+				<div className="maintenance-description">
+					{maintenance.description || t('msg.maintenance.no_desc')}
+				</div>
 			</div>
 			<div>Status : {renderStatus()}</div>
 		</StyledMaintenanceCard>

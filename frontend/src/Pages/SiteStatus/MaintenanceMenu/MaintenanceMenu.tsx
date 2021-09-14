@@ -20,7 +20,7 @@ const MaintenanceMenu = () => {
 		<StyledMaintenanceMenu>
 			<h1 className="title">Maintenances</h1>
 			{!maintenances ? (
-				<LoadingScreen relative />
+				<LoadingScreen />
 			) : (
 				maintenances.map((m, idx) => (
 					<MaintenanceCard key={idx} maintenance={m} />

@@ -8,31 +8,6 @@ export const prettyField = (field: string) => {
 };
 
 export const formatDate = (date: Date, t: TFunction) => {
-	const monthsList = [
-		'Jan',
-		'Feb',
-		'Mar',
-		'Apr',
-		'May',
-		'Jun',
-		'Jul',
-		'Aug',
-		'Sep',
-		'Oct',
-		'Nov',
-		'Dec',
-	];
-
-	const daysList = [
-		'Dimanche',
-		'Lundi',
-		'Mardi',
-		'Mercredi',
-		'Jeudi',
-		'Vendredi',
-		'Samedi',
-	];
-
 	const year = date.getFullYear();
 	const month = date.getMonth();
 	const dayOfWeek = date.getDay();
@@ -40,7 +15,12 @@ export const formatDate = (date: Date, t: TFunction) => {
 	const hour = date.getHours();
 	const minute = date.getMinutes();
 
-	return `${daysList[dayOfWeek]}, ${day} ${
-		monthsList[month]
-	} ${year} - ${hour}:${minute <= 9 ? `0${minute}` : minute}`;
+	return t('msg.time.format', {
+		dayName: t(`msg.time.day.${dayOfWeek.toString()}`),
+		monthName: t(`msg.time.month.${month.toString()}`),
+		day,
+		hour,
+		minute: minute <= 9 ? `0${minute}` : minute,
+		year,
+	});
 };

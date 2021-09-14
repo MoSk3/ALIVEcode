@@ -45,6 +45,7 @@ export class AppModule {
         { path: '/users/login', method: RequestMethod.POST },
         { path: '/users/refreshToken', method: RequestMethod.POST },
         'maintenances/(.*)',
+        'maintenances',
         'admin/(.*)',
         'admin',
       )

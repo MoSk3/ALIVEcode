@@ -68,6 +68,32 @@
 		"student": "étudiant",
 		"understood": "C'est compris!",
 		"description": "description",
+		"time": {
+			"format": "{{dayName}}, {{day}} {{monthName}} {{year}} - {{hour}}:{{minute}}",
+			"day": {
+				"0": "Dimanche",
+				"1": "Lundi",
+				"2": "Mardi",
+				"3": "Mercredi",
+				"4": "Jeudi",
+				"5": "Vendredi",
+				"6": "Samedi"
+			},
+			"month": {
+				"0": "Janvier",
+				"1": "Février",
+				"2": "Mars",
+				"3": "Avril",
+				"4": "Mai",
+				"5": "Juin",
+				"6": "Juillet",
+				"7": "Août",
+				"8": "Septembre",
+				"9": "Octobre",
+				"10": "Novembre",
+				"11": "Décembre"
+			}
+		},
 		"desc": {
 			"empty": "Aucune description disponible"
 		},
@@ -92,6 +118,8 @@
 			"account": "Mon compte"
 		},
 		"maintenance": {
+			"more_info": "Plus d'informations",
+			"no_desc": "Pas de description disponible.",
 			"ongoing": "Une maintenance est présentement en cours du {{startDate}} au {{finishDate}}. Vous ne pouvez pas utiliser votre compte ou voir les niveaux des utilisateurs durant cette période. Désolé pour cet inconvénient.",
 			"upcoming": "Une maintenance est prévue du {{startDate}} au {{finishDate}}. Vous ne pourrez pas utiliser votre compte ou voir les niveaux des utilisateurs durant cette période. Désolé pour cet inconvénient.",
 			"status": {

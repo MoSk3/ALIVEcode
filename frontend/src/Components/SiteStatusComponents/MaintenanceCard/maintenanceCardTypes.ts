@@ -29,6 +29,7 @@ export const StyledMaintenanceCard = styled.div`
 
 	.maintenance-description {
 		text-align: justify;
+		color: rgba(var(--foreground-color-rgb), 0.8);
 	}
 
 	.maintenance-time {
