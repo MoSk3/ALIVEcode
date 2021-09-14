@@ -1,4 +1,6 @@
 import { LineInterfaceProps, StyledLineInterface, EditorTabModel } from './lineInterfaceTypes';
+import ace from 'ace-builds/src-noconflict/ace';
+import { autocomplete, setAutocomplete } from './autocomplete';
 import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/theme-cobalt';
 import './mode-alivescript';
@@ -75,6 +77,9 @@ const LineInterface = ({
 										tabs[idx].loaded = true;
 										setTabs([...tabs]);
 									}, 100);
+									const editor = ace.edit('1nt3rf4c3');
+									setAutocomplete(editor);
+									editor.keyBinding.addKeyboardHandler(autocomplete, 0);
 								}}
 								onChange={content => {
 									onEditorChange(content, t);

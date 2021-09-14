@@ -32,8 +32,8 @@ const IoTDashboard = (props: iotDashboardProps) => {
 	useEffect(() => {
 		const getProjects = async () => {
 			if (!user) return;
-			const projects = await api.db.users.iot.getProjects();
-			const objects = await api.db.users.iot.getObjects();
+			const projects = await api.db.users.iot.getProjects({});
+			const objects = await api.db.users.iot.getObjects({});
 			setProjects(projects);
 			setObjects(objects);
 		};

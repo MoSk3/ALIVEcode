@@ -37,9 +37,9 @@ const Course = (props: CourseProps) => {
 	useEffect(() => {
 		const getCourse = async () => {
 			try {
-				const course: CourseModel = await api.db.courses.get(
-					props.match.params.id,
-				);
+				const course: CourseModel = await api.db.courses.get({
+					id: props.match.params.id,
+				});
 				await course.getSections();
 				setCourse(course);
 			} catch (err) {

@@ -78,7 +78,12 @@ const LevelAI = ({
 		if (messageTimeout.current) clearTimeout(messageTimeout.current);
 		setSaving(true);
 		setSaved(false);
-		const updatedLevel = (await api.db.levels.update(level)) as LevelAIModel;
+		const updatedLevel = (await api.db.levels.update(
+			{
+				id: level.id,
+			},
+			level,
+		)) as LevelAIModel;
 		messageTimeout.current = setTimeout(() => {
 			setSaving(false);
 			setSaved(true);
@@ -102,8 +107,10 @@ const LevelAI = ({
 		setSaving(true);
 		setSaved(false);
 		const updatedProgression = await api.db.levels.progressions.save(
-			level.id,
-			user,
+			{
+				id: level.id,
+				userId: user.id,
+			},
 			progression,
 		);
 		messageTimeout.current = setTimeout(() => {

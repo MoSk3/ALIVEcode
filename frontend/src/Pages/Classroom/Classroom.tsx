@@ -34,9 +34,9 @@ const Classroom = (props: ClassroomProps) => {
 	useEffect(() => {
 		const getClassroom = async () => {
 			try {
-				const classroom: ClassroomModel = await api.db.classrooms.get(
-					props.match.params.id,
-				);
+				const classroom = await api.db.classrooms.get({
+					id: props.match.params.id,
+				});
 				await classroom.getStudents();
 				await classroom.getCourses();
 				setClassroom(classroom);
