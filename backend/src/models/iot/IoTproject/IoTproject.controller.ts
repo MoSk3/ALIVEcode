@@ -21,7 +21,7 @@ import { DTOInterceptor } from '../../../utils/interceptors/dto.interceptor';
 import { IoTRouteEntity } from '../IoTroute/entities/IoTroute.entity';
 
 @Controller('iot/projects')
-@UseInterceptors(new DTOInterceptor())
+@UseInterceptors(DTOInterceptor)
 export class IoTProjectController {
   constructor(private readonly IoTProjectService: IoTProjectService) {}
 

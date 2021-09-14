@@ -15,7 +15,9 @@ import { LevelProgression } from './Level/levelProgression';
 import { BrowsingQuery } from '../Components/MainComponents/BrowsingMenu/browsingMenuTypes';
 import { LevelAI } from './Level/levelAI.entity';
 import { IoTObject } from './Iot/IoTobject.entity';
+import { Maintenance } from './Maintenance/maintenance.entity';
 
+/*
 type urlArgType<S extends string> = S extends `${infer _}:${infer A}/${infer B}`
 	? A | urlArgType<B>
 	: S extends `${infer _}:${infer A}`
@@ -40,7 +42,6 @@ const apiGetter = <T extends {}, U extends boolean, S extends string>(
 			target,
 		)) as U extends true ? T[] : T;
 };
-
 const apiCreate = <U extends ClassConstructor<unknown>>(
 	moduleName: string,
 	target: U,
@@ -53,9 +54,23 @@ const apiCreate = <U extends ClassConstructor<unknown>>(
 		return plainToClass(target, data);
 	};
 };
+*/
 
 const api = {
 	db: {
+		maintenances: {
+			async getMaintenances() {
+				return (await axios.get('maintenances')).data.map((d: any) =>
+					plainToClass(Maintenance, d),
+				);
+			},
+			async getUpcoming() {
+				return plainToClass(
+					Maintenance,
+					(await axios.get('maintenances/upcoming')).data,
+				);
+			},
+		},
 		users: {
 			iot: {
 				async getProjects() {
@@ -196,94 +211,5 @@ const api = {
 		},
 	},
 };
-
-/*
-const api = {
-	db: {
-		users: {
-			iot: {
-				getProjects: apiGetter('users/:id/iot/projects', IoTProject, true),
-				getObjects: apiGetter('users/:id/iot/objects', IoTObject, true),
-			},
-			//get: apiGetter('users', User),
-			getClassrooms: apiGetter('users/:id/classrooms', Classroom, true),
-			getCourses: apiGetter('users/:id/courses', Course, true),
-			createProfessor: apiCreate('users/professors/:id', Professor),
-			createStudent: apiCreate('users/students/:id', Student),
-		},
-		classrooms: {
-			get: apiGetter('classrooms/:id/', Classroom, false),
-			getCourses: apiGetter('classrooms/:id/courses', Course, true),
-			getStudents: apiGetter('classrooms/:id/students', Student, true),
-			create: apiCreate('classrooms', Classroom),
-			joinClassroom: apiCreate('classrooms/students', Classroom),
-			async leaveClassroom(classroomId: string, studentId: string) {
-				return plainToClass(
-					Classroom,
-					(
-						await axios.delete(
-							`classrooms/${classroomId}/students/${studentId}`,
-						)
-					).data,
-				);
-			},
-		},
-		courses: {
-			get: apiGetter('courses/:id', Course, false),
-			getSections: apiGetter('courses/:id/sections', Section, true),
-		},
-		iot: {
-			projects: {
-				get: apiGetter('iot/projects/:id', IoTProject, false),
-				getRoutes: apiGetter('iot/projects/:id/routes', IotRoute, true),
-			},
-		},
-		levels: {
-			async get(levelId: string) {
-				const level = (await axios.get(`levels/${levelId}`)).data;
-				if (level.layout) return plainToClass(LevelAlive, level);
-				if (level.testCases) return plainToClass(LevelCode, level);
-				if (level.ai) return plainToClass(LevelAI, level);
-				return plainToClass(Level, level);
-			},
-			async query(query: BrowsingQuery) {
-				const levels: Array<any> = (await axios.post(`levels/query`, query))
-					.data;
-				return levels.map((l: any) => {
-					if (l.layout) return plainToClass(LevelAlive, l);
-					if (l.testCases) return plainToClass(LevelCode, l);
-					if (l.ai) return plainToClass(LevelAI, l);
-					return plainToClass(Level, l);
-				});
-			},
-			async update(level: Level | LevelAlive | LevelCode) {
-				const l = (await axios.patch(`levels/${level.id}`, level)).data;
-				if (l.layout) return plainToClass(LevelAlive, l);
-				if (l.testCases) return plainToClass(LevelCode, l);
-				if (l.ai) return plainToClass(LevelAI, l);
-				return plainToClass(Level, l);
-			},
-			progressions: {
-				get: apiGetter(
-					'levels/:levelId/progressions/:userId',
-					LevelProgression,
-					false,
-				),
-				async save(levelId: string, user: User, data: LevelProgression) {
-					return plainToClass(
-						LevelProgression,
-						(
-							await axios.patch(
-								`levels/${levelId}/progressions/${user.id}`,
-								data,
-							)
-						).data,
-					);
-				},
-			},
-		},
-	},
-};
-*/
 
 export default api;

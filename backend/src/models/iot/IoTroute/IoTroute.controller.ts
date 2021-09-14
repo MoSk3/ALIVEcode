@@ -21,7 +21,7 @@ import { hasRole } from 'src/models/user/auth';
 import { DTOInterceptor } from '../../../utils/interceptors/dto.interceptor';
 
 @Controller('iot/routes')
-@UseInterceptors(new DTOInterceptor())
+@UseInterceptors(DTOInterceptor)
 export class IoTRouteController {
   constructor(
     private readonly IoTRouteService: IoTRouteService,

@@ -1,7 +1,15 @@
 {
 	"error": {
+		"sorry": "Désolé.",
+		"back": "Retour en arrière",
+		"home": "Retour à la page d'accueil",
 		"logout": "Une erreur est survenue lors de la déconnexion, veuillez réesayer.",
-		"500": "Une erreur est survenue, veuillez réessayer"
+		"500": "Une erreur est survenue, veuillez réessayer",
+		"page404": "Cette page n'existe pas.",
+		"maintenance": {
+			"ongoing": "Une maintenance est en cours du {{startDate}} et prend fin le {{finishDate}}, cette page n'a pas pu être affichée.",
+			"short": "La requête n'a pas pu être faite, le site est présentement en maintenance"
+		}
 	},
 	"form": {
 		"submit": {
@@ -60,6 +68,32 @@
 		"student": "étudiant",
 		"understood": "C'est compris!",
 		"description": "description",
+		"time": {
+			"format": "{{dayName}}, {{day}} {{monthName}} {{year}} - {{hour}}:{{minute}}",
+			"day": {
+				"0": "Dimanche",
+				"1": "Lundi",
+				"2": "Mardi",
+				"3": "Mercredi",
+				"4": "Jeudi",
+				"5": "Vendredi",
+				"6": "Samedi"
+			},
+			"month": {
+				"0": "Janvier",
+				"1": "Février",
+				"2": "Mars",
+				"3": "Avril",
+				"4": "Mai",
+				"5": "Juin",
+				"6": "Juillet",
+				"7": "Août",
+				"8": "Septembre",
+				"9": "Octobre",
+				"10": "Novembre",
+				"11": "Décembre"
+			}
+		},
 		"desc": {
 			"empty": "Aucune description disponible"
 		},
@@ -82,6 +116,49 @@
 			"avp": "Perception de véhicule augmentée",
 			"lrima": "Laboratoire de recherche LRIMA",
 			"account": "Mon compte"
+		},
+		"maintenance": {
+			"more_info": "Plus d'informations",
+			"no_desc": "Pas de description disponible.",
+			"ongoing": "Une maintenance est présentement en cours du {{startDate}} au {{finishDate}}. Vous ne pouvez pas utiliser votre compte ou voir les niveaux des utilisateurs durant cette période. Désolé pour cet inconvénient.",
+			"upcoming": "Une maintenance est prévue du {{startDate}} au {{finishDate}}. Vous ne pourrez pas utiliser votre compte ou voir les niveaux des utilisateurs durant cette période. Désolé pour cet inconvénient.",
+			"status": {
+				"ongoing": "En cours",
+				"finished": "Terminée",
+				"upcoming": "Prochainement"
+			}
+		}
+	},
+	"dashboard": {
+		"classrooms": {
+			"empty": {
+				"student": "Tu ne fais parti d'aucune classe",
+				"professor": "Tu ne possède aucune classe"
+			}
+		}
+	},
+	"classroom": {
+		"add_students": "Ajoutez des étudiants",
+		"delete": "Supprimer la classe",
+		"leave": "Quitter la classe",
+		"container": {
+			"courses": {
+				"title": "Cours",
+				"empty": "Cette classe ne possède aucun cours"
+			},
+			"details": {
+				"title": "Détails"
+			},
+			"students": {
+				"title": "Élèves dans la classe",
+				"empty": "Il n'y a aucun élève dans la classe"
+			}
+		},
+		"desc": "Classe de {{professor}}",
+		"subject": "Sujet",
+		"code": {
+			"title": "Code de la classe",
+			"desc": "Donnez ce code aux élèves afin qu'ils puissent rejoindre la classe depuis le site!"
 		}
 	},
 	"dashboard": {

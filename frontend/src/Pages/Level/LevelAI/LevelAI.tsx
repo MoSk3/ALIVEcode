@@ -6,15 +6,15 @@ import { Row, Col } from 'react-bootstrap';
 import {
 	faBookOpen,
 	faCog,
+	faPauseCircle,
 	faPencilAlt,
 	faPlayCircle,
 	faQuestionCircle,
 } from '@fortawesome/free-solid-svg-icons';
 import IconButton from '../../../Components/DashboardComponents/IconButton/IconButton';
 import Cmd from '../../../Components/LevelComponents/Cmd/Cmd';
-import LevelAliveExecutor from './LevelAIExecutor';
+import LevelAIExecutor from './LevelAIExecutor';
 import useCmd from '../../../state/hooks/useCmd';
-import { Professor } from '../../../Models/User/user.entity';
 import { useHistory } from 'react-router-dom';
 import useRoutes from '../../../state/hooks/useRoutes';
 import FormModal from '../../../Components/UtilsComponents/FormModal/FormModal';
@@ -31,6 +31,7 @@ import $ from 'jquery';
 import { useTranslation } from 'react-i18next';
 import Modal from '../../../Components/UtilsComponents/Modal/Modal';
 import FillContainer from '../../../Components/UtilsComponents/FillContainer/FillContainer';
+import useExecutor from '../../../state/hooks/useExecutor';
 
 const LevelAI = ({
 	level,
@@ -40,9 +41,9 @@ const LevelAI = ({
 	setProgression,
 }: LevelAIProps) => {
 	const { user } = useContext(UserContext);
-	const [executor, setExecutor] = useState<LevelAliveExecutor>();
 	const [cmdRef, cmd] = useCmd();
-	const playButton = useRef<HTMLButtonElement>(null);
+	const { executor, setExecutor, setExecutorLines } =
+		useExecutor<LevelAIExecutor>(LevelAIExecutor, cmd);
 	const history = useHistory();
 	const { routes, goToNewTab } = useRoutes();
 	const { t } = useTranslation();
@@ -55,7 +56,7 @@ const LevelAI = ({
 	const messageTimeout = useRef<any>(null);
 
 	const lineInterfaceContentChanges = (content: any) => {
-		if (executor) executor.lineInterfaceContent = content;
+		setExecutorLines(content);
 		if (!editMode && progression) {
 			progression.data.code = content;
 			const updatedProgression = progression;
@@ -65,21 +66,10 @@ const LevelAI = ({
 	};
 
 	useEffect(() => {
-		if (cmd && executor) executor.cmd = cmd;
-	}, [cmd, executor]);
-
-	useEffect(() => {
 		if (user && editMode && level.creator.id !== user.id)
 			return history.push(routes.public.home.path);
 
-		if (!playButton.current) return;
-		setExecutor(
-			new LevelAliveExecutor(
-				user ?? ({} as Professor),
-				level.name,
-				playButton.current,
-			),
-		);
+		setExecutor(new LevelAIExecutor(level.name, user || undefined));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, level]);
 
@@ -195,7 +185,11 @@ const LevelAI = ({
 								size="2x"
 							/>
 							<IconButton icon={faQuestionCircle} size="2x" />
-							<IconButton icon={faPlayCircle} size="2x" />
+							<IconButton
+								onClick={() => executor?.toggleExecution()}
+								icon={executor?.execution ? faPauseCircle : faPlayCircle}
+								size="2x"
+							/>
 							{(saving || saved) && (
 								<label className="save-message">
 									{saving && 'Sauvegarde en cours...'}

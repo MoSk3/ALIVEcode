@@ -28,6 +28,8 @@ import LevelFormMenu from '../../Pages/Level/LevelFormMenu/LevelFormMenu';
 import Test from '../../Pages/Test/Test';
 import { useHistory } from 'react-router';
 import ASDocs from '../../Components/AliveScriptComponents/ASDocs/ASDocs';
+import { MaintenanceError } from '../../Pages/Errors/MaintenanceError/MaintenanceError';
+import MaintenanceMenu from '../../Pages/SiteStatus/MaintenanceMenu/MaintenanceMenu';
 
 type component =
 	| React.ComponentType<RouteComponentProps<any>>
@@ -37,6 +39,9 @@ export interface Route {
 	path: string;
 	exact?: boolean;
 	component?: component;
+	maintenanceExempt?: boolean;
+
+	// Do not set manually
 	hasAccess?: boolean;
 }
 
@@ -50,12 +55,24 @@ export interface RoutesGroup<T extends Route> {
 }
 
 const useRoutes = () => {
-	const { user } = useContext(UserContext);
+	const { user, maintenance } = useContext(UserContext);
 	const history = useHistory();
 
 	const asRoutes = <T extends RoutesGroup<Route>>(routeGroup: T): T => {
 		Object.values(routeGroup).forEach(route => {
 			route.hasAccess = route.hasAccess ?? true;
+			if (
+				maintenance &&
+				maintenance.started &&
+				!maintenance.finished &&
+				!route.maintenanceExempt &&
+				route.hasAccess
+			) {
+				if (!user || !user.isAdmin) {
+					route.component = MaintenanceError;
+					route.hasAccess = false;
+				}
+			}
 		});
 		return routeGroup;
 	};
@@ -66,6 +83,7 @@ const useRoutes = () => {
 	): T => {
 		Object.values(routeGroup).forEach(route => {
 			const redirect = route.redirect || defaultRedirect;
+
 			if (
 				!user ||
 				(route.accountType === Professor && !(user instanceof Professor)) ||
@@ -100,6 +118,7 @@ const useRoutes = () => {
 			exact: true,
 			path: '/',
 			component: Home,
+			maintenanceExempt: true,
 		},
 		asDocs: {
 			path: '/as',
@@ -108,10 +127,12 @@ const useRoutes = () => {
 		ai: {
 			path: '/aliveai',
 			component: AliveIa,
+			maintenanceExempt: true,
 		},
 		about: {
 			path: '/about',
 			component: About,
+			maintenanceExempt: true,
 		},
 		amc: {
 			path: '/amc',
@@ -139,6 +160,12 @@ const useRoutes = () => {
 		level_code: {
 			path: '/level/play/code',
 			component: () => <Level type="code" editMode />,
+		},
+		maintenances: {
+			path: '/maintenances',
+			exact: true,
+			maintenanceExempt: true,
+			component: MaintenanceMenu,
 		},
 	});
 
@@ -225,6 +252,7 @@ const useRoutes = () => {
 		signin: {
 			path: '/signin',
 			component: SignIn,
+			maintenanceExempt: true,
 		},
 		signup: {
 			path: '/signup',
@@ -244,6 +272,7 @@ const useRoutes = () => {
 		not_found: {
 			path: '*',
 			component: NotFound,
+			maintenanceExempt: true,
 		},
 	});
 

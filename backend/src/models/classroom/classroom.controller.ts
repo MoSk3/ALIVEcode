@@ -29,7 +29,7 @@ import { InClassroomGuard } from '../../utils/guards/classroom.guard';
 import { Classroom } from 'src/utils/decorators/classroom.decorator';
 
 @Controller('classrooms')
-@UseInterceptors(new DTOInterceptor())
+@UseInterceptors(DTOInterceptor)
 @Injectable()
 export class ClassroomController {
   constructor(

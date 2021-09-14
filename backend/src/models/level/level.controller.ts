@@ -26,7 +26,7 @@ import { QueryDTO } from './dto/query.dto';
 import { LevelAIEntity } from './entities/levelAI.entity';
 
 @Controller('levels')
-@UseInterceptors(new DTOInterceptor())
+@UseInterceptors(DTOInterceptor)
 export class LevelController {
   constructor(private readonly levelService: LevelService, private readonly userService: UserService) {}
 

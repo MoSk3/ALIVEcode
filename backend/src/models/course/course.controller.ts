@@ -23,7 +23,7 @@ import { UserEntity } from '../user/entities/user.entity';
 import { hasRole } from '../user/auth';
 
 @Controller('courses')
-@UseInterceptors(new DTOInterceptor())
+@UseInterceptors(DTOInterceptor)
 export class CourseController {
   constructor(private readonly courseService: CourseService) {}
 

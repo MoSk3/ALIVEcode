@@ -15,13 +15,13 @@ export class User {
 	email: string;
 
 	@Exclude({ toPlainOnly: true })
-	is_mod?: boolean;
+	isMod?: boolean;
 
 	@Exclude({ toPlainOnly: true })
-	is_admin?: boolean;
+	isAdmin?: boolean;
 
 	@Exclude({ toPlainOnly: true })
-	is_super_user?: boolean;
+	isSuperUser?: boolean;
 
 	levels?: Level[];
 

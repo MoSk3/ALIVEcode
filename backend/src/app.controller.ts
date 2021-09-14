@@ -6,7 +6,7 @@ import { UserEntity } from './models/user/entities/user.entity';
 import { DTOInterceptor } from './utils/interceptors/dto.interceptor';
 
 @Controller()
-@UseInterceptors(new DTOInterceptor())
+@UseInterceptors(DTOInterceptor)
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
