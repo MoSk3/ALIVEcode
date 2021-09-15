@@ -67,7 +67,8 @@ export const StyledAliveLevel = styled(FillContainer)`
 		border-bottom: 1px solid var(--foreground-color);
 	}
 
-	.graphContainer {
-		background-color: rgb(140, 230, 230);
+	.graph-container {
+		background-color: var(--pale-color);
+		padding: 20px
 	}
 `;

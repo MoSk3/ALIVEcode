@@ -68,24 +68,25 @@ const LevelAI = ({
 	//Set the data for the level
 	const [chartData, setChartData] = useState({});
 
-  
   useEffect(() => {
     const dataTest = {
-      labels: ['Red', 'Orange', 'Blue'],
       // datasets is an array of objects where each object represents a set of data to display corresponding to the labels above. for brevity, we'll keep it at one object
       datasets: [
         {
           label: 'Popularity of colours',
-          data: [55, 23, 96],
-          // you can set indiviual colors for each bar
-          backgroundColor: [
-            'rgba(255, 0, 0, 0.6)',
-            'rgba(255, 145, 0, 0.6)',
-            'rgba(0, 26, 255, 0.6)'
-            ],
+          data: [
+									{x: 2, y: 2}, 
+									{x: 3, y: 35},
+									{x: 32, y: 85},
+									{x: 54, y: 2},
+									{x: 41, y: 45},
+									{x: 90, y: 84},
+					],
+          backgroundColor: "rgba(236, 3, 3, 0.5)",
           borderWidth: 1,
         }
-      ]
+      ],
+			
     };
     setChartData(dataTest);
   }, []);
@@ -281,7 +282,7 @@ const LevelAI = ({
 					<Col md={6} style={{ resize: 'both', padding: '0' }}>
 						<Row style={{ height: '60%' }}>
 							<FillContainer
-								className="graphContainer"
+								className="graph-container"
 								centered
 								relative
 								

@@ -6,10 +6,5 @@ export interface LevelGraphProps {
 }
 
 export const StyledLevelGraph = styled(FillContainer)`
-  .container {
-    width: fit-content;
-    height: fit-content;
-    background: white;
-  }
 
 `
