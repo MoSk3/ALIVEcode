@@ -1,6 +1,6 @@
-import { UserEntity } from 'src/models/user/entities/user.entity';
 import { Entity, ManyToOne } from 'typeorm';
-import { CreatedByUser } from '../../generics/entities/createdByUser.entity';
+import { CreatedByUser } from '../../../generics/entities/createdByUser.entity';
+import { UserEntity } from '../../user/entities/user.entity';
 
 @Entity()
 export class AsScriptEntity extends CreatedByUser {

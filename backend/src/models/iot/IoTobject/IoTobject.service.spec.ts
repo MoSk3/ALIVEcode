@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { IoTObjectService } from './IoTObject.service';
+import { IoTObjectService } from './IoTobject.service';
+import { IoTObjectController } from './IoTobject.controller';
 
 describe('IoTObjectService', () => {
   let service: IoTObjectService;

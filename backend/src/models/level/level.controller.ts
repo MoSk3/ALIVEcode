@@ -11,9 +11,6 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { LevelService } from './level.service';
-import { Auth } from 'src/utils/decorators/auth.decorator';
-import { Role } from 'src/utils/types/roles.types';
-import { User } from 'src/utils/decorators/user.decorator';
 import { LevelEntity, LEVEL_ACCESS } from './entities/level.entity';
 import { DTOInterceptor } from '../../utils/interceptors/dto.interceptor';
 import { UserEntity } from '../user/entities/user.entity';
@@ -24,6 +21,9 @@ import { UserService } from '../user/user.service';
 import { LevelProgressionEntity } from './entities/levelProgression.entity';
 import { QueryDTO } from './dto/query.dto';
 import { LevelAIEntity } from './entities/levelAI.entity';
+import { Auth } from '../../utils/decorators/auth.decorator';
+import { User } from '../../utils/decorators/user.decorator';
+import { Role } from '../../utils/types/roles.types';
 
 @Controller('levels')
 @UseInterceptors(DTOInterceptor)

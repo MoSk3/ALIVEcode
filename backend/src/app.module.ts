@@ -3,7 +3,7 @@ import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import config from '../ormconfig';
-import { AsScriptModule } from './as-script/as-script.module';
+import { AsScriptModule } from './models/as-script/as-script.module';
 import { ClassroomModule } from './models/classroom/classroom.module';
 import { CourseModule } from './models/course/course.module';
 import { IoTObjectModule } from './models/iot/IoTobject/IoTobject.module';
@@ -27,6 +27,8 @@ import { hasRole } from './models/user/auth';
 import { Role } from './utils/types/roles.types';
 import { compare } from 'bcryptjs';
 import { adminOptions } from './admin/admin.options';
+import { LoggerModule } from './admin/loger/loger.module';
+import { MyLogger } from './admin/loger/logger';
 
 adminjs.registerAdapter({ Database, Resource });
 
@@ -35,14 +37,18 @@ adminjs.registerAdapter({ Database, Resource });
     TypeOrmModule.forFeature([MaintenanceEntity]),
     TypeOrmModule.forRoot(config),
     AdminModule.createAdminAsync({
-      imports: [UserModule],
+      imports: [UserModule, LoggerModule],
       inject: [getRepositoryToken(UserEntity)],
       useFactory: (userRepo: Repository<UserEntity>) => ({
         adminJsOptions: adminOptions,
         auth: {
           authenticate: async (email, password) => {
             const user = await userRepo.findOne({ where: { email } });
-            if (!user || !hasRole(user, Role.STAFF) || !(await compare(password, user.password))) return null;
+            if (!user || !hasRole(user, Role.STAFF) || !(await compare(password, user.password))) {
+              const logger = new MyLogger('Admin');
+              logger.warn(`User tried to login to admin with email: ${email}`);
+              return null;
+            }
             return user;
           },
           cookiePassword: process.env.ADMIN_COOKIE_PASS,

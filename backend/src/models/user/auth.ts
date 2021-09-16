@@ -1,6 +1,6 @@
 import { Response } from "express";
 import { sign } from "jsonwebtoken"
-import { Role } from 'src/utils/types/roles.types';
+import { Role } from '../../utils/types/roles.types';
 import { ProfessorEntity } from './entities/professor.entity';
 import { StudentEntity } from './entities/student.entity';
 import { UserEntity } from './entities/user.entity';

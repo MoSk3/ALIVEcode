@@ -4,10 +4,10 @@ import { Request } from 'express';
 import { JsonWebTokenError } from 'jsonwebtoken';
 import { Repository } from 'typeorm';
 import { Reflector, REQUEST } from '@nestjs/core';
-import { UserEntity } from 'src/models/user/entities/user.entity';
 import { hasRole } from '../../models/user/auth';
 import { Role } from '../types/roles.types';
 import { ClassroomEntity } from '../../models/classroom/entities/classroom.entity';
+import { UserEntity } from '../../models/user/entities/user.entity';
 
 export interface MyRequest extends Request {
   user: UserEntity;

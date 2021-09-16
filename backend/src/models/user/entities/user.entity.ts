@@ -4,8 +4,8 @@ import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn, TableInh
 import { LevelEntity } from '../../level/entities/level.entity';
 import { IoTObjectEntity } from '../../iot/IoTobject/entities/IoTobject.entity';
 import { IoTProjectEntity } from '../../iot/IoTproject/entities/IoTproject.entity';
-import { AsScriptEntity } from 'src/as-script/entities/as-script.entity';
 import { LevelProgressionEntity } from '../../level/entities/levelProgression.entity';
+import { AsScriptEntity } from '../../as-script/entities/as-script.entity';
 
 @Entity()
 @TableInheritance({ column: { type: 'varchar', name: 'type' } })
