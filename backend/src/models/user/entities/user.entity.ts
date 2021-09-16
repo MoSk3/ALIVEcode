@@ -1,6 +1,6 @@
 import { Exclude, Expose } from 'class-transformer';
 import { IsEmail, IsEmpty, IsNotEmpty, Length, Matches } from 'class-validator';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn, TableInheritance } from 'typeorm';
+import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn, TableInheritance } from 'typeorm';
 import { LevelEntity } from '../../level/entities/level.entity';
 import { IoTObjectEntity } from '../../iot/IoTobject/entities/IoTobject.entity';
 import { IoTProjectEntity } from '../../iot/IoTproject/entities/IoTproject.entity';
@@ -9,7 +9,7 @@ import { LevelProgressionEntity } from '../../level/entities/levelProgression.en
 
 @Entity()
 @TableInheritance({ column: { type: 'varchar', name: 'type' } })
-export class UserEntity {
+export class UserEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   @Exclude({ toClassOnly: true })
   id: string;
