@@ -25,8 +25,8 @@ import { UserEntity } from './models/user/entities/user.entity';
 import { Repository } from 'typeorm';
 import { hasRole } from './models/user/auth';
 import { Role } from './utils/types/roles.types';
-import UserResource from './admin/resources/user.resource';
 import { compare } from 'bcryptjs';
+import { adminOptions } from './admin/admin.options';
 
 adminjs.registerAdapter({ Database, Resource });
 
@@ -38,10 +38,7 @@ adminjs.registerAdapter({ Database, Resource });
       imports: [UserModule],
       inject: [getRepositoryToken(UserEntity)],
       useFactory: (userRepo: Repository<UserEntity>) => ({
-        adminJsOptions: {
-          rootPath: '/admin',
-          resources: [UserResource],
-        },
+        adminJsOptions: adminOptions,
         auth: {
           authenticate: async (email, password) => {
             const user = await userRepo.findOne({ where: { email } });
