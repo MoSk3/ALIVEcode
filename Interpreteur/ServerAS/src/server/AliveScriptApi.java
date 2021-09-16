@@ -10,14 +10,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-public class AliveScriptApi implements HttpHandler {
+public record AliveScriptApi(String CORS_ORIGIN) implements HttpHandler {
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
         String requestParamValue;
 
         Headers headers = httpExchange.getResponseHeaders();
-        headers.set("Access-Control-Allow-Origin", "http://localhost:3000");
+        headers.set("Access-Control-Allow-Origin", CORS_ORIGIN);
         headers.set("Access-Control-Allow-Credentials", "true");
         headers.set("Access-Control-Allow-Headers", "Authorization, Content-Type");
 

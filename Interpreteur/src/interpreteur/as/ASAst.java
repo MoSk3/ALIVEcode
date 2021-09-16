@@ -575,7 +575,7 @@ public class ASAst extends AstGenerator {
                         //        return new Argument((Var) p.get(0), (Expression<?>) p.get(2), null);
                         //    }
                         //});
-                        Expression<?> contenu = AstGenerator.evalOneExpr(new ArrayList<>(p.subList(2, p.size() - 1)), astParams);
+                        Expression<?> contenu = evalOneExpr(new ArrayList<>(p.subList(2, p.size() - 1)), astParams);
 
                         CreerListe args = contenu instanceof CreerListe.Enumeration enumeration ?
                                 enumeration.build() :
@@ -602,7 +602,7 @@ public class ASAst extends AstGenerator {
                         if (p.size() == 2) {
                             return new Expression.ExpressionVide();
                         }
-                        return AstGenerator.evalOneExpr(new ArrayList<>(p.subList(1, p.size() - 1)), null);
+                        return evalOneExpr(new ArrayList<>(p.subList(1, p.size() - 1)), null);
                     }
                 });
 
@@ -636,16 +636,16 @@ public class ASAst extends AstGenerator {
                                 .findFirst()
                                 .orElse(null);
 
-                        Expression<?> debut = AstGenerator.evalOneExpr(new ArrayList<>(p.subList(1, idxTroisPoints)), null);
+                        Expression<?> debut = evalOneExpr(new ArrayList<>(p.subList(1, idxTroisPoints)), null);
                         Expression<?> fin, bond = null;
 
                         // pas de bond, forme {debut...fin}
                         if (bondToken == null) {
-                            fin = AstGenerator.evalOneExpr(new ArrayList<>(p.subList(idxTroisPoints + 1, p.size() - 1)), null);
+                            fin = evalOneExpr(new ArrayList<>(p.subList(idxTroisPoints + 1, p.size() - 1)), null);
                         } else {
                             int idxBond = p.indexOf(bondToken);
-                            fin = AstGenerator.evalOneExpr(new ArrayList<>(p.subList(idxTroisPoints + 1, idxBond)), null);
-                            bond = AstGenerator.evalOneExpr(new ArrayList<>(p.subList(idxBond + 1, p.size() - 1)), null);
+                            fin = evalOneExpr(new ArrayList<>(p.subList(idxTroisPoints + 1, idxBond)), null);
+                            bond = evalOneExpr(new ArrayList<>(p.subList(idxBond + 1, p.size() - 1)), null);
                         }
 
                         return new Suite(debut, fin, bond);
@@ -669,7 +669,7 @@ public class ASAst extends AstGenerator {
 
                         // pas de deux points, forme val[idx]
                         if (deux_pointsToken == null) {
-                            Expression<?> idx = AstGenerator.evalOneExpr(new ArrayList<>(p.subList(2, p.size() - 1)), null);
+                            Expression<?> idx = evalOneExpr(new ArrayList<>(p.subList(2, p.size() - 1)), null);
                             return new CreerListe.SousSection.IndexSection((Expression<?>) p.get(0), idx);
                         }
                         // deux points, forme val[debut:fin] ou val[:fin] ou val[debut:] ou val[:]
@@ -678,11 +678,11 @@ public class ASAst extends AstGenerator {
                             int idxDeuxPoints = p.indexOf(deux_pointsToken);
                             // si debut dans sous section
                             if (idxDeuxPoints > 2) {
-                                debut = AstGenerator.evalOneExpr(new ArrayList<>(p.subList(2, idxDeuxPoints)), null);
+                                debut = evalOneExpr(new ArrayList<>(p.subList(2, idxDeuxPoints)), null);
                             }
                             // si fin dans sous section
                             if (idxDeuxPoints < p.size() - 2) {
-                                fin = AstGenerator.evalOneExpr(new ArrayList<>(p.subList(idxDeuxPoints + 1, p.size() - 1)), null);
+                                fin = evalOneExpr(new ArrayList<>(p.subList(idxDeuxPoints + 1, p.size() - 1)), null);
                             }
                             return new CreerListe.SousSection.CreerSousSection((Expression<?>) p.get(0), debut, fin);
                         }
@@ -696,7 +696,7 @@ public class ASAst extends AstGenerator {
                     @Override
                     public CreerListe apply(List<Object> p) {
                         if (p.size() < 3) return new CreerListe();
-                        Expression<?> contenu = AstGenerator.evalOneExpr(new ArrayList<>(p.subList(1, p.size() - 1)), null);
+                        Expression<?> contenu = evalOneExpr(new ArrayList<>(p.subList(1, p.size() - 1)), null);
                         if (contenu instanceof CreerListe.Enumeration enumeration)
                             return enumeration.build();
                         return new CreerListe(contenu);

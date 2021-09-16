@@ -265,7 +265,7 @@ function closeBlock(): command | undefined {
 			}
 		}
 	}
-
+	
 	execCommands(
 		{
 			command: 'insertstring',

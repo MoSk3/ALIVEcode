@@ -44,6 +44,7 @@ ace.define(
 			//this.$rules = new TextHighlightRules().getRules(); // Use Text's rules as a base
 			var identifierRe =
 				'[a-zA-Z\\$_\u00a1-\uffff][a-zA-Z\\d\\$_\u00a1-\uffff]*';
+			const paramComment = '(\\{ *)(@)(.*? )(.*?)(\\})';
 			const reserved_words = {
 				boucles: [
 					'\\brepeter\\b',
@@ -216,6 +217,11 @@ ace.define(
 						next: 'multi_line_comment',
 					},
 					{
+						token: 'comment.line.italic',
+						regex: /\(-:/,
+						next: 'multi_line_documentation',
+					},
+					{
 						token: 'keyword',
 						regex: '\\s+',
 					},
@@ -229,6 +235,45 @@ ace.define(
 					{
 						token: 'comment.line',
 						regex: '.*',
+					},
+				],
+				multi_line_documentation: [
+					{
+						token: 'comment.line.italic',
+						regex: /.*:-\)/,
+						next: 'main',
+					},
+					{
+						token: (tiret: string, arobase: string, word: string) => {
+							return [
+								'comment.line.italic',
+								'empty',
+								'constant.numeric.italic',
+							];
+						},
+						regex: /( *- *)(@)(.*? )/,
+					},
+					{
+						token: (
+							open: string,
+							arobase: string,
+							word: string,
+							extra: string,
+							close: string,
+						) => {
+							return [
+								'empty',
+								'empty',
+								'constant.numeric.italic',
+								'comment.line.italic',
+								'empty',
+							];
+						},
+						regex: paramComment,
+					},
+					{
+						token: 'comment.line.italic',
+						regex: `.*?(?=(${paramComment})|$)`,
 					},
 				],
 				fonction_arguments: [
