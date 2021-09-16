@@ -14,7 +14,7 @@ public class Server {
     public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
 
         Dotenv env = Dotenv.configure()
-                .directory("../../../.env")
+                .directory("./.env")
                 .load();
 
         final int PORT = Integer.parseInt(env.get("PORT"));
