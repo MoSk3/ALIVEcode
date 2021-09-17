@@ -19,7 +19,7 @@ export type AdminParent =
   | string;
 
 export const adminOptions: AdminJSOptions = {
-  rootPath: '/admin',
+  rootPath: '/api/admin',
   resources: [
     UserResource,
     StudentResource,
