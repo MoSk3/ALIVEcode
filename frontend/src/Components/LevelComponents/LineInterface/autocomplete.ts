@@ -1,6 +1,5 @@
 //#region Types
 
-import { editor } from "./mode-alivescript";
 
 /**
  * represent all the valid command names
@@ -265,7 +264,7 @@ function closeBlock(): command | undefined {
 			}
 		}
 	}
-
+	
 	execCommands(
 		{
 			command: 'insertstring',
@@ -275,6 +274,10 @@ function closeBlock(): command | undefined {
 	);
 	return { command: 'insertstring', args: ' '.repeat(spaces + tabSize) };
 }
+
+const setAutocomplete = (e: any) => {
+	editor = e;
+};
 
 function autocomplete(
 	data: any,
@@ -351,5 +354,5 @@ function lineStartWith(line: string, start: string): boolean {
 }
 
 //#endregion
-
-export default autocomplete;
+let editor: any;
+export { autocomplete, setAutocomplete };

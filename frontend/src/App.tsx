@@ -18,6 +18,9 @@ import { setAccessToken } from './Types/accessToken';
 import { User, Student, Professor } from './Models/User/user.entity';
 import LoadingScreen from './Components/UtilsComponents/LoadingScreen/LoadingScreen';
 import background_image_light from './assets/images/backgroundImage4.png';
+import api from './Models/api';
+import { Maintenance } from './Models/Maintenance/maintenance.entity';
+import MaintenanceBar from './Components/SiteStatusComponents/MaintenanceBar/MaintenanceBar';
 
 type GlobalStyleProps = {
 	theme: Theme;
@@ -65,13 +68,17 @@ const App = () => {
 	const [user, setUser] = useState<Student | Professor | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [theme, setTheme] = useState(themes.light);
+	const [maintenance, setMaintenance] = useState<Maintenance | null>(null);
 
 	const { routes } = useRoutes();
 	const { t } = useTranslation();
 	const alert = useAlert();
 
 	const history = useHistory();
-	const providerValue = useMemo(() => ({ user, setUser }), [user, setUser]);
+	const providerValue = useMemo(
+		() => ({ user, setUser, maintenance }),
+		[user, setUser, maintenance],
+	);
 
 	const handleSetTheme = (theme: Theme) => {
 		setCookie('theme', theme.name, 365);
@@ -106,6 +113,7 @@ const App = () => {
 				const loadedTheme = loadThemeFromCookies();
 				if (loadedTheme && loadedTheme !== theme) setTheme(loadedTheme);
 				setUser(loadedUser);
+				await api.db.maintenances.getUpcoming();
 			} catch {
 				const loadedTheme = loadThemeFromCookies();
 				if (loadedTheme && loadedTheme !== theme) setTheme(loadedTheme);
@@ -119,6 +127,8 @@ const App = () => {
 			response => response,
 			async error => {
 				const originalRequest = error.config;
+				if (process.env.REACT_APP_DEBUG && error.response)
+					console.log(error.response);
 				if (
 					error.response &&
 					error.response.status === 401 &&
@@ -129,7 +139,6 @@ const App = () => {
 					return Promise.reject(error);
 				}
 				// TODO : remove in production
-				if (process.env.DEBUG && error.response) console.log(error.response);
 				if (
 					error.response &&
 					error.response.data.message === 'Not Authenticated' &&
@@ -148,9 +157,25 @@ const App = () => {
 						if (process.env.DEBUG) console.error(err);
 					}
 				}
+				if (
+					error.response &&
+					error.response.data.message === 'Server is in maintenance' &&
+					error.response.status === 503
+				) {
+					//setMaintenance({ ...maintenance, hidden: false });
+					alert.error(t('error.maintenance.short'));
+				}
 				return Promise.reject(error);
 			},
 		);
+
+		const getUpcomingMaintenance = async () => {
+			try {
+				const maintenance = await api.db.maintenances.getUpcoming();
+				setMaintenance(maintenance);
+			} catch {}
+		};
+		getUpcomingMaintenance();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -172,7 +197,17 @@ const App = () => {
 							<StyledApp theme={theme} className="m-auto my-4">
 								<RouterSwitch />
 							</StyledApp>
-							<BackArrow />
+							{maintenance && !maintenance.hidden && (
+								<MaintenanceBar
+									onClose={() =>
+										setMaintenance({ ...maintenance, hidden: true })
+									}
+									maintenance={maintenance}
+								/>
+							)}
+							<BackArrow
+								maintenancePopUp={maintenance != null && !maintenance.hidden}
+							/>
 						</UserContext.Provider>
 					</Router>
 				)}

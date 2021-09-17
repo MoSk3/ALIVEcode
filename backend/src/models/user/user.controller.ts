@@ -18,13 +18,14 @@ import { Param } from '@nestjs/common';
 import { Response } from 'express';
 import { Auth } from '../../utils/decorators/auth.decorator';
 import { UserEntity } from './entities/user.entity';
-import { User } from 'src/utils/decorators/user.decorator';
-import { Role } from 'src/utils/types/roles.types';
 import { hasRole } from './auth';
 import { DTOInterceptor } from '../../utils/interceptors/dto.interceptor';
+import { Group } from '../../utils/decorators/group.decorator';
+import { User } from '../../utils/decorators/user.decorator';
+import { Role } from '../../utils/types/roles.types';
 
 @Controller('users')
-@UseInterceptors(new DTOInterceptor())
+@UseInterceptors(DTOInterceptor)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -68,7 +69,7 @@ export class UserController {
   }
 
   @Get()
-  //@Auth(Role.MOD)
+  @Auth(Role.STAFF)
   findAll() {
     return this.userService.findAll();
   }
@@ -87,6 +88,7 @@ export class UserController {
 
   @Get('me')
   @Auth()
+  @Group('user')
   me(@User() user: UserEntity) {
     return user;
   }

@@ -30,7 +30,7 @@ export class ClassroomEntity extends CreatedByUser {
   subject: CLASSROOM_SUBJECT;
 
   @Exclude({ toClassOnly: true })
-  @ManyToMany(() => StudentEntity, student => student.classrooms)
+  @ManyToMany(() => StudentEntity, student => student.classrooms, { onDelete: 'CASCADE' })
   @JoinTable()
   students: StudentEntity[];
 

@@ -1,6 +1,15 @@
 {
 	"error": {
-		"logout": "Something went wrong when logging out, please try again."
+		"sorry": "Sorry.",
+		"back": "Go back",
+		"home": "Back to the main page",
+		"logout": "Something went wrong when logging out, please try again.",
+		"500": "Something went wrong, please try again",
+		"page404": "This page does not exist.",
+		"maintenance": {
+			"ongoing": "The website is under maintenance since {{startDate}} and will finish at {{finishDate}}, this page could not be loaded.",
+			"short": "The request could not be made, the website is currently under maintenance"
+		}
 	},
 	"form": {
 		"submit": {
@@ -11,7 +20,10 @@
 		"error": {
 			"required": "This field is required",
 			"maxLength": "This field exceeds {{max}} characters",
-			"minLength": "This field should be at least {{min}} characters"
+			"minLength": "This field should be at least {{min}} characters",
+			"match": {
+				"name": "This field should only contains alphanumeric characters"
+			}
 		},
 		"level": {
 			"PATCH": {
@@ -55,6 +67,36 @@
 		}
 	},
 	"msg": {
+		"professor": "professor",
+		"student": "student",
+		"understood": "Understood!",
+		"description": "description",
+		"time": {
+			"format": "{{dayName}}, {{day}} {{monthName}} {{year}} {{hour}}:{{minute}}",
+			"day": {
+				"0": "Sunday",
+				"1": "Monday",
+				"2": "Tuesday",
+				"3": "Wednesday",
+				"4": "Thursday",
+				"5": "Friday",
+				"6": "Saturday"
+			},
+			"month": {
+				"0": "January",
+				"1": "February",
+				"2": "March",
+				"3": "April",
+				"4": "May",
+				"5": "June",
+				"6": "July",
+				"7": "August",
+				"8": "September",
+				"9": "October",
+				"10": "November",
+				"11": "December"
+			}
+		},
 		"desc": {
 			"empty": "No description available"
 		},
@@ -77,6 +119,49 @@
 			"avp": "Augmented Vehicle Perception",
 			"lrima": "LRIMA's research laboratory",
 			"account": "My account"
+		},
+		"maintenance": {
+			"more_info": "More info",
+			"no_desc": "No description available.",
+			"ongoing": "The website is currently undergoing a maintenance from {{startDate}} to {{finishDate}}. You cannot use your account or see other users' levels during this period of time. Sorry for the incovenience.",
+			"upcoming": "The website will be undergoing a maintenance from {{startDate}} to {{finishDate}}. You will not be able to use your account or see other users' levels during this period of time. Sorry for the inconvenience.",
+			"status": {
+				"ongoing": "Ongoing",
+				"finished": "Finished",
+				"upcoming": "Upcoming"
+			}
+		}
+	},
+	"dashboard": {
+		"classrooms": {
+			"empty": {
+				"student": "You are not part of any classroom",
+				"professor": "You do not have any classroom"
+			}
+		}
+	},
+	"classroom": {
+		"add_students": "Add students",
+		"delete": "Delete classroom",
+		"leave": "Leave classroom",
+		"container": {
+			"courses": {
+				"title": "Courses",
+				"empty": "This classroom has no courses"
+			},
+			"details": {
+				"title": "Details"
+			},
+			"students": {
+				"title": "Students in this classroom",
+				"empty": "There are no students in this classroom"
+			}
+		},
+		"desc": "Classroom of {{professor}}",
+		"subject": "Subject",
+		"code": {
+			"title": "Code of the classroom",
+			"desc": "Give this code to your students so that they can join the classroom from the website!"
 		}
 	},
 	"menu": {
@@ -86,7 +171,8 @@
 		},
 		"level": {
 			"alive": "Level with ALIVE car",
-			"code": "Level with console"
+			"code": "Level with console",
+			"ai": "Level with artificial intelligence"
 		}
 	},
 	"home": {

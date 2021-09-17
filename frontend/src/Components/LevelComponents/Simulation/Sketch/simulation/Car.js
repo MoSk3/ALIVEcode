@@ -19,7 +19,7 @@ export class Car {
 
 		this.#speed = this.initialSpeed;
 
-		this.rotateSpeed = 1;
+		this.rotateSpeed = 2;
 
 		this.initialRotateSpeed = this.rotateSpeed;
 		this.initialPos = shape.pos.clone();

@@ -15,9 +15,7 @@ public class Type implements Expression<ASObjet<?>> {
     private String nom;
 
     public Type(String nom) {
-        this.nom = nom
-                .replace("nombre", "entier|decimal")
-                .replace("iterable", "texte|liste");
+        this.nom = nom;
     }
 
     public String nom() {
@@ -25,7 +23,9 @@ public class Type implements Expression<ASObjet<?>> {
     }
 
     public String getNom() {
-        return nom.equals("tout") ? null : nom;
+        return nom.equals("tout") ? null : nom
+                .replace("nombre", "entier|decimal")
+                .replace("iterable", "texte|liste");
     }
 
     public List<String> getNomAsList() {
@@ -52,11 +52,11 @@ public class Type implements Expression<ASObjet<?>> {
     public boolean noMatch(Object o) {
         if (this == o) return false;
 
-        if (o instanceof String) {
-            List<String> type = Arrays.asList(((String) o).split("\\|"));
+        if (o instanceof String s) {
+            List<String> type = Arrays.asList(s.split("\\|"));
             return this.getNom() != null && !type.contains("tout") && !type.contains("nulType") && this.getNomAsList().stream().noneMatch(type::contains);
-        } else if (o instanceof Type) {
-            List<String> type = ((Type) o).getNomAsList();
+        } else if (o instanceof Type t) {
+            List<String> type = t.getNomAsList();
             return this.getNom() != null && type != null && this.getNomAsList().stream().noneMatch(type::contains);
 
         } else return true;

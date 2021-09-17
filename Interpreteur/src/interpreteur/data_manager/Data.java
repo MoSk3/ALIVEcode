@@ -36,6 +36,12 @@ public class Data extends JSONObject {
         return this;
     }
 
+    public static Data endOfExecution() {
+        Data endOfExecutionData = new Data(Id.ARRETER);
+        endOfExecutionData.put("id", 0);
+        return endOfExecutionData;
+    }
+
     /**
      * MOTEUR = 1xx
      * SENSEUR = 2xx

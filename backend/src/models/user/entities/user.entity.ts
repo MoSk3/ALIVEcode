@@ -1,15 +1,23 @@
-import { Exclude } from 'class-transformer';
-import { IsEmail, IsEmpty, IsNotEmpty, IsOptional, Length, MinLength } from 'class-validator';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn, TableInheritance } from 'typeorm';
+import { Exclude, Expose } from 'class-transformer';
+import { IsEmail, IsEmpty, IsNotEmpty, Length, Matches } from 'class-validator';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  TableInheritance,
+  CreateDateColumn,
+} from 'typeorm';
 import { LevelEntity } from '../../level/entities/level.entity';
 import { IoTObjectEntity } from '../../iot/IoTobject/entities/IoTobject.entity';
 import { IoTProjectEntity } from '../../iot/IoTproject/entities/IoTproject.entity';
 import { LevelProgressionEntity } from '../../level/entities/levelProgression.entity';
-import { AsScriptEntity } from 'src/as-script/entities/as-script.entity';
+import { AsScriptEntity } from '../../as-script/entities/as-script.entity';
 
 @Entity()
 @TableInheritance({ column: { type: 'varchar', name: 'type' } })
-export class UserEntity {
+export class UserEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   @Exclude({ toClassOnly: true })
   id: string;
@@ -18,6 +26,7 @@ export class UserEntity {
   @Exclude({ toPlainOnly: true })
   @Length(6, 32)
   @IsNotEmpty()
+  @Matches(/^[A-Za-z0-9!@#\$&*~]*$/)
   password: string;
 
   @Column({ unique: true, nullable: false })
@@ -27,34 +36,41 @@ export class UserEntity {
 
   @Column({ default: false })
   @IsEmpty()
-  @Exclude()
-  is_mod: boolean;
+  @Exclude({ toClassOnly: true })
+  @Expose({ groups: ['admin', 'user'] })
+  isMod: boolean;
 
   @Column({ default: false })
   @IsEmpty()
-  @Exclude()
-  is_admin: boolean;
+  @Exclude({ toClassOnly: true })
+  @Expose({ groups: ['admin', 'user'] })
+  isAdmin: boolean;
 
   @Column({ default: false })
   @IsEmpty()
-  @Exclude()
-  is_super_user: boolean;
+  @Exclude({ toClassOnly: true })
+  @Expose({ groups: ['admin', 'user'] })
+  isSuperUser: boolean;
+
+  @CreateDateColumn()
+  @Exclude({ toClassOnly: true })
+  joinDate: Date;
 
   @OneToMany(() => LevelEntity, level => level.creator, { cascade: true })
   levels: LevelEntity[];
 
-  @OneToMany(() => AsScriptEntity, asScript => asScript.creator, { cascade: true })
+  @OneToMany(() => AsScriptEntity, asScript => asScript.creator)
   asScripts: AsScriptEntity[];
 
-  @OneToMany(() => IoTObjectEntity, iot => iot.creator, { cascade: true })
+  @OneToMany(() => IoTObjectEntity, iot => iot.creator)
   IoTObjects: IoTObjectEntity[];
 
-  @OneToMany(() => IoTProjectEntity, iot => iot.creator, { cascade: true })
+  @OneToMany(() => IoTProjectEntity, iot => iot.creator)
   IoTProjects: IoTProjectEntity[];
 
-  @OneToMany(() => IoTProjectEntity, iot => iot.creator, { cascade: true })
+  @OneToMany(() => IoTProjectEntity, iot => iot.creator)
   collabIoTProjects: IoTProjectEntity[];
 
-  @OneToMany(() => LevelProgressionEntity, prog => prog.user, { cascade: true })
+  @OneToMany(() => LevelProgressionEntity, prog => prog.user)
   levelProgressions: LevelProgressionEntity[];
 } 

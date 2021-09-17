@@ -9,13 +9,13 @@ import { Response } from 'express';
 import { createAccessToken, setRefreshToken, createRefreshToken } from './auth';
 import { verify } from 'jsonwebtoken';
 import { AuthPayload } from '../../utils/types/auth.payload';
-import { MyRequest } from 'src/utils/guards/auth.guard';
 import { REQUEST } from '@nestjs/core';
-import { CourseEntity } from 'src/models/course/entities/course.entity';
 import { ClassroomEntity } from '../classroom/entities/classroom.entity';
 import { IoTProjectEntity } from '../iot/IoTproject/entities/IoTproject.entity';
 import { IoTObjectEntity } from '../iot/IoTobject/entities/IoTobject.entity';
 import { LevelEntity } from '../level/entities/level.entity';
+import { CourseEntity } from '../course/entities/course.entity';
+import { MyRequest } from '../../utils/guards/auth.guard';
 
 @Injectable({ scope: Scope.REQUEST })
 export class UserService {

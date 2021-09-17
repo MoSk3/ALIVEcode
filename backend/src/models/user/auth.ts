@@ -1,6 +1,6 @@
 import { Response } from "express";
 import { sign } from "jsonwebtoken"
-import { Role } from 'src/utils/types/roles.types';
+import { Role } from '../../utils/types/roles.types';
 import { ProfessorEntity } from './entities/professor.entity';
 import { StudentEntity } from './entities/student.entity';
 import { UserEntity } from './entities/user.entity';
@@ -30,7 +30,9 @@ export const createRefreshToken = (user: UserEntity) => {
 
 export const setRefreshToken = (res: Response, token: string) => {
   res.cookie('wif', token, {
+    expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
     httpOnly: true,
+    path: '/api/users/refreshToken',
   });
 };
 
@@ -39,13 +41,13 @@ export const hasRole = (user: UserEntity, ...roles: Array<Role>): boolean => {
   return roles.some(role => {
     switch (role) {
       case Role.SUPER_USER:
-        return user.is_super_user;
+        return user.isSuperUser;
       case Role.ADMIN:
-        return user.is_admin || user.is_super_user;
+        return user.isAdmin || user.isSuperUser;
       case Role.MOD:
-        return user.is_mod || user.is_admin || user.is_super_user;
+        return user.isMod || user.isAdmin || user.isSuperUser;
       case Role.STAFF:
-        return user.is_super_user || user.is_admin || user.is_mod;
+        return user.isSuperUser || user.isAdmin || user.isMod;
       case Role.PROFESSOR:
         return user instanceof ProfessorEntity;
       case Role.STUDENT:

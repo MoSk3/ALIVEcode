@@ -56,7 +56,7 @@ public class Executeur {
     // modules
     private final ASModuleManager asModuleManager = new ASModuleManager(this);
 
-    // data explaining the actions to do to the server
+    // data explaining the actions to do to the com.server
     private final ArrayList<Data> datas = new ArrayList<>();
 
     // data stack used when the program asks the site for information
@@ -125,16 +125,9 @@ public class Executeur {
 
 
         String[] lines = """   
-                fonction additionner(num1: nombre, num2: nombre) -> liste
-                    fonction f(a)
-                        afficher a
-                    fin fonction
-                    retourner [f, 1]
-                fin fonction
-                                
-                var a <- "23.1"
-                var b <- '11'
-                afficher(additionner(decimal(a), decimal(b))[0] a)
+                repeter 3
+                    afficher "salut"
+                fin repeter
                 """.split("\n");
 
 
@@ -197,7 +190,7 @@ public class Executeur {
     }
 
     /**
-     * @param coord <li>la coordonne d'une certaine ligne de code</li>
+     * @param coord <br><li>la coordonne d'une certaine ligne de code</li>
      * @return la position de la la ligne de code dans le code
      */
     public Integer getLineFromCoord(Coordonnee coord) {
@@ -235,7 +228,7 @@ public class Executeur {
     }
 
     /**
-     * @param nomDuScope <li>cree un nouveau scope et ajoute la premiere coordonnee a ce scope</li>
+     * @param nomDuScope <br><li>cree un nouveau scope et ajoute la premiere coordonnee a ce scope</li>
      * @return la premiere coordonnee du scope
      */
     public String nouveauScope(String nomDuScope) {
@@ -279,7 +272,7 @@ public class Executeur {
     /**
      * permet de changer la coordonne lors de l'execution du code
      *
-     * @param coord <li>la nouvelle coordonnee</li>
+     * @param coord <br><li>la nouvelle coordonnee</li>
      */
     public void setCoordRunTime(String coord) {
         coordRunTime.setCoord(coord);
@@ -300,13 +293,13 @@ public class Executeur {
     /**
      * Cette fonction permet de compiler des lignes de code afin de pouvoir les executer (voir Executeur.executerMain)
      *
-     * @param lignes            <li>
+     * @param lignes           <li>
      *                          Type: String[]
      *                          </li>
      *                          <li>
      *                          Represente les lignes de code a compiler, une ligne se finit par un <code>\n</code>
      *                          </li>
-     * @param compilationForcee <li>
+     * @param compilationForcee <br><li>
      *                          Type: boolean
      *                          </li>
      *                          <li>
@@ -386,7 +379,7 @@ public class Executeur {
             String line = lignes[i];
 
             // produit la liste de Token representant la ligne (voir lexer.lex)
-            List<Token> lineToken = lexer.lex(line.trim());
+            var lineToken = lexer.lex(line.trim());
 
             // obtiens la coordonne ainsi que le scope ou sera enregistree la ligne compilee
             String coordActuelle = coordCompileTime.get(coordCompileTime.size() - 1).toString();
@@ -587,8 +580,9 @@ public class Executeur {
             // boolean servant a indique que l'execution est terminee
             executionActive = false;
             reset();
+            String resultatString = resultat.toString();
             // ajoute un '!' devant le résultat pour indiquer que l'exécution est terminée
-            resultat = "!" + resultat.toString();
+            resultat = "!" + resultatString.substring(0, resultatString.length()-1) + ", " + Data.endOfExecution() + "]";
         }
         datas.clear();
 

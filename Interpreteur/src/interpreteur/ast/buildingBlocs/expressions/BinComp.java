@@ -7,15 +7,9 @@ import interpreteur.ast.buildingBlocs.Expression;
 import java.util.function.BiFunction;
 
 
-public class BinComp implements Expression<ASObjet.Booleen> {
-    private final Expression<?> gauche, droite;
-    private final Comparateur op;
-
-    public BinComp(Expression<?> gauche, Comparateur op, Expression<?> droite) {
-        this.gauche = gauche;
-        this.droite = droite;
-        this.op = op;
-    }
+public record BinComp(Expression<?> gauche,
+                      Comparateur op,
+                      Expression<?> droite) implements Expression<ASObjet.Booleen> {
 
     @Override
     public ASObjet.Booleen eval() {
@@ -46,54 +40,54 @@ public class BinComp implements Expression<ASObjet.Booleen> {
          * Gere x > y
          */
         PLUS_GRAND((gauche, droite) -> {
-            if (!(gauche.getValue() instanceof Number || droite.getValue() instanceof Number)) {
+            if (!(gauche.getValue() instanceof Number numG && droite.getValue() instanceof Number numD)) {
                 throw new ASErreur.ErreurComparaison("Il est impossible de comparer autre chose que des nombres");
             }
-            return new ASObjet.Booleen(((Number) gauche.getValue()).doubleValue() > ((Number) droite.getValue()).doubleValue());
+            return new ASObjet.Booleen(numG.doubleValue() > numD.doubleValue());
         }),
 
         /**
          * Gere x < y
          */
         PLUS_PETIT((gauche, droite) -> {
-            if (!(gauche.getValue() instanceof Number || droite.getValue() instanceof Number)) {
+            if (!(gauche.getValue() instanceof Number numG && droite.getValue() instanceof Number numD)) {
                 throw new ASErreur.ErreurComparaison("Il est impossible de comparer autre chose que des nombres");
             }
-            return new ASObjet.Booleen(((Number) gauche.getValue()).doubleValue() < ((Number) droite.getValue()).doubleValue());
+            return new ASObjet.Booleen(numG.doubleValue() < numD.doubleValue());
         }),
 
         /**
          * Gere x >= y
          */
         PLUS_GRAND_EGAL((gauche, droite) -> {
-            if (!(gauche.getValue() instanceof Number || droite.getValue() instanceof Number)) {
+            if (!(gauche.getValue() instanceof Number numG && droite.getValue() instanceof Number numD)) {
                 throw new ASErreur.ErreurComparaison("Il est impossible de comparer autre chose que des nombres");
             }
-            return new ASObjet.Booleen(((Number) gauche.getValue()).doubleValue() >= ((Number) droite.getValue()).doubleValue());
+            return new ASObjet.Booleen(numG.doubleValue() >= numD.doubleValue());
         }),
 
         /**
          * Gere x <= y
          */
         PLUS_PETIT_EGAL((gauche, droite) -> {
-            if (!(gauche.getValue() instanceof Number || droite.getValue() instanceof Number)) {
+            if (!(gauche.getValue() instanceof Number numG && droite.getValue() instanceof Number numD)) {
                 throw new ASErreur.ErreurComparaison("Il est impossible de comparer autre chose que des nombres");
             }
-            return new ASObjet.Booleen(((Number) gauche.getValue()).doubleValue() <= ((Number) droite.getValue()).doubleValue());
+            return new ASObjet.Booleen(numG.doubleValue() <= numD.doubleValue());
         }),
 
         DANS((gauche, droite) -> {
-            if (!(droite instanceof ASObjet.Iterable)) {
+            if (!(droite instanceof ASObjet.Iterable iterD)) {
                 throw new ASErreur.ErreurComparaison("L'op\u00E9rateur 'dans' ne s'applique que sur les \u00E9l\u00E9ments de type 'iterable'");
             }
-            return new ASObjet.Booleen(((ASObjet.Iterable) droite).contient(gauche));
+            return new ASObjet.Booleen(iterD.contient(gauche));
         }),
 
         PAS_DANS((gauche, droite) -> {
-            if (!(droite instanceof ASObjet.Iterable)) {
+            if (!(droite instanceof ASObjet.Iterable iterD)) {
                 throw new ASErreur.ErreurComparaison("L'op\u00E9rateur 'dans' ne s'applique que sur les \u00E9l\u00E9ments de type 'iterable'");
             }
-            return new ASObjet.Booleen(!((ASObjet.Iterable) droite).contient(gauche));
+            return new ASObjet.Booleen(!iterD.contient(gauche));
         });
 
         private final BiFunction<ASObjet<?>, ASObjet<?>, ASObjet.Booleen> eval;
