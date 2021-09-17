@@ -125,16 +125,8 @@ public class Executeur {
 
 
         String[] lines = """   
-                fonction additionner(num1: nombre, num2: nombre) -> liste
-                    fonction f(a)
-                        afficher a
-                    fin fonction
-                    retourner [f, 1]
-                fin fonction
-                                
-                var a <- "23.1"
-                var b <- '11'
-                afficher(additionner(decimal(a), decimal(b))[0] a)
+                var a = "12"
+                afficher ((decimal(a) + decimal(a)) / 2)
                 """.split("\n");
 
 
