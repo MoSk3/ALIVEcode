@@ -25,7 +25,7 @@ export enum LEVEL_DIFFICULTY {
 @TableInheritance({ column: { type: 'varchar', name: 'type' } })
 export class LevelEntity extends CreatedByUser {
   @Exclude({ toClassOnly: true })
-  @ManyToOne(() => UserEntity, user => user.levels, { eager: true })
+  @ManyToOne(() => UserEntity, user => user.levels, { eager: true, onDelete: 'SET NULL' })
   creator: UserEntity;
 
   @Column({ enum: LEVEL_ACCESS })

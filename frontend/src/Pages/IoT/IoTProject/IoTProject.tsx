@@ -60,9 +60,9 @@ const IoTProject = (props: IoTProjectProps) => {
 	useEffect(() => {
 		const getProject = async () => {
 			try {
-				const project: ProjectModel = await api.db.iot.projects.get(
-					props.match.params.id,
-				);
+				const project: ProjectModel = await api.db.iot.projects.get({
+					id: props.match.params.id,
+				});
 				await project.getRoutes();
 				setProject(project);
 			} catch (err) {

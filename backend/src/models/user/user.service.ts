@@ -9,14 +9,13 @@ import { Response } from 'express';
 import { createAccessToken, setRefreshToken, createRefreshToken } from './auth';
 import { verify } from 'jsonwebtoken';
 import { AuthPayload } from '../../utils/types/auth.payload';
-import { MyRequest } from 'src/utils/guards/auth.guard';
 import { REQUEST } from '@nestjs/core';
-import { CourseEntity } from 'src/models/course/entities/course.entity';
 import { ClassroomEntity } from '../classroom/entities/classroom.entity';
 import { IoTProjectEntity } from '../iot/IoTproject/entities/IoTproject.entity';
 import { IoTObjectEntity } from '../iot/IoTobject/entities/IoTobject.entity';
 import { LevelEntity } from '../level/entities/level.entity';
-import { QueryDTO } from '../level/dto/query.dto';
+import { CourseEntity } from '../course/entities/course.entity';
+import { MyRequest } from '../../utils/guards/auth.guard';
 
 @Injectable({ scope: Scope.REQUEST })
 export class UserService {
@@ -153,9 +152,9 @@ export class UserService {
     return await this.iotObjectRepository.find({ where: { creator: user } });
   }
 
-  async getLevels(user: UserEntity, query: QueryDTO) {
+  async getLevels(user: UserEntity, query: string) {
     return await this.levelRepository.find({
-      where: { creator: user, name: ILike(`%${query?.txt ?? ''}%`) },
+      where: { creator: user, name: ILike(`%${query ?? ''}%`) },
       order: {
         creationDate: 'DESC',
         name: 'ASC',

@@ -1,14 +1,13 @@
 import { Injectable, CanActivate, ExecutionContext, Scope, Inject, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Request } from 'express';
-import { JsonWebTokenError, verify } from 'jsonwebtoken';
+import { JsonWebTokenError } from 'jsonwebtoken';
 import { Repository } from 'typeorm';
 import { Reflector, REQUEST } from '@nestjs/core';
-import { AuthPayload } from '../types/auth.payload';
-import { UserEntity } from 'src/models/user/entities/user.entity';
 import { hasRole } from '../../models/user/auth';
 import { Role } from '../types/roles.types';
 import { ClassroomEntity } from '../../models/classroom/entities/classroom.entity';
+import { UserEntity } from '../../models/user/entities/user.entity';
 
 export interface MyRequest extends Request {
   user: UserEntity;
@@ -28,15 +27,7 @@ export class RolesGuard implements CanActivate {
       let roles = this.reflector.get<Role[]>('roles', context.getHandler());
       if (!roles) roles = [];
 
-      const authorization = this.req.headers['authorization'];
-      if (!authorization) throw new HttpException('Not Authenticated', HttpStatus.UNAUTHORIZED);
-
-      const accessToken = authorization.split(' ')[1];
-      const payload = verify(accessToken, process.env.ACCESS_TOKEN_SECRET_KEY);
-      if (!payload) throw new HttpException('Not Authenticated', HttpStatus.UNAUTHORIZED);
-
-      const authPayload = payload as AuthPayload;
-      const user = await this.userRepository.findOne(authPayload.id);
+      const user = this.req.user;
       if (!user) throw new HttpException('Not Authenticated', HttpStatus.UNAUTHORIZED);
 
       if (!hasRole(user, ...roles)) throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);

@@ -23,7 +23,10 @@ const ClassroomHeader = ({ classroom }: ClassroomHeaderProps) => {
 	const leaveClassroom = async () => {
 		if (!user) return;
 		try {
-			await api.db.classrooms.leaveClassroom(classroom.id, user.id);
+			await api.db.classrooms.leave({
+				classroomId: classroom.id,
+				studentId: user.id,
+			});
 			history.push(routes.auth.dashboard.path);
 		} catch {
 			return alert.error(t('error.505'));

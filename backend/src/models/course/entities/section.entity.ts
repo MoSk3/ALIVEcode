@@ -14,6 +14,6 @@ export class SectionEntity {
   @Column({ nullable: false })
   name: string;
 
-  @ManyToOne(() => CourseEntity, course => course.sections)
+  @ManyToOne(() => CourseEntity, course => course.sections, { onDelete: 'CASCADE' })
   course: CourseEntity;
 }
