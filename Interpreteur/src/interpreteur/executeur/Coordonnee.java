@@ -152,8 +152,7 @@ public class Coordonnee {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Coordonnee)) return false;
-        Coordonnee that = (Coordonnee) o;
+        if (!(o instanceof Coordonnee that)) return false;
         return numLigne == that.numLigne &&
                 Objects.equals(coord, that.coord);
     }
