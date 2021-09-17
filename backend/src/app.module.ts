@@ -76,12 +76,12 @@ export class AppModule {
     consumer
       .apply(MaintenanceMiddleware)
       .exclude(
-        { path: '/users/login', method: RequestMethod.POST },
-        { path: '/users/refreshToken', method: RequestMethod.POST },
-        'maintenances/(.*)',
-        'maintenances',
-        'admin/(.*)',
-        'admin',
+        { path: '/api/users/login', method: RequestMethod.POST },
+        { path: '/api/users/refreshToken', method: RequestMethod.POST },
+        'api/maintenances/(.*)',
+        'api/maintenances',
+        'api/admin/(.*)',
+        'api/admin',
       )
       .forRoutes({ path: '*', method: RequestMethod.ALL });
   }
