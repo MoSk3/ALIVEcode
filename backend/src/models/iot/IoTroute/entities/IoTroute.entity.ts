@@ -19,6 +19,6 @@ export class IoTRouteEntity {
   @Length(3, 40)
   path: string;
 
-  @ManyToOne(() => IoTProjectEntity, project => project.routes)
+  @ManyToOne(() => IoTProjectEntity, project => project.routes, { onDelete: 'CASCADE' })
   project: IoTProjectEntity;
 }
