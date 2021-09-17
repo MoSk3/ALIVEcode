@@ -13,6 +13,6 @@ export class StudentEntity extends UserEntity {
   name: string;
 
   @Optional()
-  @ManyToMany(() => ClassroomEntity, classroom => classroom.students)
+  @ManyToMany(() => ClassroomEntity, classroom => classroom.students, { onDelete: 'CASCADE' })
   classrooms: ClassroomEntity[];
 }

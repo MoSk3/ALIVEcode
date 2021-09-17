@@ -75,5 +75,8 @@
 		"@types/react-alert": "^5.2.1",
 		"@types/react-router-dom": "^5.1.7",
 		"@types/styled-components": "^5.1.11"
+	},
+	"transform": {
+		"\\.js$": "<rootDir>/node_modules/babel-jest"
 	}
 }

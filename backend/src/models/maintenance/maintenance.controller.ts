@@ -2,9 +2,8 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors } fr
 import { MaintenanceService } from './maintenance.service';
 import { MaintenanceEntity } from './entities/maintenance.entity';
 import { DTOInterceptor } from '../../utils/interceptors/dto.interceptor';
-import { Auth } from 'src/utils/decorators/auth.decorator';
-import { Role } from 'src/utils/types/roles.types';
-import { Group } from '../../utils/decorators/group.decorator';
+import { Role } from '../../utils/types/roles.types';
+import { Auth } from '../../utils/decorators/auth.decorator';
 
 @Controller('maintenances')
 @UseInterceptors(DTOInterceptor)

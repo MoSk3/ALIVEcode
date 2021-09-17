@@ -35,5 +35,6 @@ import { LevelAIEntity } from './entities/levelAI.entity';
   ],
   controllers: [LevelController],
   providers: [LevelService, UserService],
+  exports: [TypeOrmModule],
 })
 export class LevelModule {}

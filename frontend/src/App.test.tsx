@@ -1,9 +1,6 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
+import 'reflect-metadata';
 import App from './App';
+import * as ReactDom from 'react-dom';
 
-test('renders learn react link', () => {
-	render(<App />);
-	const linkElement = screen.getByText(/learn react/i);
-	expect(linkElement).toBeInTheDocument();
-});
+test('Testing login form', () => {});

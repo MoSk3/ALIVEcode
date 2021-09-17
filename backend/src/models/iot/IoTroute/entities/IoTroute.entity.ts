@@ -1,7 +1,7 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { IsNotEmpty, Length } from 'class-validator';
-import { IoTProjectEntity } from 'src/models/iot/IoTproject/entities/IoTproject.entity';
+import { IoTProjectEntity } from '../../IoTproject/entities/IoTproject.entity';
 
 @Entity()
 export class IoTRouteEntity {
@@ -19,6 +19,6 @@ export class IoTRouteEntity {
   @Length(3, 40)
   path: string;
 
-  @ManyToOne(() => IoTProjectEntity, project => project.routes)
+  @ManyToOne(() => IoTProjectEntity, project => project.routes, { onDelete: 'CASCADE' })
   project: IoTProjectEntity;
 }

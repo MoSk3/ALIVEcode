@@ -32,6 +32,6 @@ export class LevelProgressionEntity {
   @IsOptional()
   data: LevelProgressionData;
 
-  @ManyToOne(() => UserEntity, user => user.levelProgressions)
+  @ManyToOne(() => UserEntity, user => user.levelProgressions, { onDelete: 'CASCADE' })
   user: UserEntity;
 }
