@@ -20,6 +20,8 @@ export type AdminParent =
 
 export const adminOptions: AdminJSOptions = {
   rootPath: '/api/admin',
+  loginPath: 'api/admin/login',
+  logoutPath: 'api/admin/logout',
   resources: [
     UserResource,
     StudentResource,
