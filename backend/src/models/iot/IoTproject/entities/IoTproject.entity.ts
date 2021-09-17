@@ -19,7 +19,7 @@ export enum IOTPROJECT_ACCESS {
 
 @Entity()
 export class IoTProjectEntity extends CreatedByUser {
-  @ManyToOne(() => UserEntity, user => user.IoTProjects, { eager: true })
+  @ManyToOne(() => UserEntity, user => user.IoTProjects, { eager: true, onDelete: 'CASCADE' })
   @IsEmpty()
   creator: UserEntity;
 

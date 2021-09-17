@@ -1,6 +1,14 @@
 import { Exclude, Expose } from 'class-transformer';
 import { IsEmail, IsEmpty, IsNotEmpty, Length, Matches } from 'class-validator';
-import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn, TableInheritance } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  TableInheritance,
+  CreateDateColumn,
+} from 'typeorm';
 import { LevelEntity } from '../../level/entities/level.entity';
 import { IoTObjectEntity } from '../../iot/IoTobject/entities/IoTobject.entity';
 import { IoTProjectEntity } from '../../iot/IoTproject/entities/IoTproject.entity';
@@ -44,21 +52,25 @@ export class UserEntity extends BaseEntity {
   @Expose({ groups: ['admin', 'user'] })
   isSuperUser: boolean;
 
+  @CreateDateColumn()
+  @Exclude({ toClassOnly: true })
+  joinDate: Date;
+
   @OneToMany(() => LevelEntity, level => level.creator, { cascade: true })
   levels: LevelEntity[];
 
-  @OneToMany(() => AsScriptEntity, asScript => asScript.creator, { cascade: true })
+  @OneToMany(() => AsScriptEntity, asScript => asScript.creator)
   asScripts: AsScriptEntity[];
 
-  @OneToMany(() => IoTObjectEntity, iot => iot.creator, { cascade: true })
+  @OneToMany(() => IoTObjectEntity, iot => iot.creator)
   IoTObjects: IoTObjectEntity[];
 
-  @OneToMany(() => IoTProjectEntity, iot => iot.creator, { cascade: true })
+  @OneToMany(() => IoTProjectEntity, iot => iot.creator)
   IoTProjects: IoTProjectEntity[];
 
-  @OneToMany(() => IoTProjectEntity, iot => iot.creator, { cascade: true })
+  @OneToMany(() => IoTProjectEntity, iot => iot.creator)
   collabIoTProjects: IoTProjectEntity[];
 
-  @OneToMany(() => LevelProgressionEntity, prog => prog.user, { cascade: true })
+  @OneToMany(() => LevelProgressionEntity, prog => prog.user)
   levelProgressions: LevelProgressionEntity[];
 } 
