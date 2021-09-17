@@ -69,7 +69,7 @@ export class UserController {
   }
 
   @Get()
-  //@Auth(Role.MOD)
+  @Auth(Role.STAFF)
   findAll() {
     return this.userService.findAll();
   }

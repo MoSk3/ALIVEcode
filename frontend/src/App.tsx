@@ -127,7 +127,6 @@ const App = () => {
 			response => response,
 			async error => {
 				const originalRequest = error.config;
-				console.log(process.env.REACT_APP_DEBUG);
 				if (process.env.REACT_APP_DEBUG && error.response)
 					console.log(error.response);
 				if (
