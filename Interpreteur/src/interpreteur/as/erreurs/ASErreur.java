@@ -211,6 +211,14 @@ public interface ASErreur {
     }
 
 
+    enum Erreurs {
+        ErreurZeroExposantZero
+
+        ;
+
+    }
+
+
     // ----------------------------------- Alertes ----------------------------------------- //
 
     class AlerteExecution {

@@ -12,15 +12,15 @@ import {
 } from '@nestjs/common';
 import { IoTObjectEntity } from './entities/IoTobject.entity';
 import { Auth } from '../../../utils/decorators/auth.decorator';
-import { Role } from 'src/utils/types/roles.types';
-import { User } from 'src/utils/decorators/user.decorator';
 import { IoTObjectService } from './IoTobject.service';
-import { hasRole } from 'src/models/user/auth';
 import { UserEntity } from '../../user/entities/user.entity';
 import { DTOInterceptor } from '../../../utils/interceptors/dto.interceptor';
+import { hasRole } from '../../user/auth';
+import { User } from '../../../utils/decorators/user.decorator';
+import { Role } from '../../../utils/types/roles.types';
 
 @Controller('iot/objects')
-@UseInterceptors(new DTOInterceptor())
+@UseInterceptors(DTOInterceptor)
 export class IoTObjectController {
   constructor(private readonly IoTObjectService: IoTObjectService) {}
 

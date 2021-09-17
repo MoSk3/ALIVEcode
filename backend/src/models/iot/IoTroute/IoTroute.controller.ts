@@ -17,11 +17,11 @@ import { Role } from '../../../utils/types/roles.types';
 import { IoTRouteEntity } from './entities/IoTroute.entity';
 import { IoTProjectService } from '../IoTproject/IoTproject.service';
 import { UserEntity } from '../../user/entities/user.entity';
-import { hasRole } from 'src/models/user/auth';
 import { DTOInterceptor } from '../../../utils/interceptors/dto.interceptor';
+import { hasRole } from '../../user/auth';
 
 @Controller('iot/routes')
-@UseInterceptors(new DTOInterceptor())
+@UseInterceptors(DTOInterceptor)
 export class IoTRouteController {
   constructor(
     private readonly IoTRouteService: IoTRouteService,

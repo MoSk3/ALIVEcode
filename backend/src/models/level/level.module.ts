@@ -14,6 +14,7 @@ import { ClassroomEntity } from '../classroom/entities/classroom.entity';
 import { CourseEntity } from '../course/entities/course.entity';
 import { IoTProjectEntity } from '../iot/IoTproject/entities/IoTproject.entity';
 import { IoTObjectEntity } from '../iot/IoTobject/entities/IoTobject.entity';
+import { LevelAIEntity } from './entities/levelAI.entity';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { IoTObjectEntity } from '../iot/IoTobject/entities/IoTobject.entity';
       LevelAliveEntity,
       LevelCodeEntity,
       LevelProgressionEntity,
+      LevelAIEntity,
       ProfessorEntity,
       StudentEntity,
       ClassroomEntity,
@@ -33,5 +35,6 @@ import { IoTObjectEntity } from '../iot/IoTobject/entities/IoTobject.entity';
   ],
   controllers: [LevelController],
   providers: [LevelService, UserService],
+  exports: [TypeOrmModule],
 })
 export class LevelModule {}

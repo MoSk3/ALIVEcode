@@ -30,6 +30,7 @@ public class SinonSi extends Programme {
 
     @Override
     public Coordonnee prochaineCoord(Coordonnee coord, List<Token> ligne) {
+        assert executeurInstance != null;
         String blocActuel = coord.getBlocActuel();
 
         if (blocActuel.startsWith("sinon_si_")) {
@@ -44,7 +45,7 @@ public class SinonSi extends Programme {
 
         SinonSiTest sinonSiTest = new SinonSiTest(this);
 
-        assert executeurInstance != null;
+
         coord = executeurInstance.obtenirCoordRunTime();
         coord.finBloc();
 

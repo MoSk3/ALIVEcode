@@ -1,8 +1,8 @@
 import { Exclude } from 'class-transformer';
-import { IsNotEmpty, IsOptional } from 'class-validator';
-import { CreatedByUser } from 'src/generics/entities/createdByUser.entity';
-import { Entity, ManyToOne, Column, TableInheritance } from 'typeorm';
+import { Entity, ManyToOne, TableInheritance, Column } from 'typeorm';
 import { UserEntity } from '../../user/entities/user.entity';
+import { CreatedByUser } from '../../../generics/entities/createdByUser.entity';
+import { IsNotEmpty, IsOptional } from 'class-validator';
 
 export enum LEVEL_TAG {}
 export enum LEVEL_ACCESS {
@@ -25,7 +25,7 @@ export enum LEVEL_DIFFICULTY {
 @TableInheritance({ column: { type: 'varchar', name: 'type' } })
 export class LevelEntity extends CreatedByUser {
   @Exclude({ toClassOnly: true })
-  @ManyToOne(() => UserEntity, user => user.levels, { eager: true })
+  @ManyToOne(() => UserEntity, user => user.levels, { eager: true, onDelete: 'SET NULL' })
   creator: UserEntity;
 
   @Column({ enum: LEVEL_ACCESS })
@@ -40,7 +40,6 @@ export class LevelEntity extends CreatedByUser {
   @IsOptional()
   hints: string[] = [];
 
-  // TODO: Switch to postgreSQL
   @Column({ enum: LEVEL_TAG, type: 'jsonb', default: () => "'[]'" })
   @IsOptional()
   tags: LEVEL_TAG[] = [];

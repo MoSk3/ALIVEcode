@@ -14,7 +14,7 @@ export interface PlaySocket {
 
 const openPlaySocket = (): PlaySocket => {
 	let wsStart = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
-	let endpoint = wsStart + window.location.hostname + ':8000/playground';
+	let endpoint = wsStart + window.location.hostname + ':8003/playground';
 	let socket: WebSocket = new WebSocket(endpoint);
 
 	const playSocketConstructor = (socket: PlaySocketDeclaration) => {
