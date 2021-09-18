@@ -36,7 +36,7 @@ i18next
 	.use(HttpAPI)
 	.init({
 		supportedLngs: ['en', 'fr'],
-		fallbackLng: 'en',
+		fallbackLng: 'fr',
 		detection: {
 			order: [
 				'querystring',
