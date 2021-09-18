@@ -7,7 +7,7 @@ export abstract class CreatedByUser {
 
 	name: string;
 
-	abstract creator: User;
+	abstract creator: User | undefined;
 
 	@Exclude({ toPlainOnly: true })
 	@Type(() => Date)

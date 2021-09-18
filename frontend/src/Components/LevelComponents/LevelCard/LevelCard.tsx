@@ -37,7 +37,7 @@ const LevelCard = ({ level, enterEdit }: LevelCardProps) => {
 				</div>
 				<div className="info-section">
 					<div className="buttons-section">
-						{level.creator.id === user?.id && (
+						{level.creator && level.creator.id === user?.id && (
 							<LevelButton
 								onClick={() =>
 									history.push(
@@ -76,7 +76,12 @@ const LevelCard = ({ level, enterEdit }: LevelCardProps) => {
 				</div>
 			</div>
 			<div className="footer">
-				<div>Creator: {level.creator.getDisplayName()}</div>
+				<div>
+					Creator:{' '}
+					{level.creator
+						? level.creator.getDisplayName()
+						: t('msg.deleted_user')}
+				</div>
 				<div>Creation date: {level.creationDate.toLocaleString()}</div>
 				<div>Last updated: {level.creationDate.toLocaleString()}</div>
 			</div>

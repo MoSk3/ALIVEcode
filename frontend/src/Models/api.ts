@@ -16,6 +16,7 @@ import { BrowsingQuery } from '../Components/MainComponents/BrowsingMenu/browsin
 import { LevelAI } from './Level/levelAI.entity';
 import { IoTObject } from './Iot/IoTobject.entity';
 import { Maintenance } from './Maintenance/maintenance.entity';
+import { QueryDTO } from '../../../backend/src/models/level/dto/query.dto';
 
 type urlArgType<S extends string> = S extends `${infer _}:${infer A}/${infer B}`
 	? A | urlArgType<B>
@@ -166,7 +167,11 @@ const api = {
 				else if (level.testCases) return plainToClass(LevelCode, level);
 				return plainToClass(Level, level);
 			}),
-			query: apiGet('levels', Level, true),
+			async query(body: QueryDTO) {
+				return (await axios.post('levels/query', body)).data.map((d: any) =>
+					plainToClass(Level, d),
+				);
+			},
 		},
 		iot: {
 			projects: {

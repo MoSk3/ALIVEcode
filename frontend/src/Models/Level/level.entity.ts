@@ -24,13 +24,14 @@ export class Level extends CreatedByUser {
 	@Type(() => User)
 	@Transform(
 		({ value }) => {
+			if (!value) return value;
 			if (value.firstName) return plainToClass(Professor, value);
 			if (value.name) return plainToClass(Student, value);
 			return value;
 		},
 		{ toClassOnly: true },
 	)
-	creator: User;
+	creator: User | undefined;
 
 	access: LEVEL_ACCESS;
 
