@@ -7,6 +7,8 @@ import useRoutes from '../../../state/hooks/useRoutes';
 import { useTranslation } from 'react-i18next';
 import { useContext } from 'react';
 import { UserContext } from '../../../state/contexts/UserContext';
+import { formatDate } from '../../../Types/formatting';
+import { NotFound } from '../NotFound/NotFound';
 
 export const MaintenanceError = () => {
 	const history = useHistory();
@@ -14,14 +16,16 @@ export const MaintenanceError = () => {
 	const { t } = useTranslation();
 	const { maintenance } = useContext(UserContext);
 
+	if (!maintenance) return <NotFound />;
+
 	return (
 		<FillContainer style={{ textAlign: 'center' }} startAtTop centered>
 			<div>
 				<h1>{t('error.sorry')}</h1>
 				<h2>
 					{t('error.maintenance.ongoing', {
-						startDate: maintenance?.startDate,
-						finishDate: maintenance?.finishDate,
+						startDate: formatDate(maintenance.startDate, t),
+						finishDate: formatDate(maintenance.finishDate, t),
 					})}
 				</h2>
 				<img src={VoitureGIF} alt="Voiture ALIVE" />
