@@ -65,9 +65,9 @@ const Footer = (props: FooterProps) => {
 			<div className="container">
 				<div className="row">
 					<div className="col-md-8">
-						{/* TODO: copyright logo*/}
 						<p className="copyright-text">
-							{t('home.footer.copyright')}
+							{t('home.footer.copyright_1')} &copy;
+							{t('home.footer.copyright_2')}
 							<a
 								href="https://lrima.cmaisonneuve.qc.ca/"
 								rel="noopener noreferrer"
