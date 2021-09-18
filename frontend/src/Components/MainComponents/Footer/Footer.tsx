@@ -3,6 +3,8 @@ import './footer.css';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import useRoutes from '../../../state/hooks/useRoutes';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGithub } from '@fortawesome/free-brands-svg-icons';
 
 const Footer = (props: FooterProps) => {
 	const { t } = useTranslation();
@@ -39,6 +41,15 @@ const Footer = (props: FooterProps) => {
 					<div className="col-xs-6 col-md-3">
 						<h6>{t('home.footer.links')}</h6>
 						<ul className="footer-links">
+							<li>
+								<a
+									href="https://github.com/MoSk3/ALIVEcode/tree/dev"
+									rel="noopener noreferrer"
+									target="_blank"
+								>
+									GITHUB <FontAwesomeIcon icon={faGithub} />
+								</a>
+							</li>
 							<li>
 								<a
 									href="https://lrima.cmaisonneuve.qc.ca/"
