@@ -11,25 +11,27 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 public class Server {
 
-    public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
+    public static void main(String[] args) throws IOException {
 
         Dotenv env = Dotenv.configure()
                 .directory("./.env")
                 .load();
 
-        final int PORT = Integer.parseInt(env.get("PORT"));
-        final String HOST_NAME = env.get("AS_URL");
+        final int PORT = Integer.parseInt(env.get("SERVER_PORT"));
+        final String AS_URL = env.get("AS_URL");
 
-        HttpServer server = HttpServer.create(new InetSocketAddress(HOST_NAME, PORT), 2);
+        HttpServer server = HttpServer.create(new InetSocketAddress(AS_URL, PORT), 2);
 
-        System.out.println("Starting com.server...");
+        System.out.println("Starting server...");
 
-        AliveScriptApi aliveScriptApi = new AliveScriptApi(env.get("CORS_ORIGIN"));
-        HttpContext context = server.createContext("/compile/");
+        AliveScriptApi aliveScriptApi = new AliveScriptApi(env.get("CORS_ORIGIN") + ":" + env.get("HOST_PORT"));
+        HttpContext context = server.createContext("/" + env.get("COMPILE_PATH") + "/");
 
         context.setHandler(aliveScriptApi);
 
-        System.out.println("server.Server listening on port " + PORT);
+        System.out.println("Server listening on port " + PORT);
+        System.out.println("Compile alivescript programs by sending a POST request to " + AS_URL + ":" + PORT + "/" + env.get("COMPILE_PATH") + "/"
+                + " from " + env.get("CORS_ORIGIN") + ":" + env.get("HOST_PORT"));
 
         ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
         server.setExecutor(threadPoolExecutor);
