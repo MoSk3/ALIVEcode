@@ -71,6 +71,7 @@
 		"student": "étudiant",
 		"understood": "C'est compris!",
 		"description": "description",
+		"deleted_user": "Ancien utilisateur",
 		"time": {
 			"format": "{{dayName}}, {{day}} {{monthName}} {{year}} - {{hour}}:{{minute}}",
 			"day": {
