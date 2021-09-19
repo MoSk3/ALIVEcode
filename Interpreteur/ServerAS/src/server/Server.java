@@ -19,8 +19,9 @@ public class Server {
 
         final int PORT = Integer.parseInt(env.get("SERVER_PORT"));
         final String AS_URL = env.get("AS_URL");
+        final int MAX_BACKLOG = Integer.parseInt(env.get("MAX_BACKLOG"));
 
-        HttpServer server = HttpServer.create(new InetSocketAddress(AS_URL, PORT), 2);
+        HttpServer server = HttpServer.create(new InetSocketAddress(AS_URL, PORT), MAX_BACKLOG);
 
         System.out.println("Starting server...");
 
