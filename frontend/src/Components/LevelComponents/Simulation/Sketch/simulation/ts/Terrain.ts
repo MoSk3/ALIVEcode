@@ -1,6 +1,6 @@
 import { Shape } from "../Shape"
 import { Template } from "./typesSimulation";
-import { SerializableShape } from './serializableShape';
+import { SerializableShape } from './typesSimulation';
 import { Vector } from '../Vector';
 
 type TemplateNamesTerrain = 'slower' | 'slow' | 'base' | 'fast' | 'faster';

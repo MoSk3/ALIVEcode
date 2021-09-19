@@ -2,7 +2,7 @@ import { dist } from "../functions"
 import { Shape, ShapeException } from "../Shape"
 import { Vector } from '../Vector';
 import { Template } from './typesSimulation';
-import { SerializableShape } from './serializableShape';
+import { SerializableShape } from './typesSimulation';
 
 type TemplateNamesText = 'base';
 

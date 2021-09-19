@@ -68,6 +68,7 @@ export class Shape {
 	setImg(img) {
 		//if (!this.isRect()) throw new ShapeException('Cannot apply an image to a shape that is not a rectangle')
 		this.img = img;
+		console.log(img);
 		// TODO: images saving
 		/*for (const [imgName, img] of Object.entries(this.s.dictImages)) {
 			if (img === this.img) {

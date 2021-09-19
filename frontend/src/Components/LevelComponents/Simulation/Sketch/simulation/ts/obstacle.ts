@@ -1,7 +1,7 @@
 import { Car } from "../Car";
 import { Shape } from "../Shape";
 import { Template } from './typesSimulation';
-import { SerializableShape } from './serializableShape';
+import { SerializableShape } from './typesSimulation';
 import { Vector } from '../Vector';
 
 type TemplateNamesObstacle = 'stop' | 'fall' | 'water' | 'lava';

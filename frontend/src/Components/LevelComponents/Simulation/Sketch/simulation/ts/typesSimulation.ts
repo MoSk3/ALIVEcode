@@ -1,5 +1,4 @@
 import { Shape } from "../Shape"
-import { SerializableShape } from './serializableShape';
 
 export type LevelTypes = 'simulation' | 'code';
 
@@ -26,10 +25,19 @@ export type TemplateProperties<
 
 export interface SerializedLevel {
 	version: string;
-	type: LevelTypes;
-	'initial-code': string[];
-	layout: BaseLayoutObj[] | undefined;
-	winCondition?: {};
+	layout: BaseLayoutObj[];
+}
+
+export interface SerializableShape<
+	TemplateNames extends string,
+	T extends Shape & SerializableShape<TemplateNames, T>,
+> {
+	readonly shapeType: string;
+	readonly templateName: string;
+	readonly defaultTemplate: string;
+	readonly templates: Template<TemplateNames, T>;
+
+	get uniqueProperties(): TemplateProperties<T>;
 }
 
 /**
@@ -68,6 +76,7 @@ export interface BaseLayoutObj {
 	shapeType: string;
 	templateName: string;
 	shapeInfo: ShapeInfo;
+	imageName: string;
 	properties: {
 		[key: string]: any;
 	};
