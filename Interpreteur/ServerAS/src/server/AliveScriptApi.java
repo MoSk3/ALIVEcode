@@ -10,7 +10,13 @@ import java.io.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Logger;
 
+
+/**
+ * --- AliveScriptApi ---
+ * @author Mathis Laroche
+ */
 public record AliveScriptApi(String CORS_ORIGIN) implements HttpHandler {
 
     @Override
@@ -70,6 +76,8 @@ public record AliveScriptApi(String CORS_ORIGIN) implements HttpHandler {
         if (aliveScriptService == null) {
             return AliveScriptService.noAliveScriptServiceWithToken().toString();
         }
+
+        aliveScriptService.update();
 
         if (data.has("response-data")) {
             if (!aliveScriptService.isCompiled()) {
