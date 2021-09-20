@@ -126,9 +126,9 @@ public class Executeur {
 
 
         String[] lines = """   
-                repeter 3
-                    afficher "salut"
-                fin repeter
+                var a = "12"
+                var b = "15"
+                afficher(([decimal(a) + decimal(b)]))
                 """.split("\n");
 
 
