@@ -32,6 +32,7 @@ import { useTranslation } from 'react-i18next';
 import Modal from '../../../Components/UtilsComponents/Modal/Modal';
 import FillContainer from '../../../Components/UtilsComponents/FillContainer/FillContainer';
 import LevelGraph from '../../../Components/LevelComponents/LevelGraph/LevelGraph';
+import LevelTable from '../../../Components/LevelComponents/LevelTable/LevelTable';
 
 const LevelAI = ({
 	level,
@@ -68,21 +69,32 @@ const LevelAI = ({
 	//Set the data for the level
 	const [chartData, setChartData] = useState({});
 
+	const dataValues = [
+		{x: 2, y: 2}, 
+		{x: 3, y: 35},
+		{x: 32, y: 85},
+		{x: 54, y: 2},
+		{x: 41, y: 45},
+		{x: 90, y: 84},
+		{x: 91, y: 84},
+		{x: 92, y: 84},
+		{x: 93, y: 84},
+		{x: 94, y: 84},
+		{x: 95, y: 84},
+		{x: 96, y: 84},
+		{x: 97, y: 84},
+		{x: 98, y: 84},
+		{x: 120, y: 84},
+	]
+	// Hook to get the dataset
   useEffect(() => {
     const dataTest = {
       // datasets is an array of objects where each object represents a set of data to display corresponding to the labels above. for brevity, we'll keep it at one object
       datasets: [
         {
           label: 'Popularity of colours',
-          data: [
-									{x: 2, y: 2}, 
-									{x: 3, y: 35},
-									{x: 32, y: 85},
-									{x: 54, y: 2},
-									{x: 41, y: 45},
-									{x: 90, y: 84},
-					],
-          backgroundColor: "rgba(236, 3, 3, 0.5)",
+          data: dataValues,
+          backgroundColor: "var(--contrast-color)",
           borderWidth: 1,
         }
       ],
@@ -280,15 +292,24 @@ const LevelAI = ({
 							Contains the graph and the console
 					*/}
 					<Col md={6} style={{ resize: 'both', padding: '0' }}>
-						<Row style={{ height: '60%' }}>
-							<FillContainer
-								className="graph-container"
-								centered
-								relative
-								
-							>
-								<LevelGraph data={chartData}/>
-							</FillContainer>
+						<Row className="data-section">
+							<Col md={3}>
+								<LevelTable
+									data={dataValues}
+									xData="Données X"
+									yData="Données Y"
+								/>
+							</Col>
+							<Col md={9} style={{padding: '0'}}>
+								<div className="graph-container">
+									<LevelGraph 
+										data={chartData}
+										title="Premier essai de graphique"
+										xAxis="X axis"
+										yAxis="Y axis"
+									/>
+								</div>
+							</Col>
 						</Row>
 						<Row style={{ height: '40%' }}>
 							<Cmd ref={cmdRef}></Cmd>
