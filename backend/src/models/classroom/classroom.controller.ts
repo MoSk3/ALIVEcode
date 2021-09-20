@@ -14,9 +14,6 @@ import {
 import { ClassroomService } from './classroom.service';
 import { ClassroomEntity } from './entities/classroom.entity';
 import { DTOInterceptor } from '../../utils/interceptors/dto.interceptor';
-import { Auth } from 'src/utils/decorators/auth.decorator';
-import { Role } from 'src/utils/types/roles.types';
-import { User } from 'src/utils/decorators/user.decorator';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProfessorEntity } from '../user/entities/professor.entity';
@@ -26,10 +23,13 @@ import { hasRole } from '../user/auth';
 import { JoinClassroomDTO } from './dto/joinClassroom.dto';
 import { UseGuards } from '@nestjs/common';
 import { InClassroomGuard } from '../../utils/guards/classroom.guard';
-import { Classroom } from 'src/utils/decorators/classroom.decorator';
+import { Auth } from '../../utils/decorators/auth.decorator';
+import { User } from '../../utils/decorators/user.decorator';
+import { Role } from '../../utils/types/roles.types';
+import { Classroom } from '../../utils/decorators/classroom.decorator';
 
 @Controller('classrooms')
-@UseInterceptors(new DTOInterceptor())
+@UseInterceptors(DTOInterceptor)
 @Injectable()
 export class ClassroomController {
   constructor(

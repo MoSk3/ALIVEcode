@@ -10,8 +10,6 @@ import interpreteur.tokens.Token;
 /**
  * @author Mathis Laroche
  */
-
-
 public abstract class Ast<T> implements Function<List<Object>, T>{
     private int importance;
     private final Hashtable<String, Ast<?>> sous_asts = new Hashtable<>();

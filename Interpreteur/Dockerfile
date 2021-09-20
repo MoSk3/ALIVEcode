@@ -1,9 +1,11 @@
-FROM openjdk:15
+FROM openjdk:16
 
 COPY . /src/java
 
 WORKDIR /src/java
 
-RUN ["javac", "ServerAS/src/Server.java"]
+RUN ["javac", "ServerAS/src/server.Server.java"]
 
-ENTRYPOINT ["java", "Server"]
+ENTRYPOINT ["java", "server.Server"]
+
+

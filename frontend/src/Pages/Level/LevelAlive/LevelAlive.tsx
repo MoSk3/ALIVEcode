@@ -7,6 +7,7 @@ import { Row, Col } from 'react-bootstrap';
 import {
 	faBookOpen,
 	faCog,
+	faPauseCircle,
 	faPencilAlt,
 	faPlayCircle,
 	faQuestionCircle,
@@ -15,7 +16,6 @@ import IconButton from '../../../Components/DashboardComponents/IconButton/IconB
 import Cmd from '../../../Components/LevelComponents/Cmd/Cmd';
 import LevelAliveExecutor from './LevelAliveExecutor';
 import useCmd from '../../../state/hooks/useCmd';
-import { Professor } from '../../../Models/User/user.entity';
 import { useHistory } from 'react-router-dom';
 import useRoutes from '../../../state/hooks/useRoutes';
 import FormModal from '../../../Components/UtilsComponents/FormModal/FormModal';
@@ -31,6 +31,7 @@ import {
 import $ from 'jquery';
 import { useTranslation } from 'react-i18next';
 import Modal from '../../../Components/UtilsComponents/Modal/Modal';
+import useExecutor from '../../../state/hooks/useExecutor';
 
 const LevelAlive = ({
 	level,
@@ -40,11 +41,13 @@ const LevelAlive = ({
 	setProgression,
 }: LevelAliveProps) => {
 	const { user } = useContext(UserContext);
-	const [executor, setExecutor] = useState<LevelAliveExecutor>();
+
 	const [cmdRef, cmd] = useCmd();
-	const playButton = useRef<HTMLButtonElement>(null);
+	const { executor, setExecutor, setExecutorLines, setSketch } =
+		useExecutor<LevelAliveExecutor>(LevelAliveExecutor, cmd);
+
 	const history = useHistory();
-	const { routes } = useRoutes();
+	const { routes, goToNewTab } = useRoutes();
 	const { t } = useTranslation();
 	const [editTitle, setEditTitle] = useState(false);
 	const [settingsModalOpen, setSettingsModalOpen] = useState(false);
@@ -55,7 +58,7 @@ const LevelAlive = ({
 	const messageTimeout = useRef<any>(null);
 
 	const lineInterfaceContentChanges = (content: any) => {
-		if (executor) executor.lineInterfaceContent = content;
+		setExecutorLines(content);
 		if (!editMode && progression) {
 			progression.data.code = content;
 			const updatedProgression = progression;
@@ -65,21 +68,10 @@ const LevelAlive = ({
 	};
 
 	useEffect(() => {
-		if (cmd && executor) executor.cmd = cmd;
-	}, [cmd, executor]);
-
-	useEffect(() => {
-		if (user && editMode && level.creator.id !== user.id)
+		if (user && editMode && level.creator && level.creator.id !== user.id)
 			return history.push(routes.public.home.path);
 
-		if (!playButton.current) return;
-		setExecutor(
-			new LevelAliveExecutor(
-				user ?? ({} as Professor),
-				level.name,
-				playButton.current,
-			),
-		);
+		setExecutor(new LevelAliveExecutor(level.name, user ?? undefined));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, level]);
 
@@ -88,7 +80,12 @@ const LevelAlive = ({
 		if (messageTimeout.current) clearTimeout(messageTimeout.current);
 		setSaving(true);
 		setSaved(false);
-		const updatedLevel = (await api.db.levels.update(level)) as LevelAliveModel;
+		const updatedLevel = (await api.db.levels.update(
+			{
+				id: level.id,
+			},
+			level,
+		)) as LevelAliveModel;
 		messageTimeout.current = setTimeout(() => {
 			setSaving(false);
 			setSaved(true);
@@ -112,8 +109,10 @@ const LevelAlive = ({
 		setSaving(true);
 		setSaved(false);
 		const updatedProgression = await api.db.levels.progressions.save(
-			level.id,
-			user,
+			{
+				id: level.id,
+				userId: user.id,
+			},
 			progression,
 		);
 		messageTimeout.current = setTimeout(() => {
@@ -134,7 +133,7 @@ const LevelAlive = ({
 
 	useEffect(() => {
 		$(document).on('keydown', e => {
-			if (e.keyCode === 83 && e.ctrlKey) {
+			if (e.key === 's' && e.ctrlKey) {
 				e.preventDefault();
 				e.stopPropagation();
 				if (!user) return setAccountModalOpen(true);
@@ -180,16 +179,28 @@ const LevelAlive = ({
 									/>
 								</>
 							)}
-							{user && !editMode && user.id === level.creator.id && (
-								<IconButton
-									to={routes.auth.level_edit.path.replace(':id', level.id)}
-									icon={faPencilAlt}
-									size="2x"
-								/>
-							)}
-							<IconButton icon={faBookOpen} size="2x" />
+							{user &&
+								!editMode &&
+								level.creator &&
+								user.id === level.creator.id && (
+									<IconButton
+										to={routes.auth.level_edit.path.replace(':id', level.id)}
+										icon={faPencilAlt}
+										size="2x"
+									/>
+								)}
+							<IconButton
+								onClick={() => goToNewTab(routes.public.asDocs.path)}
+								icon={faBookOpen}
+								size="2x"
+							/>
 							<IconButton icon={faQuestionCircle} size="2x" />
-							<IconButton icon={faPlayCircle} size="2x" ref={playButton} />
+							{/* Do not change the onClick method!! it MUST be a method that calls the toggleExecution */}
+							<IconButton
+								onClick={() => executor?.toggleExecution()}
+								icon={executor?.execution ? faPauseCircle : faPlayCircle}
+								size="2x"
+							/>
 							{(saving || saved) && (
 								<label className="save-message">
 									{saving && 'Sauvegarde en cours...'}
@@ -204,7 +215,7 @@ const LevelAlive = ({
 									{
 										title: 'Initial Code',
 										open: true,
-										content: level.initialCode,
+										defaultContent: level.initialCode,
 										onChange: content => {
 											level.initialCode = content;
 											const newLevel = plainToClass(LevelAliveModel, {
@@ -217,7 +228,7 @@ const LevelAlive = ({
 									{
 										title: 'Solution',
 										open: false,
-										content: level.solution,
+										defaultContent: level.solution,
 										onChange: content => {
 											level.solution = content;
 											const newLevel = plainToClass(LevelAliveModel, {
@@ -232,7 +243,7 @@ const LevelAlive = ({
 							/>
 						) : (
 							<LineInterface
-								content={
+								defaultContent={
 									progression?.data.code
 										? progression.data.code
 										: level.initialCode
@@ -243,7 +254,14 @@ const LevelAlive = ({
 					</Col>
 					<Col md={6} style={{ resize: 'both', padding: '0' }}>
 						<Row id="simulation-row" style={{ height: '60%' }}>
-							{executor && <Simulation init={s => executor.init(s)} />}
+							{executor && (
+								<Simulation
+									init={s => {
+										executor.init(s);
+										setSketch(s);
+									}}
+								/>
+							)}
 						</Row>
 						<Row style={{ height: '40%' }}>
 							<Cmd ref={cmdRef}></Cmd>

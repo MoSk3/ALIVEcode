@@ -1,80 +1,62 @@
-import { CMD } from "../../../Components/LevelComponents/Cmd/cmdTypes";
-import { PlaySocket } from '../PlaySocket';
-import $ from 'jquery';
 import axios from 'axios';
-import { User } from '../../../Models/User/user.entity';
+import { LevelExecutor } from '../LevelExecutor';
 
-export default class LevelCodeExecutor {
-	public playButton: JQuery;
-	public socket?: PlaySocket;
-	public cmd?: CMD;
-	public lineInterfaceContent: string = '';
-	public timeouts: Array<NodeJS.Timeout> = [];
-	public execution: boolean = false;
+export default class LevelCodeExecutor extends LevelExecutor {
+	public async onRun() {
+		// Envoie le code à exécuter au serveur
+		const lines: string = this.lineInterfaceContent;
 
-	public levelName?: string;
-	public creator?: User | undefined;
+		try {
+			let data = await this.sendDataToAsServer({ lines });
+			if (data.status === 'complete') {
+				this.execute(data.result);
+				return;
+			}
 
-	constructor(
-		creator: User | undefined,
-		levelName: string,
-		playButton: HTMLButtonElement,
-	) {
-		this.creator = creator;
-		this.levelName = levelName;
-		this.playButton = $(playButton);
-		this.init();
+			const { idToken } = data;
+
+			if (process.env.DEBUG) console.log(idToken, data.data);
+
+			while (true) {
+				let res = this.execute(data.result);
+				if ((Array.isArray(res) && res.length === 0) || res === undefined) {
+					break;
+				} else {
+					data = await this.sendDataToAsServer({
+						idToken,
+						'response-data': res,
+					});
+				}
+			}
+		} catch {
+			this.stop();
+		}
 	}
+
+	public onStop() {}
+	public init(s: any) {}
 
 	private async sendDataToAsServer(
 		data: { lines: string } | { idToken: string; 'response-data': string[] },
 	) {
-		return (
-			await axios({
-				method: 'POST',
-				url: '/compile/',
-				baseURL: process.env.REACT_APP_AS_URL,
-				data,
-			})
-		).data;
+		try {
+			return (
+				await axios({
+					method: 'POST',
+					url: '/compile/',
+					baseURL: process.env.REACT_APP_AS_URL,
+					data,
+				})
+			).data;
+		} catch {
+			this.cmd?.error(
+				"Une erreur inconnue est survenue. Vérifiez pour des erreurs dans votre code, sinon, les services d'alivescript sont hors-ligne.",
+				0,
+			);
+		}
 	}
 
-	private init() {
-		this.playButton.on('click', async (e: any) => {
-			if (!this.execution) {
-				this.execution = true;
-				// Envoie le code à exécuter au serveur
-				const lines: string = this.lineInterfaceContent;
-
-				let { idToken, result: data } = await this.sendDataToAsServer({
-					lines,
-				});
-				if (process.env.DEBUG) console.log(idToken, data);
-
-				while (true) {
-					let res = this.execute(data);
-					if ((Array.isArray(res) && res.length === 0) || res === undefined) {
-						break;
-					} else {
-						({ idToken, result: data } = await this.sendDataToAsServer({
-							idToken,
-							'response-data': res,
-						}));
-					}
-				}
-			} else {
-				this.cmd?.clear();
-				this.execution = false;
-
-				// Clear tous les timeouts de la simulation
-				for (let timeout of this.timeouts) {
-					clearTimeout(timeout);
-				}
-			}
-		});
-	}
-
-	private execute(data: any) {
+	public execute(data: any) {
 		const res: any = [];
 		const ID = 'id';
 		const DODO = 'd';
@@ -94,6 +76,7 @@ export default class LevelCodeExecutor {
 		const perform_action = (i: number) => {
 			if (i >= data.length) {
 				//this.socket?.response(res);
+				this.stop();
 				return;
 			}
 			const action = data[i];

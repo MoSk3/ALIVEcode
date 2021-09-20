@@ -26,11 +26,11 @@ export class ClassroomEntity extends CreatedByUser {
   code: string;
 
   @IsNotEmpty()
-  @Column({ enum: CLASSROOM_SUBJECT })
+  @Column({ enum: CLASSROOM_SUBJECT, nullable: false })
   subject: CLASSROOM_SUBJECT;
 
   @Exclude({ toClassOnly: true })
-  @ManyToMany(() => StudentEntity, student => student.classrooms)
+  @ManyToMany(() => StudentEntity, student => student.classrooms, { onDelete: 'CASCADE' })
   @JoinTable()
   students: StudentEntity[];
 

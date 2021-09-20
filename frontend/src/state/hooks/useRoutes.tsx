@@ -27,6 +27,9 @@ import LevelList from '../../Pages/Level/LevelList/LevelList';
 import LevelFormMenu from '../../Pages/Level/LevelFormMenu/LevelFormMenu';
 import Test from '../../Pages/Test/Test';
 import { useHistory } from 'react-router';
+import ASDocs from '../../Components/AliveScriptComponents/ASDocs/ASDocs';
+import { MaintenanceError } from '../../Pages/Errors/MaintenanceError/MaintenanceError';
+import MaintenanceMenu from '../../Pages/SiteStatus/MaintenanceMenu/MaintenanceMenu';
 
 type component =
 	| React.ComponentType<RouteComponentProps<any>>
@@ -36,6 +39,10 @@ export interface Route {
 	path: string;
 	exact?: boolean;
 	component?: component;
+	maintenanceExempt?: boolean;
+	adminOnly?: boolean;
+
+	// Do not set manually
 	hasAccess?: boolean;
 }
 
@@ -49,12 +56,28 @@ export interface RoutesGroup<T extends Route> {
 }
 
 const useRoutes = () => {
-	const { user } = useContext(UserContext);
+	const { user, maintenance } = useContext(UserContext);
 	const history = useHistory();
 
 	const asRoutes = <T extends RoutesGroup<Route>>(routeGroup: T): T => {
 		Object.values(routeGroup).forEach(route => {
+			if (route.adminOnly && !user?.isAdmin) {
+				route.component = NotFound;
+				route.hasAccess = false;
+			}
+
 			route.hasAccess = route.hasAccess ?? true;
+			if (
+				maintenance &&
+				maintenance.started &&
+				!maintenance.finished &&
+				!route.maintenanceExempt
+			) {
+				if (!user || !user.isAdmin) {
+					route.component = MaintenanceError;
+					route.hasAccess = false;
+				}
+			}
 		});
 		return routeGroup;
 	};
@@ -65,6 +88,7 @@ const useRoutes = () => {
 	): T => {
 		Object.values(routeGroup).forEach(route => {
 			const redirect = route.redirect || defaultRedirect;
+
 			if (
 				!user ||
 				(route.accountType === Professor && !(user instanceof Professor)) ||
@@ -87,26 +111,34 @@ const useRoutes = () => {
 				else route.component = defaultRedirect;
 			});
 		}
-		return routeGroup;
+		return asRoutes(routeGroup);
 	};
 
 	const public_routes = asRoutes({
 		test: {
 			path: '/test',
 			component: Test,
+			adminOnly: true,
 		},
 		home: {
 			exact: true,
 			path: '/',
 			component: Home,
+			maintenanceExempt: true,
+		},
+		asDocs: {
+			path: '/as',
+			component: ASDocs,
 		},
 		ai: {
 			path: '/aliveai',
 			component: AliveIa,
+			maintenanceExempt: true,
 		},
 		about: {
 			path: '/about',
 			component: About,
+			maintenanceExempt: true,
 		},
 		amc: {
 			path: '/amc',
@@ -126,6 +158,7 @@ const useRoutes = () => {
 			exact: true,
 			path: '/iot',
 			component: IoTHome,
+			adminOnly: true,
 		},
 		level_alive: {
 			path: '/level/play/alive',
@@ -134,6 +167,12 @@ const useRoutes = () => {
 		level_code: {
 			path: '/level/play/code',
 			component: () => <Level type="code" editMode />,
+		},
+		maintenances: {
+			path: '/maintenances',
+			exact: true,
+			maintenanceExempt: true,
+			component: MaintenanceMenu,
 		},
 	});
 
@@ -159,10 +198,12 @@ const useRoutes = () => {
 		create_course: {
 			path: '/course/create',
 			component: CourseForm,
+			adminOnly: true,
 		},
 		course: {
 			path: '/course/:id',
 			component: Course,
+			adminOnly: true,
 		},
 		account: {
 			path: '/account',
@@ -171,14 +212,17 @@ const useRoutes = () => {
 		iot_dashboard: {
 			path: '/iot/dashboard',
 			component: IoTDashboard,
+			adminOnly: true,
 		},
 		create_iot_project: {
 			path: '/iot/projects/create',
 			component: IoTProjectCreate,
+			adminOnly: true,
 		},
 		iot_project: {
 			path: '/iot/projects/:id',
 			component: IoTProject,
+			adminOnly: true,
 		},
 		level_list: {
 			path: '/level',
@@ -220,6 +264,7 @@ const useRoutes = () => {
 		signin: {
 			path: '/signin',
 			component: SignIn,
+			maintenanceExempt: true,
 		},
 		signup: {
 			path: '/signup',
@@ -239,6 +284,7 @@ const useRoutes = () => {
 		not_found: {
 			path: '*',
 			component: NotFound,
+			maintenanceExempt: true,
 		},
 	});
 
@@ -252,6 +298,7 @@ const useRoutes = () => {
 	return {
 		routes,
 		goTo: (path: string) => history.push(path),
+		goToNewTab: (path: string) => window.open(path, '_blank'),
 		goBack: () => history.goBack(),
 	};
 };

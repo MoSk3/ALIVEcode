@@ -12,7 +12,7 @@ export enum IoTObjectLabel {
 @Entity()
 export class IoTObjectEntity extends CreatedByUser {
   @Type(() => UserEntity)
-  @ManyToOne(() => UserEntity, user => user.IoTObjects, { eager: true })
+  @ManyToOne(() => UserEntity, user => user.IoTObjects, { eager: true, onDelete: 'CASCADE' })
   creator: UserEntity;
 
   @IsNotEmpty()

@@ -8,7 +8,6 @@ import interpreteur.as.erreurs.ASErreur.*;
 import interpreteur.as.Objets.ASObjet.Booleen;
 import interpreteur.as.Objets.ASObjet.Decimal;
 import interpreteur.as.Objets.ASObjet.Entier;
-import interpreteur.as.Objets.ASObjet.FonctionManager;
 import interpreteur.as.Objets.ASObjet.Nul;
 import interpreteur.as.Objets.ASObjet.Texte;
 import interpreteur.as.experimental.ASAstExperimental;
@@ -18,7 +17,6 @@ import interpreteur.ast.buildingBlocs.expressions.Argument;
 import interpreteur.ast.buildingBlocs.Expression;
 import interpreteur.ast.buildingBlocs.expressions.*;
 import interpreteur.ast.buildingBlocs.programmes.*;
-import interpreteur.data_manager.Data;
 import interpreteur.executeur.Coordonnee;
 import interpreteur.executeur.Executeur;
 import interpreteur.generateurs.ast.AstGenerator;
@@ -57,8 +55,8 @@ public class ASAst extends AstGenerator {
                 new Ast<Utiliser>() {
                     @Override
                     public Utiliser apply(List<Object> p) {
-                        if (p.get(1) instanceof ValeurConstante && ((ValeurConstante) p.get(1)).eval() instanceof Texte) {
-                            String msg = (String) ((ValeurConstante) p.get(1)).eval().getValue();
+                        if (p.get(1) instanceof ValeurConstante valeurConstante && valeurConstante.eval() instanceof Texte texte) {
+                            String msg = texte.getValue();
                             if (msg.equalsIgnoreCase("experimental")) {
                                 executeurInstance.setAst(new ASAstExperimental(executeurInstance));
                                 return new Utiliser(new Var("experimental"), executeurInstance);
@@ -69,8 +67,8 @@ public class ASAst extends AstGenerator {
 
                         if (p.size() > 2) {
                             Var[] sous_modules;
-                            if (p.get(3) instanceof CreerListe.Enumeration) {
-                                sous_modules = ((CreerListe.Enumeration) p.get(3)).getExprs().toArray(Var[]::new);
+                            if (p.get(3) instanceof CreerListe.Enumeration enumeration) {
+                                sous_modules = enumeration.getExprs().toArray(Var[]::new);
                             } else {
                                 sous_modules = new Var[]{(Var) p.get(3)};
                             }
@@ -97,9 +95,9 @@ public class ASAst extends AstGenerator {
                     public Lire apply(List<Object> p) {
 
                         boolean hasPromptMessage = p.stream()
-                                .anyMatch(e -> e instanceof Token && ((Token) e).obtenirNom().equals("VIRGULE"));
+                                .anyMatch(e -> e instanceof Token token && token.obtenirNom().equals("VIRGULE"));
                         boolean hasAppliedFunction = p.stream()
-                                .anyMatch(e -> e instanceof Token && ((Token) e).obtenirNom().equals("DANS"));
+                                .anyMatch(e -> e instanceof Token token && token.obtenirNom().equals("DANS"));
 
                         Expression<?> message = null, fonction = null;
 
@@ -110,12 +108,12 @@ public class ASAst extends AstGenerator {
                         }
                         if (hasPromptMessage) message = (Expression<?>) p.get(p.size() - 1);
 
-                        if (!(p.get(idxVar) instanceof Var)) {
+                        if (!(p.get(idxVar) instanceof Var var)) {
                             throw new ErreurInputOutput("Une variable est attendue apr\u00E8s la commande 'lire', mais '" +
                                     p.get(idxVar).getClass().getSimpleName() + "' a \u00E9t\u00E9 trouv\u00E9.");
                         }
 
-                        return new Lire((Var) p.get(idxVar), message, fonction, executeurInstance);
+                        return new Lire(var, message, fonction, executeurInstance);
                     }
                 });
         /*
@@ -143,26 +141,25 @@ public class ASAst extends AstGenerator {
 
                         int idxValeur;
                         int idxAssignement;
-                        Type type = null;
 
                         BinOp.Operation op = null;
 
                         // si le premier mot est "const" ou "var"
-                        if (p.get(0) instanceof Token) {
-                            boolean estConst = ((Token) p.get(0)).obtenirNom().equals("CONSTANTE");
+                        if (p.get(0) instanceof Token token) {
+                            boolean estConst = token.obtenirNom().equals("CONSTANTE");
                             if (p.size() == 2) {
                                 return new Declarer((Expression<?>) p.get(1), new ValeurConstante(new Nul()), null, false);
                             }
-                            if (p.size() == 4 && ((Token) p.get(2)).obtenirNom().equals("DEUX_POINTS")) {
+                            if (p.size() == 4 && p.get(2) instanceof Token token2 && token2.obtenirNom().equals("DEUX_POINTS")) {
                                 // si le type précisisé n'est pas un type
-                                if (!(p.get(3) instanceof Type))
+                                if (!(p.get(3) instanceof Type type))
                                     throw new ErreurType("Dans une d\u00E9claration de " +
                                             (estConst ? "constante" : "variable") +
                                             ", les deux points doivent \u00EAtre suivi d'un type valide");
 
-                                type = (Type) p.get(3);
                                 return new Declarer((Expression<?>) p.get(1), new ValeurConstante(new Nul()), type, false);
                             }
+                            Type type = null;
                             // si la précision du type est présente
                             if (p.size() == 6) {
                                 idxValeur = 5;
@@ -173,7 +170,6 @@ public class ASAst extends AstGenerator {
                                     throw new ErreurType("Dans une d\u00E9claration de " +
                                             (estConst ? "constante" : "variable") +
                                             ", les deux points doivent \u00EAtre suivi d'un type valide");
-
                                 type = (Type) p.get(3);
                             }
                             // si la précision du type n'est pas présente
@@ -192,8 +188,8 @@ public class ASAst extends AstGenerator {
 
                             // si la valeur de l'expression est une énumération d'éléments ex: 3, "salut", 4
                             // on forme une liste avec la suite d'éléments
-                            if (p.get(idxValeur) instanceof CreerListe.Enumeration)
-                                p.set(idxValeur, ((CreerListe.Enumeration) p.get(idxValeur)).build());
+                            if (p.get(idxValeur) instanceof CreerListe.Enumeration enumeration)
+                                p.set(idxValeur, enumeration.build());
 
                             // on retourne l'objet Assigner
                             return new Declarer((Expression<?>) p.get(1), (Expression<?>) p.get(idxValeur), type, estConst);
@@ -217,8 +213,8 @@ public class ASAst extends AstGenerator {
 
                             // si la valeur de l'expression est une énumération d'éléments ex: var = 3, "salut", 4
                             // on forme une liste avec la suite d'éléments
-                            if (p.get(idxValeur) instanceof CreerListe.Enumeration)
-                                p.set(idxValeur, ((CreerListe.Enumeration) p.get(idxValeur)).build());
+                            if (p.get(idxValeur) instanceof CreerListe.Enumeration enumeration)
+                                p.set(idxValeur, enumeration.build());
                             return new Assigner((Expression<?>) p.get(0), (Expression<?>) p.get(idxValeur), op);
                         }
                     }
@@ -277,14 +273,7 @@ public class ASAst extends AstGenerator {
         //<-----------------------------------Les setters----------------------------------------->//
         ajouterProgramme("SET NOM_VARIABLE PARENT_OUV NOM_VARIABLE PARENT_FERM~" +
                         "SET NOM_VARIABLE PARENT_OUV NOM_VARIABLE DEUX_POINTS expression PARENT_FERM",
-                new Ast<CreerSetter>(new Object[]{"{nom_type_de_donnees}",
-                        new Ast<Type>(0) {
-                            @Override
-                            public Type apply(List<Object> p) {
-                                assert p.get(0) instanceof Token;
-                                return new Type(((Token) p.get(0)).obtenirValeur());
-                            }
-                        }}) {
+                new Ast<CreerSetter>() {
                     @Override
                     public CreerSetter apply(List<Object> p) {
                         Type type = new Type("tout");
@@ -318,16 +307,14 @@ public class ASAst extends AstGenerator {
                                     @Override
                                     public Argument apply(List<Object> p) {
                                         Type type = new Type("tout");
-                                        Var var;
                                         Expression<?> valParDefaut = null;
 
-                                        if (!(p.get(0) instanceof Var)) {
+                                        if (!(p.get(0) instanceof Var var)) {
                                             throw new ErreurSyntaxe("Une d\u00E9claration de fonction doit commencer par une variable, pas par " + p.get(0));
                                         }
-                                        var = (Var) p.get(0);
 
                                         Token deuxPointsToken = (Token) p.stream()
-                                                .filter(t -> t instanceof Token && ((Token) t).obtenirNom().equals("DEUX_POINTS"))
+                                                .filter(t -> t instanceof Token token && token.obtenirNom().equals("DEUX_POINTS"))
                                                 .findFirst()
                                                 .orElse(null);
                                         if (deuxPointsToken != null) {
@@ -344,7 +331,7 @@ public class ASAst extends AstGenerator {
                                             type = (Type) typeObj;
                                         }
                                         Token assignementToken = (Token) p.stream()
-                                                .filter(t -> t instanceof Token && ((Token) t).obtenirNom().equals("ASSIGNEMENT"))
+                                                .filter(t -> t instanceof Token token && token.obtenirNom().equals("ASSIGNEMENT"))
                                                 .findFirst()
                                                 .orElse(null);
                                         if (assignementToken != null) {
@@ -359,23 +346,23 @@ public class ASAst extends AstGenerator {
                     public CreerFonction apply(List<Object> p) {
                         Argument[] params = new Argument[]{};
 
-                        Type typeRetour = p.get(p.size() - 1) instanceof Type ? (Type) p.get(p.size() - 1) : new Type("tout");
+                        Type typeRetour = p.get(p.size() - 1) instanceof Type type ? type : new Type("tout");
 
-                        if (p.get(p.size() - 1) == null && p.get(3) instanceof Type) {
-                            typeRetour = (Type) p.get(3);
+                        if (p.get(p.size() - 1) == null && p.get(3) instanceof Type type) {
+                            typeRetour = type;
                             return new CreerFonction((Var) p.get(1), params, typeRetour, executeurInstance);
                         }
 
                         if (p.get(3) != null && !(p.get(3) instanceof Token)) {
-                            if (p.get(3) instanceof CreerListe.Enumeration) {
-                                params = ((CreerListe.Enumeration) p.get(3)).getExprs()
+                            if (p.get(3) instanceof CreerListe.Enumeration enumeration) {
+                                params = enumeration.getExprs()
                                         .stream()
-                                        .map(expr -> expr instanceof Argument ? (Argument) expr : new Argument((Var) expr, null, null))
+                                        .map(expr -> expr instanceof Argument arg
+                                                ? arg
+                                                : new Argument((Var) expr, null, null))
                                         .toArray(Argument[]::new);
-                            } else if (p.get(3) instanceof Argument) {
-                                params = new Argument[]{
-                                        (Argument) p.get(3)
-                                };
+                            } else if (p.get(3) instanceof Argument arg) {
+                                params = new Argument[]{arg};
                             } else {
                                 params = new Argument[]{
                                         new Argument((Var) p.get(3), null, null)
@@ -392,8 +379,8 @@ public class ASAst extends AstGenerator {
                 new Ast<Retourner>() {
                     @Override
                     public Retourner apply(List<Object> p) {
-                        if (p.size() > 1 && p.get(1) instanceof CreerListe.Enumeration)
-                            p.set(1, ((CreerListe.Enumeration) p.get(1)).build());
+                        if (p.size() > 1 && p.get(1) instanceof CreerListe.Enumeration enumeration)
+                            p.set(1, enumeration.build());
                         return new Retourner(p.size() > 1 ? (Expression<?>) p.get(1) : new ValeurConstante(new Nul()));
                     }
                 });
@@ -449,6 +436,7 @@ public class ASAst extends AstGenerator {
                         return new Programme(executeurInstance) {
                             @Override
                             public NullType execute() {
+                                assert this.executeurInstance != null;
                                 this.executeurInstance.obtenirCoordRunTime().nouveauBloc("faire");
                                 return null;
                             }
@@ -572,8 +560,10 @@ public class ASAst extends AstGenerator {
                     @Override
                     public AppelFonc apply(List<Object> p) {
                         if (p.size() == 3) {
-                            Expression<?> nom = p.get(0) instanceof Type ? new Var(((Type) p.get(0)).getNom()) : (Expression<?>) p.get(0);
-                            return new AppelFonc(nom, new CreerListe());
+                            //Expression<?> nom = p.get(0) instanceof Type type
+                            //        ? new Var(type.nom())
+                            //        : (Expression<?>) p.get(0);
+                            return new AppelFonc((Expression<?>) p.get(0), new CreerListe());
                         }
                         Hashtable<String, Ast<?>> astParams = new Hashtable<>();
 
@@ -585,22 +575,21 @@ public class ASAst extends AstGenerator {
                         //        return new Argument((Var) p.get(0), (Expression<?>) p.get(2), null);
                         //    }
                         //});
-                        Expression<?> contenu = AstGenerator.evalOneExpr(new ArrayList<>(p.subList(2, p.size() - 1)), astParams);
+                        Expression<?> contenu = evalOneExpr(new ArrayList<>(p.subList(2, p.size() - 1)), astParams);
 
-                        CreerListe args = contenu instanceof CreerListe.Enumeration ?
-                                ((CreerListe.Enumeration) contenu).build() :
+                        CreerListe args = contenu instanceof CreerListe.Enumeration enumeration ?
+                                enumeration.build() :
                                 new CreerListe(contenu);
 
 
-                        final Expression<?> nom;
+                        //final Expression<?> nom;
+                        //if (p.get(0) instanceof Type type) {
+                        //    nom = new Var(type.nom());
+                        //} else {
+                        //    nom = (Expression<?>) p.get(0);
+                        //}
 
-                        if (p.get(0) instanceof Type) {
-                            nom = new Var(((Type) p.get(0)).getNom());
-                        } else {
-                            nom = (Expression<?>) p.get(0);
-                        }
-
-                        return new AppelFonc(nom, args);
+                        return new AppelFonc((Expression<?>) p.get(0), args);
                     }
                 });
 
@@ -613,7 +602,7 @@ public class ASAst extends AstGenerator {
                         if (p.size() == 2) {
                             return new Expression.ExpressionVide();
                         }
-                        return AstGenerator.evalOneExpr(new ArrayList<>(p.subList(1, p.size() - 1)), null);
+                        return evalOneExpr(new ArrayList<>(p.subList(1, p.size() - 1)), null);
                     }
                 });
 
@@ -627,10 +616,10 @@ public class ASAst extends AstGenerator {
         //            }
         //        });
 
-        ajouterExpression("BRACES_OUV #expression TROIS_POINTS #expression BRACES_FERM~" +
-                        "BRACES_OUV #expression TROIS_POINTS #expression BOND #expression BRACES_FERM~" +
-                        "CROCHET_OUV #expression TROIS_POINTS #expression BOND #expression CROCHET_FERM~" +
-                        "CROCHET_OUV #expression TROIS_POINTS #expression CROCHET_FERM",
+        ajouterExpression("BRACES_OUV #expression TROIS_POINTS #expression BRACES_FERM~"
+                        + "BRACES_OUV #expression TROIS_POINTS #expression BOND #expression BRACES_FERM~"
+                        + "CROCHET_OUV #expression TROIS_POINTS #expression BOND #expression CROCHET_FERM~"
+                        + "CROCHET_OUV #expression TROIS_POINTS #expression CROCHET_FERM",
                 new Ast<Suite>() {
                     /**
                      * {1...10} -> {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
@@ -640,27 +629,29 @@ public class ASAst extends AstGenerator {
                     @Override
                     public Suite apply(List<Object> p) {
 
-                        int idxTroisPoints = p.indexOf(p.stream().filter(exp -> exp instanceof Token && ((Token) exp).obtenirNom().equals("TROIS_POINTS")).findFirst().orElseThrow());
+                        int idxTroisPoints = p.indexOf(p.stream().filter(exp -> exp instanceof Token token
+                                && token.obtenirNom().equals("TROIS_POINTS")).findFirst().orElseThrow());
                         Token bondToken = (Token) p.stream()
-                                .filter(exp -> exp instanceof Token && ((Token) exp).obtenirNom().equals("BOND"))
+                                .filter(exp -> exp instanceof Token token && token.obtenirNom().equals("BOND"))
                                 .findFirst()
                                 .orElse(null);
 
-                        Expression<?> debut = AstGenerator.evalOneExpr(new ArrayList<>(p.subList(1, idxTroisPoints)), null);
+                        Expression<?> debut = evalOneExpr(new ArrayList<>(p.subList(1, idxTroisPoints)), null);
                         Expression<?> fin, bond = null;
 
                         // pas de bond, forme {debut...fin}
                         if (bondToken == null) {
-                            fin = AstGenerator.evalOneExpr(new ArrayList<>(p.subList(idxTroisPoints + 1, p.size() - 1)), null);
+                            fin = evalOneExpr(new ArrayList<>(p.subList(idxTroisPoints + 1, p.size() - 1)), null);
                         } else {
                             int idxBond = p.indexOf(bondToken);
-                            fin = AstGenerator.evalOneExpr(new ArrayList<>(p.subList(idxTroisPoints + 1, idxBond)), null);
-                            bond = AstGenerator.evalOneExpr(new ArrayList<>(p.subList(idxBond + 1, p.size() - 1)), null);
+                            fin = evalOneExpr(new ArrayList<>(p.subList(idxTroisPoints + 1, idxBond)), null);
+                            bond = evalOneExpr(new ArrayList<>(p.subList(idxBond + 1, p.size() - 1)), null);
                         }
 
                         return new Suite(debut, fin, bond);
                     }
                 });
+
 
         ajouterExpression("expression CROCHET_OUV DEUX_POINTS CROCHET_FERM~"
                         + "expression CROCHET_OUV #expression DEUX_POINTS #expression CROCHET_FERM~"
@@ -672,13 +663,13 @@ public class ASAst extends AstGenerator {
                     public CreerListe.SousSection apply(List<Object> p) {
 
                         Token deux_pointsToken = (Token) p.stream()
-                                .filter(exp -> exp instanceof Token && ((Token) exp).obtenirNom().equals("DEUX_POINTS"))
+                                .filter(exp -> exp instanceof Token token && token.obtenirNom().equals("DEUX_POINTS"))
                                 .findFirst()
                                 .orElse(null);
 
                         // pas de deux points, forme val[idx]
                         if (deux_pointsToken == null) {
-                            Expression<?> idx = AstGenerator.evalOneExpr(new ArrayList<>(p.subList(2, p.size() - 1)), null);
+                            Expression<?> idx = evalOneExpr(new ArrayList<>(p.subList(2, p.size() - 1)), null);
                             return new CreerListe.SousSection.IndexSection((Expression<?>) p.get(0), idx);
                         }
                         // deux points, forme val[debut:fin] ou val[:fin] ou val[debut:] ou val[:]
@@ -687,32 +678,30 @@ public class ASAst extends AstGenerator {
                             int idxDeuxPoints = p.indexOf(deux_pointsToken);
                             // si debut dans sous section
                             if (idxDeuxPoints > 2) {
-                                debut = AstGenerator.evalOneExpr(new ArrayList<>(p.subList(2, idxDeuxPoints)), null);
+                                debut = evalOneExpr(new ArrayList<>(p.subList(2, idxDeuxPoints)), null);
                             }
                             // si fin dans sous section
                             if (idxDeuxPoints < p.size() - 2) {
-                                fin = AstGenerator.evalOneExpr(new ArrayList<>(p.subList(idxDeuxPoints + 1, p.size() - 1)), null);
+                                fin = evalOneExpr(new ArrayList<>(p.subList(idxDeuxPoints + 1, p.size() - 1)), null);
                             }
                             return new CreerListe.SousSection.CreerSousSection((Expression<?>) p.get(0), debut, fin);
                         }
                     }
                 });
-
-        ajouterExpression("BRACES_OUV BRACES_FERM~" +
-                        "BRACES_OUV #expression BRACES_FERM~" +
-                        "!expression CROCHET_OUV CROCHET_FERM~" +
-                        "!expression CROCHET_OUV #expression CROCHET_FERM",
+        ajouterExpression("BRACES_OUV BRACES_FERM~"
+                        + "BRACES_OUV #expression BRACES_FERM~"
+                        + "!expression CROCHET_OUV CROCHET_FERM~"
+                        + "!expression CROCHET_OUV #expression CROCHET_FERM",
                 new Ast<CreerListe>() {
                     @Override
                     public CreerListe apply(List<Object> p) {
                         if (p.size() < 3) return new CreerListe();
-                        Expression<?> contenu = AstGenerator.evalOneExpr(new ArrayList<>(p.subList(1, p.size() - 1)), null);
-                        if (contenu instanceof CreerListe.Enumeration)
-                            return ((CreerListe.Enumeration) contenu).build();
+                        Expression<?> contenu = evalOneExpr(new ArrayList<>(p.subList(1, p.size() - 1)), null);
+                        if (contenu instanceof CreerListe.Enumeration enumeration)
+                            return enumeration.build();
                         return new CreerListe(contenu);
                     }
                 });
-
 
         ajouterExpression("expression PLUS PLUS~"
                         + "expression MOINS MOINS",
@@ -802,7 +791,7 @@ public class ASAst extends AstGenerator {
                 new Ast<Expression<?>>() {
                     @Override
                     public Expression<?> apply(List<Object> p) {
-                        if (!(p.get(0) instanceof Type && p.get(2) instanceof Type)) {
+                        if (!(p.get(0) instanceof Type typeG && p.get(2) instanceof Type typeD)) {
                             //String nom;
                             //if (p.get(0) instanceof Var) {
                             //    nom = ((Var) p.get(0)).getNom();
@@ -817,8 +806,8 @@ public class ASAst extends AstGenerator {
                             //throw new ErreurType("Le symbole | doit s\u00E9parer deux types valides " +
                             //        "('" + nom + "' n'est pas un type valide)");
                         }
-                        ((Type) p.get(0)).union((Type) p.get(2));
-                        return (Type) p.get(0);
+                        typeG.union(typeD);
+                        return typeG;
                     }
                 });
 
@@ -878,19 +867,19 @@ public class ASAst extends AstGenerator {
                     @Override
                     public CreerListe.Enumeration apply(List<Object> p) {
                         if (p.size() == 2) {
-                            if (p.get(0) instanceof CreerListe.Enumeration)
-                                return (CreerListe.Enumeration) p.get(0);
+                            if (p.get(0) instanceof CreerListe.Enumeration enumeration)
+                                return enumeration;
                             else
                                 return new CreerListe.Enumeration((Expression<?>) p.get(0));
                         }
 
                         Expression<?> valeur = (Expression<?>) p.get(2);
-                        if (p.get(2) instanceof CreerListe.Enumeration) {
-                            valeur = ((CreerListe.Enumeration) valeur).build();
+                        if (p.get(2) instanceof CreerListe.Enumeration enumeration) {
+                            valeur = enumeration.build();
                         }
-                        if (p.get(0) instanceof CreerListe.Enumeration) {
-                            ((CreerListe.Enumeration) p.get(0)).add(valeur);
-                            return (CreerListe.Enumeration) p.get(0);
+                        if (p.get(0) instanceof CreerListe.Enumeration enumeration) {
+                            enumeration.add(valeur);
+                            return enumeration;
                         }
 
                         return new CreerListe.Enumeration((Expression<?>) p.get(0), valeur);
@@ -916,8 +905,8 @@ public class ASAst extends AstGenerator {
                         if (p.size() == 2 && !(p.get(1) instanceof Expression.ExpressionVide)) {
                             contenu = (Expression<?>) p.get(1);
 
-                            args = contenu instanceof CreerListe.Enumeration ?
-                                    ((CreerListe.Enumeration) contenu).build() :
+                            args = contenu instanceof CreerListe.Enumeration enumeration ?
+                                    enumeration.build() :
                                     new CreerListe(contenu);
                         } else {
                             args = new CreerListe();

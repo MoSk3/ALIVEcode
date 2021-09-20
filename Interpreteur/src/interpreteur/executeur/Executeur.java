@@ -15,6 +15,8 @@ import interpreteur.ast.buildingBlocs.programmes.Declarer;
 import interpreteur.data_manager.Data;
 import interpreteur.data_manager.DataVoiture;
 import interpreteur.tokens.Token;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 
 
@@ -56,19 +58,18 @@ public class Executeur {
     // modules
     private final ASModuleManager asModuleManager = new ASModuleManager(this);
 
-    // data explaining the actions to do to the server
+    // data explaining the actions to do to the com.server
     private final ArrayList<Data> datas = new ArrayList<>();
 
     // data stack used when the program asks the site for information
     private final Stack<Object> dataResponse = new Stack<>();
-
+    //debug mode
+    public boolean debug = false;
     private String[] anciennesLignes = null;
     // failsafe
     private boolean compilationActive = false;
     private boolean executionActive = false;
     private boolean canExecute = false;
-    //debug mode
-    public boolean debug = false;
     // ast
     private ASAst ast;
 
@@ -125,16 +126,10 @@ public class Executeur {
 
 
         String[] lines = """   
-                fonction additionner(num1: nombre, num2: nombre) -> liste
-                    fonction f(a)
-                        afficher a
-                    fin fonction
-                    retourner [f, 1]
-                fin fonction
-                                
-                var a <- "23.1"
-                var b <- '11'
-                afficher(additionner(decimal(a), decimal(b))[0] a)
+                utiliser IA
+                afficher IA.moyenne([1, 2, 3, 4, 5, 6, 7])
+                
+                
                 """.split("\n");
 
 
@@ -197,7 +192,7 @@ public class Executeur {
     }
 
     /**
-     * @param coord <li>la coordonne d'une certaine ligne de code</li>
+     * @param coord <br><li>la coordonne d'une certaine ligne de code</li>
      * @return la position de la la ligne de code dans le code
      */
     public Integer getLineFromCoord(Coordonnee coord) {
@@ -235,7 +230,7 @@ public class Executeur {
     }
 
     /**
-     * @param nomDuScope <li>cree un nouveau scope et ajoute la premiere coordonnee a ce scope</li>
+     * @param nomDuScope <br><li>cree un nouveau scope et ajoute la premiere coordonnee a ce scope</li>
      * @return la premiere coordonnee du scope
      */
     public String nouveauScope(String nomDuScope) {
@@ -279,7 +274,7 @@ public class Executeur {
     /**
      * permet de changer la coordonne lors de l'execution du code
      *
-     * @param coord <li>la nouvelle coordonnee</li>
+     * @param coord <br><li>la nouvelle coordonnee</li>
      */
     public void setCoordRunTime(String coord) {
         coordRunTime.setCoord(coord);
@@ -306,7 +301,7 @@ public class Executeur {
      *                          <li>
      *                          Represente les lignes de code a compiler, une ligne se finit par un <code>\n</code>
      *                          </li>
-     * @param compilationForcee <li>
+     * @param compilationForcee <br><li>
      *                          Type: boolean
      *                          </li>
      *                          <li>
@@ -314,7 +309,7 @@ public class Executeur {
      *                          (le code sera alors compile meme s'il est identique au code precedemment compile)
      *                          </li>
      */
-    public String compiler(String[] lignes, boolean compilationForcee) {
+    public JSONArray compiler(String[] lignes, boolean compilationForcee) {
         reset();
 
         /*
@@ -327,7 +322,7 @@ public class Executeur {
          */
         if (Arrays.equals(lignes, anciennesLignes) && !compilationForcee) {
             if (debug) System.out.println("No changes: compilation done");
-            return "[]";
+            return new JSONArray();
         } else {
             // Si le code est different ou que la compilation est forcee, compiler les lignes
             //System.out.println(Arrays.toString(PreCompiler.preCompile(lignes)));
@@ -346,7 +341,7 @@ public class Executeur {
      *               Represente les lignes de code a compiler, une ligne se finit par un <code>\n</code>
      *               </li>
      */
-    private String compiler(String[] lignes) {
+    private JSONArray compiler(String[] lignes) {
         this.ast = new ASAst(this);
 
         // sert au calcul du temps qu'a pris le code pour etre compile
@@ -386,7 +381,7 @@ public class Executeur {
             String line = lignes[i];
 
             // produit la liste de Token representant la ligne (voir lexer.lex)
-            List<Token> lineToken = lexer.lex(line.trim());
+            var lineToken = lexer.lex(line.trim());
 
             // obtiens la coordonne ainsi que le scope ou sera enregistree la ligne compilee
             String coordActuelle = coordCompileTime.get(coordCompileTime.size() - 1).toString();
@@ -440,7 +435,7 @@ public class Executeur {
                 canExecute = false;
                 compilationActive = false;
                 err.afficher(this, i + 1);
-                return "[" + err.getAsData(i + 1) + "]";
+                return new JSONArray().put(err.getAsData(i + 1));
 
             }
 
@@ -467,7 +462,7 @@ public class Executeur {
             canExecute = false;
             compilationActive = false;
             err.afficher(this, lignes.length);
-            return "[" + err.getAsData(lignes.length) + "]";
+            return new JSONArray().put(err.getAsData(lignes.length));
 
         }
 
@@ -483,7 +478,7 @@ public class Executeur {
         anciennesLignes = lignes;
         compilationActive = false;
         canExecute = true;
-        return "[]";
+        return new JSONArray();
     }
 
     public Object executerScope(String scope, Hashtable<String, Hashtable<String, Programme>> coordCompileDict, String startCoord) {
@@ -558,13 +553,13 @@ public class Executeur {
     /**
      * fonction executant le scope principal ("main")
      */
-    public String executerMain(boolean resume) {
+    public JSONArray executerMain(boolean resume) {
         executionActive = true;
         // sert au calcul du temps qu'a pris le code pour etre execute
         LocalDateTime before = LocalDateTime.now();
 
         if (obtenirCoordCompileDict().get("main").isEmpty()) {
-            return "[]";
+            return new JSONArray();
         }
 
         Object resultat;
@@ -575,6 +570,7 @@ public class Executeur {
             resultat = executerScope("main", null, null);
         } else resultat = resumeExecution();
 
+        var returnData = new JSONArray(resultat.toString());
         /*
          * affiche si l'execution s'est deroulee sans probleme ou si elle a ete interrompue par une erreur
          * affiche le temps qu'a pris l'execution du programme (au complet ou jusqu'a l'interruption)
@@ -587,12 +583,11 @@ public class Executeur {
             // boolean servant a indique que l'execution est terminee
             executionActive = false;
             reset();
-            // ajoute un '!' devant le résultat pour indiquer que l'exécution est terminée
-            resultat = "!" + resultat.toString();
+            returnData.put(Data.endOfExecution());
         }
         datas.clear();
 
-        return resultat.toString();
+        return returnData;
     }
 
     public Object resumeExecution() {

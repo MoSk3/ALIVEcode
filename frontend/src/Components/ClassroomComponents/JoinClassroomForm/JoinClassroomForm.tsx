@@ -29,7 +29,7 @@ const JoinClassroomForm = () => {
 
 	const SubmitForm = async (formValues: { code: string }) => {
 		try {
-			const classroom = await api.db.classrooms.joinClassroom(formValues.code);
+			const classroom = await api.db.classrooms.join({ code: formValues.code });
 			goTo(routes.auth.classroom.path.replace(':id', classroom.id));
 			setNotFound(false);
 		} catch {

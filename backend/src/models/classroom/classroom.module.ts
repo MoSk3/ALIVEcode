@@ -3,7 +3,6 @@ import { ClassroomService } from './classroom.service';
 import { ClassroomController } from './classroom.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ClassroomEntity } from './entities/classroom.entity';
-import { DefaultAdminModule, DefaultAdminSite } from 'nestjs-admin';
 import { CourseEntity } from '../course/entities/course.entity';
 import { IoTProjectEntity } from '../iot/IoTproject/entities/IoTproject.entity';
 import { IoTObjectEntity } from '../iot/IoTobject/entities/IoTobject.entity';
@@ -25,14 +24,14 @@ import { LevelEntity } from '../level/entities/level.entity';
       IoTObjectEntity,
       LevelEntity,
     ]),
-    DefaultAdminModule,
+    //DefaultAdminModule,
   ],
   controllers: [ClassroomController],
   providers: [ClassroomService, UserService],
 })
 export class ClassroomModule {
-  constructor(private readonly adminSite: DefaultAdminSite) {
+  /*constructor(private readonly adminSite: DefaultAdminSite) {
     // Register the User entity under the "User" section
     adminSite.register('Classroom', ClassroomEntity);
-  }
+  }*/
 }

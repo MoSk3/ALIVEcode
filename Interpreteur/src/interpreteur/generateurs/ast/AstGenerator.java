@@ -14,6 +14,8 @@ import interpreteur.ast.buildingBlocs.Programme;
 import interpreteur.generateurs.lexer.Regle;
 import interpreteur.tokens.Token;
 import interpreteur.utils.ArraysUtils;
+import interpreteur.utils.Range;
+import interpreteur.utils.StringUtils;
 
 
 /**
@@ -101,7 +103,7 @@ public class AstGenerator {
     }
 
     public static Expression<?> evalOneExpr(ArrayList<Object> expressions, Hashtable<String, Ast<?>> sous_ast) {
-        ArrayList<Expression<?>> result = eval(expressions, sous_ast);
+        var result = eval(expressions, sous_ast);
         if (result.size() != 1) {
             throw new ASErreur.ErreurSyntaxe("Erreur ligne 106 dans AstGenerator");
         } else {
@@ -111,8 +113,8 @@ public class AstGenerator {
 
     public static ArrayList<Expression<?>> eval(ArrayList<Object> expressions, Hashtable<String, Ast<?>> sous_ast) {
 
-        Hashtable<String, Ast<?>> regleSyntaxeDispo = new Hashtable<>(expressionsDict);
-        ArrayList<String> ordreRegleSyntaxe = new ArrayList<>(ordreExpressions);
+        var regleSyntaxeDispo = new Hashtable<>(expressionsDict);
+        var ordreRegleSyntaxe = new ArrayList<>(ordreExpressions);
 
         if (sous_ast != null) {
             regleSyntaxeDispo.putAll(sous_ast);
@@ -128,7 +130,7 @@ public class AstGenerator {
             for (Object expr : expressions) {
                 expressionList.addAll(eval((ArrayList<Object>) expr, regleSyntaxeDispo));
             }
-            return ((ArrayList<?>) expressionList).stream().map(e -> (Expression<?>) e).collect(Collectors.toCollection(ArrayList::new));
+            return expressionList.stream().map(e -> (Expression<?>) e).collect(Collectors.toCollection(ArrayList::new));
         }
 
         ArrayList<Object> expressionArray = new ArrayList<>(expressions);
@@ -149,7 +151,7 @@ public class AstGenerator {
                     List<String> expressionNom = new ArrayList<>();
 
                     for (Object expr : expressionArray) {
-                        expressionNom.add(expr instanceof Token ? ((Token) expr).obtenirNom() : "expression");
+                        expressionNom.add(expr instanceof Token token ? token.obtenirNom() : "expression");
                     }
                     //System.out.println("Nom " + expressionNom);
                     Matcher match = memeStructureExpression(String.join(" ", expressionNom.subList(i, expressionNom.size())), regleSyntaxe);
@@ -180,25 +182,27 @@ public class AstGenerator {
                         String ouv = membresRegleSyntaxe.get(membresRegleSyntaxe.indexOf("#expression") - 1);
                         String ferm = membresRegleSyntaxe.get(membresRegleSyntaxe.size() - 1);
 
-                        int premier_ouv = expressionNom.indexOf(ouv);
+                        Range range = ArraysUtils.enclose(expressionNom, ouv, ferm);
+                        assert range != null;
+                        //int premier_ouv = expressionNom.indexOf(ouv);
                         //System.out.println(expressionNom);
                         // algorithme des parenthèses (), des crochets [] et des accolades {}
-                        int cptr = 0;
-                        exprLength = premier_ouv;
-                        do {
-                            String exp = expressionNom.get(exprLength);
-                            if (exp.equals(ferm)) {
-                                cptr--;
-                            } else if (exp.equals(ouv)) {
-                                cptr++;
-                            }
-                            //comment System.out.println("\nexp: " + exp
-                            //        + "\nfin: " + exprLength
-                            //        + "\ncptr: " + cptr
-                            //        + "\n" + "-".repeat(10)
-                            //);
-                            exprLength++;
-                        } while (cptr > 0);
+                        //int cptr = 0;
+                        //exprLength = premier_ouv;
+                        //do {
+                        //    String exp = expressionNom.get(exprLength);
+                        //    if (exp.equals(ferm)) {
+                        //        cptr--;
+                        //    } else if (exp.equals(ouv)) {
+                        //        cptr++;
+                        //    }
+                        //    //comment System.out.println("\nexp: " + exp
+                        //    //        + "\nfin: " + exprLength
+                        //    //        + "\ncptr: " + cptr
+                        //    //        + "\n" + "-".repeat(10)
+                        //    //);
+                        //    exprLength++;
+                        //} while (cptr > 0);
 
                         //comment for (String exp : expressionNom.subList(premier_ouv + 1, expressionNom.size())) {
                         //    if (exp.equals(ouv)) {
@@ -213,7 +217,7 @@ public class AstGenerator {
                         //}
 
 
-                        List<Object> expr = expressionArray.subList(debut, debut + exprLength);
+                        List<Object> expr = expressionArray.subList(debut, debut + range.end());
 
                         // System.out.println("\nregle: " + regleSyntaxe + "\nexpr: " + expr);
                         //expr.stream().map(Object::toString).forEach(Executeur::printCompiledCode);
@@ -224,7 +228,7 @@ public class AstGenerator {
 
                         ArrayList<Object> newArray = new ArrayList<>(expressionArray.subList(0, debut));
                         newArray.add(capsule);
-                        newArray.addAll(expressionArray.subList(debut + exprLength, expressionArray.size()));
+                        newArray.addAll(expressionArray.subList(debut + range.end(), expressionArray.size()));
 
                         //System.out.println(expressionArray);
                         expressionArray = newArray;
@@ -342,7 +346,7 @@ public class AstGenerator {
 		 */
 
         for (String programme : pattern.split("~")) {
-            Hashtable<String, Ast<?>> sousAstCopy = new Hashtable<>(fonction.getSousAst());
+            var sousAstCopy = new Hashtable<>(fonction.getSousAst());
             for (String p : sousAstCopy.keySet()) {
                 fonction.getSousAst().remove(p);
                 fonction.getSousAst().put(remplacerCategoriesParMembre(p), sousAstCopy.get(p));
@@ -408,17 +412,17 @@ public class AstGenerator {
 
         String programme = obtenirProgramme(listToken);
         if (programme == null) {
-            throw new Error("Programme invalide: " + listToken);
+            throw new ASErreur.ErreurSyntaxe("Syntaxe invalide: " + listToken.stream().map(Token::obtenirValeur).collect(Collectors.toList()));
         }
         //System.out.println("Programme trouvé: " + programme);
 
-        ArrayList<ArrayList<Token>> expressions_programme = obtenirDivisionExpressionsProgramme(listToken, programme);
+        var expressions_programme = obtenirDivisionExpressionsProgramme(listToken, programme);
 
-        ArrayList<ArrayList<Token>> expressions = new ArrayList<>(expressions_programme.subList(0, expressions_programme.size() - 1));
-        ArrayList<Token> programmeToken = expressions_programme.get(expressions_programme.size() - 1);
+        var expressions = new ArrayList<>(expressions_programme.subList(0, expressions_programme.size() - 1));
+        var programmeToken = expressions_programme.get(expressions_programme.size() - 1);
 
 
-        ArrayList<Expression<?>> arbre = eval(
+        var arbre = eval(
                 expressions.stream().map(e -> (Object) e).collect(Collectors.toCollection(ArrayList::new)),
                 programmesDict.get(programme).getSousAst()
         );

@@ -1,5 +1,5 @@
 import { iotDashboardProps } from './iotDashboardTypes';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import api from '../../../Models/api';
 import { IoTProject } from '../../../Models/Iot/IoTproject.entity';
 import useRoutes from '../../../state/hooks/useRoutes';
@@ -13,12 +13,14 @@ import { IoTObject } from '../../../Models/Iot/IoTobject.entity';
 import IoTObjectCreate from '../../../Components/IoTComponents/IoTObject/IotObjectForm/IoTObjectCreate';
 import FormModal from '../../../Components/UtilsComponents/FormModal/FormModal';
 import { useTranslation } from 'react-i18next';
+import { UserContext } from '../../../state/contexts/UserContext';
 
 const StyledDiv = styled(FillContainer)`
 	padding: 2vw;
 `;
 
 const IoTDashboard = (props: iotDashboardProps) => {
+	const { user } = useContext(UserContext);
 	const [projects, setProjects] = useState<IoTProject[]>();
 	const [objects, setObjects] = useState<IoTObject[]>();
 	const { routes } = useRoutes();
@@ -29,13 +31,14 @@ const IoTDashboard = (props: iotDashboardProps) => {
 
 	useEffect(() => {
 		const getProjects = async () => {
-			const projects = await api.db.users.iot.getProjects();
-			const objects = await api.db.users.iot.getObjects();
+			if (!user) return;
+			const projects = await api.db.users.iot.getProjects({});
+			const objects = await api.db.users.iot.getObjects({});
 			setProjects(projects);
 			setObjects(objects);
 		};
 		getProjects();
-	}, []);
+	}, [user]);
 
 	return (
 		<StyledDiv>

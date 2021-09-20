@@ -1,10 +1,10 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { UserEntity } from '../../models/user/entities/user.entity';
 import { Exclude } from 'class-transformer';
-import { IsOptional, IsNotEmpty, Length, IsEmpty, MaxLength } from 'class-validator';
+import { IsOptional, IsNotEmpty, Length, IsEmpty, MaxLength, Matches } from 'class-validator';
 
 @Entity()
-export abstract class CreatedByUser {
+export abstract class CreatedByUser extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   @Exclude({ toClassOnly: true })
   @IsEmpty()
@@ -13,6 +13,7 @@ export abstract class CreatedByUser {
   @Column({ nullable: false })
   @IsNotEmpty()
   @Length(3, 25)
+  @Matches(/[\w ]*/, { message: 'form.error.match.name' })
   name: string;
 
   abstract creator: UserEntity;

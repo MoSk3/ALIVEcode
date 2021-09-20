@@ -1,7 +1,7 @@
-import { ChildEntity, Column, OneToMany } from 'typeorm';
-import { UserEntity } from './user.entity';
-import { IsNotEmpty, Length } from 'class-validator';
 import { Exclude } from 'class-transformer';
+import { IsNotEmpty, Length, Matches } from 'class-validator';
+import { ChildEntity, Column, OneToMany, RelationId } from 'typeorm';
+import { UserEntity } from './user.entity';
 import { ClassroomEntity } from '../../classroom/entities/classroom.entity';
 import { CourseEntity } from '../../course/entities/course.entity';
 
@@ -10,11 +10,13 @@ export class ProfessorEntity extends UserEntity {
   @Column()
   @IsNotEmpty()
   @Length(3, 25)
+  @Matches(/^[A-Za-z]*$/, { message: 'form.firstName.error.match' })
   firstName: string;
 
   @Column()
   @IsNotEmpty()
   @Length(3, 25)
+  @Matches(/^[A-Za-z]*$/, { message: 'form.lastName.error.match' })
   lastName: string;
 
   @Exclude({ toClassOnly: true })

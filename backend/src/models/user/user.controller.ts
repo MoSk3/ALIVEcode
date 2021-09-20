@@ -9,6 +9,7 @@ import {
   HttpStatus,
   Res,
   UseInterceptors,
+  Query,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ProfessorEntity } from './entities/professor.entity';
@@ -17,14 +18,14 @@ import { Param } from '@nestjs/common';
 import { Response } from 'express';
 import { Auth } from '../../utils/decorators/auth.decorator';
 import { UserEntity } from './entities/user.entity';
-import { User } from 'src/utils/decorators/user.decorator';
-import { Role } from 'src/utils/types/roles.types';
 import { hasRole } from './auth';
 import { DTOInterceptor } from '../../utils/interceptors/dto.interceptor';
-import { QueryDTO } from '../level/dto/query.dto';
+import { Group } from '../../utils/decorators/group.decorator';
+import { User } from '../../utils/decorators/user.decorator';
+import { Role } from '../../utils/types/roles.types';
 
 @Controller('users')
-@UseInterceptors(new DTOInterceptor())
+@UseInterceptors(DTOInterceptor)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -68,7 +69,7 @@ export class UserController {
   }
 
   @Get()
-  //@Auth(Role.MOD)
+  @Auth(Role.STAFF)
   findAll() {
     return this.userService.findAll();
   }
@@ -87,6 +88,7 @@ export class UserController {
 
   @Get('me')
   @Auth()
+  @Group('user')
   me(@User() user: UserEntity) {
     return user;
   }
@@ -147,9 +149,9 @@ export class UserController {
     return this.userService.getClassrooms(await this.userService.findById(id));
   }
 
-  @Post(':id/levels')
+  @Get(':id/levels')
   @Auth()
-  async getLevels(@User() user: UserEntity, @Param('id') id: string, @Body() query: QueryDTO) {
+  async getLevels(@User() user: UserEntity, @Param('id') id: string, @Query('search') query: string) {
     if (!hasRole(user, Role.MOD) && user.id !== id) throw new HttpException('You cannot do that', HttpStatus.FORBIDDEN);
 
     if (user.id === id) return this.userService.getLevels(user, query);
