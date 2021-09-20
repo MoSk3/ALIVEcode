@@ -1,10 +1,10 @@
 #!/bin/bash
 
-if [ ! -d ./out/production/Interpreteur/interpreteur ]
-then rm ./out/production/Interpreteur/interpreteur
+if [ -d ./out/production/Interpreteur/interpreteur ]
+then rm -r -f ./out/production/Interpreteur/interpreteur
 fi
-if [ ! -d ./out/production/ServerAS/server ]
-then rm ./out/production/ServerAS/server
+if [ -d ./out/production/ServerAS/server ]
+then rm -r -f ./out/production/ServerAS/server
 fi
 
 javac -encoding UTF-8 -sourcepath ./src/ -d ./out/production/Interpreteur/ ./src/interpreteur/executeur/Executeur.java -cp ./lib/json-20140107.jar:./lib/snakeyaml-1.28.jar:./lib/annotations-19.0.0.jar
