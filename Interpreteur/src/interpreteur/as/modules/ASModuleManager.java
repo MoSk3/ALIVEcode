@@ -46,11 +46,12 @@ public final class ASModuleManager {
     }
 
     // methode permettant d'ajouter un module au dictionnaire de modules
-    protected void ajouterModule(String nomModule, Fonction[] fonctions, Variable[] variables) {
+    public void ajouterModule(String nomModule, Fonction[] fonctions, Variable[] variables) {
         moduleDict.put(nomModule, new Module(nomModule, fonctions, variables));
+
     }
 
-    protected void ajouterModule(String nomModule, Fonction[] fonctions) {
+    public void ajouterModule(String nomModule, Fonction[] fonctions) {
         moduleDict.put(nomModule, new Module(nomModule, fonctions, new Variable[]{}));
     }
 
@@ -86,9 +87,9 @@ public final class ASModuleManager {
                 variablesBuiltins.toArray(Variable[]::new)
         );
 
-        new ModuleMath(this).charger();
+        new ModuleMath(this).charger(executeurInstance);
 
-        new ModuleAst(this).charger();
+        new ModuleAst(this).charger(executeurInstance);
 
         ajouterModule("Iot", new Fonction[]{
                 new Fonction(

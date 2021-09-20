@@ -3,6 +3,7 @@ package interpreteur.as.modules;
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.as.Objets.ASObjet;
 import interpreteur.ast.buildingBlocs.expressions.Type;
+import interpreteur.executeur.Executeur;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -75,7 +76,7 @@ public class ModuleNombreUtils extends ASModule {
     }
 
     @Override
-    public void charger() {
+    public void charger(Executeur executeurInstance) {
 
     }
 }

@@ -4,6 +4,7 @@ import interpreteur.as.Objets.ASFonction;
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.as.Objets.ASObjet;
 import interpreteur.ast.buildingBlocs.expressions.Type;
+import interpreteur.executeur.Executeur;
 
 import java.util.*;
 
@@ -250,7 +251,7 @@ public class ModuleListeUtils extends ASModule {
     }
 
     @Override
-    public void charger() {
+    public void charger(Executeur executeurInstance) {
 
     }
 }

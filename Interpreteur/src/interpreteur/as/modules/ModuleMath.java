@@ -2,6 +2,7 @@ package interpreteur.as.modules;
 
 import interpreteur.as.Objets.ASObjet;
 import interpreteur.ast.buildingBlocs.expressions.Type;
+import interpreteur.executeur.Executeur;
 
 
 public class ModuleMath extends ASModule {
@@ -10,7 +11,7 @@ public class ModuleMath extends ASModule {
         super(moduleManager);
     }
 
-    public void charger() {
+    public void charger(Executeur executeurInstance) {
         moduleManager.ajouterModule("Math", new ASObjet.Fonction[]{
                 new ASObjet.Fonction("sin", new ASObjet.Fonction.Parametre[]{
                         new ASObjet.Fonction.Parametre(new Type("nombre"), "x", null)

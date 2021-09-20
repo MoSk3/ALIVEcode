@@ -1,6 +1,7 @@
 package interpreteur.as.modules;
 
 import interpreteur.as.Objets.ASObjet;
+import interpreteur.executeur.Executeur;
 
 public class ModuleTest extends ASModule {
 
@@ -9,7 +10,7 @@ public class ModuleTest extends ASModule {
     }
 
     @Override
-    public void charger() {
+    public void charger(Executeur executeurInstance) {
         moduleManager.ajouterModule("Test", new ASObjet.Fonction[]{
 
         });

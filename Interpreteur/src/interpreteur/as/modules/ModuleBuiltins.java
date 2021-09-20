@@ -10,7 +10,7 @@ import interpreteur.executeur.Executeur;
 import java.util.*;
 import java.util.function.Supplier;
 
-public class ModuleBuiltins {
+public class ModuleBuiltins extends ASModule {
 
 
     private static final Supplier<ASObjet<?>> getVarsLocales = () -> {
@@ -39,6 +39,10 @@ public class ModuleBuiltins {
             new ASObjet.Variable("varGlobales", new ASObjet.Liste(), ASObjet.TypeBuiltin.liste.asType()).setGetter(getVarsGlobales).setReadOnly(),
             new ASObjet.Variable("varListe", new ASObjet.Liste(), ASObjet.TypeBuiltin.liste.asType()).setGetter(getVarListe).setReadOnly()
     );
+
+    public ModuleBuiltins(ASModuleManager moduleManager) {
+        super(moduleManager);
+    }
 
     public static List<ASObjet.Fonction> loadFonctions(Executeur executeurInstance) {
         return Arrays.asList(
@@ -173,6 +177,10 @@ public class ModuleBuiltins {
         );
     }
 
+    @Override
+    public void charger(Executeur executeurInstance) {
+
+    }
 }
 
 

@@ -126,9 +126,10 @@ public class Executeur {
 
 
         String[] lines = """   
-                var a = "12"
-                var b = "15"
-                afficher([decimal(a) + decimal(b)] / [2])
+                fonction facto(n: entier)
+                    retourner n * facto(n - 1) si n > 1 sinon 1
+                fin fonction
+                afficher facto(5)
                 """.split("\n");
 
 

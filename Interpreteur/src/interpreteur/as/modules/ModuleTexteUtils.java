@@ -140,7 +140,7 @@ public class ModuleTexteUtils extends ASModule {
     }
 
     @Override
-    public void charger() {
+    public void charger(Executeur executeurInstance) {
 
     }
 }

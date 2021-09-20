@@ -46,7 +46,7 @@ public class ModuleDict extends ASModule {
     //    }
     //};
 
-    public void charger() {
+    public void charger(Executeur executeurInstance) {
         moduleManager.ajouterModule("Dict", new ASObjet.Fonction[]{
 
                 new ASObjet.Fonction("creer", new ASObjet.Fonction.Parametre[]{

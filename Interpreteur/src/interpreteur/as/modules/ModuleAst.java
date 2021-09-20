@@ -2,6 +2,7 @@ package interpreteur.as.modules;
 
 import interpreteur.as.Objets.ASObjet;
 import interpreteur.ast.buildingBlocs.expressions.Type;
+import interpreteur.executeur.Executeur;
 
 public class ModuleAst extends ASModule {
 
@@ -9,7 +10,7 @@ public class ModuleAst extends ASModule {
         super(moduleManager);
     }
 
-    public void charger() {
+    public void charger(Executeur executeurInstance) {
         moduleManager.ajouterModule("Ast", new ASObjet.Fonction[]{
             new ASObjet.Fonction("genererArbre", new ASObjet.Fonction.Parametre[] {
                     new ASObjet.Fonction.Parametre(new Type("texte"), "param", null)
