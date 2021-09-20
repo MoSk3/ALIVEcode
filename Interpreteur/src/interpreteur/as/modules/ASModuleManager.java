@@ -54,7 +54,7 @@ public final class ASModuleManager {
         moduleDict.put(nomModule, new Module(nomModule, fonctions, new Variable[]{}));
     }
 
-    protected void ajouterModule(String nomModule, Variable[] variables) {
+    private void ajouterModule(String nomModule, Variable[] variables) {
         moduleDict.put(nomModule, new Module(nomModule, new Fonction[]{}, variables));
     }
 
@@ -69,7 +69,7 @@ public final class ASModuleManager {
     /**
      * methode où sont definies tous les modules de base du langage
      */
-    protected void chargerModules() {
+    private void chargerModules() {
 
         List<Fonction> fonctionBuiltins = new ArrayList<>(ModuleBuiltins.loadFonctions(executeurInstance));
         fonctionBuiltins.addAll(ModuleTexteUtils.fonctions);
