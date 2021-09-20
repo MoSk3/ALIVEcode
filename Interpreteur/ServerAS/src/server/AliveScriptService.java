@@ -1,24 +1,55 @@
 package server;
 
-import interpreteur.as.erreurs.ASErreur;
 import interpreteur.executeur.Executeur;
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Hashtable;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 public class AliveScriptService {
     private final static Hashtable<UUID, AliveScriptService> runningServices = new Hashtable<>();
-    private final int LIFE_TIME = 60;
+    private static double maxServiceLifeSpan = 0;
+    private static Logger logger;
 
     private final UUID idToken;
     private final Executeur executeur;
     private boolean resume = false;
     private boolean compiled = false;
+    /**
+     * the time since the service has been updated
+     */
+    private double sinceUpdate = 0;
 
     private AliveScriptService(UUID idToken) {
         this.idToken = idToken;
         this.executeur = new Executeur();
+    }
+
+    public static void setMaxServiceLifeSpan(double maxServiceLifeSpan) {
+        AliveScriptService.maxServiceLifeSpan = maxServiceLifeSpan;
+    }
+
+    public static void setLogger(Logger logger) {
+        AliveScriptService.logger = logger;
+    }
+
+    public static void updateAndCleanUp() {
+        for (var service : runningServices.values()) {
+            if (service.sinceUpdate > maxServiceLifeSpan) {
+                service.destroy();
+                logger.info("Service " + service + " destroyed");
+            } else
+                service.sinceUpdate += 1;
+        }
+    }
+
+    public static JSONObject noAliveScriptServiceWithToken() {
+        return new JSONObject()
+                .put("status", ResponseStatus.FAILED)
+                .put("message", "There is no instance of alivescript with that token");
     }
 
     public static Hashtable<UUID, AliveScriptService> getRunningServices() {
@@ -31,7 +62,7 @@ public class AliveScriptService {
 
     public static AliveScriptService create() {
         UUID idToken = UUID.randomUUID();
-        System.out.println("New session: " + idToken);
+        logger.info("New session: " + idToken);
         AliveScriptService aliveScriptService = new AliveScriptService(idToken);
         runningServices.put(idToken, aliveScriptService);
         return aliveScriptService;
@@ -41,8 +72,12 @@ public class AliveScriptService {
         return runningServices.remove(idToken);
     }
 
+    public synchronized void update() {
+        this.sinceUpdate = 0;
+    }
+
     public AliveScriptService destroy() {
-        System.out.println("End of session: " + idToken);
+        logger.info("End of session: " + idToken);
         return runningServices.remove(this.idToken);
     }
 
@@ -50,9 +85,9 @@ public class AliveScriptService {
         return idToken;
     }
 
-    public String compile(String[] lines) {
+    public JSONArray compile(String[] lines) {
         resume = false;
-        String result = executeur.compiler(lines, true);
+        JSONArray result = executeur.compiler(lines, true);
         compiled = true;
         return result;
     }
@@ -62,29 +97,43 @@ public class AliveScriptService {
             executeur.pushDataResponse(responseData.get(i));
     }
 
+    public boolean isCompiled() {
+        return compiled;
+    }
+
+    public JSONObject notCompiledError() {
+        return new JSONObject()
+                .put("status", ResponseStatus.FAILED)
+                .put("message", "Le code doit \u00EAtre compil\u00E9 avant d'\u00EAtre ex\u00E9cut\u00E9");
+    }
+
     public String execute() {
-        if (!compiled) {
-            return "[" +
-                    new ASErreur.ErreurAliveScript(
-                            "Le code doit \u00EAtre compil\u00E9 avant d'\u00EAtre ex\u00E9cut\u00E9",
-                            "ErreurCompilation"
-                    ).getAsData(0) +
-                    "]";
-        }
-        String result = executeur.executerMain(resume);
+        JSONObject returnData = new JSONObject();
+        JSONArray result = executeur.executerMain(resume);
 
         // if the method was to be called later, resume would be true
         if (!resume) resume = true;
 
-        // if the result starts with '!', it means that the execution just ended
-        if (result.startsWith("!")) {
-            // we remove the object from memory
-            destroy();
-            // we remove the '!' from the result
-            result = result.substring(1);
+        try {
+            boolean executionFinished = result.getJSONObject(result.length() - 1).getInt("id") == 0;
+
+            // if the execution is finished, we remove the object from memory
+            if (executionFinished) {
+                returnData.put("status", ResponseStatus.COMPLETE);
+                destroy();
+            } else {
+                returnData.put("status", ResponseStatus.ONGOING);
+                returnData.put("idToken", getIdToken());
+            }
+            returnData.put("result", result);
+
+        } catch (JSONException err) {
+            returnData.put("status", ResponseStatus.FAILED);
+            returnData.put("message", "failed to execute du to internal error");
+            err.printStackTrace();
         }
 
-        return "{\"idToken\":\"" + getIdToken() + "\", \"result\":" + result + "}";
+        return returnData.toString();
     }
 
     @Override
@@ -94,6 +143,17 @@ public class AliveScriptService {
                 ", executeur=" + executeur +
                 ", resume=" + resume +
                 '}';
+    }
+
+    enum ResponseStatus {
+        COMPLETE,
+        ONGOING,
+        FAILED;
+
+        @Override
+        public String toString() {
+            return super.toString().toLowerCase();
+        }
     }
 }
 

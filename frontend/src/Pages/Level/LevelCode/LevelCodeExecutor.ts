@@ -7,20 +7,25 @@ export default class LevelCodeExecutor extends LevelExecutor {
 		const lines: string = this.lineInterfaceContent;
 
 		try {
-			let { idToken, result: data } = await this.sendDataToAsServer({
-				lines,
-			});
-			if (process.env.DEBUG) console.log(idToken, data);
+			let data = await this.sendDataToAsServer({ lines });
+			if (data.status === 'complete') {
+				this.execute(data.result);
+				return;
+			}
+
+			const { idToken } = data;
+
+			if (process.env.DEBUG) console.log(idToken, data.data);
 
 			while (true) {
-				let res = this.execute(data);
+				let res = this.execute(data.result);
 				if ((Array.isArray(res) && res.length === 0) || res === undefined) {
 					break;
 				} else {
-					({ idToken, result: data } = await this.sendDataToAsServer({
+					data = await this.sendDataToAsServer({
 						idToken,
 						'response-data': res,
-					}));
+					});
 				}
 			}
 		} catch {
