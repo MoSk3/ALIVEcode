@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 
 /**
  * --- AliveScriptApi ---
+ *
  * @author Mathis Laroche
  */
 public record AliveScriptApi(String CORS_ORIGIN) implements HttpHandler {
@@ -92,7 +93,16 @@ public record AliveScriptApi(String CORS_ORIGIN) implements HttpHandler {
             return aliveScriptService.execute();
 
         } else if (data.has("lines")) {
-            String[] lignes = data.getString("lines").split("\n");
+            var lines = data.get("lines");
+            String[] lignes;
+            if (lines instanceof JSONArray ligneArray) {
+                lignes = new String[ligneArray.length()];
+                for (int i = 0; i < ligneArray.length(); i++) {
+                    lignes[i] = ligneArray.getString(i);
+                }
+            } else
+                lignes = ((String) lines).split("\n");
+
             JSONArray compileResult = aliveScriptService.compile(lignes);
 
             return compileResult.length() == 0

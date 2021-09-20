@@ -128,7 +128,7 @@ public class Executeur {
         String[] lines = """   
                 var a = "12"
                 var b = "15"
-                afficher(([decimal(a) + decimal(b)]))
+                afficher([decimal(a) + decimal(b)] / [2])
                 """.split("\n");
 
 
