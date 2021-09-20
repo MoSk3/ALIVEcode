@@ -151,6 +151,11 @@ export class TextObject
 			size: this.size,
 		};
 	}
+
+	loadFromTemplate() {
+		Object.assign(this, this.templates[this.templateName]);
+	}
+
 	readonly defaultTemplate: TemplateNamesText = 'base';
 	readonly templates: Template<TemplateNamesText, TextObject> = {
 		base: {},

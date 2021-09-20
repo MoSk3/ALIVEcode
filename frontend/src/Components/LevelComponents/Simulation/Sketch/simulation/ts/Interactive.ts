@@ -47,6 +47,10 @@ export class Interactive
 		return { linkedId: this.linkedId };
 	}
 
+	loadFromTemplate() {
+		Object.assign(this, this.templates[this.templateName]);
+	}
+
 	readonly defaultTemplate: TemplateNamesInteractive = 'collectable';
 	readonly templates: Template<TemplateNamesInteractive, Interactive> = {
 		objective: {

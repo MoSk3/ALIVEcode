@@ -26,6 +26,10 @@ export class Decoration
 		return {};
 	}
 
+	loadFromTemplate() {
+		Object.assign(this, this.templates[this.templateName]);
+	}
+
 	readonly defaultTemplate: TemplateNamesDecoration = 'base';
 	readonly templates: Template<TemplateNamesDecoration, Decoration> = {
 		base: {},

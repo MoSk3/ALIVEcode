@@ -23,6 +23,10 @@ export class Figure
 		};
 	}
 
+	loadFromTemplate() {
+		Object.assign(this, this.templates[this.templateName]);
+	}
+
 	readonly defaultTemplate: TemplateNamesFigure = 'base';
 	readonly templates: Template<TemplateNamesFigure, Figure> = {
 		base: {},

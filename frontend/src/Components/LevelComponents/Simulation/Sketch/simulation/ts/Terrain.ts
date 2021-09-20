@@ -20,10 +20,15 @@ export class Terrain
 		this.class = 'Terrain';
 		this.templateName = templateName;
 		this.carInteraction = true;
+		this.minimumSize = 75;
 	}
 
 	get uniqueProperties() {
 		return {};
+	}
+
+	loadFromTemplate() {
+		Object.assign(this, this.templates[this.templateName]);
 	}
 
 	readonly defaultTemplate: TemplateNamesTerrain = 'base';

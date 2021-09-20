@@ -91,47 +91,28 @@ export function editModeSection(s) {
 
 	// #region Menu Items
 
+	const size = s.sideMenu.getWidth() / 4;
+	const space = s.sideMenu.getWidth() / 20;
+
+	function addMenuSection(title, spawnItems) {
+		const text = s.spawnFixedTextObject(title, size / 2, 0, 0);
+		s.sideMenu.addChild(text, true);
+		spawnItems();
+		s.sideMenu.children[s.sideMenu.children.length - 1].lastInSection = true;
+	}
+
 	s.spawnSideMenuItems = () => {
 		// taille de formes dans le menu
 		let size = s.sideMenu.getWidth() / 4;
 		// espace entre les formes du menu
 		let space = s.sideMenu.getWidth() / 20;
 
-		//******************************** Roads ***********************************
-		let roadText = s.spawnFixedTextObject('Roads', size / 2, 0, 0);
-		s.sideMenu.addChild(roadText, true);
-		s.menuRoadItems();
-		s.sideMenu.children[s.sideMenu.children.length - 1].lastInSection = true;
-
-		//******************************** Terrains ********************************
-		let terrainText = s.spawnFixedTextObject('Terrains', size / 2, 0, 0);
-		s.sideMenu.addChild(terrainText, true);
-		s.menuTerrainItems();
-		s.sideMenu.children[s.sideMenu.children.length - 1].lastInSection = true;
-
-		//******************************** Obstacles *******************************
-		let obstacleText = s.spawnFixedTextObject('Obstacles', size / 2, 0, 0);
-		s.sideMenu.addChild(obstacleText, true);
-		s.menuObstacleItems();
-		s.sideMenu.children[s.sideMenu.children.length - 1].lastInSection = true;
-
-		//******************************** Interactive *****************************
-		let interactiveText = s.spawnFixedTextObject('Interactive', size / 2, 0, 0);
-		s.sideMenu.addChild(interactiveText, true);
-		s.menuInteractiveObjectItems();
-		s.sideMenu.children[s.sideMenu.children.length - 1].lastInSection = true;
-
-		//******************************** Decorations *****************************
-		let decorationText = s.spawnFixedTextObject('Decorations', size / 2, 0, 0);
-		s.sideMenu.addChild(decorationText, true);
-		s.menuDecorationItems();
-		s.sideMenu.children[s.sideMenu.children.length - 1].lastInSection = true;
-
-		//******************************** Other ***********************************
-		let otherText = s.spawnFixedTextObject('Other', size / 2, 0, 0);
-		s.sideMenu.addChild(otherText, true);
-		s.menuOtherShapeItems();
-		s.sideMenu.children[s.sideMenu.children.length - 1].lastInSection = true;
+		addMenuSection('Roads', s.menuRoadItems);
+		addMenuSection('Terrains', s.menuTerraiItems);
+		addMenuSection('Obstacles', s.menuObstacleItems);
+		addMenuSection('Interactives', s.menuInteractiveObjectItems);
+		addMenuSection('Decorations', s.menuDecorationItems);
+		addMenuSection('Other', s.menuOtherShapeItems);
 
 		//******************************** Organisation ****************************
 		let top = s.sideMenu.top.y - size * 1.5;

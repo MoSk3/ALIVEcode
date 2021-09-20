@@ -37,6 +37,8 @@ export interface SerializableShape<
 	readonly defaultTemplate: string;
 	readonly templates: Template<TemplateNames, T>;
 
+	loadFromTemplate: () => void;
+
 	get uniqueProperties(): TemplateProperties<T>;
 }
 

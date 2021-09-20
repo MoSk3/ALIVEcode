@@ -75,7 +75,7 @@ export class Serializer {
 					serializedShape.shapeType
 				](s, serializedShape.templateName, ...points);
 
-				Object.assign(shape, shape.templates[shape.templateName]);
+				shape.loadFromTemplate();
 				Object.assign(shape, serializedShape.properties);
 				shapes.push(shape);
 			}

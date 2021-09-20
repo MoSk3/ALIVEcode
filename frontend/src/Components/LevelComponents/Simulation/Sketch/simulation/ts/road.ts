@@ -21,6 +21,7 @@ export class Road
 		this.class = 'Road';
 		this.templateName = templateName;
 		this.carInteraction = true;
+		this.minimumSize = 150;
 	}
 
 	override editShape() {
@@ -86,6 +87,10 @@ export class Road
 
 	get uniqueProperties() {
 		return {};
+	}
+
+	loadFromTemplate() {
+		Object.assign(this, this.templates[this.templateName]);
 	}
 
 	readonly defaultTemplate: TemplateNamesRoad = 'base';

@@ -54,6 +54,10 @@ export class Obstacle
 		return {};
 	}
 
+	loadFromTemplate() {
+		Object.assign(this, this.templates[this.templateName]);
+	}
+
 	readonly defaultTemplate: TemplateNamesObstacle = 'stop';
 	readonly templates: Template<TemplateNamesObstacle, Obstacle> = {
 		stop: {
