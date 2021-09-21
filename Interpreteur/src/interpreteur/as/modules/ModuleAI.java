@@ -256,12 +256,25 @@ public class ModuleAI extends ASModule {
                     public ASObjet<?> executer() {
                         Liste liste = (Liste) this.getValeurParam("lst");
                         Double[] doubles;
+                        //liste.getValue().stream().map(Object::toString).allMatch(Nombre::estNumerique);
                         try {
                            doubles = liste.getValue().stream().map(e -> ((Number) e.getValue()).doubleValue()).toArray(Double[]::new);
                         } catch (ClassCastException err) {
                             throw new ASErreur.ErreurType("La fonction ecartType prend une liste de nombre, mais la liste pass\u00E9e en param\u00E8tre n'est pas compos\u00E9e que de nombres.");
                         }
                         return new Decimal(standardDeviation(doubles));
+                    }
+                },
+                new ASObjet.Fonction("coefficientCorrelation", new ASObjet.Fonction.Parametre[]{
+                        new ASObjet.Fonction.Parametre(
+                                ASObjet.TypeBuiltin.liste.asType(),
+                                "lst1",
+                                null
+                        )
+                }, ASObjet.TypeBuiltin.nombre.asType()) {
+                    @Override
+                    public ASObjet<?> executer() {
+                        return null;
                     }
                 }
         }, new ASObjet.Variable[]{});
