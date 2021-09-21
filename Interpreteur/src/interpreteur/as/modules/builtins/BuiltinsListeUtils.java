@@ -80,13 +80,19 @@ public class BuiltinsListeUtils {
             }, new Type("liste")) {
                 @Override
                 public ASObjet<?> executer() {
-                    ArrayList<ASObjet<?>> liste = new ArrayList<>(List.of(this.getParamsValeursDict().get("lst")));
-                    Liste nouvelleListe = new Liste();
+                    Liste liste = (Liste) this.getParamsValeursDict().get("lst");
+                    Liste nouvelleListe;
                     ASObjet<?> f = this.getParamsValeursDict().get("f");
                     if (f instanceof ASFonction fonction) {
-                        nouvelleListe.ajouterElement(fonction.makeInstance().executer(liste));
+                        nouvelleListe = new Liste(liste.getValue().stream().map(element -> fonction
+                                        .makeInstance()
+                                        .executer(new ArrayList<>(List.of((ASObjet<?>) element))))
+                                .toArray(ASObjet[]::new));
+
                     } else {
-                        nouvelleListe.ajouterElement(((ASObjet.Fonction) f).setParamPuisExecute(liste));
+                        nouvelleListe = new Liste(liste.getValue().stream().map(element -> ((ASObjet.Fonction) f)
+                                        .setParamPuisExecute(new ArrayList<>(List.of((ASObjet<?>) element))))
+                                .toArray(ASObjet[]::new));
                     }
                     return nouvelleListe;
                 }
@@ -242,13 +248,21 @@ public class BuiltinsListeUtils {
 
             new ASObjet.Fonction("indexDe", new ASObjet.Fonction.Parametre[]{
                     new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.tout.asType(), "valeur", null),
-                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.liste.asType(), "lst", null)
+                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.iterable.asType(), "iter", null)
             }, new Type("entier")) {
                 @Override
                 public ASObjet<?> executer() {
-                    Liste lst = (Liste) this.getParamsValeursDict().get("lst");
+                    Iterable iter = (Iterable) this.getParamsValeursDict().get("iter");
                     ASObjet<?> val = this.getParamsValeursDict().get("valeur");
-                    int idx = lst.getValue().indexOf(val);
+                    int idx;
+                    if (iter instanceof Texte txt && val instanceof Texte txtVal) {
+                        idx = txt.getValue().indexOf(txtVal.getValue());
+                    } else if (iter instanceof Liste lst) {
+                        idx = lst.getValue().indexOf(val);
+                    } else {
+                        throw new ASErreur.ErreurType("La valeur doit \u00EAtre de type texte lorsque l'on recherche " +
+                                "l'index d'un \u00E9l\u00E9ment de type texte");
+                    }
                     return idx != -1 ? new Entier(idx) : new Nul();
                 }
             }
