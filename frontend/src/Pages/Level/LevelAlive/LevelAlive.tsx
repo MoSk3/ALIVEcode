@@ -67,6 +67,10 @@ const LevelAlive = ({
 		}
 	};
 
+	const simulationContentChanges = (content: any) => {
+		if (!editMode) return;
+	};
+
 	useEffect(() => {
 		if (user && editMode && level.creator.id !== user.id)
 			return history.push(routes.public.home.path);
@@ -257,6 +261,7 @@ const LevelAlive = ({
 										executor.init(s);
 										setSketch(s);
 									}}
+									handleChange={() => {}}
 								/>
 							)}
 						</Row>

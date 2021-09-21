@@ -5,7 +5,7 @@ import { SimulationProps, StyledSimulation } from './simulationTypes';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSquare } from '@fortawesome/free-solid-svg-icons';
 
-const Simulation = ({ init }: SimulationProps) => {
+const Simulation = ({ init, handleChange }: SimulationProps) => {
 	return (
 		<StyledSimulation>
 			<FillContainer
