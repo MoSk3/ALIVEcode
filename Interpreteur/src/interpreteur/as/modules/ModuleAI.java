@@ -3,9 +3,6 @@ package interpreteur.as.modules;
 import interpreteur.as.Objets.ASObjet;
 import interpreteur.as.erreurs.ASErreur;
 
-import java.util.Arrays;
-import java.util.stream.DoubleStream;
-
 /**
  * This abstract class implements all used formulas in the artificial intelligence course of this application.
  * All methods are static, and since it is an abstract class, it cannot become an object.
@@ -228,7 +225,15 @@ public class ModuleAI extends ASModule {
 
     @Override
     public void charger() {
+
+        /**
+         * Module containing all methods related to artificial intelligence.
+         */
         moduleManager.ajouterModule("IA", new ASObjet.Fonction[]{
+
+                /**
+                 * Calculates the mean of a list of numbers.
+                */
                 new ASObjet.Fonction("moyenne",
                         new ASObjet.Fonction.Parametre[]{
                                 new ASObjet.Fonction.Parametre(
@@ -245,6 +250,10 @@ public class ModuleAI extends ASModule {
                         return new Decimal(mean(doubles));
                     }
                 },
+
+                /*
+                  Calculates the standart deviation of a list of numbers.
+                */
                 new ASObjet.Fonction("ecartType", new ASObjet.Fonction.Parametre[]{
                         new ASObjet.Fonction.Parametre(
                                 ASObjet.TypeBuiltin.liste.asType(),
@@ -265,16 +274,74 @@ public class ModuleAI extends ASModule {
                         return new Decimal(standardDeviation(doubles));
                     }
                 },
+
+                /*
+                  Calculates the correlation coefficient of two list of numbers which together are representing
+                  coordinates. The first list contains all X values for each point while the second list
+                  contains all Y values for each point.
+
+                  If both lists are not the same length, an error will be generated.
+                */
                 new ASObjet.Fonction("coefficientCorrelation", new ASObjet.Fonction.Parametre[]{
                         new ASObjet.Fonction.Parametre(
                                 ASObjet.TypeBuiltin.liste.asType(),
                                 "lst1",
                                 null
+                        ),
+                        new ASObjet.Fonction.Parametre(
+                                ASObjet.TypeBuiltin.liste.asType(),
+                                "lst2",
+                                null
                         )
                 }, ASObjet.TypeBuiltin.nombre.asType()) {
                     @Override
                     public ASObjet<?> executer() {
-                        return null;
+                        Liste lst1 = (Liste) this.getValeurParam("lst1");
+                        Liste lst2 = (Liste) this.getValeurParam("lst2");
+                        Double[] x;
+                        Double[] y;
+                        try {
+                            x = lst1.getValue().stream().map(e -> ((Number) e.getValue()).doubleValue()).toArray(Double[]::new);
+                            y = lst2.getValue().stream().map(e -> ((Number) e.getValue()).doubleValue()).toArray(Double[]::new);
+                        } catch (ClassCastException err) {
+                            throw new ASErreur.ErreurType("La fonction ecartType prend une liste de nombre, mais la liste pass\u00E9e en param\u00E8tre n'est pas compos\u00E9e que de nombres.");
+                        }
+                        return new Decimal(correlationCoefficient(x, y));
+                    }
+                },
+
+                /*
+                  Calculates the determination coefficient of two list of numbers which together are representing
+                  coordinates. The first list contains all X values for each point while the second list
+                  contains all Y values for each point.
+
+                  If both lists are not the same length, an error will be generated.
+                */
+                new ASObjet.Fonction("coefficientDetermination", new ASObjet.Fonction.Parametre[]{
+                        new ASObjet.Fonction.Parametre(
+                                ASObjet.TypeBuiltin.liste.asType(),
+                                "lst1",
+                                null
+                        ),
+                        new ASObjet.Fonction.Parametre(
+                                ASObjet.TypeBuiltin.liste.asType(),
+                                "lst2",
+                                null
+                        )
+                }, ASObjet.TypeBuiltin.nombre.asType()) {
+                    @Override
+                    public ASObjet<?> executer() {
+                        Liste lst1 = (Liste) this.getValeurParam("lst1");
+                        Liste lst2 = (Liste) this.getValeurParam("lst2");
+                        Double[] x;
+                        Double[] y;
+                        try {
+                            x = lst1.getValue().stream().map(e -> ((Number) e.getValue()).doubleValue()).toArray(Double[]::new);
+                            y = lst2.getValue().stream().map(e -> ((Number) e.getValue()).doubleValue()).toArray(Double[]::new);
+                        } catch (ClassCastException err) {
+                            throw new ASErreur.ErreurType("La fonction ecartType prend une liste de nombre, mais la liste pass\u00E9e en param\u00E8tre n'est pas compos\u00E9e que de nombres.");
+                        }
+                        return new Decimal(determinationCoefficient(x, y));
                     }
                 }
         }, new ASObjet.Variable[]{});
