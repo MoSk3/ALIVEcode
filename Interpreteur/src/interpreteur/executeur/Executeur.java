@@ -121,8 +121,9 @@ public class Executeur {
 
 
         String[] lines = """   
-                utiliser IA
-                afficher IA.moyenne([1, 2, 3, 4, 5, 6, 7])
+                utiliser Ai
+                afficher Ai
+                
                 
                 
                 """.split("\n");

@@ -1,6 +1,8 @@
 package interpreteur.as.modules;
 
 
+import interpreteur.as.Objets.ASObjet;
+import interpreteur.as.Objets.Scope;
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.executeur.Executeur;
 
@@ -45,6 +47,12 @@ public record ASModuleManager(Executeur executeurInstance) {
         ASModule module = getModule(nomModule);
 
         module.utiliser(nomModule);
+        Scope.getCurrentScope().declarerVariable(new ASObjet.Constante(nomModule, new ASObjet.Liste(module
+                .getNomsConstantesEtFonctions()
+                .stream()
+                .map(e -> nomModule + "." + e)
+                .map(ASObjet.Texte::new)
+                .toArray(ASObjet.Texte[]::new))));
     }
 
     /**
@@ -70,6 +78,10 @@ public record ASModuleManager(Executeur executeurInstance) {
                     .replaceAll("\\[|]", ""));
 
         module.utiliser(nomsFctEtConstDemandees);
+        Scope.getCurrentScope().declarerVariable(new ASObjet.Constante(nomModule, new ASObjet.Liste(nomsFctEtConstDemandees
+                .stream()
+                .map(ASObjet.Texte::new)
+                .toArray(ASObjet.Texte[]::new))));
     }
 
 
