@@ -71,38 +71,37 @@ const LevelAI = ({
 	const [chartData, setChartData] = useState({});
 
 	const dataValues = [
-		{x: 2, y: 2}, 
-		{x: 3, y: 35},
-		{x: 32, y: 85},
-		{x: 54, y: 2},
-		{x: 41, y: 45},
-		{x: 90, y: 84},
-		{x: 91, y: 84},
-		{x: 92, y: 84},
-		{x: 93, y: 84},
-		{x: 94, y: 84},
-		{x: 95, y: 84},
-		{x: 96, y: 84},
-		{x: 97, y: 84},
-		{x: 98, y: 84},
-		{x: 120, y: 84},
-	]
+		{ x: 2, y: 2 },
+		{ x: 3, y: 35 },
+		{ x: 32, y: 85 },
+		{ x: 54, y: 2 },
+		{ x: 41, y: 45 },
+		{ x: 90, y: 84 },
+		{ x: 91, y: 84 },
+		{ x: 92, y: 84 },
+		{ x: 93, y: 84 },
+		{ x: 94, y: 84 },
+		{ x: 95, y: 84 },
+		{ x: 96, y: 84 },
+		{ x: 97, y: 84 },
+		{ x: 98, y: 84 },
+		{ x: 120, y: 84 },
+	];
 	// Hook to get the dataset
-  useEffect(() => {
-    const dataTest = {
-      // datasets is an array of objects where each object represents a set of data to display corresponding to the labels above. for brevity, we'll keep it at one object
-      datasets: [
-        {
-          label: 'Popularity of colours',
-          data: dataValues,
-          backgroundColor: "var(--contrast-color)",
-          borderWidth: 1,
-        }
-      ],
-			
-    };
-    setChartData(dataTest);
-  }, []);
+	useEffect(() => {
+		const dataTest = {
+			// datasets is an array of objects where each object represents a set of data to display corresponding to the labels above. for brevity, we'll keep it at one object
+			datasets: [
+				{
+					label: 'Popularity of colours',
+					data: dataValues,
+					backgroundColor: 'var(--contrast-color)',
+					borderWidth: 1,
+				},
+			],
+		};
+		setChartData(dataTest);
+	}, []);
 
 	useEffect(() => {
 		if (user && editMode && level.creator && level.creator.id !== user.id)
@@ -308,9 +307,9 @@ const LevelAI = ({
 									yData="Données Y"
 								/>
 							</Col>
-							<Col md={9} style={{padding: '0'}}>
+							<Col md={9} style={{ padding: '0' }}>
 								<div className="graph-container">
-									<LevelGraph 
+									<LevelGraph
 										data={chartData}
 										title="Premier essai de graphique"
 										xAxis="X axis"

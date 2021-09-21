@@ -160,12 +160,12 @@ const api = {
 			get: apiGet('levels/:id', Level, false, level => {
 				if (level.layout) return plainToClass(LevelAlive, level);
 				else if (level.testCases) return plainToClass(LevelCode, level);
-				return plainToClass(Level, level);
+				return plainToClass(LevelAI, level);
 			}),
 			update: apiUpdate('levels/:id', Level, level => {
 				if (level.layout) return plainToClass(LevelAlive, level);
 				else if (level.testCases) return plainToClass(LevelCode, level);
-				return plainToClass(Level, level);
+				return plainToClass(LevelAI, level);
 			}),
 			async query(body: QueryDTO) {
 				return (await axios.post('levels/query', body)).data.map((d: any) =>

@@ -136,7 +136,6 @@ const Level = (props: LevelProps) => {
 				}
 			></LevelAI>
 		);
-
 	history.push(routes.public.home.path);
 	return <></>;
 };
