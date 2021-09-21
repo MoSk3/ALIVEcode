@@ -80,13 +80,14 @@ public class BuiltinsListeUtils {
             }, new Type("liste")) {
                 @Override
                 public ASObjet<?> executer() {
-                    Liste liste = (Liste) this.getParamsValeursDict().get("lst");
-                    Fonction f = (Fonction) this.getParamsValeursDict().get("f");
+                    ArrayList<ASObjet<?>> liste = new ArrayList<>(List.of(this.getParamsValeursDict().get("lst")));
                     Liste nouvelleListe = new Liste();
-                    for (ASObjet<?> element : liste.getValue()) {
-                        nouvelleListe.ajouterElement(f.setParamPuisExecute(new ArrayList<>(Arrays.asList(element))));
+                    ASObjet<?> f = this.getParamsValeursDict().get("f");
+                    if (f instanceof ASFonction fonction) {
+                        nouvelleListe.ajouterElement(fonction.makeInstance().executer(liste));
+                    } else {
+                        nouvelleListe.ajouterElement(((ASObjet.Fonction) f).setParamPuisExecute(liste));
                     }
-
                     return nouvelleListe;
                 }
             },
@@ -111,13 +112,22 @@ public class BuiltinsListeUtils {
             }, new Type("liste")) {
                 @Override
                 public ASObjet<?> executer() {
-                    ArrayList<ASObjet<?>> liste = new ArrayList<>(List.of(this.getParamsValeursDict().get("lst")));
-                    Liste nouvelleListe = new Liste();
+                    Liste liste = (Liste) this.getParamsValeursDict().get("lst");
+                    Liste nouvelleListe;
                     ASObjet<?> f = this.getParamsValeursDict().get("f");
+
                     if (f instanceof ASFonction fonction) {
-                        nouvelleListe.ajouterElement(fonction.makeInstance().executer(liste));
+                        nouvelleListe = new Liste(liste.getValue().stream().filter(element -> fonction
+                                        .makeInstance()
+                                        .executer(new ArrayList<>(List.of((ASObjet<?>) element)))
+                                        .boolValue())
+                                .toArray(ASObjet[]::new));
+
                     } else {
-                        nouvelleListe.ajouterElement(((ASObjet.Fonction) f).setParamPuisExecute(liste));
+                        nouvelleListe = new Liste(liste.getValue().stream().filter(element -> ((ASObjet.Fonction) f)
+                                        .setParamPuisExecute(new ArrayList<>(List.of((ASObjet<?>) element)))
+                                        .boolValue())
+                                .toArray(ASObjet[]::new));
                     }
                     return nouvelleListe;
                 }
