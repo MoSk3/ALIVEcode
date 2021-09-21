@@ -3,7 +3,7 @@ package interpreteur.as.modules;
 import interpreteur.as.Objets.ASObjet;
 import interpreteur.executeur.Executeur;
 
-public class ModuleDict extends ASModule {
+public class ModuleDict {
 
     String dictCode = """
             fonction Dict.creer() -> fonctionType
@@ -32,10 +32,6 @@ public class ModuleDict extends ASModule {
             fin fonction
             """;
 
-    public ModuleDict(ASModuleManager moduleManager) {
-        super(moduleManager);
-    }
-
     //ASFonction creer = new ASFonction("creer", ASObjet.TypeBuiltin.fonctionType.asType()) {
     //    @Override
     //    public FonctionInstance makeInstance() {
@@ -46,8 +42,8 @@ public class ModuleDict extends ASModule {
     //    }
     //};
 
-    public void charger(Executeur executeurInstance) {
-        moduleManager.ajouterModule("Dict", new ASObjet.Fonction[]{
+    static ASModule charger(Executeur executeurInstance) {
+        return new ASModule(new ASObjet.Fonction[]{
 
                 new ASObjet.Fonction("creer", new ASObjet.Fonction.Parametre[]{
 

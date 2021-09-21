@@ -73,11 +73,6 @@ public class Executeur {
     // ast
     private ASAst ast;
 
-
-    public Executeur() {
-        asModuleManager.init();
-    }
-
     public static void printCompiledCode(String code) {
         int nbTab = 0;
         code = code.replaceAll(", ", ",");
@@ -126,10 +121,8 @@ public class Executeur {
 
 
         String[] lines = """   
-                fonction facto(n: entier)
-                    retourner n * facto(n - 1) si n > 1 sinon 1
-                fin fonction
-                afficher facto(5)
+                utiliser Math
+                afficher Math.sin(Math.rad(Math.PI))
                 """.split("\n");
 
 
@@ -607,14 +600,16 @@ public class Executeur {
         datas.clear();
 
         FonctionManager.reset();
-        for (ASObjet.Fonction fonction : asModuleManager.getModuleBuiltins().getFonctions())
-            FonctionManager.ajouterFonction(fonction);
-        for (ASObjet.Variable variable : asModuleManager.getModuleBuiltins().getVariables()) {
-            Scope.getCurrentScope().declarerVariable(variable);
-        }
+
+        asModuleManager.getModuleBuiltins().utiliser((String) null);
+        //for (ASObjet.Fonction fonction : asModuleManager.getModuleBuiltins().getFonctions())
+        //    FonctionManager.ajouterFonction(fonction);
+        //for (ASObjet.Variable variable : asModuleManager.getModuleBuiltins().getVariables()) {
+        //    Scope.getCurrentScope().declarerVariable(variable);
+        //}
+        Declarer.reset();
         DataVoiture.reset();
 
-        Declarer.reset();
         // remet la coordonnee d'execution au debut du programme
         coordRunTime.setCoord(debutCoord.toString());
         //if (ast instanceof ASAstExperimental) {

@@ -1,7 +1,8 @@
-package interpreteur.as.modules;
+package interpreteur.as.modules.builtins;
 
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.as.Objets.ASObjet;
+import interpreteur.as.modules.ASModule;
 import interpreteur.ast.buildingBlocs.expressions.Type;
 import interpreteur.executeur.Executeur;
 
@@ -10,9 +11,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-public class ModuleTexteUtils extends ASModule {
-
-    public static List<ASObjet.Fonction> fonctions = Arrays.asList(
+public class BuiltinsTexteUtils {
+    public static ASObjet.Fonction[] fonctions = new ASObjet.Fonction[]{
 
             new ASObjet.Fonction("texte", new ASObjet.Fonction.Parametre[]{
                     new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.tout.asType(), "element", null)
@@ -132,16 +132,10 @@ public class ModuleTexteUtils extends ASModule {
                     return new Texte(texte);
                 }
             }
-    );
-    public static List<ASObjet.Constante> constantes = Collections.emptyList();
+    };
 
-    public ModuleTexteUtils(ASModuleManager moduleManager) {
-        super(moduleManager);
-    }
-
-    @Override
-    public void charger(Executeur executeurInstance) {
-
+    public static ASModule charger(Executeur executeurInstance) {
+        return new ASModule(fonctions);
     }
 }
 

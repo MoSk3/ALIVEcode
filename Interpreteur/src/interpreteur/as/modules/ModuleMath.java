@@ -5,14 +5,9 @@ import interpreteur.ast.buildingBlocs.expressions.Type;
 import interpreteur.executeur.Executeur;
 
 
-public class ModuleMath extends ASModule {
-
-    public ModuleMath(ASModuleManager moduleManager) {
-        super(moduleManager);
-    }
-
-    public void charger(Executeur executeurInstance) {
-        moduleManager.ajouterModule("Math", new ASObjet.Fonction[]{
+public class ModuleMath {
+    static ASModule charger(Executeur executeurInstance) {
+        return new ASModule(new ASObjet.Fonction[]{
                 new ASObjet.Fonction("sin", new ASObjet.Fonction.Parametre[]{
                         new ASObjet.Fonction.Parametre(new Type("nombre"), "x", null)
                 }, new Type("decimal")) {
@@ -63,10 +58,9 @@ public class ModuleMath extends ASModule {
                         return new Decimal(Math.round(n * shift) / shift);
                     }
                 },
-        }, new ASObjet.Constante[]{
+        }, new ASObjet.Variable[]{
                 new ASObjet.Constante("PI", new ASObjet.Decimal(Math.PI)),
                 new ASObjet.Constante("E", new ASObjet.Decimal(Math.E))
         });
     }
-
 }

@@ -290,6 +290,7 @@ public interface ASObjet<T> {
         }
 
         public static void ajouterStructure(String nomStruct) {
+            if (nomStruct == null) return;
             structure += (structure.isBlank() ? "" : ".") + nomStruct;
         }
 

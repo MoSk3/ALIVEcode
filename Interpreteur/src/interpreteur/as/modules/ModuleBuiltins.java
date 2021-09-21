@@ -3,6 +3,9 @@ package interpreteur.as.modules;
 import interpreteur.as.Objets.ASObjet;
 import interpreteur.as.Objets.Scope;
 import interpreteur.as.erreurs.ASErreur;
+import interpreteur.as.modules.builtins.BuiltinsListeUtils;
+import interpreteur.as.modules.builtins.BuiltinsNombreUtils;
+import interpreteur.as.modules.builtins.BuiltinsTexteUtils;
 import interpreteur.ast.buildingBlocs.expressions.Type;
 import interpreteur.data_manager.Data;
 import interpreteur.executeur.Executeur;
@@ -10,19 +13,15 @@ import interpreteur.executeur.Executeur;
 import java.util.*;
 import java.util.function.Supplier;
 
-public class ModuleBuiltins extends ASModule {
-
-
+public class ModuleBuiltins {
     private static final Supplier<ASObjet<?>> getVarsLocales = () -> {
         List<ASObjet.Variable> variableList = new ArrayList<>(Scope.getCurrentScopeInstance().getVariableStack());
         return new ASObjet.Liste(variableList.stream().map(var -> new ASObjet.Texte(var.obtenirNom())).toArray(ASObjet.Texte[]::new));
     };
-
     private static final Supplier<ASObjet<?>> getVarsGlobales = () -> {
         List<ASObjet.Variable> variableList = new ArrayList<>(Scope.getScopeInstanceStack().firstElement().getVariableStack());
         return new ASObjet.Liste(variableList.stream().map(var -> new ASObjet.Texte(var.obtenirNom())).toArray(ASObjet.Texte[]::new));
     };
-
     private static final Supplier<ASObjet<?>> getVarListe = () -> {
         HashSet<ASObjet.Variable> variables = new HashSet<>();
         Scope.getScopeInstanceStack().forEach(scopeInstance -> variables.addAll(scopeInstance.getVariableStack()));
@@ -32,20 +31,16 @@ public class ModuleBuiltins extends ASModule {
      * Module builtins: contient toutes les fonctions utiliser par defaut dans le langage
      */
     //public static List<ASObjet.Fonction> fonctions =
-    public static List<ASObjet.Variable> variables = Arrays.asList(
+    public static ASObjet.Variable[] variables = new ASObjet.Variable[]{
             new ASObjet.Constante("bob", new ASObjet.Texte("(~°3°)~")),
             new ASObjet.Constante("finl", new ASObjet.Texte("\n")),
             new ASObjet.Variable("varLocales", new ASObjet.Liste(), ASObjet.TypeBuiltin.liste.asType()).setGetter(getVarsLocales).setReadOnly(),
             new ASObjet.Variable("varGlobales", new ASObjet.Liste(), ASObjet.TypeBuiltin.liste.asType()).setGetter(getVarsGlobales).setReadOnly(),
             new ASObjet.Variable("varListe", new ASObjet.Liste(), ASObjet.TypeBuiltin.liste.asType()).setGetter(getVarListe).setReadOnly()
-    );
+    };
 
-    public ModuleBuiltins(ASModuleManager moduleManager) {
-        super(moduleManager);
-    }
-
-    public static List<ASObjet.Fonction> loadFonctions(Executeur executeurInstance) {
-        return Arrays.asList(
+    static ASModule charger(Executeur executeurInstance) {
+        ASObjet.Fonction[] fonctions = new ASObjet.Fonction[]{
 
                 new ASObjet.Fonction("afficher", new ASObjet.Fonction.Parametre[]{
                         new ASObjet.Fonction.Parametre(new Type("tout"), "element", new ASObjet.Texte(""))
@@ -173,13 +168,14 @@ public class ModuleBuiltins extends ASModule {
                         return var.getValeurApresGetter();
                     }
                 }
+        };
 
-        );
-    }
+        var fonctionsBuiltins = new ArrayList<>(List.of(fonctions));
+        fonctionsBuiltins.addAll(List.of(BuiltinsListeUtils.fonctions));
+        fonctionsBuiltins.addAll(List.of(BuiltinsTexteUtils.fonctions));
+        fonctionsBuiltins.addAll(List.of(BuiltinsNombreUtils.fonctions));
 
-    @Override
-    public void charger(Executeur executeurInstance) {
-
+        return new ASModule(fonctionsBuiltins.toArray(ASObjet.Fonction[]::new), variables);
     }
 }
 

@@ -1,17 +1,17 @@
-package interpreteur.as.modules;
+package interpreteur.as.modules.builtins;
 
 import interpreteur.as.Objets.ASFonction;
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.as.Objets.ASObjet;
+import interpreteur.as.modules.ASModule;
 import interpreteur.ast.buildingBlocs.expressions.Type;
 import interpreteur.executeur.Executeur;
 
 import java.util.*;
 
-public class ModuleListeUtils extends ASModule {
+public class BuiltinsListeUtils {
 
-    public static List<ASObjet.Fonction> fonctions = Arrays.asList(
-
+    public static ASObjet.Fonction[] fonctions = new ASObjet.Fonction[]{
             /*
              * sep:
              * 		@param t:
@@ -241,18 +241,15 @@ public class ModuleListeUtils extends ASModule {
                     int idx = lst.getValue().indexOf(val);
                     return idx != -1 ? new Entier(idx) : new Nul();
                 }
-            });
+            }
+    };
 
 
     public static List<ASObjet.Constante> constantes = Collections.emptyList();
 
-    public ModuleListeUtils(ASModuleManager moduleManager) {
-        super(moduleManager);
-    }
 
-    @Override
-    public void charger(Executeur executeurInstance) {
-
+    public ASModule charger(Executeur executeurInstance) {
+        return null;
     }
 }
 
