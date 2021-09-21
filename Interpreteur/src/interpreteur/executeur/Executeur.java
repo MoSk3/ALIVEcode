@@ -121,8 +121,10 @@ public class Executeur {
 
 
         String[] lines = """   
-                utiliser Math
-                afficher Math.sin(Math.rad(Math.PI))
+                utiliser IA
+                afficher IA.moyenne([1, 2, 3, 4, 5, 6, 7])
+                
+                
                 """.split("\n");
 
 
