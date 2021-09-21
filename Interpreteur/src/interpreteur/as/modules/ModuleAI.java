@@ -2,30 +2,14 @@ package interpreteur.as.modules;
 
 import interpreteur.as.Objets.ASObjet;
 import interpreteur.as.erreurs.ASErreur;
+import interpreteur.executeur.Executeur;
 
 /**
- * This abstract class implements all used formulas in the artificial intelligence course of this application.
- * All methods are static, and since it is an abstract class, it cannot become an object.
+ * Module containing all methods related to artificial intelligence.
  *
- * @author Félix Jobin
+ * @author Felix Jobin
  */
-public class ModuleAI extends ASModule {
-
-    private static class NoDataException extends ASErreur.ErreurAliveScript {
-        public NoDataException(String message) {
-            super(message, "ErreurAucuneDonnee");
-        }
-    }
-
-    private static class DifferentArrayLengthException extends ASErreur.ErreurAliveScript {
-        public DifferentArrayLengthException(String message) {
-            super(message, "ErreurTailleDeListeIncompatible");
-        }
-    }
-
-    public ModuleAI(ASModuleManager moduleManager) {
-        super(moduleManager);
-    }
+public class ModuleAI {
 
     //Sets how many numbers are after the coma when rounding, depending on the amount of zeroes.
     private static final double ROUNDING_FACTOR = 10000.0;
@@ -87,7 +71,6 @@ public class ModuleAI extends ASModule {
         strdDev = Math.sqrt(summation(differences) / (double) differences.length);
         return strdDev;
     }
-
 
     /**
      * <p>
@@ -223,16 +206,10 @@ public class ModuleAI extends ASModule {
         return ROUNDING_FACTOR;
     }
 
-    @Override
-    public void charger() {
-
-        /**
-         * Module containing all methods related to artificial intelligence.
-         */
-        moduleManager.ajouterModule("IA", new ASObjet.Fonction[]{
-
-                /**
-                 * Calculates the mean of a list of numbers.
+    static ASModule charger(Executeur executeurInstance) {
+        return new ASModule(new ASObjet.Fonction[]{
+                /*
+                 Calculates the mean of a list of numbers.
                 */
                 new ASObjet.Fonction("moyenne",
                         new ASObjet.Fonction.Parametre[]{
@@ -267,7 +244,7 @@ public class ModuleAI extends ASModule {
                         Double[] doubles;
                         //liste.getValue().stream().map(Object::toString).allMatch(Nombre::estNumerique);
                         try {
-                           doubles = liste.getValue().stream().map(e -> ((Number) e.getValue()).doubleValue()).toArray(Double[]::new);
+                            doubles = liste.getValue().stream().map(e -> ((Number) e.getValue()).doubleValue()).toArray(Double[]::new);
                         } catch (ClassCastException err) {
                             throw new ASErreur.ErreurType("La fonction ecartType prend une liste de nombre, mais la liste pass\u00E9e en param\u00E8tre n'est pas compos\u00E9e que de nombres.");
                         }
@@ -345,6 +322,18 @@ public class ModuleAI extends ASModule {
                     }
                 }
         }, new ASObjet.Variable[]{});
+    }
+
+    private static class NoDataException extends ASErreur.ErreurAliveScript {
+        public NoDataException(String message) {
+            super(message, "ErreurAucuneDonnee");
+        }
+    }
+
+    private static class DifferentArrayLengthException extends ASErreur.ErreurAliveScript {
+        public DifferentArrayLengthException(String message) {
+            super(message, "ErreurTailleDeListeIncompatible");
+        }
     }
 }
 

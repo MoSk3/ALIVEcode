@@ -2,11 +2,12 @@ package interpreteur.as.modules;
 
 public enum EnumModule {
     builtins(ModuleBuiltins::charger),
-    AST(ModuleAst::charger),
+    Ast(ModuleAst::charger),
     Math(ModuleMath::charger),
     Voiture(ModuleVoiture::charger),
     Dict(ModuleDict::charger),
-    Test(ModuleTest::charger)
+    Test(ModuleTest::charger),
+    Ai(ModuleAI::charger)
     ;
 
     EnumModule(ModuleFactory moduleFactory) {
