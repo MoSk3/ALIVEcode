@@ -56,7 +56,7 @@ const Forum = () => {
 								<div className="media">
 									<div className="media-left">
 										<figure className="image is-48x48">
-											<img className="is-rounded" src="https://bulma.io/images/placeholders/128x128.png"/>
+											<img className="is-rounded" src="https://bulma.io/images/placeholders/128x128.png" alt=""/>
 										</figure>
 									</div>
 									<div className="has-text-left">
@@ -87,7 +87,7 @@ const Forum = () => {
 									<div className="media">
 										<div className="media-left">
 											<figure className="image is-48x48">
-												<img className="is-rounded" src="https://bulma.io/images/placeholders/128x128.png"/>
+												<img className="is-rounded" src="https://bulma.io/images/placeholders/128x128.png" alt=""/>
 											</figure>
 										</div>
 										<div className="has-text-left">
@@ -123,7 +123,7 @@ const Forum = () => {
 									<div className="media">
 									<div className="media-left">
 										<figure className="image is-48x48">
-										<img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image"/>
+										<img src="https://bulma.io/images/placeholders/96x96.png" alt=""/>
 										</figure>
 									</div>
 									<div className="media-content">
