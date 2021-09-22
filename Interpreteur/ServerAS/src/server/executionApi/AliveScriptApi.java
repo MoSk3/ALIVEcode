@@ -1,16 +1,15 @@
-package server;
+package server.executionApi;
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import server.BaseApi;
 
 import java.io.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Logger;
 
 
 /**
@@ -18,16 +17,16 @@ import java.util.logging.Logger;
  *
  * @author Mathis Laroche
  */
-public record AliveScriptApi(String CORS_ORIGIN) implements HttpHandler {
+public class AliveScriptApi extends BaseApi {
+
+    public AliveScriptApi(String CORS_ORIGIN) {
+        super(CORS_ORIGIN);
+    }
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
+        super.handle(httpExchange);
         String requestParamValue;
-
-        Headers headers = httpExchange.getResponseHeaders();
-        headers.set("Access-Control-Allow-Origin", CORS_ORIGIN);
-        headers.set("Access-Control-Allow-Credentials", "true");
-        headers.set("Access-Control-Allow-Headers", "Authorization, Content-Type");
 
         requestParamValue = switch (httpExchange.getRequestMethod().toUpperCase()) {
             case "GET", "OPTIONS" -> "{}";
@@ -38,13 +37,6 @@ public record AliveScriptApi(String CORS_ORIGIN) implements HttpHandler {
         handleResponse(httpExchange, requestParamValue);
     }
 
-    private JSONObject byteArrayToJson(byte[] byteArray) {
-        StringBuilder inputData = new StringBuilder();
-        for (byte b : byteArray) {
-            inputData.append((char) b);
-        }
-        return new JSONObject(inputData.toString());
-    }
 
     private boolean hasValidDataStructure(JSONObject data) {
         List<String> mustHaveFields = Arrays.asList(
@@ -112,21 +104,6 @@ public record AliveScriptApi(String CORS_ORIGIN) implements HttpHandler {
             aliveScriptService.destroy();
         }
         return "{}";
-    }
-
-    private void handleResponse(HttpExchange httpExchange, String requestParamValue) throws IOException {
-
-        OutputStream outputStream = httpExchange.getResponseBody();
-        byte[] responseBytes = requestParamValue.getBytes();
-
-        // this line is a must
-        httpExchange.sendResponseHeaders(200, responseBytes.length);
-        outputStream.write(responseBytes);
-
-        outputStream.flush();
-
-        outputStream.close();
-
     }
 }
 
