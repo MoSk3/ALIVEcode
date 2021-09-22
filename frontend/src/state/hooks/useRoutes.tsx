@@ -30,6 +30,7 @@ import { useHistory } from 'react-router';
 import ASDocs from '../../Components/AliveScriptComponents/ASDocs/ASDocs';
 import { MaintenanceError } from '../../Pages/Errors/MaintenanceError/MaintenanceError';
 import MaintenanceMenu from '../../Pages/SiteStatus/MaintenanceMenu/MaintenanceMenu';
+import QuizHome from '../../Pages/Quiz/QuizHome/QuizHome';
 
 type component =
 	| React.ComponentType<RouteComponentProps<any>>
@@ -173,6 +174,11 @@ const useRoutes = () => {
 			exact: true,
 			maintenanceExempt: true,
 			component: MaintenanceMenu,
+		},
+		quiz: {
+			path: '/quiz',
+			exact: true,
+			component: QuizHome
 		},
 	});
 
