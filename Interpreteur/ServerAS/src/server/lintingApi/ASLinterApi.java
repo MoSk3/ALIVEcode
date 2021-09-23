@@ -85,7 +85,7 @@ public class ASLinterApi extends BaseApi {
                 .put("fin", getReglePattern("FIN"))
                 .put("fonctions_builtin", fonctionsBuiltins)
                 .put("control_flow", new JSONArray(getPatternsOfCategory("control_flow")).put("\\bconst\\b"))
-                .put("variable", "[a-zA-Z\\\\$_\\u00a1-\\uffff][a-zA-Z\\\\d\\\\$_\\u00a1-\\uffff\\.]*");
+                .put("variable", "[a-zA-Z\\_\\u00a1-\\uffff][a-zA-Z\\\\d\\_\\u00a1-\\uffff\\.]*");
 
         return linterProperties.toString();
     }

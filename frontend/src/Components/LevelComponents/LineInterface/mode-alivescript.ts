@@ -193,7 +193,7 @@ ace.define(
 								importedModules.push(module)
 								return ['variable.language', 'support.class'];
 							}
-							else return ['variable.language', 'empty'];
+							else return ['variable.language', 'invisible'];
 						},
 						regex: `(\\butiliser\\s+)(${lintInfo.variable})`
 					},
@@ -256,16 +256,19 @@ ace.define(
 						regex: lintInfo.datatype.booleen,
 					},
 					{
-						token: 'support.function.italic',
+						token: 'support.type.italic',
 						regex: lintInfo.fonctions_builtin.join('|'),
 					},
 					{
 						token: function (name: string, parenthesis: string) {
 							if (lintInfo.fonctions_builtin.includes(name)) 
-								return ['support.function.italic', 'empty'];
-							else return ['support.function', 'empty'];
+								return ['support.type.italic', 'empty'];
+							else {
+								usedVariables.push(name)
+								return ['support.type', 'empty'];
+							}
 						},
-						regex: '(\\w+\\s*)(\\((?=.*\\)))',
+						regex: '(\\w+\\s*)(\\((?=.*\\)))', 
 					},
 					{
 						token: 'support.class',
@@ -280,7 +283,7 @@ ace.define(
 							else if (usedConstants.includes(variable))
 								return ['support.italic']
 							else
-								return ['empty']
+								return ['invisible']
 						},
 						regex: "(" + lintInfo.variable + ")",
 					},
@@ -325,7 +328,7 @@ ace.define(
 						token: 'comment.line',
 						regex: '.*',
 					},
-				],
+				], 
 				multi_line_documentation: [
 					{
 						token: 'comment.line.italic',

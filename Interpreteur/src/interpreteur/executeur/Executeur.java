@@ -604,7 +604,7 @@ public class Executeur {
 
         FonctionManager.reset();
 
-        asModuleManager.getModuleBuiltins().utiliser((String) null);
+        asModuleManager.utiliserModuleBuitlins();
         //for (ASObjet.Fonction fonction : asModuleManager.getModuleBuiltins().getFonctions())
         //    FonctionManager.ajouterFonction(fonction);
         //for (ASObjet.Variable variable : asModuleManager.getModuleBuiltins().getVariables()) {

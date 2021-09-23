@@ -33,6 +33,15 @@ public record ASModuleManager(Executeur executeurInstance) {
         return MODULE_FACTORY.get(EnumModule.builtins).charger(executeurInstance);
     }
 
+    public void utiliserModuleBuitlins() {
+        var moduleBuiltins = getModuleBuiltins();
+        moduleBuiltins.utiliser((String) null);
+        Scope.getCurrentScope().declarerVariable(new ASObjet.Constante("builtins", new ASObjet.Liste(moduleBuiltins
+                .getNomsConstantesEtFonctions()
+                .stream()
+                .map(ASObjet.Texte::new)
+                .toArray(ASObjet.Texte[]::new))));
+    }
 
     public void utiliserModule(String nomModule) {
         if (nomModule.equals("builtins")) {
