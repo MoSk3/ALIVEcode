@@ -1,5 +1,5 @@
 import { LevelAIProps, StyledAliveLevel } from './levelAITypes';
-import { useEffect, useState, useContext, useRef } from 'react';
+import { useEffect, useState, useContext, useRef, useMemo } from 'react';
 import LineInterface from '../../../Components/LevelComponents/LineInterface/LineInterface';
 import { UserContext } from '../../../state/contexts/UserContext';
 import { Row, Col } from 'react-bootstrap';
@@ -69,39 +69,64 @@ const LevelAI = ({
 
 	//Set the data for the level
 	const [chartData, setChartData] = useState({});
+	const [dataTable, setDataTable] = useState({});
+	
+	useMemo(() => {
+		const data = [
+			{ x: 2, y: 2 },
+			{ x: 3, y: 35 },
+			{ x: 32, y: 85 },
+			{ x: 54, y: 2 },
+			{ x: 41, y: 45 },
+			{ x: 90, y: 84 },
+			{ x: 91, y: 84 },
+			{ x: 92, y: 84 },
+			{ x: 93, y: 84 },
+			{ x: 94, y: 84 },
+			{ x: 95, y: 84 },
+			{ x: 96, y: 84 },
+			{ x: 97, y: 84 },
+			{ x: 98, y: 84 },
+			{ x: 120, y: 84 },
+		];
+		setDataTable(data);
+	}, []);
 
-	const dataValues = [
-		{ x: 2, y: 2 },
-		{ x: 3, y: 35 },
-		{ x: 32, y: 85 },
-		{ x: 54, y: 2 },
-		{ x: 41, y: 45 },
-		{ x: 90, y: 84 },
-		{ x: 91, y: 84 },
-		{ x: 92, y: 84 },
-		{ x: 93, y: 84 },
-		{ x: 94, y: 84 },
-		{ x: 95, y: 84 },
-		{ x: 96, y: 84 },
-		{ x: 97, y: 84 },
-		{ x: 98, y: 84 },
-		{ x: 120, y: 84 },
-	];
 	// Hook to get the dataset
 	useEffect(() => {
+		const data = [
+			{ x: 2, y: 2 },
+			{ x: 3, y: 35 },
+			{ x: 32, y: 85 },
+			{ x: 54, y: 2 },
+			{ x: 41, y: 45 },
+			{ x: 90, y: 84 },
+			{ x: 91, y: 84 },
+			{ x: 92, y: 84 },
+			{ x: 93, y: 84 },
+			{ x: 94, y: 84 },
+			{ x: 95, y: 84 },
+			{ x: 96, y: 84 },
+			{ x: 97, y: 84 },
+			{ x: 98, y: 84 },
+			{ x: 120, y: 84 },
+		];
+		setDataTable(data);
+
 		const dataTest = {
 			// datasets is an array of objects where each object represents a set of data to display corresponding to the labels above. for brevity, we'll keep it at one object
+			
 			datasets: [
 				{
 					label: 'Popularity of colours',
-					data: dataValues,
+					data: dataTable,
 					backgroundColor: 'var(--contrast-color)',
 					borderWidth: 1,
 				},
 			],
 		};
 		setChartData(dataTest);
-	}, []);
+	}, [chartData]);
 
 	useEffect(() => {
 		if (user && editMode && level.creator && level.creator.id !== user.id)
@@ -302,7 +327,7 @@ const LevelAI = ({
 						<Row className="data-section">
 							<Col md={3}>
 								<LevelTable
-									data={dataValues}
+									data={dataTable}
 									xData="Données X"
 									yData="Données Y"
 								/>
