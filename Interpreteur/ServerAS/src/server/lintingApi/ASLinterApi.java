@@ -12,42 +12,35 @@ import server.BaseApi;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ASLinterApi extends BaseApi {
-
     private final static ArrayList<Regle> REGLES;
-    private static final ASModuleManager MODULE_MANAGER = new ASModuleManager(null);
+    private final static ASModuleManager MODULE_MANAGER;
+    private final static JSONObject LINTER_INFO;
+    private final static String LINTER_INFO_STRING;
+    private static Logger logger;
 
     static {
+        MODULE_MANAGER = new ASModuleManager(null);
         var tmp = new LexerLoader(null);
         tmp.load();
         REGLES = tmp.getReglesAjoutees();
+        LINTER_INFO = loadLinterInfo();
+        LINTER_INFO_STRING = LINTER_INFO.toString();
     }
 
     public ASLinterApi(String CORS_ORIGIN) {
         super(CORS_ORIGIN);
     }
 
-    @Override
-    public void handle(HttpExchange httpExchange) throws IOException {
-        super.handle(httpExchange);
-
-        String requestParamValue;
-
-        requestParamValue = switch (httpExchange.getRequestMethod().toUpperCase()) {
-            case "GET" -> handleGetRequest(httpExchange);
-            case "POST" -> "{}";
-            default -> "";
-        };
-        assert requestParamValue != null;
-        handleResponse(httpExchange, requestParamValue);
+    public static void setLogger(Logger logger) {
+        ASLinterApi.logger = logger;
     }
 
-    private String handleGetRequest(HttpExchange httpExchange) {
-        JSONObject linterProperties = new JSONObject();
-
+    public static JSONObject loadLinterInfo() {
         // adds all builtin functions
         List<String> fonctionsBuiltins = MODULE_MANAGER.getModuleBuiltins().getNomsConstantesEtFonctions();
         fonctionsBuiltins.remove("afficher");
@@ -69,7 +62,13 @@ public class ASLinterApi extends BaseApi {
         commands.remove("\\bconst\\b");
         commands.addAll(getPatternsOfCategory("methode_moteur"));
 
-        linterProperties
+        List<String> operators = getPatternsOfCategory("arithmetique");
+        operators.addAll(getPatternsOfCategory("assignements"));
+        operators.add(getReglePattern("FLECHE"));
+        operators.add(getReglePattern("DEUX_POINTS"));
+        operators.addAll(getPatternsOfCategory("comparaison"));
+
+        return new JSONObject()
                 .put("datatype", Map.ofEntries(getMembersOfCategory("type_de_donnees")
                         .map(regle -> Map.entry(regle.getNom().toLowerCase(), regle.getPattern()))
                         .toArray(Map.Entry[]::new))
@@ -85,28 +84,27 @@ public class ASLinterApi extends BaseApi {
                 .put("fin", getReglePattern("FIN"))
                 .put("fonctions_builtin", fonctionsBuiltins)
                 .put("control_flow", new JSONArray(getPatternsOfCategory("control_flow")).put("\\bconst\\b"))
-                .put("variable", "[a-zA-Z\\_\\u00a1-\\uffff][a-zA-Z\\\\d\\_\\u00a1-\\uffff\\.]*");
-
-        return linterProperties.toString();
+                .put("variable", "[a-zA-Z_\\u00a1-\\uffff][a-zA-Z\\d_\\u00a1-\\uffff]*")
+                .put("operators", operators);
     }
 
-    private List<String> getPatternsOfCategory(String nomCategorie) {
+    private static List<String> getPatternsOfCategory(String nomCategorie) {
         return getMembersOfCategory(nomCategorie).map(Regle::getPattern).collect(Collectors.toList());
     }
 
-    private List<String> getNamesOfCategory(String nomCategorie) {
+    private static List<String> getNamesOfCategory(String nomCategorie) {
         return getMembersOfCategory(nomCategorie).map(regle -> regle.getNom().toLowerCase()).collect(Collectors.toList());
     }
 
-    private Stream<Regle> getMembersOfCategory(String nomCategorie) {
+    private static Stream<Regle> getMembersOfCategory(String nomCategorie) {
         return REGLES.stream().filter(regle -> regle.getCategorie().equals(nomCategorie));
     }
 
-    private String getReglePattern(String regleName) {
+    private static String getReglePattern(String regleName) {
         return REGLES.stream().filter(regle -> regle.getNom().equals(regleName)).findFirst().orElseThrow().getPattern();
     }
 
-    private List<String> getMembersOfModule(String moduleName, boolean includeFunction, boolean includeVariables) {
+    private static List<String> getMembersOfModule(String moduleName, boolean includeFunction, boolean includeVariables) {
         ArrayList<String> members = new ArrayList<>();
         ASModule module = MODULE_MANAGER.getModule(moduleName);
         if (includeFunction)
@@ -115,6 +113,26 @@ public class ASLinterApi extends BaseApi {
             members.addAll(module.getNomsVariables().stream().map(name -> "\\b" + name + "\\b").collect(Collectors.toList()));
 
         return members;
+    }
+
+    @Override
+    public void handle(HttpExchange httpExchange) throws IOException {
+        super.handle(httpExchange);
+
+        String requestParamValue;
+
+        requestParamValue = switch (httpExchange.getRequestMethod().toUpperCase()) {
+            case "GET" -> handleGetRequest(httpExchange);
+            case "POST" -> "{}";
+            default -> "";
+        };
+        handleResponse(httpExchange, requestParamValue);
+    }
+
+    private String handleGetRequest(HttpExchange httpExchange) {
+        logger.info("Collecting linter info...");
+        logger.info("[SUCCESS] Linter info collected and sent successfuly");
+        return LINTER_INFO_STRING;
     }
 }
 

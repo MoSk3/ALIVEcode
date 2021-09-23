@@ -65,7 +65,8 @@ public class Server {
         FileHandler fileHandler = new FileHandler("./log/" + fileName, true);
         logger.addHandler(fileHandler);
         fileHandler.setFormatter(new SimpleFormatter());
-        AliveScriptService.setLogger(logger);
+        AliveScriptApi.setLogger(logger);
+        ASLinterApi.setLogger(logger);
     }
 
     public static void setupCleanUp(final double maxServiceLifeSpan) {

@@ -10,6 +10,7 @@ import java.io.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 
 /**
@@ -22,6 +23,7 @@ public class AliveScriptApi extends BaseApi {
     public AliveScriptApi(String CORS_ORIGIN) {
         super(CORS_ORIGIN);
     }
+    private static Logger logger;
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
@@ -37,6 +39,11 @@ public class AliveScriptApi extends BaseApi {
         handleResponse(httpExchange, requestParamValue);
     }
 
+
+    public static void setLogger(Logger logger) {
+        AliveScriptApi.logger = logger;
+        AliveScriptService.setLogger(logger);
+    }
 
     private boolean hasValidDataStructure(JSONObject data) {
         List<String> mustHaveFields = Arrays.asList(

@@ -49,14 +49,14 @@ public class Executeur {
     // coordonne ou commencer tous les programmes
     final private static Coordonnee debutCoord = new Coordonnee("<0>main");
     // lexer et parser
-    private static final ASLexer lexer = new ASLexer();
+    private final ASLexer lexer;
     //------------------------ compilation -----------------------------//
     private final Hashtable<String, Hashtable<String, Programme>> coordCompileDict = new Hashtable<>();
     private final ArrayList<Coordonnee> coordCompileTime = new ArrayList<>();
     // Coordonnee utilisee lors de l'execution pour savoir quelle ligne executer
     private final Coordonnee coordRunTime = new Coordonnee(debutCoord.toString());
     // modules
-    private final ASModuleManager asModuleManager = new ASModuleManager(this);
+    private final ASModuleManager asModuleManager;
 
     // data explaining the actions to do to the com.server
     private final ArrayList<Data> datas = new ArrayList<>();
@@ -71,7 +71,13 @@ public class Executeur {
     private boolean executionActive = false;
     private boolean canExecute = false;
     // ast
-    private ASAst ast;
+    private final ASAst ast;
+
+    public Executeur() {
+        lexer =  new ASLexer();
+        asModuleManager = new ASModuleManager(this);
+        ast = new ASAst(this);
+    }
 
     public static void printCompiledCode(String code) {
         int nbTab = 0;
@@ -113,19 +119,23 @@ public class Executeur {
     /**
      * @return le lexer utilise par l'interpreteur (voir ASLexer)
      */
-    public static ASLexer getLexer() {
-        return Executeur.lexer;
+    public ASLexer getLexer() {
+        return lexer;
     }
 
     public static void main(String[] args) {
 
 
         String[] lines = """   
-                utiliser Ai
-                afficher Ai
-                
-                
-                
+                var nb = "12"
+                var nb2 = "74"
+                                
+                afficher((decimal(nb) + decimal(nb2)) / 2)
+                                
+                utiliser Math
+                                
+                afficher Math.sin(Math.PI)
+                                
                 """.split("\n");
 
 
@@ -135,8 +145,13 @@ public class Executeur {
         if (!(a = executeur.compiler(lines, true)).equals("[]")) System.out.println(a);
         // executeur.printCompileDict();
         System.out.println(executeur.executerMain(false));
-        //System.out.println(compiler(lines, false));
-        //executerMain(false);
+
+        Executeur executeur2 = new Executeur();
+        executeur2.debug = true;
+        Object a2;
+        if (!(a2 = executeur2.compiler(lines, true)).equals("[]")) System.out.println(a2);
+        // executeur.printCompileDict();
+        System.out.println(executeur2.executerMain(false));
     }
 
     // methode utilisee a chaque fois qu'une info doit etre afficher par le langage
@@ -215,10 +230,6 @@ public class Executeur {
      */
     public ASAst getAst() {
         return ast;
-    }
-
-    public void setAst(ASAst ast) {
-        this.ast = ast;
     }
 
     public ASModuleManager getAsModuleManager() {
@@ -338,7 +349,6 @@ public class Executeur {
      *               </li>
      */
     private JSONArray compiler(String[] lignes) {
-        this.ast = new ASAst(this);
 
         // sert au calcul du temps qu'a pris le code pour etre compile
         LocalDateTime before = LocalDateTime.now();

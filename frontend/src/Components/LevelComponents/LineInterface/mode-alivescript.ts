@@ -17,6 +17,7 @@ export interface LinterFormatType {
 	control_flow: string[];
 	modules: string[];
 	commands: string[];
+	operators: string[];
 }
 
 export interface Datatype {
@@ -83,8 +84,8 @@ ace.define(
 			// 	'[a-zA-Z\\$_\u00a1-\uffff][a-zA-Z\\d\\$_\u00a1-\uffff]*';
 			const paramComment = '(\\{ *)(@)(.*? )(.*?)(\\})';
 			let importedModules: string[] = []
-			let usedVariables: string[] = []
-			let usedConstants: string[] = []
+			//let usedVariables: string[] = []
+			//let usedConstants: string[] = []
 			/*
 			const reserved_words = {
 				boucles: [
@@ -179,8 +180,8 @@ ace.define(
 					{
 						token: function(_arg: string) {
 							importedModules = [];
-							usedVariables = [];
-							usedConstants = [];
+							//usedVariables = [];
+							//usedConstants = [];
 						},
 						regex: '',
 						next: 'main',
@@ -193,30 +194,34 @@ ace.define(
 								importedModules.push(module)
 								return ['variable.language', 'support.class'];
 							}
-							else return ['variable.language', 'invisible'];
+							else return ['variable.language', 'invalid'];
 						},
 						regex: `(\\butiliser\\s+)(${lintInfo.variable})`
 					},
 					{
 						token: function(_declaration: string, variable_name: string) {
-							usedVariables.push(variable_name.trim())
+							//usedVariables.push(variable_name.trim())
 							return ['variable.language', 'support'];
 						},
 						regex: `(\\bvar\\s+)(${lintInfo.variable}\\s+)`
 					},
 					{
 						token: function(_declaration: string, variable_name: string) {
-							usedVariables.push(variable_name.trim())
+							//usedVariables.push(variable_name.trim())
 							return ['variable.language', 'support'];
 						},
 						regex: `(\\bvar\\s+)(${lintInfo.variable}\\s+)`
 					},
 					{
 						token: function(_declaration: string, variable_name: string) {
-							usedConstants.push(variable_name)
+							//usedConstants.push(variable_name)
 							return ['keyword.control.bold', 'support.italic'];
 						},
 						regex: `(\\bconst\\s+)(${lintInfo.variable})`
+					},
+					{
+						token: 'support',
+						regex: lintInfo.operators.join('|'),
 					},
 					{
 						token: 'variable.language',
@@ -264,28 +269,30 @@ ace.define(
 							if (lintInfo.fonctions_builtin.includes(name)) 
 								return ['support.type.italic', 'empty'];
 							else {
-								usedVariables.push(name)
+								//usedVariables.push(name)
 								return ['support.type', 'empty'];
 							}
 						},
-						regex: '(\\w+\\s*)(\\((?=.*\\)))', 
+						regex: `(${lintInfo.variable})(\\((?=.*\\)))`, 
 					},
 					{
 						token: 'support.class',
 						regex: lintInfo.datatype.nul,
 					},
 					{
-						token: function (variable: string) {
-							if (importedModules.includes(variable))
-								return ['support.class']
-							else if (usedVariables.includes(variable))
-								return ['support']
-							else if (usedConstants.includes(variable))
-								return ['support.italic']
-							else
-								return ['invisible']
+						token: function (variable: string, dot?: string) {
+							const lst = importedModules.includes(variable) ? ['support.class'] : ['empty']
+
+							if (dot !== undefined) lst.push('empty')
+							return lst
+							//else if (usedVariables.includes(variable))
+							//	return ['support']
+							//else if (usedConstants.includes(variable))
+							//	return ['support.italic']
+							//else
+							//	return ['invisible']
 						},
-						regex: "(" + lintInfo.variable + ")",
+						regex: "(" + lintInfo.variable + ")(\\.?)",//"(?!\\s*\\()\\.?)",
 					},
 					{
 						token: 'constant.numeric',
