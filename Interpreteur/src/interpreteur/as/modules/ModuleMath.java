@@ -8,6 +8,26 @@ import interpreteur.executeur.Executeur;
 public class ModuleMath {
     static ASModule charger(Executeur executeurInstance) {
         return new ASModule(new ASObjet.Fonction[]{
+                new ASObjet.Fonction("rad", new ASObjet.Fonction.Parametre[]{
+                        new ASObjet.Fonction.Parametre(new Type("nombre"), "x", null)
+                }, new Type("decimal")) {
+                    @Override
+                    public ASObjet<?> executer() {
+                        double angle = ((Number) this.getValeurParam("x").getValue()).doubleValue();
+                        return new Decimal(Math.toRadians(angle));
+                    }
+                },
+
+                new ASObjet.Fonction("deg", new ASObjet.Fonction.Parametre[]{
+                        new ASObjet.Fonction.Parametre(new Type("nombre"), "x", null)
+                }, new Type("decimal")) {
+                    @Override
+                    public ASObjet<?> executer() {
+                        double angle = ((Number) this.getValeurParam("x").getValue()).doubleValue();
+                        return new Decimal(Math.toDegrees(angle));
+                    }
+                },
+
                 new ASObjet.Fonction("sin", new ASObjet.Fonction.Parametre[]{
                         new ASObjet.Fonction.Parametre(new Type("nombre"), "x", null)
                 }, new Type("decimal")) {

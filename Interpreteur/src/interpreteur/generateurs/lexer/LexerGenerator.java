@@ -26,6 +26,9 @@ public class LexerGenerator {
     static private ArrayList<Regle> reglesAjoutees = new ArrayList<>();
 
     public LexerGenerator() {
+        reglesAjoutees.clear();
+        reglesIgnorees.clear();
+        Regle.reset();
     }
     /*
     protected void chargerRegles(File configGrammaire){

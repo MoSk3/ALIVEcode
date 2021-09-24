@@ -5,6 +5,7 @@ import interpreteur.executeur.Executeur;
 
 public class ModuleDict {
 
+
     String dictCode = """
             fonction Dict.creer() -> fonctionType
                 var clefs = {}
@@ -18,14 +19,12 @@ public class ModuleDict {
                         sinon
                             retourner valeurs[idx]
                         fin si
-                    sinon
-                        si valeur != nul
+                    sinon si valeur != nul
                             clefs += clef
                             valeurs += valeur
                             retourner {clef, valeur}
-                        sinon
-                            retourner nul
-                        fin si
+                    sinon
+                        retourner nul
                     fin si
                 fin fonction
                 retourner dict
@@ -56,3 +55,18 @@ public class ModuleDict {
         });
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
