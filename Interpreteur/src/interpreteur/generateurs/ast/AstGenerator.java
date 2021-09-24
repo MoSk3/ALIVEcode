@@ -5,7 +5,6 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.ast.Ast;
@@ -14,6 +13,7 @@ import interpreteur.ast.buildingBlocs.Programme;
 import interpreteur.generateurs.lexer.Regle;
 import interpreteur.tokens.Token;
 import interpreteur.utils.ArraysUtils;
+import interpreteur.utils.Range;
 
 
 /**
@@ -31,7 +31,8 @@ public class AstGenerator {
 
     static Hashtable<String, Ast<?>> expressionsDict = new Hashtable<>();
     static ArrayList<String> ordreExpressions = new ArrayList<>();
-    int cptr = 0;
+    private int cptrExpr = 0;
+    private int cptrProg = 0;
 
     private static ArrayList<String> ajouterSousAstOrdre(Hashtable<String, Ast<?>> sous_ast) {
         ArrayList<String> nouvelOrdre = new ArrayList<>(ordreExpressions);
@@ -180,25 +181,27 @@ public class AstGenerator {
                         String ouv = membresRegleSyntaxe.get(membresRegleSyntaxe.indexOf("#expression") - 1);
                         String ferm = membresRegleSyntaxe.get(membresRegleSyntaxe.size() - 1);
 
-                        int premier_ouv = expressionNom.indexOf(ouv);
+                        Range range = ArraysUtils.enclose(expressionNom, ouv, ferm);
+                        assert range != null;
+                        //int premier_ouv = expressionNom.indexOf(ouv);
                         //System.out.println(expressionNom);
                         // algorithme des parenthèses (), des crochets [] et des accolades {}
-                        int cptr = 0;
-                        exprLength = premier_ouv;
-                        do {
-                            String exp = expressionNom.get(exprLength);
-                            if (exp.equals(ferm)) {
-                                cptr--;
-                            } else if (exp.equals(ouv)) {
-                                cptr++;
-                            }
-                            //comment System.out.println("\nexp: " + exp
-                            //        + "\nfin: " + exprLength
-                            //        + "\ncptr: " + cptr
-                            //        + "\n" + "-".repeat(10)
-                            //);
-                            exprLength++;
-                        } while (cptr > 0);
+                        //int cptr = 0;
+                        //exprLength = premier_ouv;
+                        //do {
+                        //    String exp = expressionNom.get(exprLength);
+                        //    if (exp.equals(ferm)) {
+                        //        cptr--;
+                        //    } else if (exp.equals(ouv)) {
+                        //        cptr++;
+                        //    }
+                        //    //comment System.out.println("\nexp: " + exp
+                        //    //        + "\nfin: " + exprLength
+                        //    //        + "\ncptr: " + cptr
+                        //    //        + "\n" + "-".repeat(10)
+                        //    //);
+                        //    exprLength++;
+                        //} while (cptr > 0);
 
                         //comment for (String exp : expressionNom.subList(premier_ouv + 1, expressionNom.size())) {
                         //    if (exp.equals(ouv)) {
@@ -213,7 +216,7 @@ public class AstGenerator {
                         //}
 
 
-                        List<Object> expr = expressionArray.subList(debut, debut + exprLength);
+                        List<Object> expr = expressionArray.subList(debut, debut + range.end());
 
                         // System.out.println("\nregle: " + regleSyntaxe + "\nexpr: " + expr);
                         //expr.stream().map(Object::toString).forEach(Executeur::printCompiledCode);
@@ -224,7 +227,7 @@ public class AstGenerator {
 
                         ArrayList<Object> newArray = new ArrayList<>(expressionArray.subList(0, debut));
                         newArray.add(capsule);
-                        newArray.addAll(expressionArray.subList(debut + exprLength, expressionArray.size()));
+                        newArray.addAll(expressionArray.subList(debut + range.end(), expressionArray.size()));
 
                         //System.out.println(expressionArray);
                         expressionArray = newArray;
@@ -312,6 +315,14 @@ public class AstGenerator {
         ordreProgrammes.clear();
     }
 
+    public static ArrayList<String> getOrdreExpressions() {
+        return ordreExpressions;
+    }
+
+    public static ArrayList<String> getOrdreProgrammes() {
+        return ordreProgrammes;
+    }
+
     private String remplacerCategoriesParMembre(String pattern) {
         String nouveauPattern = pattern;
         for (String option : pattern.split("~")) {
@@ -347,8 +358,10 @@ public class AstGenerator {
                 fonction.getSousAst().remove(p);
                 fonction.getSousAst().put(remplacerCategoriesParMembre(p), sousAstCopy.get(p));
             }
-
-            programmesDict.put(remplacerCategoriesParMembre(programme), fonction); // remplace les categories par ses membres, s'il n'y a pas de categorie, ne modifie pas le pattern
+            fonction.setImportance(cptrProg++);
+            String nouveauPattern = remplacerCategoriesParMembre(programme);
+            programmesDict.put(nouveauPattern, fonction); // remplace les categories par ses membres, s'il n'y a pas de categorie, ne modifie pas le pattern
+            ordreProgrammes.add(nouveauPattern);
         }
     }
 
@@ -358,8 +371,9 @@ public class AstGenerator {
             si plusieurs expressions ont la mÃªme importance, la derniÃ¨re ajoutÃ©e sera priorisÃ©e
 		 */
         String nouveauPattern = remplacerCategoriesParMembre(pattern);
-        fonction.setImportance(cptr++);
+        fonction.setImportance(cptrExpr++);
         expressionsDict.put(nouveauPattern, fonction);
+        ordreExpressions.add(nouveauPattern);
     }
 
     protected void setOrdreProgramme() {
@@ -371,11 +385,12 @@ public class AstGenerator {
             if (importance == -1) {
                 ordreProgrammes.add(pattern);
             } else {
-                if (ordreProgrammes.get(importance) == null) {
-                    ordreProgrammes.set(importance, pattern);
-                } else {
-                    ordreProgrammes.add(importance, pattern);
-                }
+                //if (ordreProgrammes.get(importance) == null) {
+                //    ordreProgrammes.set(importance, pattern);
+                //} else {
+                //    ordreProgrammes.add(importance, pattern);
+                //}
+                ordreProgrammes.add(importance, pattern);
             }
         }
         ordreProgrammes.removeIf(Objects::isNull);
@@ -396,7 +411,6 @@ public class AstGenerator {
                 } else {
                     ordreExpressions.add(importance, pattern);
                 }
-
             }
         }
         ordreExpressions.removeIf(Objects::isNull);
@@ -408,7 +422,7 @@ public class AstGenerator {
 
         String programme = obtenirProgramme(listToken);
         if (programme == null) {
-            throw new Error("Programme invalide: " + listToken);
+            throw new ASErreur.ErreurSyntaxe("Syntaxe invalide: " + listToken.stream().map(Token::obtenirValeur).collect(Collectors.toList()));
         }
         //System.out.println("Programme trouvé: " + programme);
 

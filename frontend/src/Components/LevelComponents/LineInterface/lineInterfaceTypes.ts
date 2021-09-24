@@ -107,8 +107,7 @@ background: #002e66
 	}
 	.ace-cobalt .ace_storage.ace_type,
 	.ace-cobalt .ace_support.ace_type {
-		font-style: italic;
-		color: #66d9ef;
+		color: #536bcc;
 	}
 	.ace-cobalt .ace_entity.ace_name.ace_function,
 	.ace-cobalt .ace_entity.ace_other,

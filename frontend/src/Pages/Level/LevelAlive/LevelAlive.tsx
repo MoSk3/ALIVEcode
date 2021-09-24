@@ -72,7 +72,7 @@ const LevelAlive = ({
 	};
 
 	useEffect(() => {
-		if (user && editMode && level.creator.id !== user.id)
+		if (user && editMode && level.creator && level.creator.id !== user.id)
 			return history.push(routes.public.home.path);
 
 		setExecutor(new LevelAliveExecutor(level.name, user ?? undefined));
@@ -183,13 +183,16 @@ const LevelAlive = ({
 									/>
 								</>
 							)}
-							{user && !editMode && user.id === level.creator.id && (
-								<IconButton
-									to={routes.auth.level_edit.path.replace(':id', level.id)}
-									icon={faPencilAlt}
-									size="2x"
-								/>
-							)}
+							{user &&
+								!editMode &&
+								level.creator &&
+								user.id === level.creator.id && (
+									<IconButton
+										to={routes.auth.level_edit.path.replace(':id', level.id)}
+										icon={faPencilAlt}
+										size="2x"
+									/>
+								)}
 							<IconButton
 								onClick={() => goToNewTab(routes.public.asDocs.path)}
 								icon={faBookOpen}

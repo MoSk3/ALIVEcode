@@ -71,6 +71,7 @@
 		"student": "étudiant",
 		"understood": "C'est compris!",
 		"description": "description",
+		"deleted_user": "Ancien utilisateur",
 		"time": {
 			"format": "{{dayName}}, {{day}} {{monthName}} {{year}} - {{hour}}:{{minute}}",
 			"day": {
@@ -220,7 +221,8 @@
 			},
 			"categories": "Catégories",
 			"links": "Liens pratiques",
-			"copyright": "Copyright &copy; 2021 Touts droits réservés par"
+			"copyright_1": "Copyright",
+			"copyright_2": " 2021 Tous droits réservés par"
 		}
 	},
 	"ai": {

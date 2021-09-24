@@ -71,8 +71,7 @@ const useRoutes = () => {
 				maintenance &&
 				maintenance.started &&
 				!maintenance.finished &&
-				!route.maintenanceExempt &&
-				route.hasAccess
+				!route.maintenanceExempt
 			) {
 				if (!user || !user.isAdmin) {
 					route.component = MaintenanceError;
@@ -112,13 +111,14 @@ const useRoutes = () => {
 				else route.component = defaultRedirect;
 			});
 		}
-		return routeGroup;
+		return asRoutes(routeGroup);
 	};
 
 	const public_routes = asRoutes({
 		test: {
 			path: '/test',
 			component: Test,
+			adminOnly: true,
 		},
 		home: {
 			exact: true,
