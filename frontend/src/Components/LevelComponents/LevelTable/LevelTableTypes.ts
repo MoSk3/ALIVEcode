@@ -10,7 +10,7 @@ export interface LevelTableProps {
 export const StyledLevelTable = styled(FillContainer)`
   
   tbody {
-    font-size: 13px;
+    font-size: 11px;
     border-style: none;
   }
 
@@ -20,13 +20,17 @@ export const StyledLevelTable = styled(FillContainer)`
     text-align: center;
   }
   .titles {
-    font-size: 15px;
+    font-size: 13px;
     font-weight: bolder;
     background-color: var(--secondary-color);
     border-style: none;
   }
   .data {
     background-color: whitesmoke;
+    border-top: 0.2vh solid gray;
+  }
+  .data-number {
+    background-color: skyblue;
     border-top: 0.2vh solid gray;
   }
   .container {

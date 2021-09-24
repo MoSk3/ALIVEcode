@@ -61,7 +61,7 @@ const LevelGraph = React.memo((props: LevelGraphProps) => {
                 display: true,
                 text: props.title,
                 font: {
-                  size: 28,
+                  size: 26,
                 }
               },
               legend: {

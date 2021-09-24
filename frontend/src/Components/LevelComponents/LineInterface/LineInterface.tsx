@@ -109,6 +109,9 @@ const LineInterface = ({
 					}}
 					onLoad={() => {
 						handleChange(defaultContent);
+						const editor = ace.edit('1nt3rf4c3');
+						setAutocomplete(editor);
+						editor.keyBinding.addKeyboardHandler(autocomplete, 0);
 					}}
 					fontSize="large"
 					name="1nt3rf4c3" //"UNIQUE_ID_OF_DIV"

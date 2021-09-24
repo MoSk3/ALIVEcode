@@ -142,6 +142,10 @@ public interface ASObjet<T> {
             return true;
         }
 
+        /**
+         * applique le setter
+         * @param valeur
+         */
         public void changerValeur(ASObjet<?> valeur) {
             if (nouvelleValeurValide(valeur)) {
                 if (this.setter != null) {
@@ -150,6 +154,14 @@ public interface ASObjet<T> {
                     this.valeur = valeur;
                 }
             }
+        }
+
+        /**
+         * by pass the setter
+         * @param valeur
+         */
+        public void setValeur(ASObjet<?> valeur) {
+            this.valeur = valeur;
         }
 
         @Override

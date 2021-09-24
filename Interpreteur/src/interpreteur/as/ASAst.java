@@ -36,10 +36,13 @@ public class ASAst extends AstGenerator {
     private final Executeur executeurInstance;
 
     public ASAst(Executeur executeurInstance) {
+        reset();
         ajouterProgrammes();
         ajouterExpressions();
         this.executeurInstance = executeurInstance;
     }
+
+
 
 
     protected void ajouterProgrammes() {
@@ -58,7 +61,7 @@ public class ASAst extends AstGenerator {
                         if (p.get(1) instanceof ValeurConstante valeurConstante && valeurConstante.eval() instanceof Texte texte) {
                             String msg = texte.getValue();
                             if (msg.equalsIgnoreCase("experimental")) {
-                                executeurInstance.setAst(new ASAstExperimental(executeurInstance));
+                                //executeurInstance.setAst(new ASAstExperimental(executeurInstance));
                                 return new Utiliser(new Var("experimental"), executeurInstance);
                             } else {
                                 throw new ErreurSyntaxe("Les noms de modules ne doivent pas \u00EAtre \u00E9crits avec des \" \" ou des ' '");
@@ -222,7 +225,7 @@ public class ASAst extends AstGenerator {
 
         ajouterProgramme("{methode_moteur} expression~"
                         + "{methode_moteur}",
-                new Ast<MethodeMoteur>(0) {
+                new Ast<MethodeMoteur>() {
                     @Override
                     public MethodeMoteur apply(List<Object> p) {
                         String nom = ((Token) p.get(0)).obtenirNom();
@@ -386,7 +389,7 @@ public class ASAst extends AstGenerator {
                 });
 
 
-        ajouterProgramme("FIN FONCTION", new Ast<FinFonction>(0) {
+        ajouterProgramme("FIN FONCTION", new Ast<FinFonction>() {
             @Override
             public FinFonction apply(List<Object> p) {
                 return new FinFonction(executeurInstance);
@@ -415,7 +418,7 @@ public class ASAst extends AstGenerator {
 
 
         ajouterProgramme("SINON",
-                new Ast<Sinon>(0) {
+                new Ast<Sinon>() {
                     @Override
                     public Sinon apply(List<Object> p) {
                         return new Sinon(executeurInstance);
@@ -455,7 +458,7 @@ public class ASAst extends AstGenerator {
                 });
 
         ajouterProgramme("TANT_QUE expression",
-                new Ast<BoucleTantQue>(0) {
+                new Ast<BoucleTantQue>() {
                     @Override
                     public BoucleTantQue apply(List<Object> p) {
                         return new BoucleTantQue((Expression<?>) p.get(1), executeurInstance);
@@ -472,7 +475,7 @@ public class ASAst extends AstGenerator {
         ajouterProgramme("POUR expression DANS expression~"
                         + "POUR VAR expression DANS expression~"
                         + "POUR CONSTANTE expression DANS expression",
-                new Ast<BouclePour>(0) {
+                new Ast<BouclePour>() {
                     @Override
                     public BouclePour apply(List<Object> p) {
                         // boucle pour sans déclaration
@@ -515,7 +518,7 @@ public class ASAst extends AstGenerator {
                 return Programme.evalExpression((Expression<?>) p.get(0), p.get(0).toString());
             }
         });
-        setOrdreProgramme();
+        //setOrdreProgramme();
     }
 
 
@@ -915,7 +918,7 @@ public class ASAst extends AstGenerator {
                         return new AppelFonc((Expression<?>) p.get(0), args);
                     }
                 });
-        setOrdreExpression();
+        //setOrdreExpression();
     }
 }
 

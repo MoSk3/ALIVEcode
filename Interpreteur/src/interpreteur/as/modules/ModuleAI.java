@@ -2,6 +2,7 @@ package interpreteur.as.modules;
 
 import interpreteur.as.Objets.ASObjet;
 import interpreteur.as.erreurs.ASErreur;
+import interpreteur.data_manager.Data;
 import interpreteur.executeur.Executeur;
 
 /**
@@ -319,6 +320,39 @@ public class ModuleAI {
                             throw new ASErreur.ErreurType("La fonction ecartType prend une liste de nombre, mais la liste pass\u00E9e en param\u00E8tre n'est pas compos\u00E9e que de nombres.");
                         }
                         return new Decimal(determinationCoefficient(x, y));
+                    }
+                },
+
+                /*
+                  Returns the values of the specified column. (AJOUTER LES DONNÉES DE CHAQUE COLONNE)
+                */
+                new ASObjet.Fonction("valeursColonne", new ASObjet.Fonction.Parametre[]{
+                        new ASObjet.Fonction.Parametre(
+                                ASObjet.TypeBuiltin.texte.asType(),
+                                "col",
+                                null
+                        )
+                }, ASObjet.TypeBuiltin.liste.asType()) {
+                    @Override
+                    public ASObjet<?> executer() {
+                        String col = this.getValeurParam("col").getValue().toString();
+                        executeurInstance.addData(new Data(Data.Id.VALEURS_COLONNE).addParam(col));
+                        return null;
+
+                        //  A TERMINER
+                    }
+                },
+                new ASObjet.Fonction("afficherGraphique", new ASObjet.Fonction.Parametre[]{
+                        new ASObjet.Fonction.Parametre(
+                                ASObjet.TypeBuiltin.texte.asType(),
+                                "type",
+                                null
+                        )
+                }, ASObjet.TypeBuiltin.nulType.asType()) {
+                    @Override
+                    public ASObjet<?> executer() {
+                        String col = this.getValeurParam("type").getValue().toString();
+                        return new Nul();
                     }
                 }
         }, new ASObjet.Variable[]{});

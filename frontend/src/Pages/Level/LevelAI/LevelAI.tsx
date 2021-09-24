@@ -29,6 +29,7 @@ import {
 } from '../../../Models/Level/level.entity';
 import $ from 'jquery';
 import { useTranslation } from 'react-i18next';
+import dataAI from "./dataAI.json"
 import Modal from '../../../Components/UtilsComponents/Modal/Modal';
 import FillContainer from '../../../Components/UtilsComponents/FillContainer/FillContainer';
 import useExecutor from '../../../state/hooks/useExecutor';
@@ -68,76 +69,34 @@ const LevelAI = ({
 	};
 
 	//Set the data for the level
-	const [data, setData] = useState(
-		[
-			{ x: 2, y: 2 },
-			{ x: 3, y: 35 },
-			{ x: 32, y: 85 },
-			{ x: 54, y: 2 },
-			{ x: 41, y: 45 },
-			{ x: 90, y: 84 },
-			{ x: 91, y: 84 },
-			{ x: 92, y: 84 },
-			{ x: 93, y: 84 },
-			{ x: 94, y: 84 },
-			{ x: 95, y: 84 },
-			{ x: 96, y: 84 },
-			{ x: 97, y: 84 },
-			{ x: 98, y: 84 },
-			{ x: 120, y: 84 }
-		]
-	);
+	const [data] = useState(dataAI);
 
 	const [chartData, setChartData] = useState({
 		datasets: [
 			{
-				label: 'Popularity of colours',
-				data: data,
+				label: "Distance parcourue en fonction de l'énergie",
+				data: [],
 				backgroundColor: 'var(--contrast-color)',
 				borderWidth: 1,
 			},
 		],
 	});
 
-	/*
-	// Hook to get the dataset
-	useEffect(() => {
-		setData([
-			{ x: 2, y: 2 },
-			{ x: 3, y: 35 },
-			{ x: 32, y: 85 },
-			{ x: 54, y: 2 },
-			{ x: 41, y: 45 },
-			{ x: 90, y: 84 },
-			{ x: 91, y: 84 },
-			{ x: 92, y: 84 },
-			{ x: 93, y: 84 },
-			{ x: 94, y: 84 },
-			{ x: 95, y: 84 },
-			{ x: 96, y: 84 },
-			{ x: 97, y: 84 },
-			{ x: 98, y: 84 },
-			{ x: 120, y: 84 },
-		]);
+	const memorizedData = useMemo(() => data, [data]);
+	const memorizedChartData = useMemo(() => chartData, [chartData]);
 
-		const dataTest = {
-			// datasets is an array of objects where each object represents a set of data to display corresponding to the labels above. for brevity, we'll keep it at one object
-			
+	function showDataCloud(): void {
+		setChartData({
 			datasets: [
 				{
-					label: 'Popularity of colours',
+					label: "Distance parcourue en fonction de l'énergie",
 					data: data,
 					backgroundColor: 'var(--contrast-color)',
 					borderWidth: 1,
 				},
-			],
-		};
-		setChartData(dataTest);
-	}, [chartData]);
-	*/
-
-	const memorizedData = useMemo(() => data, [data]);
-	const memorizedChartData = useMemo(() => chartData, [chartData]);
+			]
+		})
+	}
 
 	useEffect(() => {
 		if (user && editMode && level.creator && level.creator.id !== user.id)
@@ -339,17 +298,17 @@ const LevelAI = ({
 							<Col md={3}>
 								<LevelTable
 									data={memorizedData}
-									xData="Données X"
-									yData="Données Y"
+									xData="Énergie utilisée (kWh)"
+									yData="Distance parcourue (km)"
 								/>
 							</Col>
 							<Col md={9} style={{ padding: '0' }}>
 								<div className="graph-container">
 									<LevelGraph
 										data={memorizedChartData}
-										title="Premier essai de graphique"
-										xAxis="X axis"
-										yAxis="Y axis"
+										title="Distance parcourue selon l'énergie utilisée"
+										xAxis="Énergie utilisée (kWh)"
+										yAxis="Distance parcourue (km)"
 									/>
 								</div>
 							</Col>

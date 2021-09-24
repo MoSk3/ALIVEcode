@@ -87,6 +87,15 @@ class LevelAIExecutor extends LevelCodeExecutor {
                         */
 					case 600:
 						break;
+					/*
+																----		ARTIFICIAL INTELLIGENCE		----
+													*/
+					case 800:
+						break;
+					case 801:
+						break;
+					case 802:
+						break;
 				}
 
 				/*

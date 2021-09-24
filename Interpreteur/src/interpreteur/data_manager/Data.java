@@ -71,6 +71,11 @@ public class Data extends JSONObject {
 
         CONSEIL(Categorie.TIPS),
         AVERTISSEMENT(Categorie.TIPS),
+
+        VALEURS_COLONNE(Categorie.AI),    // 0
+        CREER_FONTION(Categorie.AI),      // 1
+        OPTIMISER_FONCTION(Categorie.AI), // 2
+        AFFICHER_NUAGE(Categorie.AI)      // 3
         ;
 
         private final int id;
@@ -110,7 +115,8 @@ public class Data extends JSONObject {
             ERREUR,
             GET,
             SET,
-            TIPS;
+            TIPS,
+            AI;
 
             private int count = 0;
 
