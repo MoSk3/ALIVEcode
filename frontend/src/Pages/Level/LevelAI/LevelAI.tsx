@@ -68,11 +68,8 @@ const LevelAI = ({
 	};
 
 	//Set the data for the level
-	const [chartData, setChartData] = useState({});
-	const [dataTable, setDataTable] = useState({});
-	
-	useMemo(() => {
-		const data = [
+	const [data, setData] = useState(
+		[
 			{ x: 2, y: 2 },
 			{ x: 3, y: 35 },
 			{ x: 32, y: 85 },
@@ -87,14 +84,25 @@ const LevelAI = ({
 			{ x: 96, y: 84 },
 			{ x: 97, y: 84 },
 			{ x: 98, y: 84 },
-			{ x: 120, y: 84 },
-		];
-		setDataTable(data);
-	}, []);
+			{ x: 120, y: 84 }
+		]
+	);
 
+	const [chartData, setChartData] = useState({
+		datasets: [
+			{
+				label: 'Popularity of colours',
+				data: data,
+				backgroundColor: 'var(--contrast-color)',
+				borderWidth: 1,
+			},
+		],
+	});
+
+	/*
 	// Hook to get the dataset
 	useEffect(() => {
-		const data = [
+		setData([
 			{ x: 2, y: 2 },
 			{ x: 3, y: 35 },
 			{ x: 32, y: 85 },
@@ -110,8 +118,7 @@ const LevelAI = ({
 			{ x: 97, y: 84 },
 			{ x: 98, y: 84 },
 			{ x: 120, y: 84 },
-		];
-		setDataTable(data);
+		]);
 
 		const dataTest = {
 			// datasets is an array of objects where each object represents a set of data to display corresponding to the labels above. for brevity, we'll keep it at one object
@@ -119,7 +126,7 @@ const LevelAI = ({
 			datasets: [
 				{
 					label: 'Popularity of colours',
-					data: dataTable,
+					data: data,
 					backgroundColor: 'var(--contrast-color)',
 					borderWidth: 1,
 				},
@@ -127,6 +134,10 @@ const LevelAI = ({
 		};
 		setChartData(dataTest);
 	}, [chartData]);
+	*/
+
+	const memorizedData = useMemo(() => data, [data]);
+	const memorizedChartData = useMemo(() => chartData, [chartData]);
 
 	useEffect(() => {
 		if (user && editMode && level.creator && level.creator.id !== user.id)
@@ -327,7 +338,7 @@ const LevelAI = ({
 						<Row className="data-section">
 							<Col md={3}>
 								<LevelTable
-									data={dataTable}
+									data={memorizedData}
 									xData="Données X"
 									yData="Données Y"
 								/>
@@ -335,7 +346,7 @@ const LevelAI = ({
 							<Col md={9} style={{ padding: '0' }}>
 								<div className="graph-container">
 									<LevelGraph
-										data={chartData}
+										data={memorizedChartData}
 										title="Premier essai de graphique"
 										xAxis="X axis"
 										yAxis="Y axis"

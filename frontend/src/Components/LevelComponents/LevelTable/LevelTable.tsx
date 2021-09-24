@@ -3,17 +3,22 @@ import { useTranslation } from 'react-i18next';
 
 const LevelTable = (props: LevelTableProps) => {
   const {t} = useTranslation();
-
+  console.log(props.data)
   function renderTableData() {
-    return props.data.map((point: any, index: number) => {
-      const {id, x, y} = point;
-      return (
-        <tr key={id}>
-          <td className="data">{x}</td>
-          <td className="data">{y}</td>
-        </tr>
-      )
-    })
+    
+    return (
+      <>
+        {props.data.map((point: any, index: number) => {
+          const {id, x, y} = point;
+          return (
+            <tr key={id}>
+              <td className="data">{x}</td>
+              <td className="data">{y}</td>
+            </tr>
+          )
+        })}
+      </>
+    )
   }
 
   return (

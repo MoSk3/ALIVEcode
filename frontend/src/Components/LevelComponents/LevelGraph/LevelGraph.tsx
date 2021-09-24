@@ -5,6 +5,7 @@ import { Scatter } from 'react-chartjs-2';
 import FillContainer from '../../UtilsComponents/FillContainer/FillContainer';
 import { themes } from '../../../state/contexts/ThemeContext';
 import { Chart } from 'react-chartjs-2';
+import React from 'react';
 
 /**
  * This constant defines all general characteristics of a graph in AI levels. The graph is
@@ -16,7 +17,7 @@ import { Chart } from 'react-chartjs-2';
  *    - yAxis: a string, the title of the Y axis.
  * @returns the graph itself.
  */
-const LevelGraph = (props: LevelGraphProps) => {
+const LevelGraph = React.memo((props: LevelGraphProps) => {
   const {t} = useTranslation();
   
   Chart.defaults.font.size = 12;
@@ -71,6 +72,6 @@ const LevelGraph = (props: LevelGraphProps) => {
         />
     </StyledLevelGraph>
   );
-};
+});
 
 export default LevelGraph;
