@@ -15,6 +15,7 @@ import ClassroomCard from '../../Components/DashboardComponents/ClassroomCard/Cl
 import { UserContext } from '../../state/contexts/UserContext';
 import { prettyField } from '../../Types/formatting';
 import useRoutes from '../../state/hooks/useRoutes';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 const StyledDiv = styled.div`
 	.classroom-content {
@@ -24,11 +25,17 @@ const StyledDiv = styled.div`
 	}
 `;
 
+/**
+ * Classroom page
+ *
+ * @param id (as a url parameter)
+ * @returns tsx element
+ */
 const Classroom = (props: ClassroomProps) => {
 	const { t } = useTranslation();
 	const { user } = useContext(UserContext);
 	const [classroom, setClassroom] = useState<ClassroomModel>();
-	const { goBack } = useRoutes();
+	const { goBack, goTo, routes } = useRoutes();
 	const alert = useAlert();
 
 	useEffect(() => {
@@ -60,6 +67,8 @@ const Classroom = (props: ClassroomProps) => {
 				<CardContainer
 					title={t('classroom.container.courses.title')}
 					height="60px"
+					icon={classroom.creator.id === user.id ? faPlus : undefined}
+					onIconClick={() => goTo(routes.auth.create_course.path)}
 				>
 					{classroom.courses && classroom.courses.length > 0 ? (
 						<ClassroomCard classroom={classroom} />
