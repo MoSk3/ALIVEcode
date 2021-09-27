@@ -342,16 +342,11 @@ public class ModuleAI {
                         //  A TERMINER
                     }
                 },
-                new ASObjet.Fonction("afficherGraphique", new ASObjet.Fonction.Parametre[]{
-                        new ASObjet.Fonction.Parametre(
-                                ASObjet.TypeBuiltin.texte.asType(),
-                                "type",
-                                null
-                        )
+                new ASObjet.Fonction("afficherNuage", new ASObjet.Fonction.Parametre[]{
                 }, ASObjet.TypeBuiltin.nulType.asType()) {
                     @Override
                     public ASObjet<?> executer() {
-                        String col = this.getValeurParam("type").getValue().toString();
+                        executeurInstance.addData(new Data(Data.Id.AFFICHER_NUAGE));
                         return new Nul();
                     }
                 }
