@@ -4,6 +4,13 @@ import LevelCodeExecutor from '../LevelCode/LevelCodeExecutor';
 // TODO: robotConnected
 
 class LevelAIExecutor extends LevelCodeExecutor {
+	private executableFuncs: any[];
+
+	constructor(public executables: any[], public levelName: string, public creator?: any) {
+		super(levelName, creator);
+		this.executableFuncs = executables;
+	}
+
 	public init(s: any) {}
 
 	public async onRun() {
@@ -91,11 +98,18 @@ class LevelAIExecutor extends LevelCodeExecutor {
 																----		ARTIFICIAL INTELLIGENCE		----
 													*/
 					case 800:
+						this.executableFuncs[0]();
 						break;
 					case 801:
+						this.executableFuncs[1]();
 						break;
 					case 802:
+						this.executableFuncs[2]();
 						break;
+					case 803:
+						this.executableFuncs[3]();
+					break;
+
 				}
 
 				/*

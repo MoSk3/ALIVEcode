@@ -75,7 +75,7 @@ const LevelAI = ({
 		datasets: [
 			{
 				label: "Distance parcourue en fonction de l'énergie",
-				data: [],
+				data: [{}],
 				backgroundColor: 'var(--contrast-color)',
 				borderWidth: 1,
 			},
@@ -102,7 +102,7 @@ const LevelAI = ({
 		if (user && editMode && level.creator && level.creator.id !== user.id)
 			return history.push(routes.public.home.path);
 
-		setExecutor(new LevelAIExecutor(level.name, user || undefined));
+		setExecutor(new LevelAIExecutor([1, 2, 3, showDataCloud], level.name, user || undefined));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, level]);
 
