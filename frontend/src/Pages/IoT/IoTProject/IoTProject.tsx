@@ -25,37 +25,17 @@ import FormModal from '../../../Components/UtilsComponents/FormModal/FormModal';
 import { IotRoute } from '../../../Models/Iot/IoTroute.entity';
 import { plainToClass } from 'class-transformer';
 import IoTRouteCard from '../../../Components/IoTComponents/IoTRoute/IoTRouteCard/IoTRouteCard';
-import { io, Socket } from 'socket.io-client';
-import Button from '../../../Components/UtilsComponents/Button/Button';
 import CenteredContainer from '../../../Components/UtilsComponents/CenteredContainer/CenteredContainer';
+import IoTProjectBody from '../../../Components/IoTComponents/IoTProject/IotProjectBody';
 
 const IoTProject = (props: IoTProjectProps) => {
 	const [project, setProject] = useState<ProjectModel>();
 	const [selectedTab, setSelectedTab] = useState<IoTProjectTabs>('settings');
-	const [socket, setSocket] = useState<Socket>();
 	const [routeModalOpen, setRouteModalOpen] = useState(false);
-	const [lightLevel, setLightLevel] = useState<number>(34);
 	const history = useHistory();
 	const alert = useAlert();
 	const { t } = useTranslation();
 	const { user } = useContext(UserContext);
-
-	// Socket io
-	useEffect(() => {
-		if (!process.env.REACT_APP_IOT_URL) return;
-		const socket = io(process.env.REACT_APP_IOT_URL);
-
-		socket.emit('register_light');
-
-		socket.on('light', lightLevel => {
-			setLightLevel(lightLevel / 1000);
-		});
-
-		setSocket(socket);
-		return () => {
-			socket.close();
-		};
-	}, []);
 
 	useEffect(() => {
 		const getProject = async () => {
@@ -239,6 +219,16 @@ const IoTProject = (props: IoTProjectProps) => {
 				<Col sm="8" id="project-body">
 					<Row className="project-top-row"></Row>
 					<CenteredContainer style={{ height: '100%' }} vertically horizontally>
+						<IoTProjectBody project={project} />
+					</CenteredContainer>
+				</Col>
+			</Row>
+		</StyledIoTProject>
+	);
+};
+
+export default IoTProject;
+/*
 						<h2 className="mb-3">Light level</h2>
 						<div className="my-progress mb-5">
 							<div className="barOverflow">
@@ -264,11 +254,4 @@ const IoTProject = (props: IoTProjectProps) => {
 						>
 							Send notification to cluster
 						</Button>
-					</CenteredContainer>
-				</Col>
-			</Row>
-		</StyledIoTProject>
-	);
-};
-
-export default IoTProject;
+						*/

@@ -17,6 +17,12 @@ export enum IOTPROJECT_ACCESS {
   PRIVATE = 'PR', // only accessible to the creator
 }
 
+type IoTComponent = {
+  id: string;
+};
+
+type IoTProjectLayout = Array<IoTComponent>;
+
 @Entity()
 export class IoTProjectEntity extends CreatedByUser {
   @ManyToOne(() => UserEntity, user => user.IoTProjects, { eager: true, onDelete: 'CASCADE' })
@@ -24,9 +30,9 @@ export class IoTProjectEntity extends CreatedByUser {
   creator: UserEntity;
 
   // TODO : body typing
-  @Column({ nullable: true, default: '{}' })
+  @Column({ nullable: true, type: 'json', default: [] })
   @IsOptional()
-  body: string;
+  layout: IoTProjectLayout;
 
   @Column({ enum: IOTPROJECT_ACCESS })
   @IsNotEmpty()

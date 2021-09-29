@@ -2,6 +2,11 @@ import { CreatedByUser } from "../Generics/createdByUser.entity";
 import { User } from '../User/user.entity';
 import { IotRoute } from './IoTroute.entity';
 import api from '../api';
+import { IOT_COMPONENT_TYPE } from './IoTProjectClasses/IoTComponent';
+import { Transform, plainToClass } from 'class-transformer';
+import { IoTButton } from './IoTProjectClasses/Components/IoTButton';
+import { IoTComponent } from './IoTProjectClasses/IoTComponent';
+import { IoTProgressBar } from './IoTProjectClasses/Components/IoTProgressBar';
 
 export enum IOTPROJECT_INTERACT_RIGHTS {
 	ANYONE = 'AN',
@@ -16,11 +21,21 @@ export enum IOTPROJECT_ACCESS {
 	PRIVATE = 'PR', // only accessible to the creator
 }
 
+export type IoTProjectLayout = Array<IoTComponent>;
 export class IoTProject extends CreatedByUser {
 	creator: User;
 
-	// TODO : body typing
-	body: string;
+	@Transform(({ value }) => {
+		return value.map((comp: IoTComponent) => {
+			if (comp.type === IOT_COMPONENT_TYPE.BUTTON)
+				return plainToClass(IoTButton, comp);
+			if (comp.type === IOT_COMPONENT_TYPE.PROGRESS_BAR)
+				return plainToClass(IoTProgressBar, comp);
+
+			return comp;
+		});
+	})
+	layout: IoTProjectLayout;
 
 	access: IOTPROJECT_ACCESS;
 
