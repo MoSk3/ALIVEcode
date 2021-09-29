@@ -7,6 +7,9 @@ import { IOT_COMPONENT_TYPE } from '../../../Models/Iot/IoTProjectClasses/IoTCom
 import IoTButtonComponent from '../IoTProjectComponents/IoTButtonComponent';
 import { Row, Col } from 'react-bootstrap';
 import IoTProgressBarComponent from '../IoTProjectComponents/IoTProgressBarComponent';
+import { IoTProgressBar } from '../../../Models/Iot/IoTProjectClasses/Components/IoTProgressBar';
+import IoTLogsComponent from '../IoTProjectComponents/IoTLogsComponent';
+import { IoTLogs } from '../../../Models/Iot/IoTProjectClasses/Components/IoTLogs';
 
 const IoTProjectBody = ({ project }: { project: IoTProject }) => {
 	const [components, setComponents] = useState<IoTProjectLayout>([]);
@@ -27,6 +30,12 @@ const IoTProjectBody = ({ project }: { project: IoTProject }) => {
 						{
 							id: 'progress',
 							type: IOT_COMPONENT_TYPE.PROGRESS_BAR,
+							min: 100,
+							max: 1000,
+						},
+						{
+							id: 'logs',
+							type: IOT_COMPONENT_TYPE.LOGS,
 						},
 					],
 				}),
@@ -39,14 +48,20 @@ const IoTProjectBody = ({ project }: { project: IoTProject }) => {
 
 	useEffect(() => {
 		socket.onReceiveUpdate({ id: 'button', value: 'heyyyy' });
-		socket.onReceiveUpdate({ id: 'progress', value: 10 });
 
 		setTimeout(() => {
 			socket.onReceiveUpdate({ id: 'button2', value: 'also hey' });
-			socket.onReceiveUpdate({ id: 'progress', value: 80 });
 		}, 1000);
 
+		const interval = setInterval(() => {
+			socket.onReceiveUpdate({
+				id: 'progress',
+				value: Math.floor(Math.random() * 900 + 100),
+			});
+		}, 100);
+
 		return () => {
+			clearInterval(interval);
 			socket.closeSocket();
 		};
 
@@ -58,7 +73,11 @@ const IoTProjectBody = ({ project }: { project: IoTProject }) => {
 			case IOT_COMPONENT_TYPE.BUTTON:
 				return <IoTButtonComponent component={component} />;
 			case IOT_COMPONENT_TYPE.PROGRESS_BAR:
-				return <IoTProgressBarComponent component={component} />;
+				return (
+					<IoTProgressBarComponent component={component as IoTProgressBar} />
+				);
+			case IOT_COMPONENT_TYPE.LOGS:
+				return <IoTLogsComponent component={component as IoTLogs} />;
 		}
 	};
 

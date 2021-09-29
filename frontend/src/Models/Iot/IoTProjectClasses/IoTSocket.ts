@@ -19,6 +19,7 @@ export class IoTSocket {
 	) {
 		this.iotProject = iotProject;
 		this.onRender = onRender;
+
 		this.iotComponentManager = new IoTComponentManager(
 			this.iotProject.layout,
 			this.onLayoutUpdate,

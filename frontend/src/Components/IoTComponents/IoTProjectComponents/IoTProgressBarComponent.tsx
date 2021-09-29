@@ -1,11 +1,13 @@
-import Button from '../../UtilsComponents/Button/Button';
 import { IoTProgressBar } from '../../../Models/Iot/IoTProjectClasses/Components/IoTProgressBar';
+import { useEffect } from 'react';
 
 const IoTProgressBarComponent = ({
 	component,
 }: {
 	component: IoTProgressBar;
 }) => {
+	const percentage = component.value / component.getMax();
+
 	return (
 		<>
 			<div className="my-progress mb-5">
@@ -13,11 +15,16 @@ const IoTProgressBarComponent = ({
 					<div
 						className="bar"
 						style={{
-							transform: `rotate(${(component.value / 100) * 180 + 45}deg)`,
+							transform: `rotate(${
+								(percentage <= 1 ? percentage : 1) * 180 + 45
+							}deg)`,
 						}}
 					></div>
 				</div>
-				<span className="my-progress-span">{component.value}%</span>
+				<span className="my-progress-span">
+					{component.value}
+					{component.isPercentage && '%'}
+				</span>
 			</div>
 		</>
 	);

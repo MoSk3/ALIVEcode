@@ -7,6 +7,7 @@ import { Transform, plainToClass } from 'class-transformer';
 import { IoTButton } from './IoTProjectClasses/Components/IoTButton';
 import { IoTComponent } from './IoTProjectClasses/IoTComponent';
 import { IoTProgressBar } from './IoTProjectClasses/Components/IoTProgressBar';
+import { IoTLogs } from './IoTProjectClasses/Components/IoTLogs';
 
 export enum IOTPROJECT_INTERACT_RIGHTS {
 	ANYONE = 'AN',
@@ -31,6 +32,8 @@ export class IoTProject extends CreatedByUser {
 				return plainToClass(IoTButton, comp);
 			if (comp.type === IOT_COMPONENT_TYPE.PROGRESS_BAR)
 				return plainToClass(IoTProgressBar, comp);
+			if (comp.type === IOT_COMPONENT_TYPE.LOGS)
+				return plainToClass(IoTLogs, comp);
 
 			return comp;
 		});

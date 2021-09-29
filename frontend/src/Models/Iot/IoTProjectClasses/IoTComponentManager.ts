@@ -16,7 +16,12 @@ export class IoTComponentManager {
 		this.onLayoutUpdate = onLayoutUpdate;
 		this.onRender = onRender;
 
-		this.onRender(this.components);
+		this.components = this.components.map(c => {
+			c.setComponentManager(this);
+			return c;
+		});
+
+		this.render();
 	}
 
 	public onReceive() {}
@@ -24,9 +29,8 @@ export class IoTComponentManager {
 	public updateComponent(id: string, data: any) {
 		const component = this.getComponent(id);
 		if (!component) throw new Error(`No component with id ${id}`);
-		console.log(component);
 		component.update(data);
-		this.onRender(this.components);
+		this.render();
 	}
 
 	public getComponent(id: string): IoTComponent | undefined {
