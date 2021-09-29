@@ -1,7 +1,7 @@
-import { IoTProject, IoTProjectLayout } from '../../../Models/Iot/IoTproject.entity';
+import { IoTProject } from '../../../Models/Iot/IoTproject.entity';
 import { useState, useEffect, useMemo } from 'react';
 import { IoTSocket } from '../../../Models/Iot/IoTProjectClasses/IoTSocket';
-import { plainToClass } from 'class-transformer';
+import { classToPlain } from 'class-transformer';
 import { IoTComponent } from '../../../Models/Iot/IoTProjectClasses/IoTComponent';
 import { IOT_COMPONENT_TYPE } from '../../../Models/Iot/IoTProjectClasses/IoTComponent';
 import IoTButtonComponent from '../IoTProjectComponents/IoTButtonComponent';
@@ -10,47 +10,60 @@ import IoTProgressBarComponent from '../IoTProjectComponents/IoTProgressBarCompo
 import { IoTProgressBar } from '../../../Models/Iot/IoTProjectClasses/Components/IoTProgressBar';
 import IoTLogsComponent from '../IoTProjectComponents/IoTLogsComponent';
 import { IoTLogs } from '../../../Models/Iot/IoTProjectClasses/Components/IoTLogs';
+import api from '../../../Models/api';
 
 const IoTProjectBody = ({ project }: { project: IoTProject }) => {
-	const [components, setComponents] = useState<IoTProjectLayout>([]);
+	const [components, setComponents] = useState<Array<IoTComponent>>([]);
 	const socket = useMemo(
 		() =>
 			new IoTSocket(
-				plainToClass(IoTProject, {
+				project,
+				/*plainToClass(IoTProject, {
 					...project,
-					layout: [
-						{
-							id: 'button',
-							type: IOT_COMPONENT_TYPE.BUTTON,
-						},
-						{
-							id: 'button2',
-							type: IOT_COMPONENT_TYPE.BUTTON,
-						},
-						{
-							id: 'progress',
-							type: IOT_COMPONENT_TYPE.PROGRESS_BAR,
-							min: 100,
-							max: 1000,
-						},
-						{
-							id: 'logs',
-							type: IOT_COMPONENT_TYPE.LOGS,
-						},
-					],
-				}),
+					layout: {
+						components: [
+							{
+								id: 'button',
+								type: IOT_COMPONENT_TYPE.BUTTON,
+							},
+							{
+								id: 'button2',
+								type: IOT_COMPONENT_TYPE.BUTTON,
+							},
+							{
+								id: 'progress',
+								type: IOT_COMPONENT_TYPE.PROGRESS_BAR,
+								min: 100,
+								max: 1000,
+							},
+							{
+								id: 'logs',
+								type: IOT_COMPONENT_TYPE.LOGS,
+							},
+						],
+					},
+				}),*/
 				layout => {
-					setComponents([...layout]);
+					setComponents([...layout.components]);
 				},
 			),
 		[project],
 	);
 
+	const saveComponents = async (components: Array<IoTComponent>) => {
+		project.layout.components = components;
+		const plainProject = classToPlain(project);
+		console.log(plainProject.layout);
+		await api.db.iot.projects.updateLayout(project.id, plainProject.layout);
+	};
+
 	useEffect(() => {
 		socket.onReceiveUpdate({ id: 'button', value: 'heyyyy' });
 
 		setTimeout(() => {
-			socket.onReceiveUpdate({ id: 'button2', value: 'also hey' });
+			socket.onReceiveUpdate({ id: 'button2', value: 'nope' });
+			const manager = socket.getComponentManager();
+			if (manager) saveComponents(manager.getComponents());
 		}, 1000);
 
 		const interval = setInterval(() => {

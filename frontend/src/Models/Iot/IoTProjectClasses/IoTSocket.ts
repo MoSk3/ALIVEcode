@@ -1,6 +1,7 @@
 import { Socket, io } from 'socket.io-client';
 import { IoTProject, IoTProjectLayout } from '../IoTproject.entity';
 import { IoTComponentManager } from './IoTComponentManager';
+import { IoTComponent } from './IoTComponent';
 
 export type IoTSocketUpdateRequest = {
 	id: string;
@@ -22,13 +23,16 @@ export class IoTSocket {
 
 		this.iotComponentManager = new IoTComponentManager(
 			this.iotProject.layout,
-			this.onLayoutUpdate,
-			this.onRender,
+			this.onComponentUpdate,
+			(components: Array<IoTComponent>) => {
+				this.iotProject.layout.components = components;
+				this.onRender(this.iotProject.layout);
+			},
 		);
 		this.openSocket();
 	}
 
-	private onLayoutUpdate(layout: IoTProjectLayout) {}
+	private onComponentUpdate(layout: Array<IoTComponent>) {}
 
 	public openSocket() {
 		if (!process.env.REACT_APP_IOT_URL)

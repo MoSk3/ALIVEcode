@@ -14,7 +14,7 @@ const IoTLogsComponent = ({ component }: { component: IoTLogs }) => {
 		return () => {
 			clearInterval(interval);
 		};
-	}, []);
+	}, [component]);
 
 	return (
 		<div>

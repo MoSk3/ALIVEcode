@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { IoTComponent } from '../IoTComponent';
 
 export type IoTLogModel = {
@@ -7,6 +8,7 @@ export type IoTLogModel = {
 
 export type IoTLogsModel = Array<IoTLogModel>;
 
+@Exclude()
 export class IoTLogs extends IoTComponent {
 	public logs: IoTLogsModel = [];
 

@@ -1,5 +1,7 @@
+import { Exclude } from 'class-transformer';
 import { IoTComponent } from '../IoTComponent';
 
+@Exclude()
 export class IoTProgressBar extends IoTComponent {
 	private max: number = 100;
 	private min: number = 0;

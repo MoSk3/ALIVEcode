@@ -3,16 +3,16 @@ import { IoTTarget } from './IoTTypes';
 import { IoTComponent } from './IoTComponent';
 
 export class IoTComponentManager {
-	private components: IoTProjectLayout;
-	private onLayoutUpdate: (layout: IoTProjectLayout) => void;
-	private onRender: (layout: IoTProjectLayout) => void;
+	private components: Array<IoTComponent>;
+	private onLayoutUpdate: (layout: Array<IoTComponent>) => void;
+	private onRender: (layout: Array<IoTComponent>) => void;
 
 	constructor(
 		layout: IoTProjectLayout,
-		onLayoutUpdate: (layout: IoTProjectLayout) => void,
-		onRender: (layout: IoTProjectLayout) => void,
+		onLayoutUpdate: (layout: Array<IoTComponent>) => void,
+		onRender: (layout: Array<IoTComponent>) => void,
 	) {
-		this.components = layout;
+		this.components = layout.components;
 		this.onLayoutUpdate = onLayoutUpdate;
 		this.onRender = onRender;
 
@@ -37,7 +37,7 @@ export class IoTComponentManager {
 		return this.components.find(c => c.id === id);
 	}
 
-	public getComponents(): IoTProjectLayout {
+	public getComponents(): Array<IoTComponent> {
 		return this.components;
 	}
 

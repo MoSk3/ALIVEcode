@@ -1,5 +1,4 @@
 import { IoTProgressBar } from '../../../Models/Iot/IoTProjectClasses/Components/IoTProgressBar';
-import { useEffect } from 'react';
 
 const IoTProgressBarComponent = ({
 	component,

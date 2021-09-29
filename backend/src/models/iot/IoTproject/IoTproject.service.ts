@@ -1,6 +1,6 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { IoTProjectEntity } from './entities/IoTproject.entity';
+import { IoTProjectEntity, IoTProjectLayout } from './entities/IoTproject.entity';
 import { Repository } from 'typeorm';
 import { UserEntity } from '../../user/entities/user.entity';
 import { IoTRouteEntity } from '../IoTroute/entities/IoTroute.entity';
@@ -37,6 +37,10 @@ export class IoTProjectService {
     return await this.projectRepository.delete(id);
   }
 
+  async updateLayout(id: string, layout: IoTProjectLayout) {
+    const project = await this.findOne(id);
+    return await this.projectRepository.save({ ...project, layout });
+  }
   async getRoutes(project: IoTProjectEntity) {
     return (await this.projectRepository.findOne(project.id, { relations: ['routes'] })).routes;
   }

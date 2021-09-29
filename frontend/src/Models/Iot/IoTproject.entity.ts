@@ -3,7 +3,7 @@ import { User } from '../User/user.entity';
 import { IotRoute } from './IoTroute.entity';
 import api from '../api';
 import { IOT_COMPONENT_TYPE } from './IoTProjectClasses/IoTComponent';
-import { Transform, plainToClass } from 'class-transformer';
+import { Transform, plainToClass, TransformationType } from 'class-transformer';
 import { IoTButton } from './IoTProjectClasses/Components/IoTButton';
 import { IoTComponent } from './IoTProjectClasses/IoTComponent';
 import { IoTProgressBar } from './IoTProjectClasses/Components/IoTProgressBar';
@@ -22,12 +22,17 @@ export enum IOTPROJECT_ACCESS {
 	PRIVATE = 'PR', // only accessible to the creator
 }
 
-export type IoTProjectLayout = Array<IoTComponent>;
+export class IoTProjectLayout {
+	components: Array<IoTComponent>;
+}
 export class IoTProject extends CreatedByUser {
 	creator: User;
 
-	@Transform(({ value }) => {
-		return value.map((comp: IoTComponent) => {
+	@Transform(({ value, type }) => {
+		if (type !== TransformationType.PLAIN_TO_CLASS || !value.components)
+			return value;
+
+		value.components = value.components.map((comp: IoTComponent) => {
 			if (comp.type === IOT_COMPONENT_TYPE.BUTTON)
 				return plainToClass(IoTButton, comp);
 			if (comp.type === IOT_COMPONENT_TYPE.PROGRESS_BAR)
@@ -37,6 +42,7 @@ export class IoTProject extends CreatedByUser {
 
 			return comp;
 		});
+		return value;
 	})
 	layout: IoTProjectLayout;
 

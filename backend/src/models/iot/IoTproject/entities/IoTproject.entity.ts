@@ -21,7 +21,10 @@ type IoTComponent = {
   id: string;
 };
 
-type IoTProjectLayout = Array<IoTComponent>;
+export class IoTProjectLayout {
+  @IsNotEmpty()
+  components: Array<IoTComponent>;
+}
 
 @Entity()
 export class IoTProjectEntity extends CreatedByUser {
@@ -30,7 +33,7 @@ export class IoTProjectEntity extends CreatedByUser {
   creator: UserEntity;
 
   // TODO : body typing
-  @Column({ nullable: true, type: 'json', default: [] })
+  @Column({ nullable: true, type: 'json', default: { components: [] } })
   @IsOptional()
   layout: IoTProjectLayout;
 
