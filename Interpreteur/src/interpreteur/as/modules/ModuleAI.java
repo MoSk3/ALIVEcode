@@ -365,7 +365,7 @@ public class ModuleAI {
                         if (!(col.equalsIgnoreCase("x") || col.equalsIgnoreCase("y"))) {
                             throw new ASErreur.ErreurInputOutput("La fonction valeursColonne() prend en param\u00E8tre le caract\u00E8re \"x\" ou \"y\" seulement.");
                         }
-
+                        System.out.println(col);
                         if (col.contains("x")) {
                             for (Double el : DATA_X) {
                                 liste.ajouterElement(new Decimal(el));
@@ -375,7 +375,6 @@ public class ModuleAI {
                                 liste.ajouterElement(new Decimal(el));
                             }
                         }
-
                         return liste;
 
                         //  A TERMINER
