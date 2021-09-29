@@ -360,13 +360,23 @@ public class ModuleAI {
                     @Override
                     public ASObjet<?> executer() {
                         String col = this.getValeurParam("col").getValue().toString();
+                        Liste liste = new Liste();
+
                         if (!(col.equalsIgnoreCase("x") || col.equalsIgnoreCase("y"))) {
                             throw new ASErreur.ErreurInputOutput("La fonction valeursColonne() prend en param\u00E8tre le caract\u00E8re \"x\" ou \"y\" seulement.");
                         }
 
-                        if (col.equalsIgnoreCase("x")) return new Liste(Stream.of(DATA_X).map(Decimal::new).toArray(Decimal[]::new));
+                        if (col.contains("x")) {
+                            for (Double el : DATA_X) {
+                                liste.ajouterElement(new Decimal(el));
+                            }
+                        } else {
+                            for (Double el : DATA_Y) {
+                                liste.ajouterElement(new Decimal(el));
+                            }
+                        }
 
-                        return new Liste(Stream.of(DATA_Y).map(Decimal::new).toArray(Decimal[]::new));
+                        return liste;
 
                         //  A TERMINER
                     }

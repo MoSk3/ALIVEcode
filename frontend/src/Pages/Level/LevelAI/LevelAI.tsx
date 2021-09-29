@@ -85,7 +85,32 @@ const LevelAI = ({
 	const memorizedData = useMemo(() => data, [data]);
 	const memorizedChartData = useMemo(() => chartData, [chartData]);
 
+	//-------------------------- Alivescript functions ----------------------------//
+
+	function getValues(param: string): number[] {
+		let values: number[] = [];
+		let point: any = 0;
+
+		for (point in data) {
+			values.push(point[param]);
+		}
+		return values;
+	}
+	// Sets the data of the graph to the level's data and displays it on the screen
 	function showDataCloud(): void {
+		let dataX: string = "{";
+		let dataY: string = "";
+		
+		for (let i = 0; i < dataAI.length; i++) {
+			dataX += dataAI[i]["x"] + ", ";
+			dataY += dataAI[i]["y"] + ", ";
+		};
+
+		console.log("valeur x : ");
+		console.log(dataX);
+		console.log("valeur y : ");
+		console.log(dataY);
+		
 		setChartData({
 			datasets: [
 				{
