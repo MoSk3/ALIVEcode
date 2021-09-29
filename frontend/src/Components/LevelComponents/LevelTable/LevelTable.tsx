@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 const LevelTable = (props: LevelTableProps) => {
   const {t} = useTranslation();
   let num: number = 0;
-  console.log(props.data)
   function renderTableData() {
     
     return (
