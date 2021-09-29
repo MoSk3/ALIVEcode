@@ -10,7 +10,7 @@ export type IoTLogsModel = Array<IoTLogModel>;
 
 @Exclude()
 export class IoTLogs extends IoTComponent {
-	public logs: IoTLogsModel = [];
+	public value: IoTLogsModel = [];
 
 	update(data: any): void {
 		if (isNaN(data)) return;
@@ -18,10 +18,15 @@ export class IoTLogs extends IoTComponent {
 	}
 
 	addLog(text: string) {
-		this.logs.push({
+		this.value.push({
 			text,
 			date: new Date(),
 		});
+		this.getComponentManager()?.render();
+	}
+
+	clearLogs() {
+		this.value = [];
 		this.getComponentManager()?.render();
 	}
 }

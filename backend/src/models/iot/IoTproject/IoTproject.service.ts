@@ -4,6 +4,7 @@ import { IoTProjectEntity, IoTProjectLayout } from './entities/IoTproject.entity
 import { Repository } from 'typeorm';
 import { UserEntity } from '../../user/entities/user.entity';
 import { IoTRouteEntity } from '../IoTroute/entities/IoTroute.entity';
+import { IoTComponent } from '../../../../../frontend/src/Models/Iot/IoTProjectClasses/IoTComponent';
 
 @Injectable()
 export class IoTProjectService {
@@ -39,6 +40,9 @@ export class IoTProjectService {
 
   async updateLayout(id: string, layout: IoTProjectLayout) {
     const project = await this.findOne(id);
+
+    layout.components = layout.components.filter((c: any) => c != null && JSON.stringify(c) != '{}');
+
     return await this.projectRepository.save({ ...project, layout });
   }
   async getRoutes(project: IoTProjectEntity) {

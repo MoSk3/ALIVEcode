@@ -3,6 +3,7 @@ import { IoTComponent } from '../IoTComponent';
 
 @Exclude()
 export class IoTProgressBar extends IoTComponent {
+	public value: number;
 	private max: number = 100;
 	private min: number = 0;
 	public isPercentage: boolean = true;

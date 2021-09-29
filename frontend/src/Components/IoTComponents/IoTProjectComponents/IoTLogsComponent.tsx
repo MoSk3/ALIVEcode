@@ -8,7 +8,8 @@ const IoTLogsComponent = ({ component }: { component: IoTLogs }) => {
 
 	useEffect(() => {
 		const interval = setInterval(() => {
-			component.addLog('YASSS');
+			component.clearLogs();
+			//component.addLog('YASSS');
 		}, 1000);
 
 		return () => {
@@ -20,10 +21,10 @@ const IoTLogsComponent = ({ component }: { component: IoTLogs }) => {
 		<div>
 			<div>{component.id}</div>
 			<div>
-				{component.logs.length <= 0 ? (
+				{component.value.length <= 0 ? (
 					<label>No logs available</label>
 				) : (
-					component.logs.map((l: IoTLogModel, idx) => (
+					component.value.map((l: IoTLogModel, idx) => (
 						<label key={idx}>
 							{formatDate(l.date, t)}
 							{l.text}

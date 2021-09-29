@@ -28,7 +28,7 @@ export class IoTComponentManager {
 
 	public updateComponent(id: string, data: any) {
 		const component = this.getComponent(id);
-		if (!component) throw new Error(`No component with id ${id}`);
+		if (!component) return;
 		component.update(data);
 		this.render();
 	}

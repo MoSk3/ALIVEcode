@@ -1,4 +1,4 @@
-import { Exclude, Expose } from 'class-transformer';
+import { Exclude, Expose, Transform } from 'class-transformer';
 import { IoTComponentManager } from './IoTComponentManager';
 
 export enum IOT_COMPONENT_TYPE {
@@ -12,9 +12,21 @@ export abstract class IoTComponent {
 	@Expose()
 	public id: string;
 	@Expose()
-	public value: any;
-	@Expose()
 	public type: IOT_COMPONENT_TYPE;
+
+	@Expose()
+	@Transform(({ value }) => {
+		// Transform arrays
+		if (Array.isArray(value)) {
+			value = value.map(v => {
+				// Transform dates
+				if (v.date) v.date = new Date(v.date);
+				return v;
+			});
+		}
+		return value;
+	})
+	public abstract value: any;
 
 	private componentManager: IoTComponentManager | null = null;
 

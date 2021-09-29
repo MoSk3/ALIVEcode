@@ -40,8 +40,12 @@ export class IoTProject extends CreatedByUser {
 			if (comp.type === IOT_COMPONENT_TYPE.LOGS)
 				return plainToClass(IoTLogs, comp);
 
-			return comp;
+			return undefined;
 		});
+
+		value.components = value.components.filter(
+			(c: IoTComponent | undefined) => c != null,
+		);
 		return value;
 	})
 	layout: IoTProjectLayout;

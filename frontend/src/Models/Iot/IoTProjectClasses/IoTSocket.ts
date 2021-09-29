@@ -34,6 +34,10 @@ export class IoTSocket {
 
 	private onComponentUpdate(layout: Array<IoTComponent>) {}
 
+	public setOnRender(onRender: (layout: IoTProjectLayout) => void) {
+		this.onRender = onRender;
+	}
+
 	public openSocket() {
 		if (!process.env.REACT_APP_IOT_URL)
 			throw new Error('Env variable REACT_APP_IOT_URL not set');
