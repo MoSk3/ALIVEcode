@@ -98,16 +98,14 @@ class LevelAIExecutor extends LevelCodeExecutor {
 																----		ARTIFICIAL INTELLIGENCE		----
 													*/
 					case 800:
-						this.executableFuncs[0]();
-						break;
-					case 801:
 						this.executableFuncs[1]();
 						break;
-					case 802:
+					case 801:
 						this.executableFuncs[2]();
 						break;
-					case 803:
+					case 802:
 						this.executableFuncs[3]();
+						perform_action(i + 1);
 					break;
 
 				}

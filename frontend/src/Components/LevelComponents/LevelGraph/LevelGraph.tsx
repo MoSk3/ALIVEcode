@@ -26,11 +26,12 @@ const LevelGraph = React.memo((props: LevelGraphProps) => {
 
 
   return (
-    <StyledLevelGraph>
+    <StyledLevelGraph className="graph-holder">
         <Scatter
           className="graph"
           data={props.data} 
           options={{
+            responsive: true,
             aspectRatio: 1.5,
             layout: {
               padding: {

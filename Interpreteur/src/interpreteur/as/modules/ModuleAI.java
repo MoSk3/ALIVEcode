@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 public class ModuleAI {
 
     //Sets how many numbers are after the coma when rounding, depending on the amount of zeroes.
-    private static final double ROUNDING_FACTOR = 10000.0;
+    private static final double ROUNDING_FACTOR = 100.0;
 
     //Data used for the first AI course. These next constants are temporary.
     public static final Double[] DATA_X = {
@@ -49,7 +49,8 @@ public class ModuleAI {
      */
     public static double mean(Double[] data) throws NoDataException {
         //General case
-        return summation(data) / (double) data.length;
+        double mean =  summation(data) / (double) data.length;
+        return Math.round(mean * ROUNDING_FACTOR) / ROUNDING_FACTOR;
     }
 
     /**
@@ -94,7 +95,7 @@ public class ModuleAI {
             differences[i] = Math.pow(data[i] - mean, 2);
         }
         strdDev = Math.sqrt(summation(differences) / (double) differences.length);
-        return strdDev;
+        return Math.round(strdDev * ROUNDING_FACTOR) / ROUNDING_FACTOR;
     }
 
     /**
