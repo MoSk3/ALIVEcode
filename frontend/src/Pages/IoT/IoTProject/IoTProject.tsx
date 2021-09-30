@@ -218,9 +218,7 @@ const IoTProject = (props: IoTProjectProps) => {
 				</Col>
 				<Col sm="8" id="project-body">
 					<Row className="project-top-row"></Row>
-					<CenteredContainer style={{ height: '100%' }} vertically horizontally>
-						<IoTProjectBody project={project} />
-					</CenteredContainer>
+					<IoTProjectBody project={project} />
 				</Col>
 			</Row>
 		</StyledIoTProject>

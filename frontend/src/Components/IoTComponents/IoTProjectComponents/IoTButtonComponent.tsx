@@ -3,9 +3,17 @@ import Button from '../../UtilsComponents/Button/Button';
 
 const IoTButtonComponent = ({ component }: { component: IoTButton }) => {
 	return (
-		<Button variant="primary">
-			{component.id} : {component.value}
-		</Button>
+		<div
+			style={{
+				height: '100%',
+				display: 'flex',
+				flexDirection: 'column',
+				alignItems: 'center',
+				justifyContent: 'center',
+			}}
+		>
+			<Button variant="primary">{component.value}</Button>
+		</div>
 	);
 };
 

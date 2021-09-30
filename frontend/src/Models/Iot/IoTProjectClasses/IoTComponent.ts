@@ -11,6 +11,10 @@ export enum IOT_COMPONENT_TYPE {
 export abstract class IoTComponent {
 	@Expose()
 	public id: string;
+
+	@Expose()
+	public name: string;
+
 	@Expose()
 	public type: IOT_COMPONENT_TYPE;
 

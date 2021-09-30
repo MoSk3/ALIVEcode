@@ -1,11 +1,14 @@
-import { Exclude } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 import { IoTComponent } from '../IoTComponent';
 
 @Exclude()
 export class IoTProgressBar extends IoTComponent {
 	public value: number;
+	@Expose()
 	private max: number = 100;
+	@Expose()
 	private min: number = 0;
+	@Expose()
 	public isPercentage: boolean = true;
 
 	update(data: any): void {

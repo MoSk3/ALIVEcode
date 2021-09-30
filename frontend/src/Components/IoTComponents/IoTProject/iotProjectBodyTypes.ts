@@ -1,4 +1,8 @@
 import styled from 'styled-components';
-import { Row } from 'react-bootstrap';
 
-export const StyledIoTProjectBody = styled(Row)``;
+export const StyledIoTProjectBody = styled.div`
+	display: flex;
+	height: 100%;
+	width: 100%;
+	padding: 100px;
+`;

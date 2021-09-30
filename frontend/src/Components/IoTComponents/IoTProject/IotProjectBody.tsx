@@ -5,10 +5,10 @@ import { classToPlain } from 'class-transformer';
 import { IoTComponent } from '../../../Models/Iot/IoTProjectClasses/IoTComponent';
 import { IOT_COMPONENT_TYPE } from '../../../Models/Iot/IoTProjectClasses/IoTComponent';
 import IoTButtonComponent from '../IoTProjectComponents/IoTButtonComponent';
-import { Col } from 'react-bootstrap';
+import { Col, Row, Container } from 'react-bootstrap';
 import IoTProgressBarComponent from '../IoTProjectComponents/IoTProgressBarComponent';
 import { IoTProgressBar } from '../../../Models/Iot/IoTProjectClasses/Components/IoTProgressBar';
-import IoTLogsComponent from '../IoTProjectComponents/IoTLogsComponent';
+import IoTLogsComponent from '../IoTProjectComponents/IoTLogsComponent/IoTLogsComponent';
 import { IoTLogs } from '../../../Models/Iot/IoTProjectClasses/Components/IoTLogs';
 import api from '../../../Models/api';
 import { StyledIoTProjectBody } from './iotProjectBodyTypes';
@@ -77,28 +77,6 @@ const IoTProjectBody = ({ project }: { project: IoTProject }) => {
 		socket.setOnRender(onLayoutChange);
 	}, [socket, onLayoutChange]);
 
-	useEffect(() => {
-		socket.onReceiveUpdate({ id: 'button', value: 'heyyyy' });
-
-		setTimeout(() => {
-			socket.onReceiveUpdate({ id: 'button2', value: 'nope' });
-		}, 2000);
-
-		const interval = setInterval(() => {
-			socket.onReceiveUpdate({
-				id: 'progress',
-				value: Math.floor(Math.random() * 900 + 100),
-			});
-		}, 100);
-
-		return () => {
-			clearInterval(interval);
-			socket.closeSocket();
-		};
-
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
 	const renderComponent = (component: IoTComponent) => {
 		switch (component.type) {
 			case IOT_COMPONENT_TYPE.BUTTON:
@@ -112,11 +90,28 @@ const IoTProjectBody = ({ project }: { project: IoTProject }) => {
 		}
 	};
 
+	const getComponentsMatrix = (): Array<Array<IoTComponent>> => {
+		const componentsMatrix = [];
+		for (let i = 0; i < Math.ceil(components.length / 3); i++) {
+			const row = components.slice(i * 3, i * 3 + 3);
+			console.log(components);
+			componentsMatrix.push(row);
+		}
+		console.log(componentsMatrix);
+		return componentsMatrix;
+	};
+
 	return (
 		<StyledIoTProjectBody>
-			{components.map((c: IoTComponent, idx) => (
-				<Col key={idx}>{renderComponent(c)}</Col>
-			))}
+			<Container fluid>
+				{getComponentsMatrix().map((row, idx) => (
+					<Row className="w-100" key={idx}>
+						{row.map((c, idx2) => (
+							<Col key={idx2}>{renderComponent(c)}</Col>
+						))}
+					</Row>
+				))}
+			</Container>
 		</StyledIoTProjectBody>
 	);
 };

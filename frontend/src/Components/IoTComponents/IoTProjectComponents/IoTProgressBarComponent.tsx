@@ -8,7 +8,14 @@ const IoTProgressBarComponent = ({
 	const percentage = component.value / component.getMax();
 
 	return (
-		<>
+		<div
+			style={{
+				display: 'flex',
+				flexDirection: 'column',
+				alignItems: 'center',
+			}}
+		>
+			<h4 style={{ textAlign: 'center' }}>{component.name}</h4>
 			<div className="my-progress mb-5">
 				<div className="barOverflow">
 					<div
@@ -25,7 +32,7 @@ const IoTProgressBarComponent = ({
 					{component.isPercentage && '%'}
 				</span>
 			</div>
-		</>
+		</div>
 	);
 };
 
