@@ -76,11 +76,9 @@ export const StyledAliveLevel = styled(FillContainer)`
 
 	.graph-container {
 		height: relative;
-		z-index: 1; 
 	}
 
 	.command {
 		height: 40%;
-		z-index: 2;
 	}
 `;

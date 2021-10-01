@@ -31,11 +31,17 @@ import $ from 'jquery';
 import { useTranslation } from 'react-i18next';
 import dataAI from "./dataAI.json"
 import Modal from '../../../Components/UtilsComponents/Modal/Modal';
-import FillContainer from '../../../Components/UtilsComponents/FillContainer/FillContainer';
 import useExecutor from '../../../state/hooks/useExecutor';
 import LevelTable from '../../../Components/LevelComponents/LevelTable/LevelTable';
 import LevelGraph from '../../../Components/LevelComponents/LevelGraph/LevelGraph';
+import Function from '../../../Components/LevelComponents/LevelGraph/Function'
 
+
+/**
+ * Component that contains all the elements that are a part of any AI level.
+ * @param param0 the props of AI levels.
+ * @returns the LevelAI component.
+ */
 const LevelAI = ({
 	level,
 	editMode,
@@ -70,10 +76,18 @@ const LevelAI = ({
 
 	//Set the data for the level
 	const [data] = useState(dataAI);
-
+	const [func, setFunc] = useState<any>([]);
+	const [mainDataset] = useState({
+		type: 'scatter',
+		label: "Distance parcourue en fonction de l'énergie",
+		data: data,
+		backgroundColor: 'var(--contrast-color)',
+		borderWidth: 1,
+	})
 	const [chartData, setChartData] = useState({
 		datasets: [
 			{
+				type: 'scatter',
 				label: "Distance parcourue en fonction de l'énergie",
 				data: [{}],
 				backgroundColor: 'var(--contrast-color)',
@@ -82,30 +96,55 @@ const LevelAI = ({
 		],
 	});
 
+	const memorizedMainDataset = useMemo(() => mainDataset, [mainDataset]);
 	const memorizedData = useMemo(() => data, [data]);
 	const memorizedChartData = useMemo(() => chartData, [chartData]);
+	const memorizedFunc = useMemo(() => func, [func]);
 
 	//-------------------------- Alivescript functions ----------------------------//
 
-	// Sets the data of the graph to the level's data and displays it on the screen
+	/**
+	 * Sets the data of the graph to the level's data and displays it on the screen
+	 * 
+	*/
 	function showDataCloud(): void {
 		setChartData({
 			datasets: [
+				memorizedMainDataset
+			],
+		});
+	}
+
+	function createFunction(a: number, b: number, c: number, d: number) {
+		setFunc(new Function(a, b, c, d));
+	}
+
+	function showFunction(nbPoints: number, minRange: number, maxRange: number) {
+		let points = memorizedFunc.generatePoints(nbPoints, minRange, maxRange);
+		setChartData({
+			datasets: [
+				memorizedMainDataset,
 				{
-					label: "Distance parcourue en fonction de l'énergie",
-					data: data,
+					type: "line",
+					label: "Fonction polynomiale",
+					data: points,
 					backgroundColor: 'var(--contrast-color)',
-					borderWidth: 1,
-				},
+					borderWidth: 3,
+				}
 			]
-		})
+		});
+	}
+
+	function createAndShowFunc(a: number, b: number, c: number, d: number, nbPoints: number, minRange: number, maxRange: number) {
+		createFunction(a, b, c, d);
+		showFunction(nbPoints, minRange, maxRange);
 	}
 
 	useEffect(() => {
 		if (user && editMode && level.creator && level.creator.id !== user.id)
 			return history.push(routes.public.home.path);
 
-		setExecutor(new LevelAIExecutor([1, 2, 3, showDataCloud], level.name, user || undefined));
+		setExecutor(new LevelAIExecutor([createAndShowFunc, 2, showDataCloud], level.name, user || undefined));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, level]);
 

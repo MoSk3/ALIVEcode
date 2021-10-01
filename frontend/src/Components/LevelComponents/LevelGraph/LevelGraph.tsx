@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
 import { LevelGraphProps, StyledLevelGraph } from './LevelGraphTypes';
-import { Scatter } from 'react-chartjs-2';
+import { Scatter, Line } from 'react-chartjs-2';
 import FillContainer from '../../UtilsComponents/FillContainer/FillContainer';
 import { themes } from '../../../state/contexts/ThemeContext';
 import { Chart } from 'react-chartjs-2';
@@ -26,7 +26,7 @@ const LevelGraph = React.memo((props: LevelGraphProps) => {
 
 
   return (
-    <StyledLevelGraph className="graph-holder">
+    <StyledLevelGraph className="graph-holder ">
         <Scatter
           className="graph"
           data={props.data} 

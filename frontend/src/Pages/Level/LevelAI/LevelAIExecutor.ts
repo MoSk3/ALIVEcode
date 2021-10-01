@@ -98,13 +98,20 @@ class LevelAIExecutor extends LevelCodeExecutor {
 																----		ARTIFICIAL INTELLIGENCE		----
 													*/
 					case 800:
-						this.executableFuncs[1]();
+						let paramsChecked = true;
+						if (params.length > 0) {
+							for (let i = 0; i < params.length; i++) {
+								if (typeof params[i] !== "number") paramsChecked = false;
+							}
+						}
+						if (paramsChecked) this.executableFuncs[0](params[0], params[1], params[2], params[3], 100, 20, 80);
+						perform_action(i + 1);
 						break;
 					case 801:
-						this.executableFuncs[2]();
+						this.executableFuncs[1]();
 						break;
 					case 802:
-						this.executableFuncs[3]();
+						this.executableFuncs[2]();
 						perform_action(i + 1);
 					break;
 

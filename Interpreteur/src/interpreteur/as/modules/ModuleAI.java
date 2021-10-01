@@ -388,6 +388,27 @@ public class ModuleAI {
                         executeurInstance.addData(new Data(Data.Id.AFFICHER_NUAGE));
                         return new Nul();
                     }
+                },
+                new ASObjet.Fonction("creerFonction", new ASObjet.Fonction.Parametre[]{
+                        new ASObjet.Fonction.Parametre(
+                                ASObjet.TypeBuiltin.decimal.asType(), "a", null),
+                        new ASObjet.Fonction.Parametre(
+                                ASObjet.TypeBuiltin.decimal.asType(), "b", null),
+                        new ASObjet.Fonction.Parametre(
+                                ASObjet.TypeBuiltin.decimal.asType(), "c", null),
+                        new ASObjet.Fonction.Parametre(
+                                ASObjet.TypeBuiltin.decimal.asType(), "d", null)
+                }, ASObjet.TypeBuiltin.nulType.asType()){
+                    @Override
+                    public ASObjet<?> executer() {
+                        Number a = ((Number) this.getValeurParam("a").getValue()).doubleValue();
+                        Number b = ((Number) this.getValeurParam("b").getValue()).doubleValue();
+                        Number c = ((Number) this.getValeurParam("c").getValue()).doubleValue();
+                        Number d = ((Number) this.getValeurParam("d").getValue()).doubleValue();
+                        executeurInstance.addData(new Data(Data.Id.CREER_FONTION)
+                                .addParam(a).addParam(b).addParam(c).addParam(d));
+                        return new Nul();
+                    }
                 }
         }, new ASObjet.Variable[]{});
     }
