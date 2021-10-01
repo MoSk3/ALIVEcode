@@ -16,8 +16,10 @@ export class SectionEntity {
   name: string;
 
   @ManyToMany(() => ActivityEntity)
-  activities: ActivityEntity[];
+  @IsEmpty()
+  activities?: ActivityEntity[];
 
   @ManyToOne(() => CourseEntity, course => course.sections, { onDelete: 'CASCADE' })
+  @IsEmpty()
   course: CourseEntity;
 }

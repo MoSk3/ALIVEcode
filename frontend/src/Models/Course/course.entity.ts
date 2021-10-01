@@ -41,6 +41,7 @@ export class Course extends CreatedByUser {
 
 	subject: COURSE_SUBJECT;
 
+	@Type(() => Section)
 	sections: Section[];
 
 	async getSections() {
