@@ -18,17 +18,6 @@ const IoTLogsComponent = ({ component }: { component: IoTLogs }) => {
 		component.addLog(
 			"Quelqu'un de non identifié a essayé de rentrer dans le stationnement avec la plaque P4S19C",
 		);
-
-		const interval = setInterval(() => {
-			//component.clearLogs();
-			component.addLog('Nouveau log');
-		}, 10000);
-
-		clearInterval(interval);
-
-		return () => {
-			clearInterval(interval);
-		};
 	}, [component]);
 
 	return (

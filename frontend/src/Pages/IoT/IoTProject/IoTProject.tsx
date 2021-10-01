@@ -25,7 +25,6 @@ import FormModal from '../../../Components/UtilsComponents/FormModal/FormModal';
 import { IotRoute } from '../../../Models/Iot/IoTroute.entity';
 import { plainToClass } from 'class-transformer';
 import IoTRouteCard from '../../../Components/IoTComponents/IoTRoute/IoTRouteCard/IoTRouteCard';
-import CenteredContainer from '../../../Components/UtilsComponents/CenteredContainer/CenteredContainer';
 import IoTProjectBody from '../../../Components/IoTComponents/IoTProject/IotProjectBody';
 
 const IoTProject = (props: IoTProjectProps) => {

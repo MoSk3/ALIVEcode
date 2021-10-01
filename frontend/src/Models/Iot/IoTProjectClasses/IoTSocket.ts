@@ -42,6 +42,7 @@ export class IoTSocket {
 		if (!process.env.REACT_APP_IOT_URL)
 			throw new Error('Env variable REACT_APP_IOT_URL not set');
 
+		console.log('OPEN');
 		this.socket = io(process.env.REACT_APP_IOT_URL);
 
 		this.socket.on('update', this.onReceiveUpdate);
