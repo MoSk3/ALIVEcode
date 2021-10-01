@@ -1,4 +1,4 @@
-import { HomeCardProps } from './homeCardTypes';
+import { HomeCardProps, StyledHomeCard } from './homeCardTypes';
 import { useHistory } from 'react-router';
 import { Card, Row, Col } from 'react-bootstrap';
 import { useContext } from 'react';
@@ -9,7 +9,7 @@ const HomeCard = ({ title, content, to, img, onClick }: HomeCardProps) => {
 	const { theme } = useContext(ThemeContext);
 
 	return (
-		<Card
+		<StyledHomeCard
 			onClick={() => {
 				onClick ? onClick() : to && history.push(to);
 			}}
@@ -25,7 +25,7 @@ const HomeCard = ({ title, content, to, img, onClick }: HomeCardProps) => {
 					</div>
 				</Col>
 			</Row>
-		</Card>
+		</StyledHomeCard>
 	);
 };
 

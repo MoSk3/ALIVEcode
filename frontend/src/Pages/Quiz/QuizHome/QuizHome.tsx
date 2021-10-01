@@ -11,19 +11,18 @@ const QuizHome = () => {
 	return (
 		<div>
 			<CenteredContainer
-                horizontally
-                textAlign="center"
-                style={{ paddingLeft: '250px', paddingRight: '250px' }}    
-                >
-                <CardContainer asRow style={{ marginBottom: '100px' }} title="Quiz">
-					<SmallCard to="/quiz" title="IoT"/>
+				horizontally
+				textAlign="center"
+				style={{ paddingLeft: '250px', paddingRight: '250px' }}
+			>
+				<CardContainer asRow style={{ marginBottom: '100px' }} title="Quiz">
+					<SmallCard to="/quiz" title="IoT" />
 					<SmallCard to="/quiz/new" title="Base de données" />
 					<SmallCard to="/quiz/browse" title="Pseudocode" />
-                    <SmallCard to="/quiz/browse" title="Réseaux" />
-                    <SmallCard to="/quiz/browse" title="Ajouter un Quiz" />
+					<SmallCard to="/quiz/browse" title="Réseaux" />
+					<SmallCard to="/quiz/browse" title="Ajouter un Quiz" />
 				</CardContainer>
-
-            </CenteredContainer>
+			</CenteredContainer>
 		</div>
 	);
 };
