@@ -1,148 +1,131 @@
 Ajouter:
-  commandes:
-    LIRE: '\blire\b'
-    ATTENDRE: '\battendre\b'
-    UTILISER: '\butiliser\b'
+    commandes:
+        LIRE: '\blire\b'
+        ATTENDRE: '\battendre\b'
+        UTILISER: '\butiliser\b'
+        VAR: '\bvar\b'
+        CONSTANTE: '\bconst\b'
 
-  methode_moteur:
-    AVANCER: '\bavancer\b'
-    RECULER: '\breculer\b'
-    ARRETER: '\barreter\b'
-    TOURNER_DROITE: '\bdroite\b'
-    TOURNER_GAUCHE: '\bgauche\b'
+    methode_moteur:
+        AVANCER: '\bavancer\b'
+        RECULER: '\breculer\b'
+        ARRETER: '\barreter\b'
+        TOURNER_DROITE: '\bdroite\b'
+        TOURNER_GAUCHE: '\bgauche\b'
 
-  arithmetique:
-    PLUS: '\+'
-    POW: '\^'
-    MUL: '\*'
-    MOINS: '-'
-    DIV: '\/'
-    DIV_ENTIERE: '\/\/'
-    MOD: '%'
+    arithmetique:
+        PLUS: '\+'
+        POW: '\^'
+        MUL: '\*'
+        MOINS: "-"
+        DIV: '\/'
+        DIV_ENTIERE: '\/\/'
+        MOD: "%"
+        PIPE: "[|]"
 
-  CONSTANTE: '\bconst\b'
-  VAR: '\bvar\b'
+    assignements:
+        ASSIGNEMENT: "="
+        ASSIGNEMENT_FLECHE: "<-"
+        PLUS_ASSIGNEMENT: '\+='
+        POW_ASSIGNEMENT: '\^='
+        MUL_ASSIGNEMENT: '\*='
+        MOINS_ASSIGNEMENT: "-="
+        DIV_ASSIGNEMENT: '\/='
+        DIV_ENTIERE_ASSIGNEMENT: '\/\/='
+        MOD_ASSIGNEMENT: "[%]="
+        PIPE_ASSIGNEMENT: '\|='
 
+    # fonction
+    fonctions:
+        FONCTION: '\bfonction\b'
+        STRUCTURE: '\bstructure\b'
+        GET: '\bget\b'
+        SET: '\bset\b'
+        FLECHE: "->"
 
-  assignements:
-    ASSIGNEMENT: '='
-    ASSIGNEMENT_FLECHE: '<-'
-    PLUS_ASSIGNEMENT: '\+='
-    POW_ASSIGNEMENT: '\^='
-    MUL_ASSIGNEMENT: '\*='
-    MOINS_ASSIGNEMENT: '-='
-    DIV_ASSIGNEMENT: '\/='
-    DIV_ENTIERE_ASSIGNEMENT : '\/\/='
-    MOD_ASSIGNEMENT : '[%]='
-    PIPE_ASSIGNEMENT : '\|='
+    # structure
 
+    blocs:
+        SI: '\bsi\b'
+        SINON: '\bsinon\b'
+        ALORS: '\balors\b'
 
-  # fonction
-  FONCTION: '\bfonction\b'
-  RETOURNER: '\bretourner\b'
-  FLECHE: '->'
+        # bloc pour
+        POUR: '\bpour\b'
+        REPETER: '\brepeter\b'
+        TROIS_POINTS: '\.\.\.'
+        BOND: '\bbond\b'
+        DANS: '\bdans\b'
 
-  GET: '\bget\b'
-  SET: '\bset\b'
+        # bloc tant que
+        TANT_QUE: '\btant que\b'
+        FAIRE: '\bfaire\b'
 
-  # structure
-  STRUCTURE: '\bstructure\b'
+    control_flow:
+        SORTIR: '\bsortir\b'
+        CONTINUER: '\bcontinuer\b'
+        RETOURNER: '\bretourner\b'
 
-  blocs:
-    SI: '\bsi\b'
-    SINON: '\bsinon\b'
+    # fin
+    FIN: '\bfin\b'
 
-    # bloc pour
-    POUR: '\bpour\b'
-    REPETER: '\brepeter\b'
-    TROIS_POINTS: '\.\.\.'
-    BOND: '\bbond\b'
-    DANS: '\bdans\b'
+    type_de_donnees:
+        ENTIER: '\d+'
+        DECIMAL: '\d+\.\d+|\d+\.(?!\.)|(?<!\.)\.\d+'
+        TEXTE: '".*?"|''.*?'''
+        BOOLEEN: '\bvrai\b|\bfaux\b'
+        NUL: '\bnul\b'
 
-    # bloc tant que
-    TANT_QUE: '\btant que\b'
-    FAIRE: 'faire'
+    nom_type_de_donnees:
+        NOM_ENTIER: '\bentier\b'
+        NOM_DECIMAL: '\bdecimal\b'
+        NOM_TEXTE: '\btexte\b'
+        NOM_BOOLEEN: '\bbooleen\b'
+        NOM_LISTE: '\bliste\b'
+        NOM_FONCTION: '\bfonctionType\b'
+        NOM_NUL: '\bnulType\b'
+        NOM_NOMBRE: '\bnombre\b'
+        NOM_ITERABLE: '\biterable\b'
+        NOM_TOUT: '\btout\b'
+        NOM_RIEN: '\brien\b'
 
-  SORTIR: '\bsortir\b'
+    comparaison:
+        EGAL: "(={2})|(==)"
+        PAS_EGAL: "!="
+        PLUS_GRAND: ">"
+        PLUS_PETIT: "<"
+        PLUS_GRAND_EGAL: ">="
+        PLUS_PETIT_EGAL: "<="
 
-  CONTINUER: '\bcontinuer\b'
+    porte_logique:
+        ET: '\bet\b'
+        OU: '\bou\b'
 
-  ALORS: '\balors\b'
+    PAS: '\bpas\b'
 
+    # separateur
+    PARENT_OUV: "[(]"
+    PARENT_FERM: "[)]"
 
-  # fin
-  FIN: '\bfin\b'
+    # iterateur
+    CROCHET_OUV: '\['
+    CROCHET_FERM: '\]'
 
+    # liste
+    BRACES_OUV: "[{]"
+    BRACES_FERM: "[}]"
 
-  type_de_donnees:
-    ENTIER: '\d+'
-    DECIMAL: '\d+\.\d+|\d+\.(?!\.)|(?<!\.)\.\d+'
-    TEXTE: "\".*?\"|'.*?'"
-    BOOLEEN: '\bvrai\b|\bfaux\b'
-    NUL: '\bnul\b'
+    # sous-categorie
+    # le point indique aussi un nombre decimal
+    POINT: '\.'
+    VIRGULE: "[,]"
+    DEUX_POINTS: "[:]"
+    POINT_VIRGULE: "[;]"
 
-  nom_type_de_donnees:
-    NOM_ENTIER: '\bentier\b'
-    NOM_DECIMAL: '\bdecimal\b'
-    NOM_TEXTE: '\btexte\b'
-    NOM_BOOLEEN: '\bbooleen\b'
-    NOM_LISTE: '\bliste\b'
-    NOM_FONCTION: '\bfonctionType\b'
-    NOM_NUL: '\bnulType\b'
-    NOM_NOMBRE: '\bnombre\b'
-    NOM_ITERABLE: '\biterable\b'
-    NOM_TOUT: '\btout\b'
-    NOM_RIEN: '\brien\b'
-
-
-  comparaison:
-    EGAL: '(={2})|(==)'
-    PAS_EGAL: '!='
-    PLUS_GRAND: '>'
-    PLUS_PETIT: '<'
-    PLUS_GRAND_EGAL: '>='
-    PLUS_PETIT_EGAL: '<='
-
-  porte_logique:
-    ET: '\bet\b'
-    OU: '\bou\b'
-
-  PAS: '\bpas\b'
-
-  # separateur
-  PARENT_OUV: '[(]'
-  PARENT_FERM: '[)]'
-
-  # iterateur
-  CROCHET_OUV: '\['
-  CROCHET_FERM: '\]'
-
-  # liste
-  BRACES_OUV: '[{]'
-  BRACES_FERM: '[}]'
-
-  # sous-categorie
-  # le point indique aussi un nombre decimal
-  POINT: '\.'
-  VIRGULE: '[,]'
-  DEUX_POINTS: '[:]'
-  POINT_VIRGULE: '[;]'
-  PIPE: '[|]'
-  NOM_VARIABLE: '((\p{L}|_)+(\d+)*(\p{L})*_*\.?)+'
+    NOM_VARIABLE: '((\p{L}|_)+(\d+)*(\p{L})*_*\.?)+'
 
 Ignorer:
-  - '\s+'
-  - '#.*'
-  - '\(:.*:\)'
-  - '\(-:.*:-\)'
-
-
-
-
-
-
-
-
-
-
-
+    - '\s+'
+    - "#.*"
+    - '\(:.*:\)'
+    - '\(-:.*:-\)'
