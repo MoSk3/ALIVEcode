@@ -1,7 +1,18 @@
 import { createContext } from "react";
 import { Course } from "../../Models/Course/course.entity";
+import { Section } from '../../Models/Course/section.entity';
+import { Activity } from '../../Models/Course/activity.entity';
 
-export const CourseContext = createContext<{
+export type CourseContentValues = {
 	course?: Course;
-	loadActivity: (id: string) => any;
-}>({ loadActivity: (id: string) => {} });
+	activity?: Activity;
+	addSection: (section: Section) => void;
+	loadActivity: (activity: Activity) => any;
+	addActivity: (section: Section, activity: Activity) => void;
+};
+
+export const CourseContext = createContext<CourseContentValues>({
+	loadActivity: (activity: Activity) => {},
+	addSection: (section: Section) => {},
+	addActivity: (section: Section, activity: Activity) => {},
+});

@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { CourseContentProps } from "./courseContentTypes";
 import { useContext } from 'react';
+import { CourseContext } from '../../../state/contexts/CourseContext';
 import {
 	Theme,
 	ThemeContext,
@@ -30,13 +31,15 @@ const StyleDiv = styled.div`
 
 const CourseContent = (props: CourseContentProps) => {
 	const { theme } = useContext(ThemeContext);
+	const { activity } = useContext(CourseContext);
+
 	return (
 		<StyleDiv theme={theme}>
 			<div className="course-content-padding">
 				<div className="course-content">
-					<h1>hello</h1>
+					<h1>{activity?.name}</h1>
 					<div>
-						<p>Contenu d'un cours!</p>
+						<p>{activity?.content}</p>
 					</div>
 				</div>
 			</div>

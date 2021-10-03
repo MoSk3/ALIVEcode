@@ -33,6 +33,7 @@ const FillContainer = ({
 					top: '0',
 			  }
 			: {}),
+		...(relative ? { position: 'relative' } : {}),
 	};
 
 	useLayoutEffect(() => {

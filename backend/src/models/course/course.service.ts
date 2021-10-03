@@ -5,12 +5,14 @@ import { Repository } from 'typeorm';
 import { SectionEntity } from './entities/section.entity';
 import { generate } from 'randomstring';
 import { ProfessorEntity } from '../user/entities/professor.entity';
+import { ActivityEntity } from './entities/activity.entity';
 
 @Injectable()
 export class CourseService {
   constructor(
     @InjectRepository(CourseEntity) private courseRepository: Repository<CourseEntity>,
     @InjectRepository(SectionEntity) private sectionRepository: Repository<SectionEntity>,
+    @InjectRepository(ActivityEntity) private activityRepository: Repository<ActivityEntity>,
   ) {}
 
   async create(professor: ProfessorEntity, createCourseDto: CourseEntity) {
@@ -62,5 +64,30 @@ export class CourseService {
   async getSections(courseId: string) {
     const course = await this.findOneWithSections(courseId);
     return course.sections;
+  }
+
+  async findSection(courseId: string, sectionId: string) {
+    const course = await this.findOne(courseId);
+    const section = await this.sectionRepository.findOne({
+      where: { id: sectionId, course },
+      relations: ['activities'],
+    });
+    if (!section) throw new HttpException('Section not found', HttpStatus.NOT_FOUND);
+    return section;
+  }
+
+  async getActivities(courseId: string, sectionId: string) {
+    const section = await this.findSection(courseId, sectionId);
+    return section.activities;
+  }
+
+  async addActivity(courseId: string, sectionId: string, activity: ActivityEntity) {
+    activity = await this.activityRepository.create(activity);
+    await this.activityRepository.save(activity);
+
+    const section = await this.findSection(courseId, sectionId);
+    section.activities.push(activity);
+    await this.sectionRepository.save(section);
+    return activity;
   }
 }

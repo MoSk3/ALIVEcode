@@ -21,6 +21,7 @@ import { hasRole } from '../user/auth';
 import { Role } from '../../utils/types/roles.types';
 import { Auth } from '../../utils/decorators/auth.decorator';
 import { User } from '../../utils/decorators/user.decorator';
+import { ActivityEntity } from './entities/activity.entity';
 
 @Controller('courses')
 @UseInterceptors(DTOInterceptor)
@@ -93,5 +94,30 @@ export class CourseController {
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
 
     return await this.courseService.getSections(id);
+  }
+
+  @Get(':id/sections/:sectionId/activities')
+  @Auth()
+  async getActivities(@User() user: UserEntity, @Param('id') id: string, @Param('sectionId') sectionId: string) {
+    const course = await this.courseService.findOne(id);
+    if (course.creator.id !== user.id && !hasRole(user, Role.STAFF))
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+
+    return await this.courseService.getActivities(id, sectionId);
+  }
+
+  @Post(':id/sections/:sectionId/activities')
+  @Auth()
+  async addActivity(
+    @User() user: UserEntity,
+    @Param('id') id: string,
+    @Param('sectionId') sectionId: string,
+    @Body() createActivityDTO: ActivityEntity,
+  ) {
+    const course = await this.courseService.findOne(id);
+    if (course.creator.id !== user.id && !hasRole(user, Role.STAFF))
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+
+    return await this.courseService.addActivity(id, sectionId, createActivityDTO);
   }
 }

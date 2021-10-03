@@ -3,6 +3,7 @@ import FillContainer from '../FillContainer/FillContainer';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
+import { SizeProp } from '@fortawesome/fontawesome-svg-core';
 
 const StyledSpinner = styled.div`
 	color: var(--primary-color);
@@ -44,7 +45,13 @@ const StyledSpinner = styled.div`
 	}
 `;
 
-const LoadingScreen = ({ relative }: { relative?: boolean }) => {
+const LoadingScreen = ({
+	relative,
+	size,
+}: {
+	relative?: boolean;
+	size?: SizeProp;
+}) => {
 	const [loading, setLoading] = useState(false);
 
 	useEffect(() => {
@@ -62,12 +69,16 @@ const LoadingScreen = ({ relative }: { relative?: boolean }) => {
 			relative={relative}
 			centered
 			startAtTop
-			style={{ textAlign: 'center' }}
+			style={{ textAlign: 'center', minHeight: loading ? '100px' : undefined }}
 		>
 			<div>
 				<StyledSpinner>
 					{loading && (
-						<FontAwesomeIcon className="rotating" size="5x" icon={faSpinner} />
+						<FontAwesomeIcon
+							className="rotating"
+							size={size ? size : '5x'}
+							icon={faSpinner}
+						/>
 					)}
 				</StyledSpinner>
 			</div>

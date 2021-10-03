@@ -9,9 +9,11 @@ import Link from '../../UtilsComponents/Link/Link';
 import { UserContext } from '../../../state/contexts/UserContext';
 import FormModal from '../../UtilsComponents/FormModal/FormModal';
 import Form from '../../UtilsComponents/Form/Form';
+import { Section } from '../../../Models/Course/section.entity';
+import { plainToClass } from 'class-transformer';
 
 const CourseNavigation = (props: CourseNavigationProps) => {
-	const { course } = useContext(CourseContext);
+	const { course, addSection } = useContext(CourseContext);
 	const { theme } = useContext(ThemeContext);
 	const { user } = useContext(UserContext);
 	const { routes, goTo } = useRoutes();
@@ -31,9 +33,19 @@ const CourseNavigation = (props: CourseNavigationProps) => {
 				</div>
 				<div className="course-nav-body">
 					{course.sections.length > 0 ? (
-						course.sections.map((s, idx) => (
-							<CourseSection key={idx} section={s} />
-						))
+						<>
+							{course.sections.map((s, idx) => (
+								<CourseSection key={idx} section={s} />
+							))}
+							<Link
+								style={{ textAlign: 'center' }}
+								onClick={() => setOpenModalSection(true)}
+								dark
+								block
+							>
+								New section
+							</Link>
+						</>
 					) : (
 						<div style={{ textAlign: 'center' }}>
 							<label>There are no sections in this course</label>
@@ -50,7 +62,11 @@ const CourseNavigation = (props: CourseNavigationProps) => {
 				open={openModalSection}
 				title="Create section"
 				onClose={() => setOpenModalSection(false)}
-				onSubmit={res => console.log(res)}
+				onSubmit={res => {
+					const section: Section = plainToClass(Section, res.data);
+					addSection(section);
+					setOpenModalSection(false);
+				}}
 			>
 				<Form
 					name="section"
@@ -60,6 +76,9 @@ const CourseNavigation = (props: CourseNavigationProps) => {
 						{
 							name: 'name',
 							inputType: 'text',
+							required: true,
+							minLength: 3,
+							maxLength: 25,
 						},
 					]}
 				/>
