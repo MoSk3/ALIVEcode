@@ -17,7 +17,7 @@ import { LevelAI } from './Level/levelAI.entity';
 import { IoTObject } from './Iot/IoTobject.entity';
 import { Maintenance } from './Maintenance/maintenance.entity';
 import { QueryDTO } from '../../../backend/src/models/level/dto/query.dto';
-import { Activity } from './Course/activity.entity';
+import { Activity, ActivityContent } from './Course/activity.entity';
 
 type urlArgType<S extends string> = S extends `${infer _}:${infer A}/${infer B}`
 	? A | urlArgType<B>
@@ -158,6 +158,20 @@ const api = {
 						`courses/${courseId}/sections/${sectionId}/activities`,
 					)
 				).data.map((c: any) => plainToClass(Activity, c));
+			},
+			async getActivityContent(
+				courseId: string,
+				sectionId: number,
+				activityId: number,
+			) {
+				return plainToClass(
+					ActivityContent,
+					(
+						await axios.get(
+							`courses/${courseId}/sections/${sectionId}/activities/${activityId}/content`,
+						)
+					).data,
+				);
 			},
 			addActivity: async (
 				courseId: string,

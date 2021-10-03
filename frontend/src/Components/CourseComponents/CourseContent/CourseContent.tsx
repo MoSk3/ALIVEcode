@@ -7,6 +7,8 @@ import {
 	ThemeContext,
 	themes,
 } from '../../../state/contexts/ThemeContext';
+import ReactMarkdown from 'react-markdown';
+import CenteredContainer from '../../UtilsComponents/CenteredContainer/CenteredContainer';
 
 const StyleDiv = styled.div`
 	position: relative;
@@ -37,10 +39,26 @@ const CourseContent = (props: CourseContentProps) => {
 		<StyleDiv theme={theme}>
 			<div className="course-content-padding">
 				<div className="course-content">
-					<h1>{activity?.name}</h1>
-					<div>
-						<p>{activity?.content}</p>
-					</div>
+					{activity ? (
+						<>
+							<h1>{activity.name}</h1>
+							<div>
+								{activity.content?.data ? (
+									<ReactMarkdown>{activity.content.data}</ReactMarkdown>
+								) : (
+									<p>Empty activity</p>
+								)}
+							</div>
+						</>
+					) : (
+						<CenteredContainer
+							style={{ height: '100%' }}
+							horizontally
+							vertically
+						>
+							Open an activity to get started
+						</CenteredContainer>
+					)}
 				</div>
 			</div>
 		</StyleDiv>

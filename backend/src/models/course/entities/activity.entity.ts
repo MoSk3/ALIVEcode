@@ -3,7 +3,7 @@ import { IsEmpty, IsNotEmpty } from 'class-validator';
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 export class ActivityContent {
-  data: string;
+  body: string;
 }
 
 @Entity()
@@ -17,7 +17,7 @@ export class ActivityEntity {
   @Column({ nullable: false })
   name: string;
 
-  @Column({ type: 'json', default: '"{}"' })
+  @Column({ type: 'json', default: {} })
   @Type(() => ActivityContent)
   content: ActivityContent;
 }

@@ -7,12 +7,12 @@ export type CourseContentValues = {
 	course?: Course;
 	activity?: Activity;
 	addSection: (section: Section) => void;
-	loadActivity: (activity: Activity) => any;
+	loadActivity: (section: Section, activity: Activity) => any;
 	addActivity: (section: Section, activity: Activity) => void;
 };
 
 export const CourseContext = createContext<CourseContentValues>({
-	loadActivity: (activity: Activity) => {},
+	loadActivity: (section: Section, activity: Activity) => {},
 	addSection: (section: Section) => {},
 	addActivity: (section: Section, activity: Activity) => {},
 });

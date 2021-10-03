@@ -18,6 +18,7 @@ const CourseSection = ({ section }: CourseSectionProps) => {
 		if (!open) {
 			setLoading(true);
 			await section.getActivities(course.id);
+			console.log(section.activities);
 			setLoading(false);
 		}
 	};
@@ -55,7 +56,7 @@ const CourseSection = ({ section }: CourseSectionProps) => {
 						<>
 							{section.activities?.map((a, idx) => (
 								<div
-									onClick={() => loadActivity(a)}
+									onClick={() => loadActivity(section, a)}
 									key={idx}
 									className="course-activity"
 								>

@@ -32,7 +32,9 @@ const Course = (props: CourseProps) => {
 	const alert = useAlert();
 	const history = useHistory();
 
-	const loadActivity = (activity: Activity) => {
+	const loadActivity = async (section: Section, activity: Activity) => {
+		if (!course) return;
+		await activity.getContent(course?.id, section.id);
 		setActivity(activity);
 	};
 
@@ -44,7 +46,11 @@ const Course = (props: CourseProps) => {
 
 	const addActivity = async (section: Section, activity: Activity) => {
 		if (!course) return;
-		await api.db.courses.addActivity(course?.id, section.id, activity);
+		activity = await api.db.courses.addActivity(
+			course?.id,
+			section.id,
+			activity,
+		);
 
 		const sectionFound = course?.sections.find(s => s.id === section.id);
 		if (!sectionFound || !course) return;
@@ -56,7 +62,7 @@ const Course = (props: CourseProps) => {
 					: (s.activities = [activity]);
 			return s;
 		});
-		loadActivity(activity);
+		loadActivity(section, activity);
 		setCourse(plainToClass(CourseModel, course));
 	};
 

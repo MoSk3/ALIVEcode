@@ -120,4 +120,19 @@ export class CourseController {
 
     return await this.courseService.addActivity(id, sectionId, createActivityDTO);
   }
+
+  @Get(':id/sections/:sectionId/activities/:activityId/content')
+  @Auth()
+  async getActivityContent(
+    @User() user: UserEntity,
+    @Param('id') id: string,
+    @Param('sectionId') sectionId: string,
+    @Param('activityId') activityId: string,
+  ) {
+    const course = await this.courseService.findOne(id);
+    if (course.creator.id !== user.id && !hasRole(user, Role.STAFF))
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+
+    return await this.courseService.findActivity(id, sectionId, activityId);
+  }
 }
