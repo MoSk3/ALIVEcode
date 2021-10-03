@@ -9,6 +9,7 @@ import {
 } from '../../../state/contexts/ThemeContext';
 import ReactMarkdown from 'react-markdown';
 import CenteredContainer from '../../UtilsComponents/CenteredContainer/CenteredContainer';
+import Level from '../../../Pages/Level/Level';
 
 const StyleDiv = styled.div`
 	position: relative;
@@ -44,7 +45,12 @@ const CourseContent = (props: CourseContentProps) => {
 							<h1>{activity.name}</h1>
 							<div>
 								{activity.content?.data ? (
-									<ReactMarkdown>{activity.content.data}</ReactMarkdown>
+									<>
+										<ReactMarkdown>{activity.content.data}</ReactMarkdown>
+										<div style={{ position: 'relative' }}>
+											<Level type="ALIVE" editMode={true}></Level>
+										</div>
+									</>
 								) : (
 									<p>Empty activity</p>
 								)}

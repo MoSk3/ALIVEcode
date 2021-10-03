@@ -60,10 +60,10 @@ const LevelCard = ({ level, enterEdit }: LevelCardProps) => {
 							onClick={() =>
 								enterEdit
 									? history.push(
-											routes.auth.level_edit.path.replace(':id', level.id),
+											routes.auth.level_edit.path.replace(':levelId', level.id),
 									  )
 									: history.push(
-											routes.auth.level_play.path.replace(':id', level.id),
+											routes.auth.level_play.path.replace(':levelId', level.id),
 									  )
 							}
 							left="2px"

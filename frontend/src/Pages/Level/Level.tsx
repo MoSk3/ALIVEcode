@@ -22,7 +22,7 @@ import { LevelAI as LevelAIModel } from '../../Models/Level/levelAI.entity';
 import LevelAI from './LevelAI/LevelAI';
 
 const Level = (props: LevelProps) => {
-	const { id } = useParams<{ id: string }>();
+	const { levelId } = useParams<{ levelId: string }>();
 	const { user } = useContext(UserContext);
 	const [level, setLevel] = useState<LevelModel>();
 	const [progression, setProgresion] = useState<LevelProgression>();
@@ -34,9 +34,9 @@ const Level = (props: LevelProps) => {
 		const loadLevel = async () => {
 			let level: LevelModel;
 
-			if (id) {
+			if (levelId) {
 				try {
-					level = await api.db.levels.get({ id });
+					level = await api.db.levels.get({ id: levelId });
 				} catch (err) {
 					alert.error('Niveau introuvable');
 					history.push('/');
@@ -84,7 +84,7 @@ const Level = (props: LevelProps) => {
 		};
 		loadLevel();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [id]);
+	}, [levelId]);
 
 	if (!level) return <LoadingScreen />;
 

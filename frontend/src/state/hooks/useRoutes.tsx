@@ -230,7 +230,7 @@ const useRoutes = () => {
 			component: LevelList,
 		},
 		level_edit: {
-			path: '/level/edit/:id',
+			path: '/level/edit/:levelId',
 			component: () => <Level editMode />,
 		},
 		level_browse: {
@@ -238,7 +238,7 @@ const useRoutes = () => {
 			component: LevelBrowse,
 		},
 		level_play: {
-			path: '/level/play/:id',
+			path: '/level/play/:levelId',
 			component: Level,
 		},
 		level_create: {
