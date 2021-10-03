@@ -6,6 +6,9 @@ import { IoTObjectEntity } from '../../iot/IoTobject/entities/IoTobject.entity';
 import { IoTProjectEntity } from '../../iot/IoTproject/entities/IoTproject.entity';
 import { AsScriptEntity } from 'src/as-script/entities/as-script.entity';
 import { LevelProgressionEntity } from '../../level/entities/levelProgression.entity';
+import { Post as Post_Table } from "src/models/social/post/entities/post.entity";
+import { Quiz } from 'src/models/social/quizzes/entities/quiz.entity';
+import { Result } from 'src/models/social/results/entities/result.entity';
 
 @Entity()
 @TableInheritance({ column: { type: 'varchar', name: 'type' } })
@@ -61,4 +64,13 @@ export class UserEntity {
 
   @OneToMany(() => LevelProgressionEntity, prog => prog.user, { cascade: true })
   levelProgressions: LevelProgressionEntity[];
+
+  @OneToMany(() => Post_Table, post => post.user_id)
+  post: Post_Table[];
+
+  @OneToMany(() => Quiz, quiz => quiz.user_id)
+  quiz: Quiz[];
+
+  @OneToMany(() => Result, result => result.user_id)
+  result: Result[];
 } 
