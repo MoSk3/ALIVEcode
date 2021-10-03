@@ -36,7 +36,7 @@ public class ModuleBuiltins {
             new ASObjet.Constante("finl", new ASObjet.Texte("\n")),
             new ASObjet.Variable("varLocales", new ASObjet.Liste(), ASObjet.TypeBuiltin.liste.asType()).setGetter(getVarsLocales).setReadOnly(),
             new ASObjet.Variable("varGlobales", new ASObjet.Liste(), ASObjet.TypeBuiltin.liste.asType()).setGetter(getVarsGlobales).setReadOnly(),
-            new ASObjet.Variable("varListe", new ASObjet.Liste(), ASObjet.TypeBuiltin.liste.asType()).setGetter(getVarListe).setReadOnly()
+            new ASObjet.Variable("varListe", new ASObjet.Liste(), ASObjet.TypeBuiltin.liste.asType()).setGetter(getVarListe).setReadOnly(),
     };
 
     static ASModule charger(Executeur executeurInstance) {

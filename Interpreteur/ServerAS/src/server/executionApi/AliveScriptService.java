@@ -1,4 +1,4 @@
-package server;
+package server.executionApi;
 
 import interpreteur.executeur.Executeur;
 import org.json.JSONArray;
@@ -36,7 +36,7 @@ public class AliveScriptService {
         AliveScriptService.logger = logger;
     }
 
-    public static void updateAndCleanUp() {
+    public synchronized static void updateAndCleanUp() {
         for (var service : runningServices.values()) {
             if (service.sinceUpdate > maxServiceLifeSpan) {
                 service.destroy();
@@ -138,7 +138,7 @@ public class AliveScriptService {
 
     @Override
     public String toString() {
-        return "server.AliveScriptService{" +
+        return "server.executionApi.AliveScriptService{" +
                 "idToken=" + idToken +
                 ", executeur=" + executeur +
                 ", resume=" + resume +

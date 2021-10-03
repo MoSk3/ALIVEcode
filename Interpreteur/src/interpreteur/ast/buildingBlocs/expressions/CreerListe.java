@@ -74,16 +74,9 @@ public class CreerListe implements Expression<ASObjet.Liste> {
             }
         }
 
-        class CreerSousSection implements SousSection {
-            private final Expression<?> expr;
-            private final Expression<?> debut;
-            private final Expression<?> fin;
-
-            public CreerSousSection(Expression<?> expr, Expression<?> debut, Expression<?> fin) {
-                this.expr = expr;
-                this.debut = debut;
-                this.fin = fin;
-            }
+        record CreerSousSection(Expression<?> expr,
+                                Expression<?> debut,
+                                Expression<?> fin) implements SousSection {
 
             public Expression<?> getExpr() {
                 return expr;

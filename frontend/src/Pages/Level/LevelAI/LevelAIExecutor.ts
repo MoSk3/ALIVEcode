@@ -4,6 +4,13 @@ import LevelCodeExecutor from '../LevelCode/LevelCodeExecutor';
 // TODO: robotConnected
 
 class LevelAIExecutor extends LevelCodeExecutor {
+	private executableFuncs: any;
+
+	constructor(executables: {[key: string]: CallableFunction}, levelName: string, creator?: any) {
+		super(levelName, creator);
+		this.executableFuncs = executables;
+	}
+
 	public init(s: any) {}
 
 	public async onRun() {
@@ -30,7 +37,7 @@ class LevelAIExecutor extends LevelCodeExecutor {
 		const perform_action = (i: number) => {
 			if (i >= data.length) {
 				//this.socket?.response(res);
-				this.stop();
+
 				return;
 			}
 			const action = data[i];
@@ -87,6 +94,22 @@ class LevelAIExecutor extends LevelCodeExecutor {
                         */
 					case 600:
 						break;
+					/*
+																----		ARTIFICIAL INTELLIGENCE		----
+													*/
+					case 800:
+						if (params.every((param: any) => typeof param === 'number')) 
+							this.executableFuncs.createAndShowReg(params[0], params[1], params[2], params[3], 100, 20, 80);
+						perform_action(i + 1);
+						break;
+					case 801:
+						
+						break;
+					case 802:
+						this.executableFuncs.showDataCloud();
+						perform_action(i + 1);
+					break;
+
 				}
 
 				/*
@@ -109,6 +132,10 @@ class LevelAIExecutor extends LevelCodeExecutor {
 			perform_action(0);
 		}
 		return res;
+	}
+
+	override onStop() {
+		this.executableFuncs.resetGraph();
 	}
 }
 

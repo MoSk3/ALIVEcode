@@ -1,5 +1,5 @@
 import { LevelAIProps, StyledAliveLevel } from './levelAITypes';
-import { useEffect, useState, useContext, useRef } from 'react';
+import { useEffect, useState, useContext, useRef, useMemo } from 'react';
 import LineInterface from '../../../Components/LevelComponents/LineInterface/LineInterface';
 import { UserContext } from '../../../state/contexts/UserContext';
 import { Row, Col } from 'react-bootstrap';
@@ -29,12 +29,19 @@ import {
 } from '../../../Models/Level/level.entity';
 import $ from 'jquery';
 import { useTranslation } from 'react-i18next';
+import dataAI from "./dataAI.json"
 import Modal from '../../../Components/UtilsComponents/Modal/Modal';
-import FillContainer from '../../../Components/UtilsComponents/FillContainer/FillContainer';
 import useExecutor from '../../../state/hooks/useExecutor';
 import LevelTable from '../../../Components/LevelComponents/LevelTable/LevelTable';
 import LevelGraph from '../../../Components/LevelComponents/LevelGraph/LevelGraph';
+import Regression from '../../../Components/LevelComponents/LevelGraph/Regression'
 
+
+/**
+ * Component that contains all the elements that are a part of any AI level.
+ * @param param0 the props of AI levels.
+ * @returns the LevelAI component.
+ */
 const LevelAI = ({
 	level,
 	editMode,
@@ -66,48 +73,89 @@ const LevelAI = ({
 			saveProgressionTimed();
 		}
 	};
-
+		
 	//Set the data for the level
-	const [chartData, setChartData] = useState({});
+	const [data] = useState(dataAI);
+	let func: Regression;
+	const mainDataset = {
+		type: 'scatter',
+		label: "Distance parcourue en fonction de l'énergie",
+		data: data,
+		backgroundColor: 'var(--contrast-color)',
+		borderWidth: 1,
+	}
+	const initialDataset = Object.freeze({
+		type: 'scatter',
+		label: "Distance parcourue en fonction de l'énergie",
+		data: [{}],
+		backgroundColor: 'var(--contrast-color)',
+		borderWidth: 1,
+	});
+	const [chartData, setChartData] = useState({
+		datasets: [initialDataset]
+	});
 
-	const dataValues = [
-		{ x: 2, y: 2 },
-		{ x: 3, y: 35 },
-		{ x: 32, y: 85 },
-		{ x: 54, y: 2 },
-		{ x: 41, y: 45 },
-		{ x: 90, y: 84 },
-		{ x: 91, y: 84 },
-		{ x: 92, y: 84 },
-		{ x: 93, y: 84 },
-		{ x: 94, y: 84 },
-		{ x: 95, y: 84 },
-		{ x: 96, y: 84 },
-		{ x: 97, y: 84 },
-		{ x: 98, y: 84 },
-		{ x: 120, y: 84 },
-	];
-	// Hook to get the dataset
-	useEffect(() => {
-		const dataTest = {
-			// datasets is an array of objects where each object represents a set of data to display corresponding to the labels above. for brevity, we'll keep it at one object
+	function resetGraph() {
+		setChartData({
 			datasets: [
-				{
-					label: 'Popularity of colours',
-					data: dataValues,
-					backgroundColor: 'var(--contrast-color)',
-					borderWidth: 1,
-				},
+				initialDataset
 			],
-		};
-		setChartData(dataTest);
-	}, []);
+		})
+	}
+
+	const memorizedData = useMemo(() => data, [data]);
+	const memorizedChartData = useMemo(() => chartData, [chartData]);
+
+
+	//-------------------------- Alivescript functions ----------------------------//
+
+	/**
+	 * Sets the data of the graph to the level's data and displays it on the screen
+	 * 
+	*/
+	function showDataCloud(): void {
+		setChartData({
+			datasets: chartData.datasets.concat([
+				mainDataset
+			])
+		});
+	}
+
+	function createRegression(a: number, b: number, c: number, d: number) {
+		func = new Regression(a, b, c, d);
+	}
+
+	function showRegression(nbPoints: number, minRange: number, maxRange: number) {
+		console.log(func)
+		let points = func?.generatePoints(nbPoints, minRange, maxRange);
+		console.log(points)
+		setChartData({
+			datasets: chartData.datasets.concat([
+				{
+					type: "line",
+					label: "Fonction polynomiale",
+					data: points,
+					backgroundColor: 'var(--contrast-color)',
+					borderWidth: 3,
+				}
+			])
+		});
+
+		console.log(memorizedChartData);
+	}
+
+	function createAndShowReg(a: number, b: number, c: number, d: number, nbPoints: number, minRange: number, maxRange: number) {
+		createRegression(a, b, c, d);
+		showRegression(nbPoints, minRange, maxRange);
+	}
+
+	
 
 	useEffect(() => {
 		if (user && editMode && level.creator && level.creator.id !== user.id)
 			return history.push(routes.public.home.path);
 
-		setExecutor(new LevelAIExecutor(level.name, user || undefined));
+		setExecutor(new LevelAIExecutor({createAndShowFunc: createAndShowReg, showDataCloud, resetGraph}, level.name, user || undefined));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, level]);
 
@@ -302,23 +350,23 @@ const LevelAI = ({
 						<Row className="data-section">
 							<Col md={3}>
 								<LevelTable
-									data={dataValues}
-									xData="Données X"
-									yData="Données Y"
+									data={memorizedData}
+									xData="Énergie utilisée (kWh)"
+									yData="Distance parcourue (km)"
 								/>
 							</Col>
 							<Col md={9} style={{ padding: '0' }}>
 								<div className="graph-container">
 									<LevelGraph
-										data={chartData}
-										title="Premier essai de graphique"
-										xAxis="X axis"
-										yAxis="Y axis"
+										data={memorizedChartData}
+										title="Distance parcourue selon l'énergie utilisée"
+										xAxis="Énergie utilisée (kWh)"
+										yAxis="Distance parcourue (km)"
 									/>
 								</div>
 							</Col>
 						</Row>
-						<Row style={{ height: '40%' }}>
+						<Row className="command">
 							<Cmd ref={cmdRef}></Cmd>
 						</Row>
 					</Col>
