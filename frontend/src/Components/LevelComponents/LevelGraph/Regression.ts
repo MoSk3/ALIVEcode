@@ -10,11 +10,8 @@
  * 
  * @author Félix Jobin
  */
-export default class Function {
-  private a: number;
-  private b: number;
-  private c: number;
-  private d: number;
+export default class Regression {
+  private static ROUNDING = 100;
 
   /**
    * Creates a function with its 4 parameters.
@@ -23,11 +20,7 @@ export default class Function {
    * @param c the parameter for x^1.
    * @param d the parameter for x^0.
    */
-  constructor(a: number, b: number, c: number, d: number) {
-    this.a = a;
-    this.b = b;
-    this.c = c;
-    this.d = d;
+  constructor(private a: number, private b: number, private c: number, private d: number) {
   }
 
   /**
@@ -39,7 +32,6 @@ export default class Function {
    */
   public generatePoints(nbPoints: number, minRange: number, maxRange: number): any {
     let points = [];
-
     // If the minimum is bigger than the maximum
     if (minRange > maxRange) {
       const temp = minRange;
@@ -55,10 +47,9 @@ export default class Function {
       points.push({
         "id": i*this.a*this.b*this.c*this.d*jump,
         "x": x,
-        "y": y
+        "y": Math.round(y * Regression.ROUNDING) / Regression.ROUNDING
       });
     }
-
     return points;
   }
 }

@@ -34,7 +34,7 @@ import Modal from '../../../Components/UtilsComponents/Modal/Modal';
 import useExecutor from '../../../state/hooks/useExecutor';
 import LevelTable from '../../../Components/LevelComponents/LevelTable/LevelTable';
 import LevelGraph from '../../../Components/LevelComponents/LevelGraph/LevelGraph';
-import Function from '../../../Components/LevelComponents/LevelGraph/Function'
+import Regression from '../../../Components/LevelComponents/LevelGraph/Regression'
 
 
 /**
@@ -73,33 +73,39 @@ const LevelAI = ({
 			saveProgressionTimed();
 		}
 	};
-
+		
 	//Set the data for the level
 	const [data] = useState(dataAI);
-	const [func, setFunc] = useState<any>([]);
-	const [mainDataset] = useState({
+	let func: Regression;
+	const mainDataset = {
 		type: 'scatter',
 		label: "Distance parcourue en fonction de l'énergie",
 		data: data,
 		backgroundColor: 'var(--contrast-color)',
 		borderWidth: 1,
-	})
+	}
+	const initialDataset = Object.freeze({
+		type: 'scatter',
+		label: "Distance parcourue en fonction de l'énergie",
+		data: [{}],
+		backgroundColor: 'var(--contrast-color)',
+		borderWidth: 1,
+	});
 	const [chartData, setChartData] = useState({
-		datasets: [
-			{
-				type: 'scatter',
-				label: "Distance parcourue en fonction de l'énergie",
-				data: [{}],
-				backgroundColor: 'var(--contrast-color)',
-				borderWidth: 1,
-			},
-		],
+		datasets: [initialDataset]
 	});
 
-	const memorizedMainDataset = useMemo(() => mainDataset, [mainDataset]);
+	function resetGraph() {
+		setChartData({
+			datasets: [
+				initialDataset
+			],
+		})
+	}
+
 	const memorizedData = useMemo(() => data, [data]);
 	const memorizedChartData = useMemo(() => chartData, [chartData]);
-	const memorizedFunc = useMemo(() => func, [func]);
+
 
 	//-------------------------- Alivescript functions ----------------------------//
 
@@ -109,21 +115,22 @@ const LevelAI = ({
 	*/
 	function showDataCloud(): void {
 		setChartData({
-			datasets: [
-				memorizedMainDataset
-			],
+			datasets: chartData.datasets.concat([
+				mainDataset
+			])
 		});
 	}
 
-	function createFunction(a: number, b: number, c: number, d: number) {
-		setFunc(new Function(a, b, c, d));
+	function createRegression(a: number, b: number, c: number, d: number) {
+		func = new Regression(a, b, c, d);
 	}
 
-	function showFunction(nbPoints: number, minRange: number, maxRange: number) {
-		let points = memorizedFunc.generatePoints(nbPoints, minRange, maxRange);
+	function showRegression(nbPoints: number, minRange: number, maxRange: number) {
+		console.log(func)
+		let points = func?.generatePoints(nbPoints, minRange, maxRange);
+		console.log(points)
 		setChartData({
-			datasets: [
-				memorizedMainDataset,
+			datasets: chartData.datasets.concat([
 				{
 					type: "line",
 					label: "Fonction polynomiale",
@@ -131,20 +138,24 @@ const LevelAI = ({
 					backgroundColor: 'var(--contrast-color)',
 					borderWidth: 3,
 				}
-			]
+			])
 		});
+
+		console.log(memorizedChartData);
 	}
 
-	function createAndShowFunc(a: number, b: number, c: number, d: number, nbPoints: number, minRange: number, maxRange: number) {
-		createFunction(a, b, c, d);
-		showFunction(nbPoints, minRange, maxRange);
+	function createAndShowReg(a: number, b: number, c: number, d: number, nbPoints: number, minRange: number, maxRange: number) {
+		createRegression(a, b, c, d);
+		showRegression(nbPoints, minRange, maxRange);
 	}
+
+	
 
 	useEffect(() => {
 		if (user && editMode && level.creator && level.creator.id !== user.id)
 			return history.push(routes.public.home.path);
 
-		setExecutor(new LevelAIExecutor([createAndShowFunc, 2, showDataCloud], level.name, user || undefined));
+		setExecutor(new LevelAIExecutor({createAndShowFunc: createAndShowReg, showDataCloud, resetGraph}, level.name, user || undefined));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, level]);
 

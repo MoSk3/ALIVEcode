@@ -72,7 +72,7 @@ public class Data extends JSONObject {
         CONSEIL(Categorie.TIPS),
         AVERTISSEMENT(Categorie.TIPS),
 
-        CREER_FONTION(Categorie.AI),      // 0
+        CREER_REGRESSION(Categorie.AI),   // 0
         OPTIMISER_FONCTION(Categorie.AI), // 1
         AFFICHER_NUAGE(Categorie.AI)      // 2
         ;

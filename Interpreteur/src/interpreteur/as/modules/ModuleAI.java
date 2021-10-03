@@ -389,23 +389,23 @@ public class ModuleAI {
                         return new Nul();
                     }
                 },
-                new ASObjet.Fonction("creerFonction", new ASObjet.Fonction.Parametre[]{
+                new ASObjet.Fonction("creerRegression", new ASObjet.Fonction.Parametre[]{
                         new ASObjet.Fonction.Parametre(
-                                ASObjet.TypeBuiltin.decimal.asType(), "a", null),
+                                ASObjet.TypeBuiltin.nombre.asType(), "a", null),
                         new ASObjet.Fonction.Parametre(
-                                ASObjet.TypeBuiltin.decimal.asType(), "b", null),
+                                ASObjet.TypeBuiltin.nombre.asType(), "b", null),
                         new ASObjet.Fonction.Parametre(
-                                ASObjet.TypeBuiltin.decimal.asType(), "c", null),
+                                ASObjet.TypeBuiltin.nombre.asType(), "c", null),
                         new ASObjet.Fonction.Parametre(
-                                ASObjet.TypeBuiltin.decimal.asType(), "d", null)
+                                ASObjet.TypeBuiltin.nombre.asType(), "d", null)
                 }, ASObjet.TypeBuiltin.nulType.asType()){
                     @Override
                     public ASObjet<?> executer() {
-                        Number a = ((Number) this.getValeurParam("a").getValue()).doubleValue();
-                        Number b = ((Number) this.getValeurParam("b").getValue()).doubleValue();
-                        Number c = ((Number) this.getValeurParam("c").getValue()).doubleValue();
-                        Number d = ((Number) this.getValeurParam("d").getValue()).doubleValue();
-                        executeurInstance.addData(new Data(Data.Id.CREER_FONTION)
+                        Number a = Math.round(((Number) this.getValeurParam("a").getValue()).doubleValue()*1000)/1000;
+                        Number b = Math.round(((Number) this.getValeurParam("b").getValue()).doubleValue()*1000)/1000;
+                        Number c = Math.round(((Number) this.getValeurParam("c").getValue()).doubleValue()*1000)/1000;
+                        Number d = Math.round(((Number) this.getValeurParam("d").getValue()).doubleValue()*1000)/1000;
+                        executeurInstance.addData(new Data(Data.Id.CREER_REGRESSION)
                                 .addParam(a).addParam(b).addParam(c).addParam(d));
                         return new Nul();
                     }
