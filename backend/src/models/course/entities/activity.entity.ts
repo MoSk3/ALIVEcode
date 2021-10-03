@@ -1,6 +1,7 @@
 import { Exclude, Type } from 'class-transformer';
 import { IsEmpty, IsNotEmpty } from 'class-validator';
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { ActivityLevelEntity } from './activity_level.entity';
 
 export class ActivityContent {
   body: string;
@@ -20,4 +21,7 @@ export class ActivityEntity {
   @Column({ type: 'json', default: {} })
   @Type(() => ActivityContent)
   content: ActivityContent;
+
+  @OneToMany(() => ActivityLevelEntity, actLevel => actLevel.activity)
+  levels: ActivityLevelEntity;
 }
