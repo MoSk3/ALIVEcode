@@ -32,7 +32,7 @@ const LevelGraph = React.memo((props: LevelGraphProps) => {
           data={props.data} 
           options={{
             responsive: true,
-            aspectRatio: 1.5,
+            aspectRatio: 1.3,
             layout: {
               padding: {
                 left: 25,

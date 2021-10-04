@@ -27,11 +27,11 @@ export const StyledLevelTable = styled(FillContainer)`
   }
   .data {
     background-color: var(--tableback-color);
-    border-top: 0.1vh solid var(--foreground-color);
+    border-top: 0.1vh solid var(--databack-color);
   }
   .data-number {
     background-color: var(--secondary-color);
-    border-top: 0.1vh solid var(--foreground-color);
+    border-top: 0.1vh solid var(--databack-color);
   }
   .container {
     display: flex;

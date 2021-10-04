@@ -32,7 +32,7 @@ export default class LevelCodeExecutor extends LevelExecutor {
 					});
 				}
 			}
-		} catch {
+		} catch(err) {
 			this.stop();
 		}
 	}

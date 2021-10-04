@@ -98,8 +98,9 @@ class LevelAIExecutor extends LevelCodeExecutor {
 																----		ARTIFICIAL INTELLIGENCE		----
 													*/
 					case 800:
-						if (params.every((param: any) => typeof param === 'number')) 
-							this.executableFuncs.createAndShowReg(params[0], params[1], params[2], params[3], 100, 20, 80);
+						if (params.every((param: any) => typeof param === 'number')) { 
+							this.executableFuncs.createAndShowReg(params[0], params[1], params[2], params[3]);
+						}
 						perform_action(i + 1);
 						break;
 					case 801:
@@ -129,6 +130,7 @@ class LevelAIExecutor extends LevelCodeExecutor {
 
 		// Check si le data est valide
 		if (Array.isArray(data) && data.length > 0) {
+			this.executableFuncs.resetGraph();
 			perform_action(0);
 		}
 		return res;

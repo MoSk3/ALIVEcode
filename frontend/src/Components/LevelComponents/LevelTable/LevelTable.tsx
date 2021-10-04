@@ -1,5 +1,4 @@
 import { LevelTableProps, StyledLevelTable } from './LevelTableTypes';
-import { useTranslation } from 'react-i18next';
 
 /**
  * This module defines all properties related to the data table in AI levels.
@@ -13,7 +12,6 @@ import { useTranslation } from 'react-i18next';
  */
 
 const LevelTable = (props: LevelTableProps) => {
-  const {t} = useTranslation();
   let num: number = 0;
   function renderTableData() {
     

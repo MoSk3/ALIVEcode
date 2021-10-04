@@ -18,7 +18,6 @@ export interface LevelGraphProps {
 
 export const StyledLevelGraph = styled(FillContainer)`
   .graph-holder {
-    height: 100px !important;
     margin-bottom: 40vh;
   }
 `

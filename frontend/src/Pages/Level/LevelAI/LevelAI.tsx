@@ -91,18 +91,27 @@ const LevelAI = ({
 		backgroundColor: 'var(--contrast-color)',
 		borderWidth: 1,
 	});
+	let datasets = [initialDataset];
+
 	const [chartData, setChartData] = useState({
-		datasets: [initialDataset]
+		datasets: datasets
 	});
 
 	function resetGraph() {
+		datasets = [initialDataset];
 		setChartData({
-			datasets: [
-				initialDataset
-			],
-		})
+			datasets: datasets
+		});
+		console.log("Données reset : ");
+		console.log(chartData)
 	}
 
+	function setDataOnGraph(newData: any): void {
+		datasets.push(newData);
+		setChartData({
+			datasets: datasets
+		});
+	}
 	const memorizedData = useMemo(() => data, [data]);
 	const memorizedChartData = useMemo(() => chartData, [chartData]);
 
@@ -114,39 +123,24 @@ const LevelAI = ({
 	 * 
 	*/
 	function showDataCloud(): void {
-		setChartData({
-			datasets: chartData.datasets.concat([
-				mainDataset
-			])
-		});
+		console.log(chartData)
+		setDataOnGraph(mainDataset);
+		console.log(chartData)
 	}
 
 	function createRegression(a: number, b: number, c: number, d: number) {
 		func = new Regression(a, b, c, d);
 	}
 
-	function showRegression(nbPoints: number, minRange: number, maxRange: number) {
-		console.log(func)
-		let points = func?.generatePoints(nbPoints, minRange, maxRange);
-		console.log(points)
-		setChartData({
-			datasets: chartData.datasets.concat([
-				{
-					type: "line",
-					label: "Fonction polynomiale",
-					data: points,
-					backgroundColor: 'var(--contrast-color)',
-					borderWidth: 3,
-				}
-			])
-		});
-
-		console.log(memorizedChartData);
+	function showRegression() {
+		const points = func?.generatePoints();
+		setDataOnGraph(points);
+		console.log(chartData);
 	}
 
-	function createAndShowReg(a: number, b: number, c: number, d: number, nbPoints: number, minRange: number, maxRange: number) {
+	function createAndShowReg(a: number, b: number, c: number, d: number): void {
 		createRegression(a, b, c, d);
-		showRegression(nbPoints, minRange, maxRange);
+		showRegression();
 	}
 
 	
@@ -155,7 +149,7 @@ const LevelAI = ({
 		if (user && editMode && level.creator && level.creator.id !== user.id)
 			return history.push(routes.public.home.path);
 
-		setExecutor(new LevelAIExecutor({createAndShowFunc: createAndShowReg, showDataCloud, resetGraph}, level.name, user || undefined));
+		setExecutor(new LevelAIExecutor({createAndShowReg, showDataCloud, resetGraph}, level.name, user || undefined));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, level]);
 
@@ -355,7 +349,7 @@ const LevelAI = ({
 									yData="Distance parcourue (km)"
 								/>
 							</Col>
-							<Col md={9} style={{ padding: '0' }}>
+							<Col md={8} style={{ padding: '0' }}>
 								<div className="graph-container">
 									<LevelGraph
 										data={memorizedChartData}

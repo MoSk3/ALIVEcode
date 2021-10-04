@@ -72,6 +72,7 @@ export const StyledAliveLevel = styled(FillContainer)`
 		background: var(--databack-color);
 		display: flex;
 		align-items: flex-start;
+		justify-content: space-around;
 	}
 
 	.graph-container {

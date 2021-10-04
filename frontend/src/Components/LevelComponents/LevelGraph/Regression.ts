@@ -12,6 +12,19 @@
  */
 export default class Regression {
   private static ROUNDING = 100;
+  private static DATA_FORMATTING = {
+    type: "line",
+		label: "Fonction polynomiale",
+		data: [{}],
+    borderColor: 'rgb(33, 87, 145)',
+		borderWidth: 3,
+    pointRadius: 3,
+    pointBorderWidth: 0,
+    pointBackgroundColor: 'black'
+  }
+  private static NB_POINTS = 20;
+  private static MIN_RANGE = 20;
+  private static MAX_RANGE = 80;
 
   /**
    * Creates a function with its 4 parameters.
@@ -24,25 +37,16 @@ export default class Regression {
   }
 
   /**
-   * Generates an array of points that can be used to be plotted on a graph.
-   * @param nbPoints the number of points needed.
-   * @param minRange the min value of x.
-   * @param maxRange the max value of x.
-   * @returns an array of points.
+   * Generates an object with formatting settings and an array of points that can be used to be plotted on a graph.
+   * @returns an object with formatting settings and an array of points
    */
-  public generatePoints(nbPoints: number, minRange: number, maxRange: number): any {
+  public generatePoints(): any {
     let points = [];
-    // If the minimum is bigger than the maximum
-    if (minRange > maxRange) {
-      const temp = minRange;
-      minRange = maxRange;
-      maxRange = temp;
-    }
 
     // Generate points
-    const jump = (maxRange - minRange) / nbPoints;
-    for (let i = 0; i < nbPoints; i++) {
-      const x = minRange + i * jump;
+    const jump = (Regression.MAX_RANGE - Regression.MIN_RANGE) / Regression.NB_POINTS;
+    for (let i = 0; i < Regression.NB_POINTS; i++) {
+      const x = Regression.MIN_RANGE + i * jump;
       const y = this.a * Math.pow(x, 3) + this.b * x * x + this.c * x + this.d;
       points.push({
         "id": i*this.a*this.b*this.c*this.d*jump,
@@ -50,7 +54,11 @@ export default class Regression {
         "y": Math.round(y * Regression.ROUNDING) / Regression.ROUNDING
       });
     }
-    return points;
+
+    const data = Regression.DATA_FORMATTING;
+    data.data = points;
+    console.log(data)
+    return data;
   }
 }
 
