@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext, useRef } from 'react';
+import { useEffect, useState, useContext, useRef, useCallback } from 'react';
 import LineInterface from '../../../Components/LevelComponents/LineInterface/LineInterface';
 import { UserContext } from '../../../state/contexts/UserContext';
 import { Row, Col } from 'react-bootstrap';
@@ -73,7 +73,7 @@ const LevelAlive = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, level]);
 
-	const saveLevel = async () => {
+	const saveLevel = useCallback(async () => {
 		if (saveTimeout.current) clearTimeout(saveTimeout.current);
 		if (messageTimeout.current) clearTimeout(messageTimeout.current);
 		setSaving(true);
@@ -93,14 +93,14 @@ const LevelAlive = ({
 			}, 5000);
 		}, 500);
 		setLevel(updatedLevel);
-	};
+	}, [level, setLevel]);
 
 	const saveLevelTimed = () => {
 		if (saveTimeout.current) clearTimeout(saveTimeout.current);
 		saveTimeout.current = setTimeout(saveLevel, 2000);
 	};
 
-	const saveProgression = async () => {
+	const saveProgression = useCallback(async () => {
 		if (!user || !progression) return;
 		if (saveTimeout.current) clearTimeout(saveTimeout.current);
 		if (messageTimeout.current) clearTimeout(messageTimeout.current);
@@ -119,7 +119,7 @@ const LevelAlive = ({
 			}, 5000);
 		}, 500);
 		setProgression(updatedProgression);
-	};
+	}, [level.id, progression, setProgression, user]);
 
 	const saveProgressionTimed = () => {
 		if (saveTimeout.current) clearTimeout(saveTimeout.current);
@@ -127,6 +127,7 @@ const LevelAlive = ({
 	};
 
 	useEffect(() => {
+		$(document).off('keydown');
 		$(document).on('keydown', e => {
 			if (e.key === 's' && e.ctrlKey) {
 				e.preventDefault();
@@ -135,7 +136,9 @@ const LevelAlive = ({
 				editMode ? saveLevel() : saveProgression();
 			}
 		});
+	}, [editMode, saveLevel, saveProgression, user]);
 
+	useEffect(() => {
 		return () => {
 			clearTimeout(saveTimeout.current);
 			clearTimeout(messageTimeout.current);
