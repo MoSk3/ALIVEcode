@@ -16,7 +16,7 @@ export const StyledLevelTable = styled(FillContainer)`
 
   table {
     padding: 6px;
-    background-color: whitesmoke;
+    color: var(--foreground-color);
     text-align: center;
   }
   .titles {
@@ -26,12 +26,12 @@ export const StyledLevelTable = styled(FillContainer)`
     border-style: none;
   }
   .data {
-    background-color: whitesmoke;
-    border-top: 0.2vh solid gray;
+    background-color: var(--tableback-color);
+    border-top: 0.1vh solid var(--foreground-color);
   }
   .data-number {
-    background-color: skyblue;
-    border-top: 0.2vh solid gray;
+    background-color: var(--secondary-color);
+    border-top: 0.1vh solid var(--foreground-color);
   }
   .container {
     display: flex;

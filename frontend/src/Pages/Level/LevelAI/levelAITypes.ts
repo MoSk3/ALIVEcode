@@ -69,7 +69,7 @@ export const StyledAliveLevel = styled(FillContainer)`
 
 	.data-section {
 		height: 60%;
-		background: var(--pale-color);
+		background: var(--databack-color);
 		display: flex;
 		align-items: flex-start;
 	}
