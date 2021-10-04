@@ -165,7 +165,7 @@ const api = {
 				activityId: number,
 			) {
 				return plainToClass(
-					ActivityContent,
+					Activity,
 					(
 						await axios.get(
 							`courses/${courseId}/sections/${sectionId}/activities/${activityId}/content`,

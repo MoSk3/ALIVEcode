@@ -78,9 +78,11 @@ export class CourseService {
 
   async findActivity(courseId: string, sectionId: string, activityId: string) {
     const section = await this.findSection(courseId, sectionId);
-    const activity = section.activities.find(a => a.id.toString() === activityId);
+    let activity = section.activities.find(a => a.id.toString() === activityId);
     if (!activity) throw new HttpException('Activity not found', HttpStatus.NOT_FOUND);
-    return activity.content;
+
+    activity = await this.activityRepository.findOne(activity.id, { relations: ['levels'] });
+    return activity;
   }
 
   async getActivities(courseId: string, sectionId: string) {

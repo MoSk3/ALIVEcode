@@ -41,7 +41,7 @@ const LevelCard = ({ level, enterEdit }: LevelCardProps) => {
 							<LevelButton
 								onClick={() =>
 									history.push(
-										routes.auth.level_edit.path.replace(':id', level.id),
+										routes.auth.level_edit.path.replace(':levelId', level.id),
 									)
 								}
 								bgColor="var(--secondary-color)"

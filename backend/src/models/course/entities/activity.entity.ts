@@ -23,5 +23,5 @@ export class ActivityEntity {
   content: ActivityContent;
 
   @OneToMany(() => ActivityLevelEntity, actLevel => actLevel.activity)
-  levels: ActivityLevelEntity;
+  levels: ActivityLevelEntity[];
 }

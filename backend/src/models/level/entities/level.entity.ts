@@ -46,5 +46,5 @@ export class LevelEntity extends CreatedByUser {
   tags: LEVEL_TAG[] = [];
 
   @OneToMany(() => ActivityLevelEntity, actLevel => actLevel.level)
-  activities: ActivityLevelEntity;
+  activities: ActivityLevelEntity[];
 }

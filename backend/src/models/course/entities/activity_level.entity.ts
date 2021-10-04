@@ -13,6 +13,6 @@ export class ActivityLevelEntity {
   @ManyToOne(() => ActivityEntity, activity => activity.levels)
   activity: ActivityEntity;
 
-  @ManyToOne(() => LevelEntity, level => level.activities)
+  @ManyToOne(() => LevelEntity, level => level.activities, { eager: true })
   level: LevelEntity;
 }

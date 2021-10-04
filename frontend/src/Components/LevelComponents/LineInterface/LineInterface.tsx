@@ -5,8 +5,17 @@ import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/theme-cobalt';
 import './mode-alivescript';
 import EditorTab from '../../AliveScriptComponents/EditorTab/EditorTab';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
+/**
+ *
+ * @param {boolean} hasTabs
+ * @param {EditorTabModel[]} tabs tabs for the different scripts
+ * @param defaultContent
+ * @param handleChange callback function that takes as parameter the line interface's content (string)
+ * @returns Component
+ * @author MoSk3
+ */
 const LineInterface = ({
 	hasTabs,
 	tabs: initialTabs,
@@ -27,6 +36,8 @@ const LineInterface = ({
 	});
 	/* Content for a single tab interface */
 	const [content, setContent] = useState<string>(defaultContent ?? '');
+
+	const ref = useRef<AceEditor>(null);
 
 	const setOpenedTab = (idx: number) => {
 		const updatedTabs = tabs.map((t, i) => {
@@ -95,6 +106,7 @@ const LineInterface = ({
 				</>
 			) : (
 				<AceEditor
+					ref={ref}
 					className="ace-editor relative w-100 h-100"
 					enableSnippets
 					enableBasicAutocompletion
@@ -109,6 +121,13 @@ const LineInterface = ({
 					}}
 					onLoad={() => {
 						handleChange(defaultContent);
+
+						// Resize the ace editor to avoid layout bugs
+						setTimeout(() => {
+							if (ref.current) {
+								console.log(ref.current.editor.resize());
+							}
+						}, 10);
 					}}
 					fontSize="large"
 					name="1nt3rf4c3" //"UNIQUE_ID_OF_DIV"

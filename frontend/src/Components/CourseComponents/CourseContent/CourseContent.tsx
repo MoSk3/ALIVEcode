@@ -47,9 +47,16 @@ const CourseContent = (props: CourseContentProps) => {
 								{activity.content?.data ? (
 									<>
 										<ReactMarkdown>{activity.content.data}</ReactMarkdown>
-										<div style={{ position: 'relative' }}>
-											<Level type="ALIVE" editMode={true}></Level>
-										</div>
+										{activity.levels &&
+											activity.levels.map((a, idx) => (
+												<div key={idx} style={{ position: 'relative' }}>
+													<Level
+														level={a.level}
+														type={a.level.getType()}
+														editMode={false}
+													></Level>
+												</div>
+											))}
 									</>
 								) : (
 									<p>Empty activity</p>
