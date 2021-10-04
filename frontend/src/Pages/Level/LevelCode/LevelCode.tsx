@@ -35,6 +35,7 @@ const LevelAlive = ({
 	level,
 	editMode,
 	progression,
+	initialCode,
 	setLevel,
 	setProgression,
 }: LevelCodeProps) => {
@@ -241,11 +242,7 @@ const LevelAlive = ({
 							/>
 						) : (
 							<LineInterface
-								defaultContent={
-									progression?.data.code
-										? progression?.data.code
-										: level.initialCode
-								}
+								initialContent={initialCode}
 								handleChange={lineInterfaceContentChanges}
 							/>
 						)}

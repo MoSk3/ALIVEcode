@@ -44,9 +44,12 @@ const CourseContent = (props: CourseContentProps) => {
 						<>
 							<h1>{activity.name}</h1>
 							<div>
-								{activity.content?.data ? (
+								{activity.content?.data ||
+								(activity.levels && activity.levels.length > 0) ? (
 									<>
-										<ReactMarkdown>{activity.content.data}</ReactMarkdown>
+										{activity.content && (
+											<ReactMarkdown>{activity.content.data}</ReactMarkdown>
+										)}
 										{activity.levels &&
 											activity.levels.map((a, idx) => (
 												<div key={idx} style={{ position: 'relative' }}>

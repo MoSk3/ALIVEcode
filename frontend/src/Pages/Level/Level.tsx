@@ -25,9 +25,14 @@ const Level = ({ level: levelProp, ...props }: LevelProps) => {
 	const { user } = useContext(UserContext);
 	const [level, setLevel] = useState<LevelModel | undefined>(() => levelProp);
 	const [progression, setProgresion] = useState<LevelProgression>();
+	const [initialCode, setInitialCode] = useState<string>('');
 	const alert = useAlert();
 	const history = useHistory();
 	const { routes } = useRoutes();
+
+	useEffect(() => {
+		setLevel(levelProp);
+	}, [levelProp]);
 
 	useEffect(() => {
 		const loadLevel = async () => {
@@ -63,6 +68,7 @@ const Level = ({ level: levelProp, ...props }: LevelProps) => {
 						currentLevel,
 					);
 				}
+				progression.data.code && setInitialCode(progression.data.code);
 				setProgresion(progression);
 			}
 
@@ -82,19 +88,19 @@ const Level = ({ level: levelProp, ...props }: LevelProps) => {
 					creationDate: new Date(),
 					updateDate: new Date(),
 				});
-				console.log(fetchedLevel);
 			}
 			fetchedLevel && setLevel(fetchedLevel);
 		};
 		loadLevel();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [levelId]);
+	}, [levelId, level]);
 
 	if (!level || !progression) return <LoadingScreen />;
 
-	if (level instanceof LevelAliveModel || props.type === 'ALIVE')
+	if (level instanceof LevelAliveModel || props.type === 'ALIVE') {
 		return (
 			<LevelAlive
+				initialCode={initialCode}
 				setLevel={setLevel}
 				level={level as LevelAliveModel}
 				progression={progression}
@@ -107,10 +113,12 @@ const Level = ({ level: levelProp, ...props }: LevelProps) => {
 				}
 			></LevelAlive>
 		);
+	}
 
 	if (level instanceof LevelCodeModel || props.type === 'code')
 		return (
 			<LevelCode
+				initialCode={initialCode}
 				setLevel={setLevel}
 				level={level as LevelCodeModel}
 				progression={progression}
@@ -127,6 +135,7 @@ const Level = ({ level: levelProp, ...props }: LevelProps) => {
 	if (level instanceof LevelAIModel || props.type === 'ai')
 		return (
 			<LevelAI
+				initialCode={initialCode}
 				setLevel={setLevel}
 				level={level as LevelAIModel}
 				progression={progression}

@@ -95,7 +95,7 @@ export class CourseService {
   }
 
   async addActivity(courseId: string, sectionId: string, activity: ActivityEntity) {
-    activity = await this.activityRepository.create(activity);
+    activity = this.activityRepository.create(activity);
     await this.activityRepository.save(activity);
 
     const section = await this.findSection(courseId, sectionId);

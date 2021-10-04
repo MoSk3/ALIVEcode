@@ -27,7 +27,6 @@ export class Activity {
 		);
 		this.content = content;
 		this.levels = levels;
-		console.log(this.levels);
 		return this;
 	}
 }

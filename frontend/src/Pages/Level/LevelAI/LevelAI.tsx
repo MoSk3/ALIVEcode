@@ -37,6 +37,7 @@ const LevelAI = ({
 	level,
 	editMode,
 	progression,
+	initialCode,
 	setLevel,
 	setProgression,
 }: LevelAIProps) => {
@@ -249,11 +250,7 @@ const LevelAI = ({
 						) : (
 							/* Interface de code sans les tabs */
 							<LineInterface
-								defaultContent={
-									progression?.data.code
-										? progression.data.code
-										: level.initialCode
-								}
+								initialContent={initialCode}
 								handleChange={lineInterfaceContentChanges}
 							/>
 						)}
