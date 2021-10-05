@@ -48,7 +48,7 @@ export class Level extends CreatedByUser {
 	getType() {
 		if (this instanceof LevelAlive) return 'ALIVE';
 		if (this instanceof LevelCode) return 'code';
-		if (this instanceof LevelCode) return 'ai';
+		if (this instanceof LevelCode) return 'AI';
 		return 'code';
 	}
 

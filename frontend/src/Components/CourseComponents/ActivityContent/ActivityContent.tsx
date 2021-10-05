@@ -1,43 +1,25 @@
-import styled from "styled-components";
-import { CourseContentProps } from "./courseContentTypes";
+import {
+	ActivityContentProps,
+	StyledActivityContent,
+} from './activityContentTypes';
 import { useContext } from 'react';
 import { CourseContext } from '../../../state/contexts/CourseContext';
-import {
-	Theme,
-	ThemeContext,
-	themes,
-} from '../../../state/contexts/ThemeContext';
+import { ThemeContext } from '../../../state/contexts/ThemeContext';
 import ReactMarkdown from 'react-markdown';
 import CenteredContainer from '../../UtilsComponents/CenteredContainer/CenteredContainer';
 import Level from '../../../Pages/Level/Level';
 
-const StyleDiv = styled.div`
-	position: relative;
-	left: 3%;
-	height: 100%;
-	width: 97%;
-
-	.course-content-padding {
-		padding: 30px;
-		height: 100%;
-	}
-
-	.course-content {
-		height: 100%;
-		padding: 20px;
-		border-radius: 5px;
-		${({ theme }: { theme: Theme }) =>
-			theme.name === themes.light.name &&
-			'background-color: rgba(var(--background-color-rgb), 1);'}
-	}
-`;
-
-const CourseContent = (props: CourseContentProps) => {
+/**
+ * Displays the content of the activity in the CourseContext
+ *
+ * @author MoSk3
+ */
+const ActivityContent = (props: ActivityContentProps) => {
 	const { theme } = useContext(ThemeContext);
 	const { activity } = useContext(CourseContext);
 
 	return (
-		<StyleDiv theme={theme}>
+		<StyledActivityContent theme={theme}>
 			<div className="course-content-padding">
 				<div className="course-content">
 					{activity ? (
@@ -77,8 +59,8 @@ const CourseContent = (props: CourseContentProps) => {
 					)}
 				</div>
 			</div>
-		</StyleDiv>
+		</StyledActivityContent>
 	);
 };
 
-export default CourseContent;
+export default ActivityContent;

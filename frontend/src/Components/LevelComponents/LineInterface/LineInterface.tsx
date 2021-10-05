@@ -8,12 +8,13 @@ import EditorTab from '../../AliveScriptComponents/EditorTab/EditorTab';
 import { useState, useRef, useEffect, memo } from 'react';
 
 /**
+ * Line interface to write the code on
  *
  * @param {boolean} hasTabs
  * @param {EditorTabModel[]} tabs tabs for the different scripts
  * @param defaultContent
  * @param handleChange callback function that takes as parameter the line interface's content (string)
- * @returns Component
+ *
  * @author MoSk3
  */
 const LineInterface = memo(

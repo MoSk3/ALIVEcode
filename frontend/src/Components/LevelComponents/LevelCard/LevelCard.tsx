@@ -12,6 +12,15 @@ import { useContext } from 'react';
 import { UserContext } from '../../../state/contexts/UserContext';
 import { useTranslation } from 'react-i18next';
 
+/**
+ * Display of a level that contains all its informations
+ * (name, description, tags, creator, etc)
+ *
+ * @param {boolean} enterEdit if true, when the card is clicked, it goes in editMode
+ * @param {LevelAlive | LevelCode | Level} level Level
+ *
+ * @author MoSk3
+ */
 const LevelCard = ({ level, enterEdit }: LevelCardProps) => {
 	const history = useHistory();
 	const { routes } = useRoutes();

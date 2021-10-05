@@ -20,6 +20,17 @@ import useRoutes from '../../state/hooks/useRoutes';
 import { LevelAI as LevelAIModel } from '../../Models/Level/levelAI.entity';
 import LevelAI from './LevelAI/LevelAI';
 
+/**
+ * This component is used to load any type of Level with an id or passed as a prop.
+ * It automatically loads the progression or create a new one.
+ * It also renders the correct Level component depending on the type specified.
+ *
+ * @param {boolean} editMode if the level is in editMode
+ * @param {Level} level level to load (optional if specified in url parameters)
+ * @param {string} type type of the level to load: AI, ALIVE, IoT, code
+ *
+ * @author MoSk3
+ */
 const Level = ({ level: levelProp, ...props }: LevelProps) => {
 	const { levelId } = useParams<{ levelId: string }>();
 	const { user } = useContext(UserContext);
@@ -132,7 +143,7 @@ const Level = ({ level: levelProp, ...props }: LevelProps) => {
 			></LevelCode>
 		);
 
-	if (level instanceof LevelAIModel || props.type === 'ai')
+	if (level instanceof LevelAIModel || props.type === 'AI')
 		return (
 			<LevelAI
 				initialCode={initialCode}

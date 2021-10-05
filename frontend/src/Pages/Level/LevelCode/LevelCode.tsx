@@ -31,6 +31,18 @@ import LevelCodeExecutor from './LevelCodeExecutor';
 import Modal from '../../../Components/UtilsComponents/Modal/Modal';
 import useExecutor from '../../../state/hooks/useExecutor';
 
+/**
+ * Code level page. Contains all the components to display and make the code level functionnal.
+ *
+ * @param {LevelCodeModel} level code level object
+ * @param {boolean} editMode if the level is in editMode or not
+ * @param {LevelProgression} progression the level progression of the current user
+ * @param {string} initialCode the initial code of the level
+ * @param {(level: LevelCodeModel) => void} setLevel callback used to modify the level in the parent state
+ * @param {(progression: LevelProgression) => void} setProgression callback used to modify the level progression in the parent state
+ *
+ * @author MoSk3
+ */
 const LevelAlive = ({
 	level,
 	editMode,

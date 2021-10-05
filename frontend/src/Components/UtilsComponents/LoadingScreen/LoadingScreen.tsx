@@ -45,6 +45,14 @@ const StyledSpinner = styled.div`
 	}
 `;
 
+/**
+ *	Loading effect used when loading content (the loading appears 300ms after the render)
+ *
+ * @param {boolean} relative if it should have a relative positioning
+ * @param {SizeProp} size size of the loading logo
+ *
+ * @author MoSk3
+ */
 const LoadingScreen = ({
 	relative,
 	size,

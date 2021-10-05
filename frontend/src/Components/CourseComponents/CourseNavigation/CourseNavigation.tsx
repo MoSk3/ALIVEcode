@@ -12,6 +12,11 @@ import Form from '../../UtilsComponents/Form/Form';
 import { Section } from '../../../Models/Course/section.entity';
 import { plainToClass } from 'class-transformer';
 
+/**
+ * Navigation menu of a course containing all the sections and activities
+ *
+ * @author MoSk3
+ */
 const CourseNavigation = (props: CourseNavigationProps) => {
 	const { course, addSection } = useContext(CourseContext);
 	const { theme } = useContext(ThemeContext);

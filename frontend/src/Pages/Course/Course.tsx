@@ -8,7 +8,7 @@ import {
 	CourseContext,
 	CourseContentValues,
 } from '../../state/contexts/CourseContext';
-import CourseContent from '../../Components/CourseComponents/CourseContent/CourseContent';
+import ActivityContent from '../../Components/CourseComponents/ActivityContent/ActivityContent';
 import { Course as CourseModel } from '../../Models/Course/course.entity';
 import api from '../../Models/api';
 import { useTranslation } from 'react-i18next';
@@ -23,6 +23,12 @@ const StyledDiv = styled.div`
 	}
 `;
 
+/**
+ * Course page that shows the content of a course
+ *
+ * @param id (as a url parameter)
+ * @author MoSk3
+ */
 const Course = (props: CourseProps) => {
 	const { user } = useContext(UserContext);
 	const [course, setCourse] = useState<CourseModel>();
@@ -99,7 +105,7 @@ const Course = (props: CourseProps) => {
 			<StyledDiv>
 				<FillContainer className="course-body">
 					<CourseNavigation />
-					<CourseContent />
+					<ActivityContent />
 				</FillContainer>
 			</StyledDiv>
 		</CourseContext.Provider>

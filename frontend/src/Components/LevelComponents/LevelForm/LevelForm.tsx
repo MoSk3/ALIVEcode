@@ -13,6 +13,13 @@ import FormContainer from '../../UtilsComponents/FormContainer/FormContainer';
 import { LevelCode } from '../../../Models/Level/levelCode.entity';
 import { LevelAI } from '../../../Models/Level/levelAI.entity';
 
+/**
+ * Component that renders the create form for the selected level type
+ *
+ * @param {string} type type of the level to create: ALIVE, IoT, code or AI
+ *
+ * @author MoSk3
+ */
 const LevelForm = ({ type }: LevelFormProps) => {
 	const { routes } = useRoutes();
 	const { t } = useTranslation();

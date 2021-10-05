@@ -79,6 +79,13 @@ const StyledDiv = styled.div`
 	}
 `;
 
+/**
+ * Card that shows all the information of a classroom and lets you access to it
+ *
+ * @param {Classroom} classroom classroom object
+ *
+ * @author MoSk3
+ */
 const ClassroomCard = ({ classroom }: ClassRoomCardProps) => {
 	const { user } = useContext(UserContext);
 	const history = useHistory();

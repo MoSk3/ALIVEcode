@@ -12,7 +12,11 @@ import {
 	Course,
 } from '../../../Models/Course/course.entity';
 
-/** Reusable form component to handle header creation */
+/**
+ * Form that creates a new course in the db and navigates to it
+ *
+ * @author MoSk3
+ */
 const CourseForm = (props: CourseFormProps) => {
 	const { t } = useTranslation();
 	const history = useHistory();

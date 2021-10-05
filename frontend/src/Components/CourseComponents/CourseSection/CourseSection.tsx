@@ -7,6 +7,12 @@ import { Activity } from '../../../Models/Course/activity.entity';
 import { plainToClass } from 'class-transformer';
 import LoadingScreen from '../../UtilsComponents/LoadingScreen/LoadingScreen';
 
+/**
+ * Component that shows the section in the navigation and handles different actions like adding in an activity onto the section
+ *
+ * @param {Section} section
+ * @author MoSk3
+ */
 const CourseSection = ({ section }: CourseSectionProps) => {
 	const [open, setOpen] = useState(false);
 	const [loading, setLoading] = useState(false);
@@ -18,7 +24,6 @@ const CourseSection = ({ section }: CourseSectionProps) => {
 		if (!open) {
 			setLoading(true);
 			await section.getActivities(course.id);
-			console.log(section.activities);
 			setLoading(false);
 		}
 	};
