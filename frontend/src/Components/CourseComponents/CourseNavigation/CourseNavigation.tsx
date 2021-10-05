@@ -3,6 +3,8 @@ import CenteredContainer from '../../UtilsComponents/CenteredContainer/CenteredC
 import { CourseNavigationProps } from './courseNavigationTypes';
 import { useContext } from 'react';
 import { CourseContext } from '../../../state/contexts/CourseContext';
+import CourseSection from '../CourseSection/CourseSection';
+import useRoutes from '../../../state/hooks/useRoutes';
 
 const StyledDiv = styled.div`
 	color: white;
@@ -13,7 +15,8 @@ const StyledDiv = styled.div`
 	border-right: 1px solid rgb(161, 161, 161);
 	transition: 0.35s;
 	transform: translateX(-85%);
-	background-color: var(--pale-color);
+	background-color: var(--fourth-color);
+	color: var(--background-color);
 	overflow-y: auto;
 	touch-action: auto;
 	z-index: 10;
@@ -25,6 +28,7 @@ const StyledDiv = styled.div`
 	.course-nav-title {
 		padding: 10px 5px 10px 5px;
 		font-size: 25px;
+		color: var(--foreground-color);
 	}
 
 	.course-nav-header {
@@ -91,6 +95,12 @@ const StyledDiv = styled.div`
 
 const CourseNavigation = (props: CourseNavigationProps) => {
 	const { course } = useContext(CourseContext);
+	const { routes, goTo } = useRoutes();
+
+	if (!course) {
+		goTo(routes.auth.dashboard.path);
+		return <></>;
+	}
 
 	return (
 		<StyledDiv>
@@ -99,12 +109,13 @@ const CourseNavigation = (props: CourseNavigationProps) => {
 					<div className="course-nav-title">{course?.name}</div>
 				</div>
 				<div className="course-nav-body">
-					{/*
-
-					{course?.sections.map((s, idx) => (
-						<CourseSection key={idx} section={s} />
-					))}
-					*/}
+					{course.sections.length > 0 ? (
+						course.sections.map((s, idx) => (
+							<CourseSection key={idx} section={s} />
+						))
+					) : (
+						<label>There are no sections in this course</label>
+					)}
 				</div>
 			</CenteredContainer>
 		</StyledDiv>
