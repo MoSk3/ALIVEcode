@@ -44,7 +44,11 @@ public class Assigner extends Programme {
         }
 
         if (expr instanceof CreerListe.SousSection) {
-            ASObjet.Liste listeInitial = (ASObjet.Liste) variable.getValeurApresGetter();
+            ASObjet<?> valeurVariable = variable.getValeurApresGetter();
+            if (!(valeurVariable instanceof ASObjet.Liste listeInitial)) {
+                throw new ASErreur.ErreurType("L'assignement d'index ou de sous-section n'est pas d\u00E9finie pour " +
+                        "un \u00E9l\u00E9ment de type '" + valeurVariable.obtenirNomType() + "'.");
+            }
 
             // si l'assignement est de forme
             // var[debut:fin] = valeur

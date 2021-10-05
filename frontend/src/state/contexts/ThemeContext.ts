@@ -19,6 +19,8 @@ export type Theme = {
 		background_rgb: string;
 		foreground: string;
 		foreground_rgb: string;
+		tableback: string;
+		databack: string;
 	};
 	background: string;
 	name: string;
@@ -44,6 +46,8 @@ export const themes: { light: Theme; dark: Theme } = {
 			background_rgb: '255,255,255',
 			foreground: 'black',
 			foreground_rgb: '0,0,0',
+			tableback: '#9ecbff',
+			databack: '#f2f2f2'
 		},
 		background: '#ffffff',
 		name: 'light',
@@ -67,6 +71,8 @@ export const themes: { light: Theme; dark: Theme } = {
 			background_rgb: '34,34,34',
 			foreground: '#f0f6fc',
 			foreground_rgb: '240,246,252',
+			tableback: '#25496f',
+			databack: '#b0b0b0'
 		},
 		background: '#222222',
 		name: 'dark',

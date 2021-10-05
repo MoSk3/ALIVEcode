@@ -1,28 +1,20 @@
 package interpreteur.as.modules;
 
 
-import interpreteur.as.erreurs.ASErreur;
 import interpreteur.as.Objets.ASObjet;
-import interpreteur.as.Objets.ASObjet.*;
-import interpreteur.ast.buildingBlocs.expressions.Type;
-import interpreteur.data_manager.Data;
-import interpreteur.data_manager.DataVoiture;
+import interpreteur.as.Objets.Scope;
+import interpreteur.as.erreurs.ASErreur;
 import interpreteur.executeur.Executeur;
-import org.json.JSONObject;
 
 import java.util.*;
-import java.util.function.Function;
 
 /**
  * Interface responsable de tous les modules builtins
  *
  * @author Mathis Laroche
  */
-public final class ASModuleManager {
-    private final Hashtable<String, Module> moduleDict = new Hashtable<>();
-    private boolean dejaCharger = false;
-    private final Executeur executeurInstance;
-
+public record ASModuleManager(Executeur executeurInstance) {
+    private final static Hashtable<EnumModule, ModuleFactory> MODULE_FACTORY = new Hashtable<>();
     /*
     TABLE DES MATIERES:
     Module:
@@ -32,28 +24,25 @@ public final class ASModuleManager {
     -Math
      */
 
-    public ASModuleManager(Executeur executeurInstance) {
-        this.executeurInstance = executeurInstance;
+    public static void enregistrerModule(EnumModule nomModule, ModuleFactory moduleFactory) {
+        MODULE_FACTORY.put(nomModule, moduleFactory);
     }
 
-    /**
-     * ATTENTION: CETTE METHODE NE DEVRAIT PAS ETRE APPELE AILLEURS QUE DANS ASObjet.FonctionManger.reset()
-     *
-     * @return le module builtins
-     */
-    public Module getModuleBuiltins() {
-        return moduleDict.get("builtins");
+
+<<<<<<< HEAD
+    public ASModule getModuleBuiltins() {
+        return MODULE_FACTORY.get(EnumModule.builtins).charger(executeurInstance);
     }
 
-    // methode permettant d'ajouter un module au dictionnaire de modules
-    protected void ajouterModule(String nomModule, Fonction[] fonctions, Variable[] variables) {
-        moduleDict.put(nomModule, new Module(nomModule, fonctions, variables));
-    }
-
-    protected void ajouterModule(String nomModule, Fonction[] fonctions) {
-        moduleDict.put(nomModule, new Module(nomModule, fonctions, new Variable[]{}));
-    }
-
+    public void utiliserModuleBuitlins() {
+        var moduleBuiltins = getModuleBuiltins();
+        moduleBuiltins.utiliser((String) null);
+        Scope.getCurrentScope().declarerVariable(new ASObjet.Constante("builtins", new ASObjet.Liste(moduleBuiltins
+                .getNomsConstantesEtFonctions()
+                .stream()
+                .map(ASObjet.Texte::new)
+                .toArray(ASObjet.Texte[]::new))));
+=======
     private void ajouterModule(String nomModule, Variable[] variables) {
         moduleDict.put(nomModule, new Module(nomModule, new Fonction[]{}, variables));
     }
@@ -207,6 +196,7 @@ public final class ASModuleManager {
                     }
                 }
         });
+>>>>>>> dev
     }
 
     public void utiliserModule(String nomModule) {
@@ -219,9 +209,15 @@ public final class ASModuleManager {
         if (nomModule.equals("experimental")) {
             return;
         }
-        Module module = getModule(nomModule);
+        ASModule module = getModule(nomModule);
 
-        module.utiliser();
+        module.utiliser(nomModule);
+        Scope.getCurrentScope().declarerVariable(new ASObjet.Constante(nomModule, new ASObjet.Liste(module
+                .getNomsConstantesEtFonctions()
+                .stream()
+                .map(e -> nomModule + "." + e)
+                .map(ASObjet.Texte::new)
+                .toArray(ASObjet.Texte[]::new))));
     }
 
     /**
@@ -234,7 +230,7 @@ public final class ASModuleManager {
             return;
         }
 
-        Module module = getModule(nomModule);
+        ASModule module = getModule(nomModule);
 
         List<String> nomsFctEtConstDemandees = Arrays.asList(methodes);
 
@@ -247,14 +243,21 @@ public final class ASModuleManager {
                     .replaceAll("\\[|]", ""));
 
         module.utiliser(nomsFctEtConstDemandees);
+        Scope.getCurrentScope().declarerVariable(new ASObjet.Constante(nomModule, new ASObjet.Liste(nomsFctEtConstDemandees
+                .stream()
+                .map(ASObjet.Texte::new)
+                .toArray(ASObjet.Texte[]::new))));
     }
 
 
-    public Module getModule(String nomModule) {
-        Module module = moduleDict.get(nomModule);
-        if (module == null) throw new ASErreur.ErreurModule("Le module '" + nomModule + "' n'existe pas");
-
-        return module;
+    public ASModule getModule(String nomModule) {
+        ModuleFactory module;
+        try {
+            module = MODULE_FACTORY.get(EnumModule.valueOf(nomModule));
+        } catch (IllegalArgumentException err) {
+            throw new ASErreur.ErreurModule("Le module '" + nomModule + "' n'existe pas");
+        }
+        return module.charger(executeurInstance);
     }
 }
 
