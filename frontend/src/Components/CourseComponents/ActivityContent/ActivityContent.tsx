@@ -2,16 +2,16 @@ import {
 	ActivityContentProps,
 	StyledActivityContent,
 } from './activityContentTypes';
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { CourseContext } from '../../../state/contexts/CourseContext';
 import { ThemeContext } from '../../../state/contexts/ThemeContext';
 import ReactMarkdown from 'react-markdown';
 import CenteredContainer from '../../UtilsComponents/CenteredContainer/CenteredContainer';
 import Level from '../../../Pages/Level/Level';
 import IconButton from '../../DashboardComponents/IconButton/IconButton';
-import { faPencilAlt } from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 import MDEditor from '../MDEditor/MDEditor';
-import api from '../../../Models/api';
+import { Form } from 'react-bootstrap';
 
 /**
  * Displays the content of the activity in the CourseContext
@@ -20,26 +20,22 @@ import api from '../../../Models/api';
  */
 const ActivityContent = (props: ActivityContentProps) => {
 	const { theme } = useContext(ThemeContext);
-	const { activity, course, section } = useContext(CourseContext);
+	const { activity, saveActivityContent, saveActivity } =
+		useContext(CourseContext);
 	const [editMode, setEditMode] = useState(false);
+	const [name, setName] = useState<string>('');
+	const [editingName, setEditingName] = useState(false);
+	const [defaultMDValue, setDefaultMDValue] = useState<string>();
 
-	const saveActivityContent = async (content: string) => {
-		if (!course || !activity || !section) return;
-		const act = await api.db.courses.updateActivity(
-			{
-				courseId: course.id,
-				sectionId: section.id.toString(),
-				activityId: activity.id.toString(),
-			},
-			{
-				...activity,
-				content: {
-					data: content,
-				},
-			},
-		);
-		console.log(act);
-	};
+	useEffect(() => {
+		activity && setName(activity.name);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [activity?.name]);
+
+	useEffect(() => {
+		setDefaultMDValue(activity?.content?.data);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [activity?.content?.data]);
 
 	return (
 		<StyledActivityContent theme={theme}>
@@ -47,10 +43,38 @@ const ActivityContent = (props: ActivityContentProps) => {
 				<div className="course-content">
 					{activity ? (
 						<>
-							<div className="activity-header">
-								<div className="activity-header-title">{activity.name}</div>
+							<div
+								className="activity-header"
+								style={{ cursor: editMode ? 'pointer' : 'initial' }}
+							>
+								{!editingName ? (
+									<div
+										className="activity-header-title"
+										onClick={() => setEditingName(true)}
+									>
+										{activity.name}
+									</div>
+								) : (
+									<Form.Control
+										className="activity-header-title"
+										value={name}
+										onChange={e => setName(e.target.value)}
+										onBlur={() => {
+											activity.name = name;
+											saveActivity(activity);
+											setEditingName(false);
+										}}
+										onKeyDown={(e: any) => {
+											if (e.keyCode === 13) {
+												activity.name = name;
+												saveActivity(activity);
+												setEditingName(false);
+											}
+										}}
+									/>
+								)}
 								<IconButton
-									icon={faPencilAlt}
+									icon={editMode ? faCheckCircle : faPencilAlt}
 									onClick={() => setEditMode(!editMode)}
 									size="2x"
 								/>
@@ -62,7 +86,7 @@ const ActivityContent = (props: ActivityContentProps) => {
 										{editMode ? (
 											<MDEditor
 												onSave={saveActivityContent}
-												defaultValue={activity.content?.data}
+												defaultValue={defaultMDValue}
 											></MDEditor>
 										) : (
 											<>

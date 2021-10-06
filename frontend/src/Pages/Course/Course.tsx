@@ -39,6 +39,35 @@ const Course = (props: CourseProps) => {
 	const alert = useAlert();
 	const history = useHistory();
 
+	const saveActivity = async (activity: Activity) => {
+		if (!course || !activity || !section) return;
+		const { content, ...actWithoutContent } = activity;
+
+		const updatedAct = await api.db.courses.updateActivity(
+			{
+				courseId: course.id,
+				sectionId: section.id.toString(),
+				activityId: activity.id.toString(),
+			},
+			actWithoutContent,
+		);
+		setActivity(updatedAct);
+	};
+
+	const saveActivityContent = async (data: string) => {
+		if (!course || !activity || !section) return;
+		const activityDTO = { ...activity, content: { data } };
+		const updatedAct = await api.db.courses.updateActivity(
+			{
+				courseId: course.id,
+				sectionId: section.id.toString(),
+				activityId: activity.id.toString(),
+			},
+			activityDTO,
+		);
+		setActivity(updatedAct);
+	};
+
 	const loadActivity = async (section: Section, activity: Activity) => {
 		if (!course) return;
 		await activity.getContent(course?.id, section.id);
@@ -52,25 +81,19 @@ const Course = (props: CourseProps) => {
 		setCourse(plainToClass(CourseModel, course));
 	};
 
-	const addActivity = async (section: Section, activity: Activity) => {
+	const addActivity = async (section: Section, newAct: Activity) => {
 		if (!course) return;
-		activity = await api.db.courses.addActivity(
-			course?.id,
-			section.id,
-			activity,
-		);
+		newAct = await api.db.courses.addActivity(course?.id, section.id, newAct);
 
 		const sectionFound = course?.sections.find(s => s.id === section.id);
 		if (!sectionFound || !course) return;
 
 		course.sections = course?.sections.map(s => {
 			if (s.id === sectionFound.id)
-				s.activities
-					? s.activities.push(activity)
-					: (s.activities = [activity]);
+				s.activities ? s.activities.push(newAct) : (s.activities = [newAct]);
 			return s;
 		});
-		loadActivity(section, activity);
+		loadActivity(section, newAct);
 		setCourse(plainToClass(CourseModel, course));
 	};
 
@@ -81,6 +104,8 @@ const Course = (props: CourseProps) => {
 		loadActivity,
 		addSection,
 		addActivity,
+		saveActivity,
+		saveActivityContent,
 	};
 
 	useEffect(() => {

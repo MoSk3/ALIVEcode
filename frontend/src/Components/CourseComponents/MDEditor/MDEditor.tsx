@@ -1,12 +1,16 @@
 import { Form } from 'react-bootstrap';
 import { StyledMDEditor, MDEditorProps } from './mdEditorTypes';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import Button from '../../UtilsComponents/Button/Button';
 
 const MDEditor = ({ onSave, defaultValue }: MDEditorProps) => {
 	const [isPreview, setIsPreview] = useState(false);
 	const [content, setContent] = useState(defaultValue ?? '');
+
+	useEffect(() => {
+		defaultValue && setContent(defaultValue);
+	}, [defaultValue]);
 
 	return (
 		<StyledMDEditor>

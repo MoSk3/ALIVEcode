@@ -10,10 +10,14 @@ export type CourseContentValues = {
 	addSection: (section: Section) => void;
 	loadActivity: (section: Section, activity: Activity) => any;
 	addActivity: (section: Section, activity: Activity) => void;
+	saveActivity: (activity: Activity) => void;
+	saveActivityContent: (data: string) => void;
 };
 
 export const CourseContext = createContext<CourseContentValues>({
 	loadActivity: (section: Section, activity: Activity) => {},
 	addSection: (section: Section) => {},
 	addActivity: (section: Section, activity: Activity) => {},
+	saveActivity: (activity: Activity) => {},
+	saveActivityContent: (data: string) => {},
 });
