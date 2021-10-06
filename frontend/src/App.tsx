@@ -19,8 +19,8 @@ import { User, Student, Professor } from './Models/User/user.entity';
 import LoadingScreen from './Components/UtilsComponents/LoadingScreen/LoadingScreen';
 import background_image_light from './assets/images/backgroundImage4.png';
 import api from './Models/api';
-import { Maintenance } from './Models/Maintenance/maintenance.entity';
 import MaintenanceBar from './Components/SiteStatusComponents/MaintenanceBar/MaintenanceBar';
+import { Maintenance } from './Models/Maintenance/maintenance.entity';
 
 type GlobalStyleProps = {
 	theme: Theme;
@@ -55,6 +55,7 @@ const GlobalStyle = createGlobalStyle`
 						--hover-color: ${theme.color.hover};
 						--background-color: ${theme.color.background};
 						--background-color-rgb: ${theme.color.background_rgb};
+						--background-hover-color: ${theme.color.background_hover};
 						--foreground-color: ${theme.color.foreground};
 						--foreground-color-rgb: ${theme.color.foreground_rgb};
 					}

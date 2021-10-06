@@ -8,6 +8,19 @@ export const StyledActivityContent = styled.div`
 	height: 100%;
 	width: 97%;
 
+	.activity-header {
+		border-bottom: 2px solid var(--foreground-color);
+		padding: 0 0 10px 0;
+		margin-bottom: 25px;
+		display: flex;
+		align-items: center;
+	}
+
+	.activity-header-title {
+		font-size: 2.5em;
+		margin-right: 20px;
+	}
+
 	.course-content-padding {
 		padding: 30px;
 		height: 100%;

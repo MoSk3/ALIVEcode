@@ -85,6 +85,19 @@ export class CourseService {
     return activity;
   }
 
+  async updateActivity(
+    courseId: string,
+    sectionId: string,
+    activityId: string,
+    updateActivityDTO: Partial<ActivityEntity>,
+  ) {
+    const section = await this.findSection(courseId, sectionId);
+    const activity = section.activities.find(a => a.id.toString() === activityId);
+    if (!activity) throw new HttpException('Activity not found', HttpStatus.NOT_FOUND);
+
+    return await this.activityRepository.save({ id: activity.id, ...updateActivityDTO });
+  }
+
   async getActivities(courseId: string, sectionId: string) {
     const section = await this.findSection(courseId, sectionId);
     section.activities = section.activities.map(a => {

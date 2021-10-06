@@ -200,7 +200,10 @@ const LevelAI = ({
 								level.creator &&
 								user.id === level.creator.id && (
 									<IconButton
-										to={routes.auth.level_edit.path.replace(':id', level.id)}
+										to={routes.auth.level_edit.path.replace(
+											':levelId',
+											level.id,
+										)}
 										icon={faPencilAlt}
 										size="2x"
 									/>

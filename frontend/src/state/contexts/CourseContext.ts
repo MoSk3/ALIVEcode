@@ -5,6 +5,7 @@ import { Activity } from '../../Models/Course/activity.entity';
 
 export type CourseContentValues = {
 	course?: Course;
+	section?: Section;
 	activity?: Activity;
 	addSection: (section: Section) => void;
 	loadActivity: (section: Section, activity: Activity) => any;

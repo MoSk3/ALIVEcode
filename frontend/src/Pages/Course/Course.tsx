@@ -32,6 +32,7 @@ const StyledDiv = styled.div`
 const Course = (props: CourseProps) => {
 	const { user } = useContext(UserContext);
 	const [course, setCourse] = useState<CourseModel>();
+	const [section, setSection] = useState<Section>();
 	const [activity, setActivity] = useState<Activity>();
 
 	const { t } = useTranslation();
@@ -42,6 +43,7 @@ const Course = (props: CourseProps) => {
 		if (!course) return;
 		await activity.getContent(course?.id, section.id);
 		setActivity(activity);
+		setSection(section);
 	};
 
 	const addSection = (section: Section) => {
@@ -74,6 +76,7 @@ const Course = (props: CourseProps) => {
 
 	const contextValue: CourseContentValues = {
 		course,
+		section,
 		activity,
 		loadActivity,
 		addSection,

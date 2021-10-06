@@ -15,9 +15,9 @@ import { LevelProgression } from './Level/levelProgression';
 import { BrowsingQuery } from '../Components/MainComponents/BrowsingMenu/browsingMenuTypes';
 import { LevelAI } from './Level/levelAI.entity';
 import { IoTObject } from './Iot/IoTobject.entity';
-import { Maintenance } from './Maintenance/maintenance.entity';
 import { QueryDTO } from '../../../backend/src/models/level/dto/query.dto';
 import { Activity, ActivityContent } from './Course/activity.entity';
+import { Maintenance } from './Maintenance/maintenance.entity';
 
 type urlArgType<S extends string> = S extends `${infer _}:${infer A}/${infer B}`
 	? A | urlArgType<B>
@@ -114,7 +114,7 @@ const api = {
 					plainToClass(Maintenance, d),
 				);
 			},
-			async getUpcoming() {
+			async getUpcoming(): Promise<Maintenance> {
 				return plainToClass(
 					Maintenance,
 					(await axios.get('maintenances/upcoming')).data,
@@ -188,6 +188,10 @@ const api = {
 					).data,
 				);
 			},
+			updateActivity: apiUpdate(
+				'courses/:courseId/sections/:sectionId/activities/:activityId/content',
+				Activity,
+			),
 		},
 		levels: {
 			progressions: {
