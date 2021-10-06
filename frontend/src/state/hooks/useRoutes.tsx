@@ -31,6 +31,7 @@ import ASDocs from '../../Components/AliveScriptComponents/ASDocs/ASDocs';
 import { MaintenanceError } from '../../Pages/Errors/MaintenanceError/MaintenanceError';
 import MaintenanceMenu from '../../Pages/SiteStatus/MaintenanceMenu/MaintenanceMenu';
 import QuizHome from '../../Pages/Quiz/QuizHome/QuizHome';
+import QuizCategory from '../../Pages/Quiz/QuizCategory/QuizCategory';
 
 type component =
 	| React.ComponentType<RouteComponentProps<any>>
@@ -179,6 +180,10 @@ const useRoutes = () => {
 			path: '/quiz',
 			exact: true,
 			component: QuizHome
+		},
+		quiz_category: {
+			path: '/quiz/category/:id',
+			component: QuizCategory,
 		},
 	});
 
