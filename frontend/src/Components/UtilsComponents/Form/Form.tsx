@@ -14,13 +14,17 @@ import { prettyField } from '../../../Types/formatting';
  *
  * example of a component creating a course:
  * 	<Form
- * 	  name='create_course',
- *    url='url_where_to_make_the_request',
- * 	  action='POST',
+ * 	  name='create_course'
+ *    url='url_where_to_make_the_request'
+ * 	  action='POST'
  * 	  onSubmit={(newPlainCourse) => {
  * 			// res is the data object of the response object
  * 			const newCourse: Course = plainToClass(Course, newPlainCourse);
- *    }},
+ *    }}
+ * 		alterFormValues={(formValues) => {
+ * 			// Modify the formValues as pleased and return them:
+ * 			return {classId: '123', course: formValues};
+ *    }}
  *		inputGroups={[
  *			{
  *				name: 'name',
@@ -69,7 +73,8 @@ const Form = (props: FormProps) => {
 	const history = useHistory();
 
 	const onFormSubmit = async (formValues: any) => {
-		if (process.env.DEBUG) console.log(formValues);
+		if (props.alterFormValues) formValues = props.alterFormValues(formValues);
+		if (process.env.REACT_APP_DEBUG) console.log(formValues);
 		try {
 			let res;
 			switch (props.action) {

@@ -6,6 +6,8 @@ import { SectionEntity } from './entities/section.entity';
 import { generate } from 'randomstring';
 import { ProfessorEntity } from '../user/entities/professor.entity';
 import { ActivityEntity } from './entities/activity.entity';
+import { CreateCourseDTO } from './dtos/CreateCourseDTO';
+import { ClassroomEntity } from '../classroom/entities/classroom.entity';
 
 @Injectable()
 export class CourseService {
@@ -13,16 +15,30 @@ export class CourseService {
     @InjectRepository(CourseEntity) private courseRepository: Repository<CourseEntity>,
     @InjectRepository(SectionEntity) private sectionRepository: Repository<SectionEntity>,
     @InjectRepository(ActivityEntity) private activityRepository: Repository<ActivityEntity>,
+    @InjectRepository(ClassroomEntity) private classroomRepo: Repository<ClassroomEntity>,
   ) {}
 
-  async create(professor: ProfessorEntity, createCourseDto: CourseEntity) {
-    const course = this.courseRepository.create(createCourseDto);
+  async create(professor: ProfessorEntity, createCourseDto: CreateCourseDTO) {
+    let course = this.courseRepository.create(createCourseDto.course);
     course.code = generate({
       length: 10,
       charset: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890',
     });
     course.creator = professor;
-    return await this.courseRepository.save(course);
+
+    // If a classroom is specified, add the course to the classroom
+    console.log(createCourseDto);
+
+    course = await this.courseRepository.save(course);
+
+    if (createCourseDto.classId) {
+      const classroom = await this.classroomRepo.findOne(createCourseDto.classId, { relations: ['courses'] });
+      if (!classroom) throw new HttpException('Classroom not found', HttpStatus.NOT_FOUND);
+      classroom.courses.push(course);
+      console.log(classroom.courses);
+      await this.classroomRepo.save(classroom);
+    }
+    return course;
   }
 
   async findAll() {

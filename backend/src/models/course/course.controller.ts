@@ -22,6 +22,7 @@ import { Role } from '../../utils/types/roles.types';
 import { Auth } from '../../utils/decorators/auth.decorator';
 import { User } from '../../utils/decorators/user.decorator';
 import { ActivityEntity } from './entities/activity.entity';
+import { CreateCourseDTO } from './dtos/CreateCourseDTO';
 
 @Controller('courses')
 @UseInterceptors(DTOInterceptor)
@@ -30,7 +31,7 @@ export class CourseController {
 
   @Post()
   @Auth(Role.PROFESSOR)
-  async create(@User() user: ProfessorEntity, @Body() createCourseDto: CourseEntity) {
+  async create(@User() user: ProfessorEntity, @Body() createCourseDto: CreateCourseDTO) {
     return await this.courseService.create(user, createCourseDto);
   }
 

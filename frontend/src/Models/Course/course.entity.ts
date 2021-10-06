@@ -48,4 +48,8 @@ export class Course extends CreatedByUser {
 		this.sections = await api.db.courses.getSections({ id: this.id });
 		return api.db.courses.getSections({ id: this.id });
 	}
+
+	getSubjectDisplay() {
+		return this.subject[0].toUpperCase() + this.subject.slice(1);
+	}
 }
