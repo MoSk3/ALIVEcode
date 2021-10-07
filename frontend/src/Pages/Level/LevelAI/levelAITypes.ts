@@ -67,4 +67,20 @@ export const StyledAliveLevel = styled(FillContainer)`
 		z-index: -1;
 		border-bottom: 1px solid var(--foreground-color);
 	}
+
+	.data-section {
+		height: 60%;
+		background: var(--databack-color);
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-around;
+	}
+
+	.graph-container {
+		height: relative;
+	}
+
+	.command {
+		height: 40%;
+	}
 `;

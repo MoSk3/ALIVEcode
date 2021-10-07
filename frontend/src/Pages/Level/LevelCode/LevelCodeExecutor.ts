@@ -2,6 +2,10 @@ import axios from 'axios';
 import { LevelExecutor } from '../LevelExecutor';
 
 export default class LevelCodeExecutor extends LevelExecutor {
+	constructor(public levelName: string, public creator?: any) {
+		super(levelName, creator);
+	};
+	
 	public async onRun() {
 		// Envoie le code à exécuter au serveur
 		const lines: string = this.lineInterfaceContent;
@@ -28,7 +32,7 @@ export default class LevelCodeExecutor extends LevelExecutor {
 					});
 				}
 			}
-		} catch {
+		} catch(err) {
 			this.stop();
 		}
 	}

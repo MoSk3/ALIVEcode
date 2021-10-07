@@ -39,6 +39,15 @@ const GlobalStyle = createGlobalStyle`
 	}
 
 	${({ theme }: GlobalStyleProps) => {
+		const cssVars = [];
+		for (const [colorName, color] of Object.entries(theme.color)) {
+			const cssName = colorName.includes('rgb')
+				? `--${colorName.split('_')[0]}-color-rgb`
+				: `--${colorName}-color`;
+			cssVars.push(`${cssName}: ${color}`);
+		}
+		return ':root {' + cssVars.join(';') + '}';
+		/*
 		return `:root {
 						--primary-color: ${theme.color.primary};
 						--primary-color-rgb: ${theme.color.primary_rgb};
@@ -60,6 +69,7 @@ const GlobalStyle = createGlobalStyle`
 						--foreground-color-rgb: ${theme.color.foreground_rgb};
 					}
 				`;
+				*/
 	}}
 `;
 

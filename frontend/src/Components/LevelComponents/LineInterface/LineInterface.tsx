@@ -12,7 +12,7 @@ import { useState, useRef, useEffect, memo } from 'react';
  *
  * @param {boolean} hasTabs
  * @param {EditorTabModel[]} tabs tabs for the different scripts
- * @param defaultContent
+ * @param initialContent
  * @param handleChange callback function that takes as parameter the line interface's content (string)
  *
  * @author MoSk3
@@ -135,6 +135,10 @@ const LineInterface = memo(
 									ref.current.editor.resize();
 								}
 							}, 10);
+
+							const editor = ace.edit('1nt3rf4c3');
+							setAutocomplete(editor);
+							editor.keyBinding.addKeyboardHandler(autocomplete, 0);
 						}}
 						fontSize="large"
 						name="1nt3rf4c3" //"UNIQUE_ID_OF_DIV"
