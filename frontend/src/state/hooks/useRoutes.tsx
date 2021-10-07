@@ -198,12 +198,10 @@ const useRoutes = () => {
 		create_course: {
 			path: '/course/create',
 			component: CourseForm,
-			adminOnly: true,
 		},
 		course: {
 			path: '/course/:id',
 			component: Course,
-			adminOnly: true,
 		},
 		account: {
 			path: '/account',

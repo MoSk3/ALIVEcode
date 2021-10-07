@@ -8,6 +8,10 @@ import { ProfessorEntity } from '../user/entities/professor.entity';
 import { ActivityEntity } from './entities/activity.entity';
 import { CreateCourseDTO } from './dtos/CreateCourseDTO';
 import { ClassroomEntity } from '../classroom/entities/classroom.entity';
+import { UserEntity } from '../user/entities/user.entity';
+import { hasRole } from '../user/auth';
+import { Role } from '../../utils/types/roles.types';
+import { StudentEntity } from '../user/entities/student.entity';
 
 @Injectable()
 export class CourseService {
@@ -16,6 +20,7 @@ export class CourseService {
     @InjectRepository(SectionEntity) private sectionRepository: Repository<SectionEntity>,
     @InjectRepository(ActivityEntity) private activityRepository: Repository<ActivityEntity>,
     @InjectRepository(ClassroomEntity) private classroomRepo: Repository<ClassroomEntity>,
+    @InjectRepository(StudentEntity) private studentRepo: Repository<StudentEntity>,
   ) {}
 
   async create(professor: ProfessorEntity, createCourseDto: CreateCourseDTO) {
@@ -72,6 +77,23 @@ export class CourseService {
     course.sections.push(section);
     this.courseRepository.save(course);
     return section;
+  }
+
+  async filterCourseAccess(course: CourseEntity, user: UserEntity) {
+    if (hasRole(user, Role.STAFF)) return true;
+    if (course.creator.id === user.id) return true;
+    // TODO: Better managing of course access private
+    //if (course.access === COURSE_ACCESS.PRIVATE) throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+
+    if (user instanceof StudentEntity) {
+      const student = await this.studentRepo.findOne(user.id, { relations: ['classrooms', 'classrooms.courses'] });
+      if (!student) throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+      if (!student.classrooms.some(classroom => classroom.courses.some(c => c.id === course.id)))
+        throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+      return true;
+    }
+
+    throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
   }
 
   async getSections(courseId: string) {

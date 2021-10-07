@@ -12,7 +12,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { CourseService } from './course.service';
-import { CourseEntity, COURSE_ACCESS } from './entities/course.entity';
+import { CourseEntity } from './entities/course.entity';
 import { DTOInterceptor } from '../../utils/interceptors/dto.interceptor';
 import { SectionEntity } from './entities/section.entity';
 import { ProfessorEntity } from '../user/entities/professor.entity';
@@ -47,11 +47,7 @@ export class CourseController {
   @Auth()
   async findOne(@User() user: UserEntity, @Param('id') id: string, @Query('code') code: string) {
     const course = await this.courseService.findOne(id);
-
-    if (course.creator.id === user.id || hasRole(user, Role.STAFF)) return course;
-    if (course.access === COURSE_ACCESS.PRIVATE) throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
-    if (course.access === COURSE_ACCESS.RESTRICTED && course.code !== code)
-      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    await this.courseService.filterCourseAccess(course, user);
 
     return course;
   }
@@ -91,8 +87,7 @@ export class CourseController {
   @Auth()
   async getSections(@User() user: UserEntity, @Param('id') id: string) {
     const course = await this.courseService.findOne(id);
-    if (course.creator.id !== user.id && !hasRole(user, Role.STAFF))
-      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    await this.courseService.filterCourseAccess(course, user);
 
     return await this.courseService.getSections(id);
   }
@@ -101,14 +96,13 @@ export class CourseController {
   @Auth()
   async getActivities(@User() user: UserEntity, @Param('id') id: string, @Param('sectionId') sectionId: string) {
     const course = await this.courseService.findOne(id);
-    if (course.creator.id !== user.id && !hasRole(user, Role.STAFF))
-      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    await this.courseService.filterCourseAccess(course, user);
 
     return await this.courseService.getActivities(id, sectionId);
   }
 
   @Post(':id/sections/:sectionId/activities')
-  @Auth()
+  @Auth(Role.PROFESSOR)
   async addActivity(
     @User() user: UserEntity,
     @Param('id') id: string,
@@ -131,14 +125,13 @@ export class CourseController {
     @Param('activityId') activityId: string,
   ) {
     const course = await this.courseService.findOne(id);
-    if (course.creator.id !== user.id && !hasRole(user, Role.STAFF))
-      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    await this.courseService.filterCourseAccess(course, user);
 
     return await this.courseService.findActivity(id, sectionId, activityId);
   }
 
   @Patch(':id/sections/:sectionId/activities/:activityId/content')
-  @Auth()
+  @Auth(Role.PROFESSOR)
   async updateActivity(
     @User() user: UserEntity,
     @Param('id') id: string,
