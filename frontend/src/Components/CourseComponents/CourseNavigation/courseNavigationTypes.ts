@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { themes } from '../../../state/contexts/ThemeContext';
 export type CourseNavigationProps = {};
 
-export const StyledDiv = styled.div`
+export const StyledCourseNavigation = styled.div`
 	color: white;
 	height: 100%;
 	width: 20%;
@@ -15,8 +15,14 @@ export const StyledDiv = styled.div`
 	border-bottom-right-radius: 10px;
 	transition: 0.35s;
 	transform: translateX(-85%);
-	background-color: var(--fourth-color);
-	color: var(--background-color);
+	background-color: ${({ theme }) => {
+		if (theme.name === themes.light.name) return 'var(--background-color)';
+		if (theme.name === themes.dark.name) return 'var(--fourth-color)';
+	}};
+	color: ${({ theme }) => {
+		if (theme.name === themes.light.name) return 'var(--background-color)';
+		if (theme.name === themes.dark.name) return 'var(--foreground-color)';
+	}};
 	overflow-y: auto;
 	touch-action: auto;
 	z-index: 10;
@@ -55,14 +61,20 @@ export const StyledDiv = styled.div`
 		font-size: 18px;
 		width: 100%;
 		padding: 10px;
-		background-color: var(--secondary-color);
+		background-color: ${({ theme }) => {
+			if (theme.name === themes.light.name) return 'var(--secondary-color)';
+			if (theme.name === themes.dark.name) return 'var(--primary-color)';
+		}};
 	}
 
 	.course-activity {
 		width: 100%;
 		margin-top: 5px;
 		padding: 10px;
-		background-color: var(--third-color);
+		background-color: ${({ theme }) => {
+			if (theme.name === themes.light.name) return 'var(--third-color)';
+			if (theme.name === themes.dark.name) return 'var(--secondary-color)';
+		}};
 	}
 
 	.course-section-body {

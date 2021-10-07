@@ -1,5 +1,8 @@
 import CenteredContainer from '../../UtilsComponents/CenteredContainer/CenteredContainer';
-import { CourseNavigationProps, StyledDiv } from './courseNavigationTypes';
+import {
+	CourseNavigationProps,
+	StyledCourseNavigation,
+} from './courseNavigationTypes';
 import { useContext, useState } from 'react';
 import { CourseContext } from '../../../state/contexts/CourseContext';
 import CourseSection from '../CourseSection/CourseSection';
@@ -29,7 +32,7 @@ const CourseNavigation = (props: CourseNavigationProps) => {
 	}
 
 	return (
-		<StyledDiv theme={theme}>
+		<StyledCourseNavigation theme={theme}>
 			<CenteredContainer horizontally>
 				<div className="course-nav-header">
 					<div className="course-nav-title">{course?.name}</div>
@@ -88,7 +91,7 @@ const CourseNavigation = (props: CourseNavigationProps) => {
 					]}
 				/>
 			</FormModal>
-		</StyledDiv>
+		</StyledCourseNavigation>
 	);
 };
 
