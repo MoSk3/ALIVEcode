@@ -14,7 +14,12 @@ import { User } from '../../../Models/User/user.entity';
 import { setAccessToken } from '../../../Types/accessToken';
 import useRoutes from '../../../state/hooks/useRoutes';
 
-/** Reusable form component to handle header creation */
+/** 
+ * Signin page that allows the user to connect to its account
+ * 
+ * @author MoSk3
+ * 
+*/
 const SignIn = (props: SignInProps) => {
 	const { register, handleSubmit, formState: { errors } } = useForm();
 	const { setUser } = useContext(UserContext);

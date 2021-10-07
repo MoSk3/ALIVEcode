@@ -1,5 +1,12 @@
 import { LevelAIProps, StyledAliveLevel } from './levelAITypes';
-import { useEffect, useState, useContext, useRef, useMemo } from 'react';
+import {
+	useEffect,
+	useState,
+	useContext,
+	useRef,
+	useCallback,
+	useMemo,
+} from 'react';
 import LineInterface from '../../../Components/LevelComponents/LineInterface/LineInterface';
 import { UserContext } from '../../../state/contexts/UserContext';
 import { Row, Col } from 'react-bootstrap';
@@ -29,23 +36,30 @@ import {
 } from '../../../Models/Level/level.entity';
 import $ from 'jquery';
 import { useTranslation } from 'react-i18next';
-import dataAI from "./dataAI.json"
+import dataAI from './dataAI.json';
 import Modal from '../../../Components/UtilsComponents/Modal/Modal';
 import useExecutor from '../../../state/hooks/useExecutor';
 import LevelTable from '../../../Components/LevelComponents/LevelTable/LevelTable';
 import LevelGraph from '../../../Components/LevelComponents/LevelGraph/LevelGraph';
-import Regression from '../../../Components/LevelComponents/LevelGraph/Regression'
-
+import Regression from '../../../Components/LevelComponents/LevelGraph/Regression';
 
 /**
- * Component that contains all the elements that are a part of any AI level.
- * @param param0 the props of AI levels.
- * @returns the LevelAI component.
+ * Ai level page. Contains all the components to display and make the ai level functionnal.
+ *
+ * @param {LevelAIModel} level ai level object
+ * @param {boolean} editMode if the level is in editMode or not
+ * @param {LevelProgression} progression the level progression of the current user
+ * @param {string} initialCode the initial code of the level
+ * @param {(level: LevelAIModel) => void} setLevel callback used to modify the level in the parent state
+ * @param {(progression: LevelProgression) => void} setProgression callback used to modify the level progression in the parent state
+ *
+ * @author MoSk3
  */
 const LevelAI = ({
 	level,
 	editMode,
 	progression,
+	initialCode,
 	setLevel,
 	setProgression,
 }: LevelAIProps) => {
@@ -73,7 +87,7 @@ const LevelAI = ({
 			saveProgressionTimed();
 		}
 	};
-		
+
 	//Set the data for the level
 	const [data] = useState(dataAI);
 	let func: Regression;
@@ -83,7 +97,7 @@ const LevelAI = ({
 		data: data,
 		backgroundColor: 'var(--contrast-color)',
 		borderWidth: 1,
-	}
+	};
 	const initialDataset = Object.freeze({
 		type: 'scatter',
 		label: "Distance parcourue en fonction de l'énergie",
@@ -94,38 +108,37 @@ const LevelAI = ({
 	let datasets = [initialDataset];
 
 	const [chartData, setChartData] = useState({
-		datasets: datasets
+		datasets: datasets,
 	});
 
 	function resetGraph() {
 		datasets = [initialDataset];
 		setChartData({
-			datasets: datasets
+			datasets: datasets,
 		});
-		console.log("Données reset : ");
-		console.log(chartData)
+		console.log('Données reset : ');
+		console.log(chartData);
 	}
 
 	function setDataOnGraph(newData: any): void {
 		datasets.push(newData);
 		setChartData({
-			datasets: datasets
+			datasets: datasets,
 		});
 	}
 	const memorizedData = useMemo(() => data, [data]);
 	const memorizedChartData = useMemo(() => chartData, [chartData]);
 
-
 	//-------------------------- Alivescript functions ----------------------------//
 
 	/**
 	 * Sets the data of the graph to the level's data and displays it on the screen
-	 * 
-	*/
+	 *
+	 */
 	function showDataCloud(): void {
-		console.log(chartData)
+		console.log(chartData);
 		setDataOnGraph(mainDataset);
-		console.log(chartData)
+		console.log(chartData);
 	}
 
 	function createRegression(a: number, b: number, c: number, d: number) {
@@ -143,17 +156,21 @@ const LevelAI = ({
 		showRegression();
 	}
 
-	
-
 	useEffect(() => {
 		if (user && editMode && level.creator && level.creator.id !== user.id)
 			return history.push(routes.public.home.path);
 
-		setExecutor(new LevelAIExecutor({createAndShowReg, showDataCloud, resetGraph}, level.name, user || undefined));
+		setExecutor(
+			new LevelAIExecutor(
+				{ createAndShowReg, showDataCloud, resetGraph },
+				level.name,
+				user || undefined,
+			),
+		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, level]);
 
-	const saveLevel = async () => {
+	const saveLevel = useCallback(async () => {
 		if (saveTimeout.current) clearTimeout(saveTimeout.current);
 		if (messageTimeout.current) clearTimeout(messageTimeout.current);
 		setSaving(true);
@@ -173,14 +190,14 @@ const LevelAI = ({
 			}, 5000);
 		}, 500);
 		setLevel(updatedLevel);
-	};
+	}, [level, setLevel]);
 
 	const saveLevelTimed = () => {
 		if (saveTimeout.current) clearTimeout(saveTimeout.current);
 		saveTimeout.current = setTimeout(saveLevel, 2000);
 	};
 
-	const saveProgression = async () => {
+	const saveProgression = useCallback(async () => {
 		if (!user || !progression) return;
 		if (saveTimeout.current) clearTimeout(saveTimeout.current);
 		if (messageTimeout.current) clearTimeout(messageTimeout.current);
@@ -202,7 +219,7 @@ const LevelAI = ({
 			}, 5000);
 		}, 500);
 		setProgression(updatedProgression);
-	};
+	}, [level.id, progression, setProgression, user]);
 
 	const saveProgressionTimed = () => {
 		if (saveTimeout.current) clearTimeout(saveTimeout.current);
@@ -210,6 +227,7 @@ const LevelAI = ({
 	};
 
 	useEffect(() => {
+		$(document).off('keydown');
 		$(document).on('keydown', e => {
 			//If ctrl + s are pressed together
 			if (e.keyCode === 83 && e.ctrlKey) {
@@ -219,7 +237,9 @@ const LevelAI = ({
 				editMode ? saveLevel() : saveProgression();
 			}
 		});
+	}, [editMode, saveLevel, saveProgression, user]);
 
+	useEffect(() => {
 		return () => {
 			clearTimeout(saveTimeout.current);
 			clearTimeout(messageTimeout.current);
@@ -265,7 +285,10 @@ const LevelAI = ({
 								level.creator &&
 								user.id === level.creator.id && (
 									<IconButton
-										to={routes.auth.level_edit.path.replace(':id', level.id)}
+										to={routes.auth.level_edit.path.replace(
+											':levelId',
+											level.id,
+										)}
 										icon={faPencilAlt}
 										size="2x"
 									/>
@@ -327,11 +350,7 @@ const LevelAI = ({
 						) : (
 							/* Interface de code sans les tabs */
 							<LineInterface
-								defaultContent={
-									progression?.data.code
-										? progression.data.code
-										: level.initialCode
-								}
+								initialContent={initialCode}
 								handleChange={lineInterfaceContentChanges}
 							/>
 						)}

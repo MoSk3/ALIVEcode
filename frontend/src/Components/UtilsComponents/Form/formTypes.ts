@@ -1,4 +1,5 @@
 import { AxiosResponse } from "axios";
+import { AnyRecord } from "dns";
 
 export type FormProps = {
 	name: string;
@@ -6,6 +7,7 @@ export type FormProps = {
 	action: 'POST' | 'PATCH' | 'DELETE';
 	onSubmit?: (response: AxiosResponse<any>) => void;
 	inputGroups: Array<InputGroup>;
+	alterFormValues?: (formValues: any) => any;
 };
 
 export type InputGroup = {
