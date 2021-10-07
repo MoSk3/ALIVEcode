@@ -10,6 +10,8 @@ import CardContainer from '../../../Components/UtilsComponents/CardContainer/Car
 import { Row } from 'react-bootstrap';
 import styled from 'styled-components';
 import AboutCard from '../../../Components/UtilsComponents/Cards/AboutCard/AboutCard';
+import { useTranslation } from 'react-i18next';
+import GamepadAlive from '../../../Components/Gamepad/GamepadAlive';
 
 
 const StyledCenteredContainer = styled(CenteredContainer)`
@@ -22,6 +24,7 @@ const StyledCenteredContainer = styled(CenteredContainer)`
 `;
 
 const AccountPage = () => {
+	const { t } = useTranslation();
 	const { user } = useContext(UserContext);
 	const percentage = 33;
 	const percentageIOT = 77;
@@ -52,11 +55,14 @@ const AccountPage = () => {
 								
 										{user instanceof Professor && (
 											<>
-												
-												<h1 defaultValue={user.firstName} />
-										
-												<h1 defaultValue={user.lastName} />
-												
+												<label>Nom</label>
+												<br />
+												<input defaultValue={user.firstName} />
+												<br />
+												<label>Nom de famille</label>
+												<br />
+												<input defaultValue={user.lastName} />
+												<br />
 											</>
 										)}
 										<div  className="text-left col-sm-6">
@@ -83,11 +89,12 @@ const AccountPage = () => {
 						<CardContainer title="Avancement">
 							
 							<Row>
-								<h3 className="text-left col-sm-5">Quiz: 0/10</h3>
-								<h3 className="text-left col-sm-7">Récompenses: 10/40</h3>
-								<h3 className="text-left col-sm-5">Status: Noob</h3>
-								<h3 className="text-left col-sm-7">Rank #1</h3>
-								<h3 className="text-left col-sm-5">Posts: 0</h3>
+								<h3 className="text-left col-sm-5">
+									{t('user.quiz')} 0/10</h3>
+								<h3 className="text-left col-sm-7">{t('user.reward')} 10/40</h3>
+								<h3 className="text-left col-sm-5">{t('user.status')} Noob</h3>
+								<h3 className="text-left col-sm-7">{t('user.rank')} #1</h3>
+								<h3 className="text-left col-sm-5">{t('user.posts')} 0</h3>
 								<h3 className="text-left col-sm-7">Autre</h3>
 							</Row>
 						</CardContainer>
@@ -120,7 +127,7 @@ const AccountPage = () => {
 			</StyledCenteredContainer>
 
 			<StyledCenteredContainer>
-				<CardContainer title="Recompenses" >
+				<CardContainer title={t('user.rewardTitle')} >
 					<Row style={{ padding: '20px' , }}>
 						<div style={{ paddingRight: '20px' , }}>
 							<img height={100} src="https://i.imgur.com/xkH6wCg.png" />
@@ -142,9 +149,11 @@ const AccountPage = () => {
 						</div>
 					</Row>
 				</CardContainer>
+				<GamepadAlive></GamepadAlive>
 			</StyledCenteredContainer>
 		</>
 	);
 };
 
 export default AccountPage;
+

@@ -257,5 +257,14 @@
 				"paragraph4": "Évidemment, les réseaux de neurones sont bien plus complexes que cela, et c’est pourquoi un cours à ce sujet sera bientôt disponible. Reste à l’affût!"
 			}
 		}
+	},
+	"user":{
+		"quiz": "Quiz : ",
+		"status": "Status : ",
+		"posts": "Posts : ",
+		"reward": "Récompenses : ",
+		"rank": "Rank : ",
+		"rewardTitle": "Récompenses"
+
 	}
 }

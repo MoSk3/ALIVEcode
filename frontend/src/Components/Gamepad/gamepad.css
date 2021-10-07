@@ -1,0 +1,58 @@
+.container {
+    position: relative;
+    width:300px;
+
+
+  }
+
+  
+.container .btnA {
+    position: absolute;
+    top: 161px;
+    left: 383px;
+  }
+  .container .btnB {
+    position: absolute;
+    top: 132px;
+    left: 412px;
+  }
+  .container .btnX {
+    position: absolute;
+    top: 122px;
+    left: 342px;
+  }
+  .container .btnY {
+    position: absolute;
+    top: 95px;
+    left: 370px;
+  }
+  .container .btnStart {
+    position: absolute;
+    top: 120px;
+    left: 250px;
+  }
+
+
+  .button {
+    transition: transform .25s ease-out;
+    font-size: 18px;
+    text-align: center;
+    cursor: pointer;
+    outline: none;
+    color: #fff;
+    background-color: #000000;   
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 5px #999;
+    word-wrap: break-word;
+    max-width: 100%;
+   }
+
+   .button:hover {background-color: #000000}
+      
+   .push {
+    background-color: #000000; 
+    box-shadow: 0 0px #666;
+    transform: translateY(5px);
+   }
+  
