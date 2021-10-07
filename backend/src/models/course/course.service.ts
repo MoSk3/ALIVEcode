@@ -26,16 +26,13 @@ export class CourseService {
     });
     course.creator = professor;
 
-    // If a classroom is specified, add the course to the classroom
-    console.log(createCourseDto);
-
     course = await this.courseRepository.save(course);
 
+    // If a classroom is specified, add the course to the classroom
     if (createCourseDto.classId) {
       const classroom = await this.classroomRepo.findOne(createCourseDto.classId, { relations: ['courses'] });
       if (!classroom) throw new HttpException('Classroom not found', HttpStatus.NOT_FOUND);
       classroom.courses.push(course);
-      console.log(classroom.courses);
       await this.classroomRepo.save(classroom);
     }
     return course;

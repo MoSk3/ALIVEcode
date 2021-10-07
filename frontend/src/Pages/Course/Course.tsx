@@ -97,10 +97,13 @@ const Course = (props: CourseProps) => {
 		setCourse(plainToClass(CourseModel, course));
 	};
 
+	const canEdit = course?.creator.id === user?.id;
+
 	const contextValue: CourseContentValues = {
 		course,
 		section,
 		activity,
+		canEdit,
 		loadActivity,
 		addSection,
 		addActivity,

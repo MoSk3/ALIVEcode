@@ -20,7 +20,7 @@ import { Form } from 'react-bootstrap';
  */
 const ActivityContent = (props: ActivityContentProps) => {
 	const { theme } = useContext(ThemeContext);
-	const { activity, saveActivityContent, saveActivity } =
+	const { activity, saveActivityContent, saveActivity, canEdit } =
 		useContext(CourseContext);
 	const [editMode, setEditMode] = useState(false);
 	const [name, setName] = useState<string>('');
@@ -50,7 +50,7 @@ const ActivityContent = (props: ActivityContentProps) => {
 								{!editingName ? (
 									<div
 										className="activity-header-title"
-										onClick={() => setEditingName(true)}
+										onClick={() => editMode && setEditingName(true)}
 									>
 										{activity.name}
 									</div>
@@ -73,38 +73,36 @@ const ActivityContent = (props: ActivityContentProps) => {
 										}}
 									/>
 								)}
-								<IconButton
-									icon={editMode ? faCheckCircle : faPencilAlt}
-									onClick={() => setEditMode(!editMode)}
-									size="2x"
-								/>
+								{canEdit && (
+									<IconButton
+										icon={editMode ? faCheckCircle : faPencilAlt}
+										onClick={() => setEditMode(!editMode)}
+										size="2x"
+									/>
+								)}
 							</div>
 							<div>
-								{activity.content?.data ||
-								(activity.levels && activity.levels.length > 0) ? (
+								{canEdit && editMode ? (
+									<MDEditor
+										onSave={saveActivityContent}
+										defaultValue={defaultMDValue}
+									/>
+								) : activity.content?.data ||
+								  (activity.levels && activity.levels.length > 0) ? (
 									<>
-										{editMode ? (
-											<MDEditor
-												onSave={saveActivityContent}
-												defaultValue={defaultMDValue}
-											></MDEditor>
-										) : (
-											<>
-												{activity.content && (
-													<ReactMarkdown>{activity.content.data}</ReactMarkdown>
-												)}
-												{activity.levels &&
-													activity.levels.map((a, idx) => (
-														<div key={idx} style={{ position: 'relative' }}>
-															<Level
-																level={a.level}
-																type={a.level.getType()}
-																editMode={false}
-															></Level>
-														</div>
-													))}
-											</>
+										{activity.content && (
+											<ReactMarkdown>{activity.content.data}</ReactMarkdown>
 										)}
+										{activity.levels &&
+											activity.levels.map((a, idx) => (
+												<div key={idx} style={{ position: 'relative' }}>
+													<Level
+														level={a.level}
+														type={a.level.getType()}
+														editMode={false}
+													></Level>
+												</div>
+											))}
 									</>
 								) : (
 									<p>Empty activity</p>

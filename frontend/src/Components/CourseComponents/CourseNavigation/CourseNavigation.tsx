@@ -6,7 +6,6 @@ import CourseSection from '../CourseSection/CourseSection';
 import useRoutes from '../../../state/hooks/useRoutes';
 import { ThemeContext } from '../../../state/contexts/ThemeContext';
 import Link from '../../UtilsComponents/Link/Link';
-import { UserContext } from '../../../state/contexts/UserContext';
 import FormModal from '../../UtilsComponents/FormModal/FormModal';
 import Form from '../../UtilsComponents/Form/Form';
 import { Section } from '../../../Models/Course/section.entity';
@@ -18,9 +17,8 @@ import { plainToClass } from 'class-transformer';
  * @author MoSk3
  */
 const CourseNavigation = (props: CourseNavigationProps) => {
-	const { course, addSection } = useContext(CourseContext);
+	const { course, addSection, canEdit } = useContext(CourseContext);
 	const { theme } = useContext(ThemeContext);
-	const { user } = useContext(UserContext);
 	const { routes, goTo } = useRoutes();
 
 	const [openModalSection, setOpenModalSection] = useState(false);
@@ -42,19 +40,21 @@ const CourseNavigation = (props: CourseNavigationProps) => {
 							{course.sections.map((s, idx) => (
 								<CourseSection key={idx} section={s} />
 							))}
-							<Link
-								style={{ textAlign: 'center' }}
-								onClick={() => setOpenModalSection(true)}
-								dark
-								block
-							>
-								New section
-							</Link>
+							{canEdit && (
+								<Link
+									style={{ textAlign: 'center' }}
+									onClick={() => setOpenModalSection(true)}
+									dark
+									block
+								>
+									New section
+								</Link>
+							)}
 						</>
 					) : (
 						<div style={{ textAlign: 'center' }}>
 							<label>There are no sections in this course</label>
-							{user?.id === course.creator.id && (
+							{canEdit && (
 								<Link onClick={() => setOpenModalSection(true)} dark block>
 									New section
 								</Link>

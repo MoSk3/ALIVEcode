@@ -7,6 +7,7 @@ export type CourseContentValues = {
 	course?: Course;
 	section?: Section;
 	activity?: Activity;
+	canEdit: boolean;
 	addSection: (section: Section) => void;
 	loadActivity: (section: Section, activity: Activity) => any;
 	addActivity: (section: Section, activity: Activity) => void;
@@ -15,6 +16,7 @@ export type CourseContentValues = {
 };
 
 export const CourseContext = createContext<CourseContentValues>({
+	canEdit: false,
 	loadActivity: (section: Section, activity: Activity) => {},
 	addSection: (section: Section) => {},
 	addActivity: (section: Section, activity: Activity) => {},

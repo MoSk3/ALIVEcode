@@ -16,7 +16,8 @@ import LoadingScreen from '../../UtilsComponents/LoadingScreen/LoadingScreen';
 const CourseSection = ({ section }: CourseSectionProps) => {
 	const [open, setOpen] = useState(false);
 	const [loading, setLoading] = useState(false);
-	const { loadActivity, addActivity, course } = useContext(CourseContext);
+	const { loadActivity, addActivity, course, canEdit } =
+		useContext(CourseContext);
 
 	const toggleOpenSection = async () => {
 		if (!course) return;
@@ -41,7 +42,9 @@ const CourseSection = ({ section }: CourseSectionProps) => {
 			<Collapse in={open} timeout={500}>
 				<div id={`section-${section.name}`} className="course-section-body">
 					{loading && open && <LoadingScreen size="3x" relative />}
-					{!section.activities || section.activities?.length === 0 ? (
+
+					{canEdit &&
+					(!section.activities || section.activities?.length === 0) ? (
 						<Link
 							dark
 							onClick={() => {
@@ -68,7 +71,7 @@ const CourseSection = ({ section }: CourseSectionProps) => {
 									{a.name}
 								</div>
 							))}
-							{
+							{canEdit && (
 								<Link
 									dark
 									onClick={() => {
@@ -84,7 +87,7 @@ const CourseSection = ({ section }: CourseSectionProps) => {
 								>
 									Add an activity
 								</Link>
-							}
+							)}
 						</>
 					)}
 				</div>
