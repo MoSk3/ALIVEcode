@@ -263,11 +263,14 @@ const LevelAlive = ({
 								/>
 							)}
 						</Row>
+						<h1>COUUUUUUUUUUUUUUUUCOUUUUUUUUUUUUUUU</h1>
+
 						<Row style={{ height: '40%' }}>
 							<Cmd ref={cmdRef}></Cmd>
 						</Row>
 					</Col>
 				</Row>
+
 				<FormModal
 					title={t('form.level.PATCH.title')}
 					onSubmit={res => {
@@ -339,6 +342,7 @@ const LevelAlive = ({
 					{t('msg.auth.signin')}
 				</Button>
 			</Modal>
+
 		</>
 	);
 };

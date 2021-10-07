@@ -52,14 +52,11 @@ const AccountPage = () => {
 								
 										{user instanceof Professor && (
 											<>
-												<label>Nom</label>
-												<br />
-												<input defaultValue={user.firstName} />
-												<br />
-												<label>Nom de famille</label>
-												<br />
-												<input defaultValue={user.lastName} />
-												<br />
+												
+												<h1 defaultValue={user.firstName} />
+										
+												<h1 defaultValue={user.lastName} />
+												
 											</>
 										)}
 										<div  className="text-left col-sm-6">
