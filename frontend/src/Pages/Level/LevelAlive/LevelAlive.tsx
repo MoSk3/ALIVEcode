@@ -32,6 +32,7 @@ import $ from 'jquery';
 import { useTranslation } from 'react-i18next';
 import Modal from '../../../Components/UtilsComponents/Modal/Modal';
 import useExecutor from '../../../state/hooks/useExecutor';
+import GamepadAlive from '../../../Components/Gamepad/GamepadAlive';
 
 const LevelAlive = ({
 	level,
@@ -252,7 +253,7 @@ const LevelAlive = ({
 							/>
 						)}
 					</Col>
-					<Col md={6} style={{ resize: 'both', padding: '0' }}>
+					<Col md={6} style={{ resize: 'both', padding: '0' , background:"#0177bc"}}>
 						<Row id="simulation-row" style={{ height: '60%' }}>
 							{executor && (
 								<Simulation
@@ -263,10 +264,11 @@ const LevelAlive = ({
 								/>
 							)}
 						</Row>
-						<h1>COUUUUUUUUUUUUUUUUCOUUUUUUUUUUUUUUU</h1>
 
-						<Row style={{ height: '40%' }}>
+						<Row style={{ height: '40%', content: "center"}}>
 							<Cmd ref={cmdRef}></Cmd>
+							
+							<GamepadAlive></GamepadAlive>
 						</Row>
 					</Col>
 				</Row>

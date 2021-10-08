@@ -1,16 +1,14 @@
-import { render } from "@testing-library/react";
-import React, { useState } from 'react';
-import { KeyboardEvent } from "react";
-import { GamepadProp } from "./gamepad";
 import controller from '../../assets/images/controller.png';
 
 import './gamepad.css';
-import { Col, Container } from "react-bootstrap";
-import AboutCard from "../UtilsComponents/Cards/AboutCard/AboutCard";
+import { Col } from "react-bootstrap";
 import styled from "styled-components";
+import CenteredContainer from "../UtilsComponents/CenteredContainer/CenteredContainer";
 
-
+  
 const StyledDiv = styled(Col)`
+background-color: var(--primary-color);
+
 width: 500px;
 height: 300px;
 
@@ -20,8 +18,16 @@ height: 300px;
 		height: 300px;
 	}
 `;
+const StyledCenteredContainer = styled(CenteredContainer)`
+	padding: 0 0 0 22%;
 
+	.row-prof {
+		margin-top: 10px;
+		margin-bottom: 10px;
+	}
+`;
 const GamepadAlive = () => {
+
     document.body.onkeydown = (e) => {
         if (e.code == 'Space') {
             document.getElementById('btnStart')?.classList.add('push')       
@@ -39,8 +45,6 @@ const GamepadAlive = () => {
             document.getElementById('btnY')?.classList.add('push')       
         }
     }
-
-
 
     document.body.onkeyup = (e) => {
         if (e.code == 'Space') {
@@ -64,65 +68,27 @@ const GamepadAlive = () => {
     }
 
     return (
+        <><StyledCenteredContainer className="container" >
 
-        <><Container className="container-sm">
-<StyledDiv>
+            <StyledDiv>
+
 			<img src={controller} alt= "" />
             
-                <button 
-                className="button btnStart" id="btnStart">Start</button>
+                <button className="button btnStart" id="btnStart">Start</button>
            
-
-          
                 <button className="button btnA" id="btnA">A</button>
-           
-
            
                 <button className="button btnB" id="btnB">B</button>
            
-
-          
                 <button className="button btnX" id="btnX">X</button>
-         
-
            
                 <button className="button btnY" id="btnY">Y</button>
             
-		</StyledDiv>            
+		    </StyledDiv>            
            
-        </Container>
-</>
-
+        </StyledCenteredContainer>
+        </>
     )
-
 };
 
 export default GamepadAlive
-
-
-
-  
-/*const Gamepad = () => {
-  const [state, setState] = useState('');
-    
-  const handler = (event: React.KeyboardEvent<HTMLInputElement>) => {
-      // changing the state to the name of the key
-    // which is pressed
-    setState(event.key);
-  };
-    
-  return (
-    <div>
-      <h1>Hi Geeks!</h1>
-        
-<p>Key pressed is: {state}</p>
-  
-        
-    
-      <input type="text" onKeyPress={(e) => handler(e)} />
-        
-    </div>
-  );
-};
-  
-export default Gamepad;*/
