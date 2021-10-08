@@ -5,6 +5,10 @@ import { InteractiveObject } from '../../../Components/LevelComponents/Simulatio
 import { Shape } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/Shape';
 import { Vector } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/Vector';
 import $ from 'jquery';
+import { BaseLayoutObj } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/ts/typesSimulation';
+import { Serializer } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/ts/Serializer';
+import { makeShapeEditable } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/editMode';
+import { User } from '../../../Models/User/user.entity';
 
 // TODO: robotConnected
 const robotConnected = false;
@@ -24,6 +28,26 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 		dG: 0,
 		dD: 0,
 	};
+
+	public loadLevelLayout(layout: BaseLayoutObj[] | {}) {
+		if (JSON.stringify(layout) === '{}') {
+			this.s.car = this.s.spawnCar(0, 0, 75, 110);
+			console.log('AHAHA');
+		} else {
+			const shapes = Serializer.deserialize(this.s, layout as BaseLayoutObj[]);
+
+			for (const [idx, shape] of Object.entries(shapes)) {
+				this.s.addObjectToScene(shape, idx);
+				makeShapeEditable(shape);
+			}
+
+			console.log(this.s.shapes);
+		}
+		if (this.creator?.id) {
+			this.spawnEditorButton();
+		}
+		this.spawnRobotConnectButton();
+	}
 
 	public init(s: any) {
 		this.s = s;
@@ -81,30 +105,25 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 			);
 		});*/
 
-		try {
-			// Clear la simulation au cas ou ce qu'il y a déjà des voitures ou autres
-			let json_script = JSON.parse($('#leveldata').text());
-
-			if (
-				json_script == null ||
-				json_script === '' ||
-				json_script === '""' ||
-				json_script.length < 100
-			)
-				throw new Error('No level loaded');
-			// Génération du niveau
-			//const level = s.load(json_script, s.creator);
-		} catch (exception) {
-			s.car = s.spawnCar(0, 0, 75, 110);
-
-			// TODO: editor reference
-			//lineInterface.setValue("# Entrer votre code ci-dessous\n\n")
-		}
-
-		if (this.creator) {
-			this.spawnEditorButton();
-		}
-		this.spawnRobotConnectButton();
+		//try {
+		//	// Clear la simulation au cas ou ce qu'il y a déjà des voitures ou autres
+		//	let json_script = JSON.parse($('#leveldata').text());
+		//
+		//	if (
+		//		json_script == null ||
+		//		json_script === '' ||
+		//		json_script === '""' ||
+		//		json_script.length < 100
+		//	)
+		//		throw new Error('No level loaded');
+		//	// Génération du niveau
+		//	//const level = s.load(json_script, s.creator);
+		//} catch (exception) {
+		//	s.car = s.spawnCar(0, 0, 75, 110);
+		//
+		//	// TODO: editor reference
+		//	//lineInterface.setValue("# Entrer votre code ci-dessous\n\n")
+		//}
 	}
 
 	public onStop() {
@@ -146,7 +165,7 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 			if (s.movableShapes[i].originalShape instanceof InteractiveObject) {
 				if (s.movableShapes[i].originalShape.isButton) {
 					// images.red_button
-					s.movableShapes[i].originalShape.setImg(images.red_button);
+					s.movableShapes[i].originalShape.setImg(images.red_button_unpressed);
 				}
 			}
 		}
@@ -161,6 +180,7 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 	}
 
 	public async onRun() {
+		//this.s.canvasCamera.setTarget(this.s.car.shape);
 		super.onRun();
 	}
 
@@ -175,8 +195,10 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 
 		const angleDroit = 90;
 		const car = s.car;
+		console.log(car);
 
 		s.canvasCamera.setTarget(s.car.shape);
+		console.log(s.canvasCamera);
 
 		const validDataStructure = (action: any) => {
 			return (
@@ -474,6 +496,16 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 		this.robotConnectButton.onClick((e: any) => {
 			//connectModal.modal('show')
 		});
+	}
+
+	public saveLayout(s: any) {
+		const shapes = Object.entries(s.shapes)?.flatMap(
+			([_, shape]) => shape,
+		) as Shape[];
+
+		if (shapes === undefined) return null;
+
+		return Serializer.serialize(shapes);
 	}
 }
 

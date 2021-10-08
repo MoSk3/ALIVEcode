@@ -2,19 +2,20 @@
 import { Shape } from './Shape';
 import { FixedObject } from './FixedObject';
 import { FixedTextObject } from './FixedTextObject';
-import { Obstacle } from './Obstacle';
-import { Road } from './Road';
-import { Terrain } from './Terrain';
-import { InteractiveObject } from './InteractiveObject';
-import { TextObject } from './TextObject';
+import { Obstacle } from './ts/Obstacle';
+import { Road } from './ts/Road';
+import { Terrain } from './ts/Terrain';
+import { Interactive as InteractiveObject } from './ts/Interactive';
+import { TextObject } from './ts/TextObject';
 import { Car } from './Car';
 import { CanvasCamera } from './Camera';
 import { Vector } from './Vector';
-import { loadImages, loadSounds, images } from './assets';
+import { loadAllImages, loadSounds, images } from './assets';
 import { editModeSection } from './editMode';
 import { overlap } from './functions';
 import $ from 'jquery';
 import { PhysicEngine } from '../physicEngine/physicEngine';
+import { Serializer } from './ts/Serializer';
 
 export const sketch = s => {
 	// #region Setup
@@ -31,18 +32,20 @@ export const sketch = s => {
 		if (props.fullscreenDiv)
 			s.fullscreenDiv = $(`.${props.fullscreenDiv}`).first();
 		if (props.canvasDiv) canvasDiv = $(`.${props.canvasDiv}`).first();
+		if (props.onChange) s.onChange = props.onChange;
 	};
 
 	s.preload = () => {
 		//********************************* Images *********************************
 		// Load des images
-		loadImages(s);
+		loadAllImages(s);
 
 		//********************************* Audio **********************************
 		loadSounds(s);
 	};
 
 	s.setup = () => {
+		editModeSection(s);
 		//************************** Setup Canvas **********************************
 
 		s.zoomButton = $('.zoom-button').first();
@@ -85,6 +88,8 @@ export const sketch = s => {
 		};
 
 		if (s.zoomButton) s.zoomButton.click(zoom);
+
+		console.log(canvasDiv);
 
 		width = canvasDiv.width();
 		height = canvasDiv.height();
@@ -186,10 +191,7 @@ export const sketch = s => {
 		//******************************** Autres **********************************
 		// Call la fonction init si elle à été initialisée
 		// (sert à modifier les propriétés de la simulation pour créer divers jeux/expérimentations)
-		if (typeof editModeSection === 'function') {
-			s.editModeSection = editModeSection;
-			s.editModeSection(s);
-		}
+
 		if (s.init) s.init(s);
 
 		s.maxFPS = 30;
@@ -201,6 +203,13 @@ export const sketch = s => {
 
 		// set the physic engine sketch canvas for reference
 		PhysicEngine.s = s;
+
+		//setInterval(() => {
+		//	if (!s.execution && s.creator && s.levelHasChanged) {
+		//		s.onChange();
+		//		s.levelHasChanged = false;
+		//	}
+		//}, 5000);
 
 		s.draw();
 	};
@@ -286,7 +295,11 @@ export const sketch = s => {
 
 			// TODO: save
 			//Save
-			//s.saveConditions();
+			if (s.levelHasChanged) {
+				console.log('level changed, it will be saved automatically soon...');
+				s.onChange(s);
+				s.levelHasChanged = false;
+			}
 
 			// TOUJOURS EN DERNIER DANS DRAW (si pas pause)
 			s.pdt = Date.now();
@@ -589,7 +602,7 @@ export const sketch = s => {
 	};
 
 	s.clickGeneral = () => {
-		s.adjustSelection();
+		if (s.editMode) s.adjustSelection();
 		s.touche1 = null;
 		s.touche2 = null;
 	};
@@ -643,7 +656,6 @@ export const sketch = s => {
 			for (let shape of shapes) {
 				if (shape instanceof FixedObject) continue;
 				if (shape instanceof FixedTextObject) continue;
-
 				// Collisions avac la voiture
 				for (let car of s.cars) {
 					if (shape.isHelp) continue;
@@ -795,31 +807,11 @@ export const sketch = s => {
 	};
 
 	// TODO: Move save conditions
-	/*s.saveConditions = () => {
-        if (s.creator) {
-            if (s.editorText !== editor.getValue()) {
-                s.levelHasChanged = true;
-                s.editorText = editor.getValue();
-            }
-
-            if (s.levelName !== $("#input-level-name").val()) {
-                s.levelHasChanged = true;
-                s.levelName = $("#input-level-name").val();
-            }
-
-            if (s.levelAccess !== $('#liste-acces').val()) {
-                s.levelHasChanged = true;
-                s.levelAccess = $('#liste-acces').val();
-            }
-
-            if (s.levelHasChanged) {
-                $('#saving-status').text('Enregistrement...⏳');
-            }
-
-            if (!s.saving)
-                s.automaticSave();
-        }
-    };*/
+	s.saveConditions = () => {
+		if (s.levelHasChanged) {
+			s.onChange();
+		}
+	};
 	// #endregion
 
 	// #endregion
@@ -1052,10 +1044,18 @@ export const sketch = s => {
 		return shape;
 	};
 
-	s.spawnTerrain = (w, h, frictionCoef = 1, z_index = 0) => {
+	/**
+	 *
+	 * @param {number} w
+	 * @param {number} h
+	 * @param {import('./ts/Terrain').TemplateNamesTerrain} templateName
+	 * @param {number} z_index
+	 * @returns
+	 */
+	s.spawnTerrain = (w, h, templateName, z_index = 0) => {
 		let terrain = new Terrain(
 			s,
-			frictionCoef,
+			templateName,
 			[-w / 2, h / 2],
 			[w / 2, h / 2],
 			[w / 2, -h / 2],
@@ -1101,10 +1101,13 @@ export const sketch = s => {
 	) => {
 		let interaction = new InteractiveObject(
 			s,
-			isCoin,
-			isObjectif,
-			isButton,
-			[-w / 2, h / 2],
+			isCoin
+				? 'collectable'
+				: isObjectif
+				? 'objective'
+				: isButton
+				? 'button'
+				: undefined[(-w / 2, h / 2)],
 			[w / 2, h / 2],
 			[w / 2, -h / 2],
 			[-w / 2, -h / 2],
@@ -1150,7 +1153,7 @@ export const sketch = s => {
 		let shape = s.spawnRect(x, y, w, h, z_index);
 
 		let car = new Car(s, shape);
-		car.shapeId = shape.id;
+		//car.shapeId = shape.id;
 		car.shape.setImg(images.carTop);
 		s.cars.push(car);
 		s.selectedCar = s.cars.length - 1;
@@ -1245,32 +1248,9 @@ export const sketch = s => {
 	};
 
 	s.saveLevel = () => {
-		/*if (!s.execution && s.creator) {
-            if (s.levelHasChanged) {
-                let stringified = s.stringify(editor.getValue().split("\n"));
-                s.save = stringified;
-
-                const data = {
-                    'csrfmiddlewaretoken': csrftoken,
-                    'level_data': s.save,
-                    'levelName': s.levelName,
-                    'levelAccess': s.levelAccess
-                };
-                $.ajax({
-                    type: "POST",
-                    url,
-                    data,
-                    success: function (data) {
-                        // console.log(data)
-                    }
-                });
-
-                s.levelHasChanged = false;
-                $('#saving-status').text('Niveau sauvegardé ✔');
-            }
-        }*/
+		return Serializer.serialize(Object.values(s.shapes).flat(1));
 	};
-
+	/*
 	s.load = data => {
 		s.clear();
 		let json = JSON.parse(data, (key, value) => {
@@ -1393,10 +1373,11 @@ export const sketch = s => {
 
 		// TODO: change this thing
 		/*if (!s.progression)
-            editor.setValue(json["initial_code"].join("\n"));*/
+            editor.setValue(json["initial_code"].join("\n"));
 
 		return json;
 	};
+	*/
 
 	s.clear = () => {
 		s.shapes = {};
@@ -1421,25 +1402,23 @@ export const sketch = s => {
 	};
 
 	s.resize = (w = null, h = null) => {
-		if (w != null && h != null) {
-			if (w !== s.width || h !== s.height) {
-				s.resizeCanvas(w, h);
-				/*for (const [z_index, shapes] of Object.entries(s.shapes)) {
+		if (w != null && h != null && (w !== s.width || h !== s.height)) {
+			s.resizeCanvas(w, h);
+			/*for (const [z_index, shapes] of Object.entries(s.shapes)) {
                     for (let shape of shapes) {
                         if (shape instanceof FixedObject) shape.resize(oldWidth, oldHeight)
                     }
                 }*/
-				if (s.editorButton != null)
-					s.editorButton.setPos(
-						new Vector(s.width / 2 - 35, -s.height / 2 + 95),
-						false,
-					);
-				if (s.robotConnectButton != null)
-					s.robotConnectButton.setPos(
-						new Vector(s.width / 2 - 35, -s.height / 2 + 35),
-						false,
-					);
-			}
+			if (s.editMode)
+				s.editorButton?.setPos(
+					new Vector(s.width / 2 - 35, -s.height / 2 + 95),
+					false,
+				);
+			if (s.robotConnectButton != null)
+				s.robotConnectButton.setPos(
+					new Vector(s.width / 2 - 35, -s.height / 2 + 35),
+					false,
+				);
 		}
 		if (canvasDiv.height() * (s.width / s.height) < canvasDiv.width()) {
 			jCanvas.css('height', '100%');

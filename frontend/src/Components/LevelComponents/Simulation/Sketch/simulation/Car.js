@@ -1,8 +1,8 @@
 import { PhysicEngine } from '../physicEngine/physicEngine';
-import { Obstacle } from './Obstacle';
-import { Road } from './Road';
-import { Terrain } from './Terrain';
-import { InteractiveObject } from './InteractiveObject';
+import { Obstacle } from './ts/Obstacle.ts';
+import { Road } from './ts/Road';
+import { Terrain } from './ts/Terrain';
+import { Interactive } from './ts/Interactive';
 import { Vector } from './Vector';
 import { images } from './assets';
 
@@ -13,13 +13,15 @@ export class Car {
 		this.s = s;
 		this.shape = shape;
 		this.initShape();
+		this.shape.shapeType = 'Car';
 		this.dir = new Vector(0, 0);
 
 		this.initialSpeed = 0;
 
-		this.#speed = this.initialSpeed;
+		this.#speed = 0;
 
-		this.rotateSpeed = 2;
+		this.rotateSpeed = 2; // degrees / second
+		this.turning = false;
 
 		this.initialRotateSpeed = this.rotateSpeed;
 		this.initialPos = shape.pos.clone();
@@ -101,7 +103,7 @@ export class Car {
 				}
 			}
 			// Interactions avec un interactiveObject
-			else if (shapeInteraction instanceof InteractiveObject) {
+			else if (shapeInteraction instanceof Interactive) {
 				// Les coins
 				if (shapeInteraction.isCoin) {
 					this.s.playSound(this.s.newCoinCollectedAudio(), 0.3);
@@ -235,11 +237,11 @@ export class Car {
 			);
 
 			//console.log(`%c${this.dir.y * this.speed}🎉🎉🎉`, 'color:orange;')
-			console.log(this.speed);
-			console.log(
-				`%c${[resultingForce.x, resultingForce.y]}🎉🎉🎉`,
-				'color:orange;',
-			);
+			//console.log(this.speed);
+			//console.log(
+			//	`%c${[resultingForce.x, resultingForce.y]}🎉🎉🎉`,
+			//	'color:orange;',
+			//);
 			// #endregion
 
 			/*
@@ -259,7 +261,15 @@ export class Car {
 				this.shape.setImg(images.carTopD);
 			}
 		}
-		if (this.rotationGoal != null) {
+		if (this.turning) {
+			const step =
+				this.rotateSpeed *
+				this.rotationDir *
+				(this.s.maxFPS / this.s.frameRate());
+
+			this.shape.setRotation(this.rotationBeforeTurn + step);
+
+			/*
 			const goal = this.rotationGoal;
 			const speed =
 				this.rotateSpeed *
@@ -286,6 +296,7 @@ export class Car {
 					tempCallback();
 				}
 			}
+			*/
 		}
 
 		/*
@@ -363,13 +374,26 @@ export class Car {
 		this.dir.y = -1;
 	}
 
-	turn(angle, callback) {
+	/**
+	 *
+	 * @param {number} angle
+	 * @returns
+	 */
+	getTimeToRotate(angle) {
+		return Math.abs(angle / this.rotateSpeed);
+	}
+
+	turn(angle) {
 		this.shape.setImg(angle > 0 ? images.carTopD : images.carTopG);
 		this.rotationBeforeTurn = this.shape.rotation.x;
-		this.rotationGoal = angle;
 		this.rotationAmount = 0;
 		this.rotationDir = angle < 0 ? -1 : 1;
-		this.callback = callback;
+		this.turning = true;
+	}
+
+	stopRotate() {
+		this.turning = false;
+		this.shape.setImg(images.carTop);
 	}
 
 	stop(decollisionShape = null) {
@@ -397,6 +421,7 @@ export class Car {
 		this.shape.setRotation(this.initialRotation.x);
 		this.shape.setImg(images.carTop);
 		this.rotationGoal = null;
+		this.turning = false;
 		this.rotationDir = 0;
 		this.rotationAmount = 0;
 		if (this.s.canvasCamera != null)

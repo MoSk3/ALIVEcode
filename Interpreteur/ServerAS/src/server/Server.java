@@ -11,7 +11,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 public class Server {
 
-    public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
+    public static void main(String[] args) throws IOException {
 
         Dotenv env = Dotenv.configure()
                 .directory("./.env")

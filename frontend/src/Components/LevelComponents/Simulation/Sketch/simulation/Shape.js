@@ -2,11 +2,11 @@ import { Vector } from './Vector';
 import { dist } from './functions';
 
 export class Shape {
-	templateName = '';
 	constructor(s, ...points) {
 		this.s = s;
 		this.id = s.id;
 		s.id++;
+		this.imgName = '';
 		this.class = 'Shape';
 		this.rotation = new Vector(0, 0);
 		this.zIndex = 0;
@@ -29,6 +29,7 @@ export class Shape {
 		this.carInteraction = false;
 		this.colliding = [];
 		this.children = [];
+		this.bounds = [];
 		for (const point of points) {
 			this.vertices.push(new Vector(point[0], point[1]));
 		}
@@ -38,12 +39,7 @@ export class Shape {
 		this.rememberBounds();
 	}
 
-	loadFromTemplate() {
-		throw new Error('must be override by a subclass');
-	}
-
 	setBounds() {
-		this.bounds = [];
 		this.middle = new Vector(
 			(this.calcLeftX() + this.calcRightX()) / 2,
 			(this.calcTopY() + this.calcBottomY()) / 2,
@@ -70,9 +66,11 @@ export class Shape {
 		this.forward.substract(this.pos);
 	}
 
-	setImg(img) {
+	setImg([imgName, img]) {
 		//if (!this.isRect()) throw new ShapeException('Cannot apply an image to a shape that is not a rectangle')
 		this.img = img;
+		this.imgName = imgName;
+		//console.log(img);
 		// TODO: images saving
 		/*for (const [imgName, img] of Object.entries(this.s.dictImages)) {
 			if (img === this.img) {
@@ -82,9 +80,10 @@ export class Shape {
 		}*/
 	}
 
-	setTexture(img, res = 1) {
+	setTexture([imgName, img], res = 1) {
 		//if (!this.isRect()) throw new ShapeException('Cannot apply an image to a shape that is not a rectangle')
 		this.img = img;
+		this.imgName = imgName;
 
 		// TODO : redo image saving
 		/*for (const [imgName, img] of Object.entries(this.s.dictImages)) {
@@ -1068,7 +1067,7 @@ export class Shape {
 
 export class ShapeException extends Error {}
 
-const Obstacle = require('./Obstacle').Obstacle;
+const Obstacle = require('./Obstacle deprecated').Obstacle;
 const Road = require('./Road').Road;
-const Terrain = require('./Terrain').Terrain;
+const Terrain = require('./Terrain deprecated').Terrain;
 const InteractiveObject = require('./InteractiveObject').InteractiveObject;
