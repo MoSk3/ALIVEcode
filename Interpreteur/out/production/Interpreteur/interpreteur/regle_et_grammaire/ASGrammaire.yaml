@@ -17,23 +17,24 @@ Ajouter:
     PLUS: '\+'
     POW: '\^'
     MUL: '\*'
-    MOINS: "-"
+    MOINS: '-'
     DIV: '\/'
     DIV_ENTIERE: '\/\/'
-    MOD: "%"
-    PIPE: "[|]"
+    MOD: '%'
+    PIPE: '[|]'
 
   assignements:
-    ASSIGNEMENT: "="
-    ASSIGNEMENT_FLECHE: "<-"
+    ASSIGNEMENT: '='
+    ASSIGNEMENT_FLECHE: '<-'
     PLUS_ASSIGNEMENT: '\+='
     POW_ASSIGNEMENT: '\^='
     MUL_ASSIGNEMENT: '\*='
-    MOINS_ASSIGNEMENT: "-="
+    MOINS_ASSIGNEMENT: '-='
     DIV_ASSIGNEMENT: '\/='
-    DIV_ENTIERE_ASSIGNEMENT: '\/\/='
-    MOD_ASSIGNEMENT: "[%]="
-    PIPE_ASSIGNEMENT: '\|='
+    DIV_ENTIERE_ASSIGNEMENT : '\/\/='
+    MOD_ASSIGNEMENT : '[%]='
+    PIPE_ASSIGNEMENT : '\|='
+
 
   # fonction
   fonctions:
@@ -41,7 +42,7 @@ Ajouter:
     STRUCTURE: '\bstructure\b'
     GET: '\bget\b'
     SET: '\bset\b'
-    FLECHE: "->"
+    FLECHE: '->'
 
   # structure
 
@@ -66,13 +67,15 @@ Ajouter:
     CONTINUER: '\bcontinuer\b'
     RETOURNER: '\bretourner\b'
 
+
   # fin
   FIN: '\bfin\b'
+
 
   type_de_donnees:
     ENTIER: '\d+'
     DECIMAL: '\d+\.\d+|\d+\.(?!\.)|(?<!\.)\.\d+'
-    TEXTE: '".*?"|''.*?'''
+    TEXTE: "\".*?\"|'.*?'"
     BOOLEEN: '\bvrai\b|\bfaux\b'
     NUL: '\bnul\b'
 
@@ -89,13 +92,14 @@ Ajouter:
     NOM_TOUT: '\btout\b'
     NOM_RIEN: '\brien\b'
 
+
   comparaison:
-    EGAL: "(={2})|(==)"
-    PAS_EGAL: "!="
-    PLUS_GRAND: ">"
-    PLUS_PETIT: "<"
-    PLUS_GRAND_EGAL: ">="
-    PLUS_PETIT_EGAL: "<="
+    EGAL: '(={2})|(==)'
+    PAS_EGAL: '!='
+    PLUS_GRAND: '>'
+    PLUS_PETIT: '<'
+    PLUS_GRAND_EGAL: '>='
+    PLUS_PETIT_EGAL: '<='
 
   porte_logique:
     ET: '\bet\b'
@@ -104,28 +108,39 @@ Ajouter:
   PAS: '\bpas\b'
 
   # separateur
-  PARENT_OUV: "[(]"
-  PARENT_FERM: "[)]"
+  PARENT_OUV: '[(]'
+  PARENT_FERM: '[)]'
 
   # iterateur
   CROCHET_OUV: '\['
   CROCHET_FERM: '\]'
 
   # liste
-  BRACES_OUV: "[{]"
-  BRACES_FERM: "[}]"
+  BRACES_OUV: '[{]'
+  BRACES_FERM: '[}]'
 
   # sous-categorie
   # le point indique aussi un nombre decimal
   POINT: '\.'
-  VIRGULE: "[,]"
-  DEUX_POINTS: "[:]"
-  POINT_VIRGULE: "[;]"
+  VIRGULE: '[,]'
+  DEUX_POINTS: '[:]'
+  POINT_VIRGULE: '[;]'
 
   NOM_VARIABLE: '((\p{L}|_)+(\d+)*(\p{L})*_*\.?)+'
 
 Ignorer:
   - '\s+'
-  - "#.*"
+  - '#.*'
   - '\(:.*:\)'
   - '\(-:.*:-\)'
+
+
+
+
+
+
+
+
+
+
+

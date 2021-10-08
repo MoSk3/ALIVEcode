@@ -28,7 +28,6 @@ public record ASModuleManager(Executeur executeurInstance) {
         MODULE_FACTORY.put(nomModule, moduleFactory);
     }
 
-
     public ASModule getModuleBuiltins() {
         return MODULE_FACTORY.get(EnumModule.builtins).charger(executeurInstance);
     }
@@ -41,6 +40,7 @@ public record ASModuleManager(Executeur executeurInstance) {
                 .stream()
                 .map(ASObjet.Texte::new)
                 .toArray(ASObjet.Texte[]::new))));
+
     }
 
     public void utiliserModule(String nomModule) {

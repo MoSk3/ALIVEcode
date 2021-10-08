@@ -41,7 +41,10 @@ import Modal from '../../../Components/UtilsComponents/Modal/Modal';
 import useExecutor from '../../../state/hooks/useExecutor';
 import LevelTable from '../../../Components/LevelComponents/LevelTable/LevelTable';
 import LevelGraph from '../../../Components/LevelComponents/LevelGraph/LevelGraph';
-import Regression from '../../../Components/LevelComponents/LevelGraph/Regression';
+import PolyOptimizer from './artificial_intelligence/PolyOptmizer';
+import RegressionOptimizer from './artificial_intelligence/RegressionOptimizer';
+import DataTypes from '../../../Components/LevelComponents/LevelGraph/DataTypes';
+import PolyRegression from '../../../Components/LevelComponents/LevelGraph/PolyRegression';
 
 /**
  * Ai level page. Contains all the components to display and make the ai level functionnal.
@@ -53,7 +56,9 @@ import Regression from '../../../Components/LevelComponents/LevelGraph/Regressio
  * @param {(level: LevelAIModel) => void} setLevel callback used to modify the level in the parent state
  * @param {(progression: LevelProgression) => void} setProgression callback used to modify the level progression in the parent state
  *
- * @author MoSk3
+ * @author Félix
+ * @author Enric
+ * @author Mathis
  */
 const LevelAI = ({
 	level,
@@ -90,15 +95,15 @@ const LevelAI = ({
 
 	//Set the data for the level
 	const [data] = useState(dataAI);
-	let func: Regression;
-	const mainDataset = {
+	let func: PolyRegression;
+	const mainDataset: DataTypes = {
 		type: 'scatter',
 		label: "Distance parcourue en fonction de l'énergie",
-		data: data,
+		data,
 		backgroundColor: 'var(--contrast-color)',
 		borderWidth: 1,
 	};
-	const initialDataset = Object.freeze({
+	const initialDataset: DataTypes = Object.freeze({
 		type: 'scatter',
 		label: "Distance parcourue en fonction de l'énergie",
 		data: [{}],
@@ -111,16 +116,21 @@ const LevelAI = ({
 		datasets: datasets,
 	});
 
+	/**
+	 * Resets the datasets array and the data shown on the graph.
+	 */
 	function resetGraph() {
 		datasets = [initialDataset];
 		setChartData({
 			datasets: datasets,
 		});
-		console.log('Données reset : ');
-		console.log(chartData);
 	}
 
-	function setDataOnGraph(newData: any): void {
+	/**
+	 * Adds a new dataset to the datasets array.
+	 * @param newData the new dataset to add.
+	 */
+	function setDataOnGraph(newData: DataTypes): void {
 		datasets.push(newData);
 		setChartData({
 			datasets: datasets,
@@ -133,27 +143,68 @@ const LevelAI = ({
 
 	/**
 	 * Sets the data of the graph to the level's data and displays it on the screen
-	 *
 	 */
 	function showDataCloud(): void {
-		console.log(chartData);
 		setDataOnGraph(mainDataset);
-		console.log(chartData);
 	}
 
+	/**
+	 * Replaces the func with a new one with the specified parameters.
+	 * @param a the param a of a polynomial regression.
+	 * @param b the param b of a polynomial regression.
+	 * @param c the param c of a polynomial regression.
+	 * @param d the param d of a polynomial regression.
+	 */
 	function createRegression(a: number, b: number, c: number, d: number) {
-		func = new Regression(a, b, c, d);
+		func = new PolyRegression(a, b, c, d);
 	}
 
+	/**
+	 * Generates the regression's points and shows them on the graph.
+	 */
 	function showRegression() {
 		const points = func?.generatePoints();
 		setDataOnGraph(points);
-		console.log(chartData);
 	}
 
+	/**
+	 * Creates the new Regression and displays it on the graph.
+	 * @param a the param a of a polynomial regression.
+	 * @param b the param b of a polynomial regression.
+	 * @param c the param c of a polynomial regression.
+	 * @param d the param d of a polynomial regression.
+	 */
 	function createAndShowReg(a: number, b: number, c: number, d: number): void {
 		createRegression(a, b, c, d);
 		showRegression();
+	}
+
+	/**
+	 * Creates a new Regression that fits as close as possible the data and shows it on
+	 * the graph.
+	 * @param lr the learning rate for the optimization algorithm.
+	 */
+	function optimizeRegression(lr: number, epoch: number): void {
+		const optimizer: PolyOptimizer = new PolyOptimizer(
+			func,
+			lr,
+			epoch,
+			RegressionOptimizer.costMSE,
+		);
+		func = optimizer.optimize(data);
+		console.log(optimizer.getError());
+		console.log(func);
+		showRegression();
+	}
+
+	/**
+	 * Evaluates the model with the value specified and returns the result.
+	 * @param x the input of the model.
+	 * @returns the output of the model.
+	 */
+	function evaluate(x: number): number {
+		console.log(memorizedChartData);
+		return func.compute(x);
 	}
 
 	useEffect(() => {
@@ -162,7 +213,13 @@ const LevelAI = ({
 
 		setExecutor(
 			new LevelAIExecutor(
-				{ createAndShowReg, showDataCloud, resetGraph },
+				{
+					createAndShowReg,
+					showDataCloud,
+					resetGraph,
+					optimizeRegression,
+					evaluate,
+				},
 				level.name,
 				user || undefined,
 			),

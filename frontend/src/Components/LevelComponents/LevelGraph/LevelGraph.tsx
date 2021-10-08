@@ -1,9 +1,5 @@
-import { useTranslation } from 'react-i18next';
-import { useState, useEffect } from 'react';
 import { LevelGraphProps, StyledLevelGraph } from './LevelGraphTypes';
-import { Scatter, Line } from 'react-chartjs-2';
-import FillContainer from '../../UtilsComponents/FillContainer/FillContainer';
-import { themes } from '../../../state/contexts/ThemeContext';
+import { Scatter } from 'react-chartjs-2';
 import { Chart } from 'react-chartjs-2';
 import React from 'react';
 
@@ -18,8 +14,6 @@ import React from 'react';
  * @returns the graph itself.
  */
 const LevelGraph = React.memo((props: LevelGraphProps) => {
-	const { t } = useTranslation();
-
 	Chart.defaults.font.size = 12;
 	Chart.defaults.font.weight = 'bold';
 	Chart.defaults.color = 'black';
