@@ -5,6 +5,7 @@ import interpreteur.as.erreurs.ASErreur;
 import interpreteur.data_manager.Data;
 import interpreteur.executeur.Executeur;
 
+import java.util.EmptyStackException;
 import java.util.stream.Stream;
 
 /**
@@ -381,6 +382,9 @@ public class ModuleAI {
                         //  A TERMINER
                     }
                 },
+                /*
+                    Shows the data on the graph as a scatter plot.
+                 */
                 new ASObjet.Fonction("afficherNuage", new ASObjet.Fonction.Parametre[]{
                 }, ASObjet.TypeBuiltin.nulType.asType()) {
                     @Override
@@ -389,6 +393,9 @@ public class ModuleAI {
                         return new Nul();
                     }
                 },
+                /*
+                    Creates a new regression and shows it on the graph,
+                 */
                 new ASObjet.Fonction("creerRegression", new ASObjet.Fonction.Parametre[]{
                         new ASObjet.Fonction.Parametre(
                                 ASObjet.TypeBuiltin.nombre.asType(), "a", null),
@@ -401,13 +408,49 @@ public class ModuleAI {
                 }, ASObjet.TypeBuiltin.nulType.asType()){
                     @Override
                     public ASObjet<?> executer() {
-                        Number a = Math.round(((Number) this.getValeurParam("a").getValue()).doubleValue()*1000)/1000;
-                        Number b = Math.round(((Number) this.getValeurParam("b").getValue()).doubleValue()*1000)/1000;
-                        Number c = Math.round(((Number) this.getValeurParam("c").getValue()).doubleValue()*1000)/1000;
-                        Number d = Math.round(((Number) this.getValeurParam("d").getValue()).doubleValue()*1000)/1000;
+                        double a = ((Number) this.getValeurParam("a").getValue()).doubleValue();
+                        double b = ((Number) this.getValeurParam("b").getValue()).doubleValue();
+                        double c = ((Number) this.getValeurParam("c").getValue()).doubleValue();
+                        double d = ((Number) this.getValeurParam("d").getValue()).doubleValue();
                         executeurInstance.addData(new Data(Data.Id.CREER_REGRESSION)
                                 .addParam(a).addParam(b).addParam(c).addParam(d));
                         return new Nul();
+                    }
+                },
+                /*
+                    Applies an algorithm to optimize the regression with the data.
+                 */
+                new ASObjet.Fonction("optimiserRegression", new ASObjet.Fonction.Parametre[]{
+                        new ASObjet.Fonction.Parametre(
+                                ASObjet.TypeBuiltin.nombre.asType(), "lr", null),
+                        new ASObjet.Fonction.Parametre(
+                                ASObjet.TypeBuiltin.nombre.asType(), "epoch", null)
+                }, ASObjet.TypeBuiltin.nulType.asType()) {
+                    @Override
+                    public ASObjet<?> executer() {
+                        double lr = ((Number) this.getValeurParam("lr").getValue()).doubleValue();
+                        double epoch = ((Number) this.getValeurParam("epoch").getValue()).doubleValue();
+                        executeurInstance.addData(new Data(Data.Id.OPTIMISER_REGRESSION).addParam(lr).addParam(epoch));
+                        return new Nul();
+                    }
+                },
+                new ASObjet.Fonction("evaluer", new ASObjet.Fonction.Parametre[]{
+                        new ASObjet.Fonction.Parametre(
+                                ASObjet.TypeBuiltin.nombre.asType(), "x", null)
+                }, ASObjet.TypeBuiltin.nombre.asType()) {
+                    @Override
+                    public ASObjet<?> executer() {
+                        double x = ((Number) this.getValeurParam("x").getValue()).doubleValue();
+                        executeurInstance.addData(new Data(Data.Id.EVALUER).addParam(x));
+                        double res = 0;
+                        try {
+                            Object obj = executeurInstance.getDataResponse().pop();
+                            if (obj instanceof Double) res = ((Double) obj).doubleValue();
+                            else if (obj instanceof Integer) res = ((Integer) obj).doubleValue();
+                        } catch(EmptyStackException e) {
+                            throw new ASErreur.StopGetInfo(new Data(Data.Id.GET));
+                        }
+                        return new Decimal(res);
                     }
                 }
         }, new ASObjet.Variable[]{});

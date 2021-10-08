@@ -98,18 +98,27 @@ class LevelAIExecutor extends LevelCodeExecutor {
 																----		ARTIFICIAL INTELLIGENCE		----
 													*/
 					case 800:
+						// creerRegression
 						if (params.every((param: any) => typeof param === 'number')) { 
 							this.executableFuncs.createAndShowReg(params[0], params[1], params[2], params[3]);
 						}
 						perform_action(i + 1);
 						break;
 					case 801:
-						
+						// optimiserRegression
+						this.executableFuncs.optimizeRegression(params[0], params[1]);
+						perform_action(i + 1);
 						break;
 					case 802:
+						// afficherNuage
 						this.executableFuncs.showDataCloud();
 						perform_action(i + 1);
 					break;
+					case 803:
+						// evaluer
+						res.push(this.executableFuncs.evaluate(params[0]));
+						perform_action(i + 1);
+						break;
 
 				}
 
