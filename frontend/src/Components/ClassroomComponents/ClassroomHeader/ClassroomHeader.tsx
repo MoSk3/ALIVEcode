@@ -12,6 +12,13 @@ import { useAlert } from 'react-alert';
 import Modal from '../../UtilsComponents/Modal/Modal';
 import { prettyField } from '../../../Types/formatting';
 
+/**
+ * Classroom header that displays the className, the professor and
+ * some actions buttons
+ *
+ * @param classroom Classroom instance
+ * @returns tsx element
+ */
 const ClassroomHeader = ({ classroom }: ClassroomHeaderProps) => {
 	const { user } = useContext(UserContext);
 	const { routes } = useRoutes();

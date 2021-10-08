@@ -15,7 +15,6 @@ import interpreteur.tokens.Token;
 import interpreteur.utils.ArraysUtils;
 import interpreteur.utils.Range;
 
-
 /**
  * @author Mathis Laroche
  */

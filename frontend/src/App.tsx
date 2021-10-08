@@ -148,7 +148,6 @@ const App = () => {
 					if (user) await logout();
 					return Promise.reject(error);
 				}
-				// TODO : remove in production
 				if (
 					error.response &&
 					error.response.data.message === 'Not Authenticated' &&
