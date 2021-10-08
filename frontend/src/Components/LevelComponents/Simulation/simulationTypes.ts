@@ -5,6 +5,8 @@ export type SimulationProps = {
 };
 
 export const StyledSimulation = styled.div`
+	width: 100%;
+
 	.zoom-button {
 		position: absolute;
 		right: 0;

@@ -8,6 +8,59 @@ import { useAlert } from 'react-alert';
 import { useHistory } from 'react-router';
 import { prettyField } from '../../../Types/formatting';
 
+/**
+ * Form used to create or alter a relation in the database that auto-generates the fields depending of the arguments.
+ * The fields can contain enums, error handling and auto-traduction.
+ *
+ * example of a component creating a course:
+ * 	<Form
+ * 	  name='create_course'
+ *    url='url_where_to_make_the_request'
+ * 	  action='POST'
+ * 	  onSubmit={(newPlainCourse) => {
+ * 			// res is the data object of the response object
+ * 			const newCourse: Course = plainToClass(Course, newPlainCourse);
+ *    }}
+ * 		alterFormValues={(formValues) => {
+ * 			// Modify the formValues as pleased and return them:
+ * 			return {classId: '123', course: formValues};
+ *    }}
+ *		inputGroups={[
+ *			{
+ *				name: 'name',
+ *				required: true,
+ *				inputType: 'text',
+ *				minLength: 3,
+ *				maxLength: 25,
+ *			},
+ *			{
+ *				name: 'description',
+ *				inputType: 'text',
+ *				maxLength: 200,
+ *			},
+ *			{
+ *				name: 'subject',
+ *				required: true,
+ *				inputType: 'select',
+ *				selectOptions: COURSE_SUBJECT,
+ *			},
+ *			{
+ *				name: 'access',
+ *				required: true,
+ *				inputType: 'select',
+ *				selectOptions: COURSE_ACCESS,
+ *			},
+ *			{
+ *				name: 'difficulty',
+ *				required: true,
+ *				inputType: 'select',
+ *				selectOptions: COURSE_DIFFICULTY,
+ *			},
+ *    ]}
+ * />
+ *
+ * @author MoSk3
+ */
 const Form = (props: FormProps) => {
 	const { t } = useTranslation();
 	const {
@@ -20,7 +73,8 @@ const Form = (props: FormProps) => {
 	const history = useHistory();
 
 	const onFormSubmit = async (formValues: any) => {
-		if (process.env.DEBUG) console.log(formValues);
+		if (props.alterFormValues) formValues = props.alterFormValues(formValues);
+		if (process.env.REACT_APP_DEBUG) console.log(formValues);
 		try {
 			let res;
 			switch (props.action) {

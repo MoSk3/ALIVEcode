@@ -17,6 +17,15 @@ const StyledButton = styled.button`
 	}
 `;
 
+/**
+ * Styled button with an icon
+ *
+ * @param {() => void} onClick callback called when the button is pressed
+ * @param {string} to url to redirect to on button click
+ * @param {HTMLButtonElement} other HTMLButtonElement props
+ *
+ * @author MoSk3
+ */
 const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
 	(props, ref) => {
 		const { onClick, to, ...other } = props;

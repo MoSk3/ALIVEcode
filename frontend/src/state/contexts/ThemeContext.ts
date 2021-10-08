@@ -17,6 +17,7 @@ export type Theme = {
 		hover: string;
 		background: string;
 		background_rgb: string;
+		background_hover: string;
 		foreground: string;
 		foreground_rgb: string;
 		tableback: string;
@@ -44,6 +45,7 @@ export const themes: { light: Theme; dark: Theme } = {
 			hover: '#00cbe6',
 			background: '#ffffff',
 			background_rgb: '255,255,255',
+			background_hover: '#bfbfbf',
 			foreground: 'black',
 			foreground_rgb: '0,0,0',
 			tableback: '#9ecbff',
@@ -69,6 +71,7 @@ export const themes: { light: Theme; dark: Theme } = {
 			hover: '#00cbe6',
 			background: '#222222',
 			background_rgb: '34,34,34',
+			background_hover: '#292929',
 			foreground: '#f0f6fc',
 			foreground_rgb: '240,246,252',
 			tableback: '#25496f',

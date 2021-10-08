@@ -10,6 +10,11 @@ import useRoutes from '../../../state/hooks/useRoutes';
 import { useHistory } from 'react-router-dom';
 import { useAlert } from 'react-alert';
 
+/**
+ * Form that creates a new classroom in the db and navigates to it
+ *
+ * @author MoSk3
+ */
 const ClassroomForm = (props: ClassroomFormProps) => {
 	const { t } = useTranslation();
 	const { routes } = useRoutes();

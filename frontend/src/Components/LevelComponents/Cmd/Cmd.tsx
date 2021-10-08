@@ -23,6 +23,11 @@ const StyledDiv = styled.div`
 	}
 `;
 
+/**
+ * Styled Cmd element used for console logging the alivescript results
+ *
+ * @author MoSk3
+ */
 const Cmd = React.forwardRef<HTMLDivElement>((props: CmdProps, ref) => {
 	return <StyledDiv ref={ref} />;
 });

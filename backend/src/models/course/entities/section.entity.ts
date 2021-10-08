@@ -1,6 +1,6 @@
 import { Exclude } from 'class-transformer';
-import { IsEmpty, IsNotEmpty } from 'class-validator';
-import { Entity, Column, ManyToOne, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
+import { IsEmpty, IsNotEmpty, Length } from 'class-validator';
+import { Entity, Column, ManyToOne, PrimaryGeneratedColumn, ManyToMany, JoinTable } from 'typeorm';
 import { CourseEntity } from './course.entity';
 import { ActivityEntity } from './activity.entity';
 
@@ -13,11 +13,15 @@ export class SectionEntity {
 
   @IsNotEmpty()
   @Column({ nullable: false })
+  @Length(3, 25)
   name: string;
 
   @ManyToMany(() => ActivityEntity)
-  activities: ActivityEntity[];
+  @JoinTable()
+  @IsEmpty()
+  activities?: ActivityEntity[];
 
   @ManyToOne(() => CourseEntity, course => course.sections, { onDelete: 'CASCADE' })
+  @IsEmpty()
   course: CourseEntity;
 }

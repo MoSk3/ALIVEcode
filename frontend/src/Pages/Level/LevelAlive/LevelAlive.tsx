@@ -1,5 +1,5 @@
 import { LevelAliveProps, StyledAliveLevel } from './levelAliveTypes';
-import { useEffect, useState, useContext, useRef } from 'react';
+import { useEffect, useState, useContext, useRef, useCallback } from 'react';
 import LineInterface from '../../../Components/LevelComponents/LineInterface/LineInterface';
 import { UserContext } from '../../../state/contexts/UserContext';
 import Simulation from '../../../Components/LevelComponents/Simulation/Simulation';
@@ -33,10 +33,23 @@ import { useTranslation } from 'react-i18next';
 import Modal from '../../../Components/UtilsComponents/Modal/Modal';
 import useExecutor from '../../../state/hooks/useExecutor';
 
+/**
+ * Alive level page. Contains all the components to display and make the alive level functionnal.
+ *
+ * @param {LevelAliveModel} level alive level object
+ * @param {boolean} editMode if the level is in editMode or not
+ * @param {LevelProgression} progression the level progression of the current user
+ * @param {string} initialCode the initial code of the level
+ * @param {(level: LevelAliveModel) => void} setLevel callback used to modify the level in the parent state
+ * @param {(progression: LevelProgression) => void} setProgression callback used to modify the level progression in the parent state
+ *
+ * @author MoSk3
+ */
 const LevelAlive = ({
 	level,
 	editMode,
 	progression,
+	initialCode,
 	setLevel,
 	setProgression,
 }: LevelAliveProps) => {
@@ -75,7 +88,7 @@ const LevelAlive = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, level]);
 
-	const saveLevel = async () => {
+	const saveLevel = useCallback(async () => {
 		if (saveTimeout.current) clearTimeout(saveTimeout.current);
 		if (messageTimeout.current) clearTimeout(messageTimeout.current);
 		setSaving(true);
@@ -95,14 +108,14 @@ const LevelAlive = ({
 			}, 5000);
 		}, 500);
 		setLevel(updatedLevel);
-	};
+	}, [level, setLevel]);
 
 	const saveLevelTimed = () => {
 		if (saveTimeout.current) clearTimeout(saveTimeout.current);
 		saveTimeout.current = setTimeout(saveLevel, 2000);
 	};
 
-	const saveProgression = async () => {
+	const saveProgression = useCallback(async () => {
 		if (!user || !progression) return;
 		if (saveTimeout.current) clearTimeout(saveTimeout.current);
 		if (messageTimeout.current) clearTimeout(messageTimeout.current);
@@ -124,7 +137,7 @@ const LevelAlive = ({
 			}, 5000);
 		}, 500);
 		setProgression(updatedProgression);
-	};
+	}, [level.id, progression, setProgression, user]);
 
 	const saveProgressionTimed = () => {
 		if (saveTimeout.current) clearTimeout(saveTimeout.current);
@@ -132,6 +145,7 @@ const LevelAlive = ({
 	};
 
 	useEffect(() => {
+		$(document).off('keydown');
 		$(document).on('keydown', e => {
 			if (e.key === 's' && e.ctrlKey) {
 				e.preventDefault();
@@ -140,7 +154,9 @@ const LevelAlive = ({
 				editMode ? saveLevel() : saveProgression();
 			}
 		});
+	}, [editMode, saveLevel, saveProgression, user]);
 
+	useEffect(() => {
 		return () => {
 			clearTimeout(saveTimeout.current);
 			clearTimeout(messageTimeout.current);
@@ -184,7 +200,10 @@ const LevelAlive = ({
 								level.creator &&
 								user.id === level.creator.id && (
 									<IconButton
-										to={routes.auth.level_edit.path.replace(':id', level.id)}
+										to={routes.auth.level_edit.path.replace(
+											':levelId',
+											level.id,
+										)}
 										icon={faPencilAlt}
 										size="2x"
 									/>
@@ -243,11 +262,7 @@ const LevelAlive = ({
 							/>
 						) : (
 							<LineInterface
-								defaultContent={
-									progression?.data.code
-										? progression.data.code
-										: level.initialCode
-								}
+								initialContent={initialCode}
 								handleChange={lineInterfaceContentChanges}
 							/>
 						)}

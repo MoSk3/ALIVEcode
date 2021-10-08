@@ -16,8 +16,9 @@ import { prettyField } from '../../../Types/formatting';
  * Classroom header that displays the className, the professor and
  * some actions buttons
  *
- * @param classroom Classroom instance
- * @returns tsx element
+ * @param {Classroom} classroom classroom object
+ *
+ * @author MoSk3
  */
 const ClassroomHeader = ({ classroom }: ClassroomHeaderProps) => {
 	const { user } = useContext(UserContext);
@@ -46,8 +47,8 @@ const ClassroomHeader = ({ classroom }: ClassroomHeaderProps) => {
 				<Col lg id="classroom-title">
 					<h2>{classroom.name}</h2>
 					<h5>
-						<Badge variant="primary">{prettyField(t('msg.professor'))}</Badge>
-						{' Enric, Soldevila'}
+						<Badge variant="primary">{prettyField(t('msg.professor'))}</Badge>{' '}
+						{classroom.creator.getDisplayName()}
 					</h5>
 				</Col>
 				{user instanceof Professor ? (

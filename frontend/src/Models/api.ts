@@ -15,8 +15,9 @@ import { LevelProgression } from './Level/levelProgression';
 import { BrowsingQuery } from '../Components/MainComponents/BrowsingMenu/browsingMenuTypes';
 import { LevelAI } from './Level/levelAI.entity';
 import { IoTObject } from './Iot/IoTobject.entity';
-import { Maintenance } from './Maintenance/maintenance.entity';
 import { QueryDTO } from '../../../backend/src/models/level/dto/query.dto';
+import { Activity, ActivityContent } from './Course/activity.entity';
+import { Maintenance } from './Maintenance/maintenance.entity';
 
 type urlArgType<S extends string> = S extends `${infer _}:${infer A}/${infer B}`
 	? A | urlArgType<B>
@@ -113,7 +114,7 @@ const api = {
 					plainToClass(Maintenance, d),
 				);
 			},
-			async getUpcoming() {
+			async getUpcoming(): Promise<Maintenance> {
 				return plainToClass(
 					Maintenance,
 					(await axios.get('maintenances/upcoming')).data,
@@ -151,6 +152,46 @@ const api = {
 			get: apiGet('courses/:id', Course, false),
 			getSections: apiGet('courses/:id/sections', Section, true),
 			delete: apiDelete('courses/:id'),
+			async getActivities(courseId: string, sectionId: number) {
+				return (
+					await axios.get(
+						`courses/${courseId}/sections/${sectionId}/activities`,
+					)
+				).data.map((c: any) => plainToClass(Activity, c));
+			},
+			async getActivityContent(
+				courseId: string,
+				sectionId: number,
+				activityId: number,
+			) {
+				return plainToClass(
+					Activity,
+					(
+						await axios.get(
+							`courses/${courseId}/sections/${sectionId}/activities/${activityId}/content`,
+						)
+					).data,
+				);
+			},
+			addActivity: async (
+				courseId: string,
+				sectionId: number,
+				activity: Activity,
+			) => {
+				return plainToClass(
+					Activity,
+					(
+						await axios.post(
+							`courses/${courseId}/sections/${sectionId}/activities`,
+							activity,
+						)
+					).data,
+				);
+			},
+			updateActivity: apiUpdate(
+				'courses/:courseId/sections/:sectionId/activities/:activityId/content',
+				Activity,
+			),
 		},
 		levels: {
 			progressions: {
