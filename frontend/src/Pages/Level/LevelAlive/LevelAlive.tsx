@@ -32,9 +32,11 @@ import $ from 'jquery';
 import { useTranslation } from 'react-i18next';
 import Modal from '../../../Components/UtilsComponents/Modal/Modal';
 import useExecutor from '../../../state/hooks/useExecutor';
+import { useAlert } from 'react-alert';
+import LoadingScreen from '../../../Components/UtilsComponents/LoadingScreen/LoadingScreen';
 
 const LevelAlive = ({
-	level,
+	level: currentLevel,
 	editMode,
 	progression,
 	setLevel,
@@ -47,6 +49,7 @@ const LevelAlive = ({
 		useExecutor<LevelAliveExecutor>(LevelAliveExecutor, cmd);
 
 	const history = useHistory();
+	const alert = useAlert();
 	const { routes, goToNewTab } = useRoutes();
 	const { t } = useTranslation();
 	const [editTitle, setEditTitle] = useState(false);
@@ -56,6 +59,11 @@ const LevelAlive = ({
 	const [accountModalOpen, setAccountModalOpen] = useState(false);
 	const saveTimeout = useRef<any>(null);
 	const messageTimeout = useRef<any>(null);
+
+	const level = useRef<LevelAliveModel>();
+	useEffect(() => {
+		level.current = currentLevel;
+	}, [currentLevel]);
 
 	const lineInterfaceContentChanges = (content: any) => {
 		setExecutorLines(content);
@@ -68,10 +76,10 @@ const LevelAlive = ({
 	};
 
 	useEffect(() => {
-		if (user && editMode && level.creator.id !== user.id)
+		if (user && editMode && level.current?.creator.id !== user.id)
 			return history.push(routes.public.home.path);
 
-		setExecutor(new LevelAliveExecutor(level.name, user ?? undefined));
+		setExecutor(new LevelAliveExecutor(level.current!.name, user ?? undefined));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, level]);
 
@@ -80,11 +88,18 @@ const LevelAlive = ({
 		if (messageTimeout.current) clearTimeout(messageTimeout.current);
 		setSaving(true);
 		setSaved(false);
+
+		if (!level.current) {
+			console.log('save aborted');
+			return;
+		}
+		console.log(level.current.layout);
+
 		const updatedLevel = (await api.db.levels.update(
 			{
-				id: level.id,
+				id: level.current.id,
 			},
-			level,
+			level.current,
 		)) as LevelAliveModel;
 		messageTimeout.current = setTimeout(() => {
 			setSaving(false);
@@ -94,7 +109,9 @@ const LevelAlive = ({
 				setSaved(false);
 			}, 5000);
 		}, 500);
-		setLevel(updatedLevel);
+
+		level.current = updatedLevel;
+		console.log(updatedLevel.layout);
 	};
 
 	const saveLevelTimed = () => {
@@ -110,7 +127,7 @@ const LevelAlive = ({
 		setSaved(false);
 		const updatedProgression = await api.db.levels.progressions.save(
 			{
-				id: level.id,
+				id: level.current!.id,
 				userId: user.id,
 			},
 			progression,
@@ -151,168 +168,180 @@ const LevelAlive = ({
 
 	return (
 		<>
-			<StyledAliveLevel editMode={editMode}>
-				<Row className="h-100">
-					<Col className="left-col" md={6}>
-						<div className="tools-bar">
-							{editMode && editTitle ? (
-								<input
-									type="text"
-									autoFocus
-									onBlur={() => setEditTitle(false)}
-									defaultValue={level.name}
-								/>
-							) : (
-								<label
-									className="level-title"
-									onClick={() => editMode && setEditTitle(true)}
-								>
-									{level ? level.name : 'Sans nom'}
-								</label>
-							)}
-							{editMode && (
-								<>
+			{level.current ? (
+				<StyledAliveLevel editMode={editMode}>
+					<Row className="h-100">
+						<Col className="left-col" md={6}>
+							<div className="tools-bar">
+								{editMode && editTitle ? (
+									<input
+										type="text"
+										autoFocus
+										onBlur={() => setEditTitle(false)}
+										defaultValue={level.current!.name}
+									/>
+								) : (
+									<label
+										className="level-title"
+										onClick={() => editMode && setEditTitle(true)}
+									>
+										{level.current ? level.current.name : 'Sans nom'}
+									</label>
+								)}
+								{editMode && (
+									<>
+										<IconButton
+											onClick={() => setSettingsModalOpen(true)}
+											icon={faCog}
+											size="2x"
+										/>
+									</>
+								)}
+								{user && !editMode && user.id === level.current?.creator.id && (
 									<IconButton
-										onClick={() => setSettingsModalOpen(true)}
-										icon={faCog}
+										to={routes.auth.level_edit.path.replace(
+											':id',
+											level.current.id,
+										)}
+										icon={faPencilAlt}
 										size="2x"
 									/>
-								</>
-							)}
-							{user && !editMode && user.id === level.creator.id && (
+								)}
 								<IconButton
-									to={routes.auth.level_edit.path.replace(':id', level.id)}
-									icon={faPencilAlt}
+									onClick={() => goToNewTab(routes.public.asDocs.path)}
+									icon={faBookOpen}
 									size="2x"
 								/>
-							)}
-							<IconButton
-								onClick={() => goToNewTab(routes.public.asDocs.path)}
-								icon={faBookOpen}
-								size="2x"
-							/>
-							<IconButton icon={faQuestionCircle} size="2x" />
-							{/* Do not change the onClick method!! it MUST be a method that calls the toggleExecution */}
-							<IconButton
-								onClick={() => executor?.toggleExecution()}
-								icon={executor?.execution ? faPauseCircle : faPlayCircle}
-								size="2x"
-							/>
-							{(saving || saved) && (
-								<label className="save-message">
-									{saving && 'Sauvegarde en cours...'}
-									{saved && 'Niveau sauvegardé ✔'}
-								</label>
-							)}
-						</div>
-						{editMode ? (
-							<LineInterface
-								hasTabs
-								tabs={[
-									{
-										title: 'Initial Code',
-										open: true,
-										defaultContent: level.initialCode,
-										onChange: content => {
-											level.initialCode = content;
-											const newLevel = plainToClass(LevelAliveModel, {
-												...level,
-											});
-											setLevel(newLevel);
-											saveLevelTimed();
+								<IconButton icon={faQuestionCircle} size="2x" />
+								{/* Do not change the onClick method!! it MUST be a method that calls the toggleExecution */}
+								<IconButton
+									onClick={() => executor?.toggleExecution()}
+									icon={executor?.execution ? faPauseCircle : faPlayCircle}
+									size="2x"
+								/>
+								{(saving || saved) && (
+									<label className="save-message">
+										{saving && 'Sauvegarde en cours...'}
+										{saved && 'Niveau sauvegardé ✔'}
+									</label>
+								)}
+							</div>
+							{editMode ? (
+								<LineInterface
+									hasTabs
+									tabs={[
+										{
+											title: 'Initial Code',
+											open: true,
+											defaultContent: level.current.initialCode,
+											onChange: content => {
+												level.current!.initialCode = content;
+												saveLevelTimed();
+											},
 										},
-									},
-									{
-										title: 'Solution',
-										open: false,
-										defaultContent: level.solution,
-										onChange: content => {
-											level.solution = content;
-											const newLevel = plainToClass(LevelAliveModel, {
-												...level,
-											});
-											setLevel(newLevel);
-											saveLevelTimed();
+										{
+											title: 'Solution',
+											open: false,
+											defaultContent: level.current.solution,
+											onChange: content => {
+												level.current!.solution = content;
+												saveLevelTimed();
+											},
 										},
-									},
-								]}
-								handleChange={lineInterfaceContentChanges}
-							/>
-						) : (
-							<LineInterface
-								defaultContent={
-									progression?.data.code
-										? progression.data.code
-										: level.initialCode
-								}
-								handleChange={lineInterfaceContentChanges}
-							/>
-						)}
-					</Col>
-					<Col md={6} style={{ resize: 'both', padding: '0' }}>
-						<Row id="simulation-row" style={{ height: '60%' }}>
-							{executor && (
-								<Simulation
-									init={s => {
-										executor.init(s);
-										setSketch(s);
-									}}
+									]}
+									handleChange={lineInterfaceContentChanges}
+								/>
+							) : (
+								<LineInterface
+									defaultContent={
+										progression?.data.code
+											? progression.data.code
+											: level.current.initialCode
+									}
+									handleChange={lineInterfaceContentChanges}
 								/>
 							)}
-						</Row>
-						<Row style={{ height: '40%' }}>
-							<Cmd ref={cmdRef}></Cmd>
-						</Row>
-					</Col>
-				</Row>
-				<FormModal
-					title={t('form.level.PATCH.title')}
-					onSubmit={res => {
-						const updatedLevel = plainToClass(LevelAliveModel, res.data);
-						updatedLevel.creator = level.creator;
-						setLevel(updatedLevel);
-						setSettingsModalOpen(false);
-					}}
-					onClose={() => setSettingsModalOpen(false)}
-					open={settingsModalOpen}
-				>
-					<Form
-						action="PATCH"
-						name="level"
-						url={`levels/${level.id}`}
-						inputGroups={[
-							{
-								name: 'name',
-								inputType: 'text',
-								required: true,
-								default: level.name,
-								minLength: 3,
-								maxLength: 25,
-							},
-							{
-								name: 'description',
-								inputType: 'text',
-								default: level.description,
-								maxLength: 200,
-							},
-							{
-								name: 'access',
-								required: true,
-								inputType: 'select',
-								selectOptions: LEVEL_ACCESS,
-								default: level.access,
-							},
-							{
-								name: 'difficulty',
-								required: true,
-								inputType: 'select',
-								selectOptions: LEVEL_DIFFICULTY,
-								default: level.difficulty,
-							},
-						]}
-					/>
-				</FormModal>
-			</StyledAliveLevel>
+						</Col>
+						<Col md={6} style={{ resize: 'both', padding: '0' }}>
+							<Row id="simulation-row" style={{ height: '60%' }}>
+								{executor && level.current && (
+									<Simulation
+										init={s => {
+											executor.init(s);
+											setSketch(s);
+											executor.loadLevelLayout(level.current?.layout ?? '[]');
+										}}
+										onChange={s => {
+											const newLayout = executor.saveLayout(s);
+											if (!newLayout) {
+												alert.error(
+													'Une erreur est survenue lors de la sauvegarde du niveau',
+												);
+												return;
+											}
+											level.current!.layout = newLayout;
+											saveLevelTimed();
+										}}
+									/>
+								)}
+							</Row>
+							<Row style={{ height: '40%' }}>
+								<Cmd ref={cmdRef}></Cmd>
+							</Row>
+						</Col>
+					</Row>
+					<FormModal
+						title={t('form.level.PATCH.title')}
+						onSubmit={res => {
+							if (!level.current) return;
+							const updatedLevel = plainToClass(LevelAliveModel, res.data);
+							updatedLevel.creator = level.current.creator;
+							level.current = updatedLevel;
+							setSettingsModalOpen(false);
+						}}
+						onClose={() => setSettingsModalOpen(false)}
+						open={settingsModalOpen}
+					>
+						<Form
+							action="PATCH"
+							name="level"
+							url={`levels/${level.current!.id}`}
+							inputGroups={[
+								{
+									name: 'name',
+									inputType: 'text',
+									required: true,
+									default: level.current?.name,
+									minLength: 3,
+									maxLength: 25,
+								},
+								{
+									name: 'description',
+									inputType: 'text',
+									default: level.current?.description,
+									maxLength: 200,
+								},
+								{
+									name: 'access',
+									required: true,
+									inputType: 'select',
+									selectOptions: LEVEL_ACCESS,
+									default: level.current?.access,
+								},
+								{
+									name: 'difficulty',
+									required: true,
+									inputType: 'select',
+									selectOptions: LEVEL_DIFFICULTY,
+									default: level.current?.difficulty,
+								},
+							]}
+						/>
+					</FormModal>
+				</StyledAliveLevel>
+			) : (
+				<LoadingScreen />
+			)}
 			<Modal
 				title={t('msg.auth.account_required')}
 				open={accountModalOpen}

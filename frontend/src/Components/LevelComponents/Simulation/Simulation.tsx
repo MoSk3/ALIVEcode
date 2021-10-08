@@ -4,8 +4,10 @@ import P5Wrapper from 'react-p5-wrapper';
 import { SimulationProps, StyledSimulation } from './simulationTypes';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSquare } from '@fortawesome/free-solid-svg-icons';
+import $ from 'jquery';
+import LoadingScreen from '../../UtilsComponents/LoadingScreen/LoadingScreen';
 
-const Simulation = ({ init }: SimulationProps) => {
+const Simulation = ({ init, onChange }: SimulationProps) => {
 	return (
 		<StyledSimulation>
 			<FillContainer
@@ -18,13 +20,18 @@ const Simulation = ({ init }: SimulationProps) => {
 					icon={faSquare}
 					color="black"
 				/>
-				<P5Wrapper
-					fullscreenDiv="fullscreen-div"
-					canvasDiv="simulation-div"
-					zoomButton={''}
-					init={init}
-					sketch={sketch}
-				/>
+				{$('simulation-div') ? (
+					<P5Wrapper
+						fullscreenDiv="fullscreen-div"
+						canvasDiv="simulation-div"
+						zoomButton={''}
+						init={init}
+						sketch={sketch}
+						onChange={onChange}
+					/>
+				) : (
+					<LoadingScreen />
+				)}
 			</FillContainer>
 			<FillContainer className="fullscreen-div" startAtTop />
 		</StyledSimulation>

@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 export type SimulationProps = {
 	init: (s: any) => void;
+	onChange: (layout: any) => void;
 };
 
 export const StyledSimulation = styled.div`
