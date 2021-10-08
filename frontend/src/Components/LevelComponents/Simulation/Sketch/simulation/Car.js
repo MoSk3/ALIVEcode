@@ -235,11 +235,13 @@ export class Car {
 			);
 
 			//console.log(`%c${this.dir.y * this.speed}🎉🎉🎉`, 'color:orange;')
-			console.log(this.speed);
-			console.log(
-				`%c${[resultingForce.x, resultingForce.y]}🎉🎉🎉`,
-				'color:orange;',
-			);
+			if (process.env.REACT_APP_DEBUG) {
+				console.log(this.speed);
+				console.log(
+					`%c${[resultingForce.x, resultingForce.y]}🎉🎉🎉`,
+					'color:orange;',
+				);
+			}
 			// #endregion
 
 			/*
@@ -352,7 +354,7 @@ export class Car {
 
 	setDirection(newDir) {
 		this.dir = newDir.clone();
-		console.log(this.dir);
+		if (process.env.REACT_APP_DEBUG) console.log(this.dir);
 	}
 
 	forward() {

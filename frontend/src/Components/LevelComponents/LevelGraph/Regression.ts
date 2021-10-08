@@ -57,7 +57,7 @@ export default class Regression {
 
     const data = Regression.DATA_FORMATTING;
     data.data = points;
-    console.log(data)
+    if(process.env.REACT_APP_DEBUG) console.log(data)
     return data;
   }
 }

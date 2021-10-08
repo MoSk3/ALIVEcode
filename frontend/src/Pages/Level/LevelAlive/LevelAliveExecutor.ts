@@ -31,7 +31,7 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 		/*this.socket.onRobotReceive((data: any) => {
 			let car = s.car;
 
-			if (process.env.DEBUG) console.log(data);
+			if (process.env.REACT_APP_DEBUG) console.log(data);
 
 			if (this.d1 == null || this.d2 == null || this.d3 == null) {
 				this.d1 = s.spawnRect(0, 0, 100, 5);
@@ -374,7 +374,7 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 									speed: car.speed,
 								};
 								res.push(infosCar);
-								if (process.env.DEBUG) console.log(res);
+								if (process.env.REACT_APP_DEBUG) console.log(res);
 								perform_action(i + 1);
 								// eslint-disable-next-line no-labels
 								break id_switch;

@@ -38,7 +38,6 @@ const CourseForm = () => {
 				url="courses"
 				action="POST"
 				alterFormValues={formValues => {
-					console.log(formValues);
 					if (!classroom) return { course: formValues };
 					return { classId: classroom.id, course: formValues };
 				}}

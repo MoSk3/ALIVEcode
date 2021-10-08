@@ -36,7 +36,6 @@ const deepConstruct = (target: any, source: any, prototype?: Object) => {
 		} else if (Array.isArray(sourceValue)) {
 			if (target.dependencies[key] != null) {
 				const objTarget = target.dependencies[key];
-				console.log('source: ' + sourceValue);
 				source[key] = source[key].map((obj: any) =>
 					deepConstruct(Object.create(objTarget), obj, objTarget.prototype),
 				);

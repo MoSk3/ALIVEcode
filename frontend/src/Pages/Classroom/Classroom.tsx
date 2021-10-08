@@ -66,7 +66,6 @@ const Classroom = (props: ClassroomProps) => {
 		<StyledDiv>
 			<ClassroomHeader classroom={classroom} />
 			<Container className="classroom-content">
-				{console.log(classroom)}
 				<CardContainer
 					title={t('classroom.container.courses.title')}
 					height="60px"

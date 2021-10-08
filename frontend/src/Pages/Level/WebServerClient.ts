@@ -29,25 +29,25 @@ export class WebServerClient {
 			// Implement WebSocket event handlers!
 			//
 			this.webSocket.onopen = function (event) {
-				if (process.env.DEBUG)
+				if (process.env.REACT_APP_DEBUG)
 					console.log('onopen::' + JSON.stringify(event, null, 4));
 			};
 
 			this.webSocket.onmessage = function (event) {
 				var msg = event.data;
-				if (process.env.DEBUG)
+				if (process.env.REACT_APP_DEBUG)
 					console.log('onmessage::' + JSON.stringify(msg, null, 4));
 			};
 			this.webSocket.onclose = function (event) {
-				if (process.env.DEBUG)
+				if (process.env.REACT_APP_DEBUG)
 					console.log('onclose::' + JSON.stringify(event, null, 4));
 			};
 			this.webSocket.onerror = function (event) {
-				if (process.env.DEBUG)
+				if (process.env.REACT_APP_DEBUG)
 					console.log('onerror::' + JSON.stringify(event, null, 4));
 			};
 		} catch (exception) {
-			if (process.env.DEBUG) console.error(exception);
+			if (process.env.REACT_APP_DEBUG) console.error(exception);
 		}
 	}
 
@@ -59,7 +59,7 @@ export class WebServerClient {
 		if (this.webSocket?.readyState === WebSocket.OPEN) {
 			this.webSocket.send(message);
 		} else {
-			if (process.env.DEBUG)
+			if (process.env.REACT_APP_DEBUG)
 				console.error(
 					'webSocket is not open. readyState=' + this.webSocket?.readyState,
 				);
@@ -70,7 +70,7 @@ export class WebServerClient {
 		if (this.webSocket?.readyState === WebSocket.OPEN) {
 			this.webSocket.close();
 		} else {
-			if (process.env.DEBUG)
+			if (process.env.REACT_APP_DEBUG)
 				console.error(
 					'webSocket is not open. readyState=' + this.webSocket?.readyState,
 				);

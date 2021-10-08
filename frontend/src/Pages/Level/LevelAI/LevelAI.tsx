@@ -116,8 +116,10 @@ const LevelAI = ({
 		setChartData({
 			datasets: datasets,
 		});
-		console.log('Données reset : ');
-		console.log(chartData);
+		if (process.env.REACT_APP_DEBUG) {
+			console.log('Données reset : ');
+			console.log(chartData);
+		}
 	}
 
 	function setDataOnGraph(newData: any): void {
@@ -136,9 +138,9 @@ const LevelAI = ({
 	 *
 	 */
 	function showDataCloud(): void {
-		console.log(chartData);
+		if (process.env.REACT_APP_DEBUG) console.log(chartData);
 		setDataOnGraph(mainDataset);
-		console.log(chartData);
+		if (process.env.REACT_APP_DEBUG) console.log(chartData);
 	}
 
 	function createRegression(a: number, b: number, c: number, d: number) {
@@ -148,7 +150,7 @@ const LevelAI = ({
 	function showRegression() {
 		const points = func?.generatePoints();
 		setDataOnGraph(points);
-		console.log(chartData);
+		if (process.env.REACT_APP_DEBUG) console.log(chartData);
 	}
 
 	function createAndShowReg(a: number, b: number, c: number, d: number): void {

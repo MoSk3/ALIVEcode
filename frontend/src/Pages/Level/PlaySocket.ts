@@ -39,7 +39,7 @@ const openPlaySocket = (): PlaySocket => {
 				let data = parsed['data'];
 				switch (status) {
 					case 'compiled':
-						console.log(data);
+						if (process.env.REACT_APP_DEBUG) console.log(data);
 						socket.compile_callback(data);
 						break;
 					case 'robot-data':
@@ -59,12 +59,12 @@ const openPlaySocket = (): PlaySocket => {
 						}
 						break;
 					default:
-						if (process.env.DEBUG) console.log(data);
+						if (process.env.REACT_APP_DEBUG) console.log(data);
 				}
 			}
 		};
 		socket.onerror = e => {
-			if (process.env.DEBUG) console.log('error:', e);
+			if (process.env.REACT_APP_DEBUG) console.log('error:', e);
 		};
 
 		const compile = (
@@ -98,7 +98,7 @@ const openPlaySocket = (): PlaySocket => {
 					data: resp,
 				};
 				socket.send(JSON.stringify(data));
-				console.log(data);
+				if (process.env.REACT_APP_DEBUG) console.log(data);
 			}
 		};
 
