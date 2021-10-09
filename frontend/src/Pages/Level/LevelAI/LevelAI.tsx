@@ -169,6 +169,14 @@ const LevelAI = ({
 	}
 
 	/**
+	 * Calculates the MSE cost for the current regression compared to the dataset of the level.
+	 * @returns the calculated cost.
+	 */
+	function costMSE(): number {
+		return func.computeMSE(data);
+	}
+
+	/**
 	 * Creates a new Regression that fits as close as possible the data and shows it on
 	 * the graph.
 	 * @param lr the learning rate for the optimization algorithm.
@@ -192,14 +200,13 @@ const LevelAI = ({
 		if (pointsOnGraph) setDataOnGraph(mainDataset);
 		if (regOnGraph) showRegression();
 		return func.compute(x);
-		
 	}
 
 	useEffect(() => {
 		if (user && editMode && level.creator && level.creator.id !== user.id)
 			return history.push(routes.public.home.path);
 
-		setExecutor(new LevelAIExecutor({createAndShowReg, showDataCloud, resetGraph, optimizeRegression, evaluate}, 
+		setExecutor(new LevelAIExecutor({createAndShowReg, showDataCloud, resetGraph, optimizeRegression, evaluate, costMSE}, 
 			level.name, user || undefined));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, level]);
