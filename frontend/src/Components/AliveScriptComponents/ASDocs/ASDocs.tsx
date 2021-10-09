@@ -8,6 +8,11 @@ const StyledDiv = styled.div`
 	background-color: rgba(var(--background-color-rgb), 0.5);
 `;
 
+/**
+ * Component that shows all of the alivescript documentation
+ *
+ * @author Ecoral360 MoSk3
+ */
 const ASDocs = () => {
 	const [text, setText] = useState('');
 

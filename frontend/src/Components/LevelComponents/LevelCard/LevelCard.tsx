@@ -12,6 +12,15 @@ import { useContext } from 'react';
 import { UserContext } from '../../../state/contexts/UserContext';
 import { useTranslation } from 'react-i18next';
 
+/**
+ * Display of a level that contains all its informations
+ * (name, description, tags, creator, etc)
+ *
+ * @param {boolean} enterEdit if true, when the card is clicked, it goes in editMode
+ * @param {LevelAlive | LevelCode | Level} level Level
+ *
+ * @author MoSk3
+ */
 const LevelCard = ({ level, enterEdit }: LevelCardProps) => {
 	const history = useHistory();
 	const { routes } = useRoutes();
@@ -37,11 +46,11 @@ const LevelCard = ({ level, enterEdit }: LevelCardProps) => {
 				</div>
 				<div className="info-section">
 					<div className="buttons-section">
-						{level.creator.id === user?.id && (
+						{level.creator && level.creator.id === user?.id && (
 							<LevelButton
 								onClick={() =>
 									history.push(
-										routes.auth.level_edit.path.replace(':id', level.id),
+										routes.auth.level_edit.path.replace(':levelId', level.id),
 									)
 								}
 								bgColor="var(--secondary-color)"
@@ -60,10 +69,10 @@ const LevelCard = ({ level, enterEdit }: LevelCardProps) => {
 							onClick={() =>
 								enterEdit
 									? history.push(
-											routes.auth.level_edit.path.replace(':id', level.id),
+											routes.auth.level_edit.path.replace(':levelId', level.id),
 									  )
 									: history.push(
-											routes.auth.level_play.path.replace(':id', level.id),
+											routes.auth.level_play.path.replace(':levelId', level.id),
 									  )
 							}
 							left="2px"
@@ -76,7 +85,12 @@ const LevelCard = ({ level, enterEdit }: LevelCardProps) => {
 				</div>
 			</div>
 			<div className="footer">
-				<div>Creator: {level.creator.getDisplayName()}</div>
+				<div>
+					Creator:{' '}
+					{level.creator
+						? level.creator.getDisplayName()
+						: t('msg.deleted_user')}
+				</div>
 				<div>Creation date: {level.creationDate.toLocaleString()}</div>
 				<div>Last updated: {level.creationDate.toLocaleString()}</div>
 			</div>

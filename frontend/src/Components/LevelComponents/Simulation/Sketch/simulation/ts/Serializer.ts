@@ -54,7 +54,7 @@ export class Serializer {
 			point.rotate(Math.hypot(rotation.x, rotation.y), position);
 			return [point.x, point.y];
 		});
-		console.log(points);
+		if (process.env.REACT_APP_DEBUG) console.log(points);
 
 		return points;
 	}
@@ -75,14 +75,15 @@ export class Serializer {
 				loadImages(serializedShape.imageName);
 				shape.setImg(images[serializedShape.imageName as imageNameType]);
 
-				if (serializedShape.shapeType === 'Car')
+				if (serializedShape.shapeType === 'Car') {
+					console.log('YEP');
 					s.spawnCar(
 						shape.pos?.x,
 						shape.pos?.y,
 						shape.getWidth(),
 						shape.getHeight(),
 					);
-				else shapes.push(shape);
+				} else shapes.push(shape);
 			}
 			return shapes;
 		}

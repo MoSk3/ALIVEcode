@@ -1,5 +1,12 @@
 import { LevelAIProps, StyledAliveLevel } from './levelAITypes';
-import { useEffect, useState, useContext, useRef } from 'react';
+import {
+	useEffect,
+	useState,
+	useContext,
+	useRef,
+	useCallback,
+	useMemo,
+} from 'react';
 import LineInterface from '../../../Components/LevelComponents/LineInterface/LineInterface';
 import { UserContext } from '../../../state/contexts/UserContext';
 import { Row, Col } from 'react-bootstrap';
@@ -29,14 +36,35 @@ import {
 } from '../../../Models/Level/level.entity';
 import $ from 'jquery';
 import { useTranslation } from 'react-i18next';
+import dataAI from './dataAI.json';
 import Modal from '../../../Components/UtilsComponents/Modal/Modal';
-import FillContainer from '../../../Components/UtilsComponents/FillContainer/FillContainer';
 import useExecutor from '../../../state/hooks/useExecutor';
+import LevelTable from '../../../Components/LevelComponents/LevelTable/LevelTable';
+import LevelGraph from '../../../Components/LevelComponents/LevelGraph/LevelGraph';
+import PolyOptimizer from './artificial_intelligence/PolyOptmizer';
+import RegressionOptimizer from './artificial_intelligence/RegressionOptimizer';
+import DataTypes from '../../../Components/LevelComponents/LevelGraph/DataTypes';
+import PolyRegression from '../../../Components/LevelComponents/LevelGraph/PolyRegression';
 
+/**
+ * Ai level page. Contains all the components to display and make the ai level functionnal.
+ *
+ * @param {LevelAIModel} level ai level object
+ * @param {boolean} editMode if the level is in editMode or not
+ * @param {LevelProgression} progression the level progression of the current user
+ * @param {string} initialCode the initial code of the level
+ * @param {(level: LevelAIModel) => void} setLevel callback used to modify the level in the parent state
+ * @param {(progression: LevelProgression) => void} setProgression callback used to modify the level progression in the parent state
+ *
+ * @author Félix
+ * @author Enric
+ * @author Mathis
+ */
 const LevelAI = ({
 	level,
 	editMode,
 	progression,
+	initialCode,
 	setLevel,
 	setProgression,
 }: LevelAIProps) => {
@@ -65,15 +93,141 @@ const LevelAI = ({
 		}
 	};
 
+	//Set the data for the level
+	const [data] = useState(dataAI);
+	let func: PolyRegression;
+	const mainDataset: DataTypes = {
+		type: 'scatter',
+		label: "Distance parcourue en fonction de l'énergie",
+		data,
+		backgroundColor: 'var(--contrast-color)',
+		borderWidth: 1,
+	};
+	const initialDataset: DataTypes = Object.freeze({
+		type: 'scatter',
+		label: "Distance parcourue en fonction de l'énergie",
+		data: [{}],
+		backgroundColor: 'var(--contrast-color)',
+		borderWidth: 1,
+	});
+	let datasets = [initialDataset];
+
+	const [chartData, setChartData] = useState({
+		datasets: datasets,
+	});
+
+	/**
+	 * Resets the datasets array and the data shown on the graph.
+	 */
+	function resetGraph() {
+		datasets = [initialDataset];
+		setChartData({
+			datasets: datasets,
+		});
+	}
+
+	/**
+	 * Adds a new dataset to the datasets array.
+	 * @param newData the new dataset to add.
+	 */
+	function setDataOnGraph(newData: DataTypes): void {
+		datasets.push(newData);
+		setChartData({
+			datasets: datasets,
+		});
+	}
+	const memorizedData = useMemo(() => data, [data]);
+	const memorizedChartData = useMemo(() => chartData, [chartData]);
+
+	//-------------------------- Alivescript functions ----------------------------//
+
+	/**
+	 * Sets the data of the graph to the level's data and displays it on the screen
+	 */
+	function showDataCloud(): void {
+		setDataOnGraph(mainDataset);
+	}
+
+	/**
+	 * Replaces the func with a new one with the specified parameters.
+	 * @param a the param a of a polynomial regression.
+	 * @param b the param b of a polynomial regression.
+	 * @param c the param c of a polynomial regression.
+	 * @param d the param d of a polynomial regression.
+	 */
+	function createRegression(a: number, b: number, c: number, d: number) {
+		func = new PolyRegression(a, b, c, d);
+	}
+
+	/**
+	 * Generates the regression's points and shows them on the graph.
+	 */
+	function showRegression() {
+		const points = func?.generatePoints();
+		setDataOnGraph(points);
+	}
+
+	/**
+	 * Creates the new Regression and displays it on the graph.
+	 * @param a the param a of a polynomial regression.
+	 * @param b the param b of a polynomial regression.
+	 * @param c the param c of a polynomial regression.
+	 * @param d the param d of a polynomial regression.
+	 */
+	function createAndShowReg(a: number, b: number, c: number, d: number): void {
+		createRegression(a, b, c, d);
+		showRegression();
+	}
+
+	/**
+	 * Creates a new Regression that fits as close as possible the data and shows it on
+	 * the graph.
+	 * @param lr the learning rate for the optimization algorithm.
+	 */
+	function optimizeRegression(lr: number, epoch: number): void {
+		const optimizer: PolyOptimizer = new PolyOptimizer(
+			func,
+			lr,
+			epoch,
+			RegressionOptimizer.costMSE,
+		);
+		func = optimizer.optimize(data);
+		console.log(optimizer.getError());
+		console.log(func);
+		showRegression();
+	}
+
+	/**
+	 * Evaluates the model with the value specified and returns the result.
+	 * @param x the input of the model.
+	 * @returns the output of the model.
+	 */
+	function evaluate(x: number): number {
+		console.log(memorizedChartData);
+		return func.compute(x);
+	}
+
 	useEffect(() => {
-		if (user && editMode && level.creator.id !== user.id)
+		if (user && editMode && level.creator && level.creator.id !== user.id)
 			return history.push(routes.public.home.path);
 
-		setExecutor(new LevelAIExecutor(level.name, user || undefined));
+		setExecutor(
+			new LevelAIExecutor(
+				{
+					createAndShowReg,
+					showDataCloud,
+					resetGraph,
+					optimizeRegression,
+					evaluate,
+				},
+				level.name,
+				user || undefined,
+			),
+		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, level]);
 
-	const saveLevel = async () => {
+	const saveLevel = useCallback(async () => {
 		if (saveTimeout.current) clearTimeout(saveTimeout.current);
 		if (messageTimeout.current) clearTimeout(messageTimeout.current);
 		setSaving(true);
@@ -93,14 +247,14 @@ const LevelAI = ({
 			}, 5000);
 		}, 500);
 		setLevel(updatedLevel);
-	};
+	}, [level, setLevel]);
 
 	const saveLevelTimed = () => {
 		if (saveTimeout.current) clearTimeout(saveTimeout.current);
 		saveTimeout.current = setTimeout(saveLevel, 2000);
 	};
 
-	const saveProgression = async () => {
+	const saveProgression = useCallback(async () => {
 		if (!user || !progression) return;
 		if (saveTimeout.current) clearTimeout(saveTimeout.current);
 		if (messageTimeout.current) clearTimeout(messageTimeout.current);
@@ -122,7 +276,7 @@ const LevelAI = ({
 			}, 5000);
 		}, 500);
 		setProgression(updatedProgression);
-	};
+	}, [level.id, progression, setProgression, user]);
 
 	const saveProgressionTimed = () => {
 		if (saveTimeout.current) clearTimeout(saveTimeout.current);
@@ -130,7 +284,9 @@ const LevelAI = ({
 	};
 
 	useEffect(() => {
+		$(document).off('keydown');
 		$(document).on('keydown', e => {
+			//If ctrl + s are pressed together
 			if (e.keyCode === 83 && e.ctrlKey) {
 				e.preventDefault();
 				e.stopPropagation();
@@ -138,7 +294,9 @@ const LevelAI = ({
 				editMode ? saveLevel() : saveProgression();
 			}
 		});
+	}, [editMode, saveLevel, saveProgression, user]);
 
+	useEffect(() => {
 		return () => {
 			clearTimeout(saveTimeout.current);
 			clearTimeout(messageTimeout.current);
@@ -179,13 +337,19 @@ const LevelAI = ({
 									/>
 								</>
 							)}
-							{user && !editMode && user.id === level.creator.id && (
-								<IconButton
-									to={routes.auth.level_edit.path.replace(':id', level.id)}
-									icon={faPencilAlt}
-									size="2x"
-								/>
-							)}
+							{user &&
+								!editMode &&
+								level.creator &&
+								user.id === level.creator.id && (
+									<IconButton
+										to={routes.auth.level_edit.path.replace(
+											':levelId',
+											level.id,
+										)}
+										icon={faPencilAlt}
+										size="2x"
+									/>
+								)}
 							<IconButton
 								onClick={() => goToNewTab(routes.public.asDocs.path)}
 								icon={faBookOpen}
@@ -243,28 +407,36 @@ const LevelAI = ({
 						) : (
 							/* Interface de code sans les tabs */
 							<LineInterface
-								defaultContent={
-									progression?.data.code
-										? progression.data.code
-										: level.initialCode
-								}
+								initialContent={initialCode}
 								handleChange={lineInterfaceContentChanges}
 							/>
 						)}
 					</Col>
 
-					{/* Right Side of screen */}
+					{/* Right Side of screen 
+							Contains the graph and the console
+					*/}
 					<Col md={6} style={{ resize: 'both', padding: '0' }}>
-						<Row style={{ height: '60%' }}>
-							<FillContainer
-								relative
-								centered
-								style={{ backgroundColor: 'black' }}
-							>
-								<label>TO IMPLEMENT</label>
-							</FillContainer>
+						<Row className="data-section">
+							<Col md={3}>
+								<LevelTable
+									data={memorizedData}
+									xData="Énergie utilisée (kWh)"
+									yData="Distance parcourue (km)"
+								/>
+							</Col>
+							<Col md={8} style={{ padding: '0' }}>
+								<div className="graph-container">
+									<LevelGraph
+										data={memorizedChartData}
+										title="Distance parcourue selon l'énergie utilisée"
+										xAxis="Énergie utilisée (kWh)"
+										yAxis="Distance parcourue (km)"
+									/>
+								</div>
+							</Col>
 						</Row>
-						<Row style={{ height: '40%' }}>
+						<Row className="command">
 							<Cmd ref={cmdRef}></Cmd>
 						</Row>
 					</Col>

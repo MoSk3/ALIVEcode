@@ -4,7 +4,6 @@ import { images } from '../../../Components/LevelComponents/Simulation/Sketch/si
 import { InteractiveObject } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/InteractiveObject';
 import { Shape } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/Shape';
 import { Vector } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/Vector';
-import $ from 'jquery';
 import { BaseLayoutObj } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/ts/typesSimulation';
 import { Serializer } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/ts/Serializer';
 import { makeShapeEditable } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/editMode';
@@ -31,7 +30,6 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 	public loadLevelLayout(layout: BaseLayoutObj[] | {}) {
 		if (JSON.stringify(layout) === '{}') {
 			this.s.spawnCar(0, 0, 75, 110);
-			console.log('AHAHA');
 		} else {
 			const shapes = Serializer.deserialize(this.s, layout as BaseLayoutObj[]);
 
@@ -40,7 +38,7 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 				makeShapeEditable(shape);
 			}
 
-			console.log(this.s.shapes);
+			if (process.env.REACT_APP_DEBUG) console.log(this.s.shapes);
 		}
 		if (this.creator) {
 			this.spawnEditorButton();

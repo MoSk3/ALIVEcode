@@ -10,7 +10,11 @@ import {
 	IOTPROJECT_INTERACT_RIGHTS,
 } from '../../../../Models/Iot/IoTproject.entity';
 
-/** Reusable form component to handle header creation */
+/**
+ * Form that creates in the database an IoTProject and navigates to it
+ *
+ * @author MoSk3
+ */
 const IoTProjectCreate = () => {
 	const { t } = useTranslation();
 	const history = useHistory();

@@ -19,8 +19,8 @@ import { User, Student, Professor } from './Models/User/user.entity';
 import LoadingScreen from './Components/UtilsComponents/LoadingScreen/LoadingScreen';
 import background_image_light from './assets/images/backgroundImage4.png';
 import api from './Models/api';
-import { Maintenance } from './Models/Maintenance/maintenance.entity';
 import MaintenanceBar from './Components/SiteStatusComponents/MaintenanceBar/MaintenanceBar';
+import { Maintenance } from './Models/Maintenance/maintenance.entity';
 
 type GlobalStyleProps = {
 	theme: Theme;
@@ -39,6 +39,15 @@ const GlobalStyle = createGlobalStyle`
 	}
 
 	${({ theme }: GlobalStyleProps) => {
+		const cssVars = [];
+		for (const [colorName, color] of Object.entries(theme.color)) {
+			const cssName = colorName.includes('rgb')
+				? `--${colorName.split('_')[0]}-color-rgb`
+				: `--${colorName}-color`;
+			cssVars.push(`${cssName}: ${color}`);
+		}
+		return ':root {' + cssVars.join(';') + '}';
+		/*
 		return `:root {
 						--primary-color: ${theme.color.primary};
 						--primary-color-rgb: ${theme.color.primary_rgb};
@@ -55,10 +64,12 @@ const GlobalStyle = createGlobalStyle`
 						--hover-color: ${theme.color.hover};
 						--background-color: ${theme.color.background};
 						--background-color-rgb: ${theme.color.background_rgb};
+						--background-hover-color: ${theme.color.background_hover};
 						--foreground-color: ${theme.color.foreground};
 						--foreground-color-rgb: ${theme.color.foreground_rgb};
 					}
 				`;
+				*/
 	}}
 `;
 
@@ -138,7 +149,6 @@ const App = () => {
 					if (user) await logout();
 					return Promise.reject(error);
 				}
-				// TODO : remove in production
 				if (
 					error.response &&
 					error.response.data.message === 'Not Authenticated' &&
