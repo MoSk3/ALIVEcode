@@ -23,6 +23,11 @@ import JoinClassroomForm from '../../Components/ClassroomComponents/JoinClassroo
 import { useTranslation } from 'react-i18next';
 import LoadingScreen from '../../Components/UtilsComponents/LoadingScreen/LoadingScreen';
 
+/**
+ * Dashboard page that contains all the links to the different pages of the plaform
+ *
+ * @author MoSk3
+ */
 const Dashboard = (props: DashboardProps) => {
 	const { user } = useContext(UserContext);
 	const { t } = useTranslation();

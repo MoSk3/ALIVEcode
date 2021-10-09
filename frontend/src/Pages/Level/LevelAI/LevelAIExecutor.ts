@@ -1,4 +1,3 @@
-/* eslint-disable no-labels */
 import LevelCodeExecutor from '../LevelCode/LevelCodeExecutor';
 
 // TODO: robotConnected
@@ -6,7 +5,11 @@ import LevelCodeExecutor from '../LevelCode/LevelCodeExecutor';
 class LevelAIExecutor extends LevelCodeExecutor {
 	private executableFuncs: any;
 
-	constructor(executables: {[key: string]: CallableFunction}, levelName: string, creator?: any) {
+	constructor(
+		executables: { [key: string]: CallableFunction },
+		levelName: string,
+		creator?: any,
+	) {
 		super(levelName, creator);
 		this.executableFuncs = executables;
 	}
@@ -99,8 +102,13 @@ class LevelAIExecutor extends LevelCodeExecutor {
 													*/
 					case 800:
 						// creerRegression
-						if (params.every((param: any) => typeof param === 'number')) { 
-							this.executableFuncs.createAndShowReg(params[0], params[1], params[2], params[3]);
+						if (params.every((param: any) => typeof param === 'number')) {
+							this.executableFuncs.createAndShowReg(
+								params[0],
+								params[1],
+								params[2],
+								params[3],
+							);
 						}
 						perform_action(i + 1);
 						break;

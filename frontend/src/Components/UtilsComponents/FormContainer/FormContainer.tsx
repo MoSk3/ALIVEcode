@@ -11,6 +11,14 @@ const StyledCenteredContainer = styled.div`
 	color: white;
 `;
 
+/**
+ * Styled container containing a form (Can be seen in signin and signup)
+ *
+ * @param {React.ReactNode} children form to display
+ * @param {string} title title of the container
+ *
+ * @author MoSk3
+ */
 const FormContainer = ({ children, title }: FormContainerProps) => {
 	return (
 		<FillContainer centered>

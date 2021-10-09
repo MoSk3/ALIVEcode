@@ -29,6 +29,14 @@ import { io, Socket } from 'socket.io-client';
 import Button from '../../../Components/UtilsComponents/Button/Button';
 import CenteredContainer from '../../../Components/UtilsComponents/CenteredContainer/CenteredContainer';
 
+/**
+ * IoTProject. On this page are all the components essential in the functionning of an IoTProject.
+ * Such as the routes, the settings, creation/update forms, the body with all the IoTComponents etc.
+ *
+ * @param {string} id id of the project (as url prop)
+ *
+ * @author MoSk3
+ */
 const IoTProject = (props: IoTProjectProps) => {
 	const [project, setProject] = useState<ProjectModel>();
 	const [selectedTab, setSelectedTab] = useState<IoTProjectTabs>('settings');
