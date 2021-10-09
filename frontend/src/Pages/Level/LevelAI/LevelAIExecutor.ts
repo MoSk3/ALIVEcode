@@ -131,7 +131,11 @@ class LevelAIExecutor extends LevelCodeExecutor {
 						break;
 					case 804:
 						// fonctionCout
-						res.push(this.executableFuncs.costMSE());
+						console.log("cost")
+						let outCost = this.executableFuncs.costMSE();
+						console.log("printing")
+						this.cmd?.print(outCost);
+						console.log("done")
 						perform_action(i + 1);
 						break;
 

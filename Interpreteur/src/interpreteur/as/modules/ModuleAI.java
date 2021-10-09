@@ -460,19 +460,11 @@ public class ModuleAI {
                     a
                  */
                 new ASObjet.Fonction("fonctionCout", new ASObjet.Fonction.Parametre[]{
-                }, ASObjet.TypeBuiltin.nombre.asType()) {
+                }, ASObjet.TypeBuiltin.nulType.asType()) {
                     @Override
                     public ASObjet<?> executer() {
                         executeurInstance.addData(new Data(Data.Id.FONCTION_COUT));
-                        double res = 0;
-                        try {
-                            Object obj = executeurInstance.getDataResponse().pop();
-                            if (obj instanceof Double) res = ((Double) obj).doubleValue();
-                            else if (obj instanceof Integer) res = ((Integer) obj).doubleValue();
-                        } catch(EmptyStackException e) {
-                            throw new ASErreur.StopGetInfo(new Data(Data.Id.GET));
-                        }
-                        return new Decimal(res);
+                        return new Nul();
                     }
                 }
         }, new ASObjet.Variable[]{});

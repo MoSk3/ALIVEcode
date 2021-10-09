@@ -189,6 +189,9 @@ const LevelAI = ({
 	 * @returns the calculated cost.
 	 */
 	function costMSE(): number {
+		if (pointsOnGraph) setDataOnGraph(mainDataset);
+		if (regOnGraph) showRegression();
+		console.log("calculating")
 		return func.computeMSE(data);
 	}
 
@@ -205,7 +208,6 @@ const LevelAI = ({
 			RegressionOptimizer.costMSE,
 		);
 		func = optimizer.optimize(data);
-		console.log(optimizer.getError());
 		console.log(func);
 		showRegression();
 		return func.paramsToString();
@@ -217,7 +219,6 @@ const LevelAI = ({
 	 * @returns the output of the model.
 	 */
 	function evaluate(x: number): number {
-		console.log("evaluate")
 		if (pointsOnGraph) setDataOnGraph(mainDataset);
 		if (regOnGraph) showRegression();
 		return func.compute(x);
@@ -235,6 +236,7 @@ const LevelAI = ({
 					resetGraph,
 					optimizeRegression,
 					evaluate,
+					costMSE
 				},
 				level.name,
 				user || undefined,
