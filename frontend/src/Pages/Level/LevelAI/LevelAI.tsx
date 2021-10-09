@@ -95,6 +95,8 @@ const LevelAI = ({
 		borderWidth: 1,
 	});
 	let datasets = [initialDataset];
+	let pointsOnGraph: boolean = false;
+	let regOnGraph: boolean = false;
 
 	const [chartData, setChartData] = useState({
 		datasets: datasets
@@ -129,6 +131,8 @@ const LevelAI = ({
 	 * Sets the data of the graph to the level's data and displays it on the screen
 	*/
 	function showDataCloud(): void {
+		console.log("show data")
+		pointsOnGraph = true;
 		setDataOnGraph(mainDataset);
 	}
 
@@ -147,6 +151,7 @@ const LevelAI = ({
 	 * Generates the regression's points and shows them on the graph.
 	 */
 	function showRegression() {
+		regOnGraph = true;
 		const points = func?.generatePoints();
 		setDataOnGraph(points);
 	}
@@ -168,12 +173,13 @@ const LevelAI = ({
 	 * the graph.
 	 * @param lr the learning rate for the optimization algorithm.
 	 */
-	function optimizeRegression(lr: number, epoch: number): void {
+	function optimizeRegression(lr: number, epoch: number): string {
 		const optimizer: PolyOptimizer = new PolyOptimizer(func, lr, epoch, RegressionOptimizer.costMSE);
 		func = optimizer.optimize(data);
 		console.log(optimizer.getError())
 		console.log(func);
 		showRegression();
+		return func.paramsToString();
 	}
 	
 	/**
@@ -182,7 +188,9 @@ const LevelAI = ({
 	 * @returns the output of the model.
 	 */
 	function evaluate(x: number): number {
-		console.log(memorizedChartData)
+		console.log("evaluate")
+		if (pointsOnGraph) setDataOnGraph(mainDataset);
+		if (regOnGraph) showRegression();
 		return func.compute(x);
 		
 	}

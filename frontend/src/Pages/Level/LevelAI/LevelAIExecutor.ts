@@ -106,17 +106,24 @@ class LevelAIExecutor extends LevelCodeExecutor {
 						break;
 					case 801:
 						// optimiserRegression
-						this.executableFuncs.optimizeRegression(params[0], params[1]);
+						const out: string = this.executableFuncs.optimizeRegression(params[0], params[1]);
+						this.cmd?.print("Nouveaux paramètres de la régression :");
+						this.cmd?.print(out);
 						perform_action(i + 1);
 						break;
 					case 802:
 						// afficherNuage
 						this.executableFuncs.showDataCloud();
 						perform_action(i + 1);
-					break;
+						break;
 					case 803:
 						// evaluer
 						res.push(this.executableFuncs.evaluate(params[0]));
+						perform_action(i + 1);
+						break;
+					case 804:
+						// fonctionCout
+						res.push(this.executableFuncs.costMSE());
 						perform_action(i + 1);
 						break;
 

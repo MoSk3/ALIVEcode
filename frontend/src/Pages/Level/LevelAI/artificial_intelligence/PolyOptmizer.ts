@@ -23,10 +23,10 @@ export default class PolyOptimizer extends RegressionOptimizer {
   protected paramDerivative(param: string, costDeriv: number, inputs: number[]): number {
     let sum: number = 0;
     let pow: number = 0;
-    if (param === 'a') pow = 3;
-    else if (param === 'b') pow = 2;
+    if (param === 'a') pow = 1;
+    else if (param === 'b') pow = 1;
     else if (param === 'c') pow = 1;
-    else if (param === 'd') pow = 0;
+    else if (param === 'd') pow = 1;
     else throw new Error ("The parameter doesn't exist");
 
     for (let i: number = 0; i < inputs.length; i++) {
@@ -48,7 +48,8 @@ export default class PolyOptimizer extends RegressionOptimizer {
     const activatedExp: number[] = RegressionOptimizer.sigmoidAll(normExpected);
     
     let predicted: number[] = this.regression.computeAll(normIndependent);
-    let activatedPred: number[] = RegressionOptimizer.sigmoidAll(RegressionOptimizer.normalize(predicted));
+    let normPredicted: number[] = RegressionOptimizer.normalize(predicted)
+    let activatedPred: number[] = RegressionOptimizer.sigmoidAll(normPredicted);
     this.error = this.costFunc(activatedPred, activatedExp);
 
     // Copy of the PolyRegression
@@ -58,22 +59,25 @@ export default class PolyOptimizer extends RegressionOptimizer {
       // 1. Cost derivative
       let costDev = this.costDerivative(activatedPred, activatedExp);
       // 2. Parameter update
+      // We multiply by param/param to avoid increasing a 0 variable
       regCopy.setParams(
-        regCopy.getA() - this.learningRate * this.paramDerivative('a', costDev, independent) 
-        * gradientDirection * (regCopy.getA()/(regCopy.getA() + this.EPSILON)), 
-        regCopy.getB() - this.learningRate * this.paramDerivative('b', costDev, independent) 
-        * gradientDirection * (regCopy.getB()/(regCopy.getB() + this.EPSILON)), 
-        regCopy.getC() - this.learningRate * this.paramDerivative('c', costDev, independent) 
-        * gradientDirection * (regCopy.getC()/(regCopy.getC() + this.EPSILON)), 
-        regCopy.getD() - this.learningRate * this.paramDerivative('d', costDev, independent) 
-        * gradientDirection * (regCopy.getD()/(regCopy.getD() + this.EPSILON)), 
+        regCopy.getA() - (this.learningRate * this.paramDerivative('a', costDev, independent) 
+        * gradientDirection * (regCopy.getA()/(regCopy.getA() + this.EPSILON))), 
+        regCopy.getB() - (this.learningRate * this.paramDerivative('b', costDev, independent) 
+        * gradientDirection * (regCopy.getB()/(regCopy.getB() + this.EPSILON))), 
+        regCopy.getC() - (this.learningRate * this.paramDerivative('c', costDev, independent) 
+        * gradientDirection * (regCopy.getC()/(regCopy.getC() + this.EPSILON))), 
+        regCopy.getD() - (this.learningRate * this.paramDerivative('d', costDev, independent) 
+        * gradientDirection * (regCopy.getD()/(regCopy.getD() + this.EPSILON))), 
       )
 
       // 3. Recalculate predictions
-      predicted = regCopy.computeAll(normIndependent);
+      predicted = regCopy.computeAll(independent);
+      normPredicted = RegressionOptimizer.normalize(predicted);
       activatedPred = RegressionOptimizer.sigmoidAll(RegressionOptimizer.normalize(predicted));
-      if (this.costFunc(predicted, expected) > this.error) gradientDirection *= -1;
+      if (this.costFunc(normPredicted, normExpected) > this.error) gradientDirection = gradientDirection * -1;
       this.error = this.costFunc(predicted, expected);
+      console.log(this.error + " and " + gradientDirection)
       numEpoch++;
     }
     console.log(regCopy);

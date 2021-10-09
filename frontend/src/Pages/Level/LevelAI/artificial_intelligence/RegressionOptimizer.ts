@@ -1,7 +1,12 @@
-import { data } from 'jquery';
 import PolyRegression from '../../../../Components/LevelComponents/LevelGraph/PolyRegression';
 import DataSample from './DataSample';
 
+/**
+ * Superclass for every Optimizer class. It contains all usefull static and abstract methods 
+ * for AI algorithms and optimization techniques.
+ * 
+ * @author Félix Jobin
+ */
 export default abstract class RegressionOptimizer {
   protected EPSILON: number = 1e-8;
   protected error: number;
