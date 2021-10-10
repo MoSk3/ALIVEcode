@@ -124,6 +124,7 @@ const LevelAlive = ({
 		}, 500);
 
 		level.current = updatedLevel;
+		if (process.env.REACT_APP_DEBUG) console.log(level.current.layout);
 	}, [level]);
 
 	const saveLevelTimed = () => {
@@ -280,7 +281,7 @@ const LevelAlive = ({
 							)}
 						</Col>
 						<Col md={6} style={{ resize: 'both', padding: '0' }}>
-							<Row id="simulation-row" style={{ height: '60%' }}>
+							<Row id="simulation-row" style={{ height: '60vh' }}>
 								{executor && level.current && (
 									<Simulation
 										id={level.current.id}
@@ -303,7 +304,7 @@ const LevelAlive = ({
 									/>
 								)}
 							</Row>
-							<Row style={{ height: '40%' }}>
+							<Row style={{ height: '40vh' }}>
 								<Cmd ref={cmdRef}></Cmd>
 							</Row>
 						</Col>

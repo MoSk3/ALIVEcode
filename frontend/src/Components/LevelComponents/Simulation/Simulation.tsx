@@ -27,17 +27,23 @@ const Simulation = ({ init, onChange, id }: SimulationProps) => {
 					icon={faSquare}
 					color="black"
 				/>
-				{$('simulation-div') ? (
-					<P5Wrapper
-						fullscreenDiv="fullscreen-div"
-						canvasDiv="simulation-div"
-						zoomButton={''}
-						init={init}
-						sketch={sketch}
-						onChange={onChange}
-					/>
+				{$(`#${id}`) ? (
+					<>
+						{loading && <LoadingScreen relative />}
+						<P5Wrapper
+							fullscreenDiv="fullscreen-div"
+							canvasDiv={id}
+							zoomButton={''}
+							init={(s: any) => {
+								setLoading(false);
+								init(s);
+							}}
+							sketch={sketch}
+							onChange={onChange}
+						/>
+					</>
 				) : (
-					<LoadingScreen />
+					<LoadingScreen relative />
 				)}
 			</FillContainer>
 			<FillContainer className="fullscreen-div" startAtTop />

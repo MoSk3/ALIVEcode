@@ -6,6 +6,10 @@ export function dist(point, center) {
 	);
 }
 
+export function floatEquals(float1, float2) {
+	return Math.abs(float1 - float2) <= Number.EPSILON;
+}
+
 export function overlap(vertices1, vertices2) {
 	let poly1 = vertices1;
 	let poly2 = vertices2;
