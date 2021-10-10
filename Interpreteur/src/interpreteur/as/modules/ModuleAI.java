@@ -434,12 +434,9 @@ public class ModuleAI {
                         return new Nul();
                     }
                 },
-<<<<<<< HEAD
                 /*
                     Evaluates the regression on the graph at a specific x value.
                  */
-=======
->>>>>>> origin/dev
                 new ASObjet.Fonction("evaluer", new ASObjet.Fonction.Parametre[]{
                         new ASObjet.Fonction.Parametre(
                                 ASObjet.TypeBuiltin.nombre.asType(), "x", null)
@@ -458,10 +455,9 @@ public class ModuleAI {
                         }
                         return new Decimal(res);
                     }
-<<<<<<< HEAD
                 },
                 /*
-                    a
+                    Evaluates the cost function for the regression on the screen.
                  */
                 new ASObjet.Fonction("fonctionCout", new ASObjet.Fonction.Parametre[]{
                 }, ASObjet.TypeBuiltin.nulType.asType()) {
@@ -470,8 +466,6 @@ public class ModuleAI {
                         executeurInstance.addData(new Data(Data.Id.FONCTION_COUT));
                         return new Nul();
                     }
-=======
->>>>>>> origin/dev
                 }
         }, new ASObjet.Variable[]{});
     }
