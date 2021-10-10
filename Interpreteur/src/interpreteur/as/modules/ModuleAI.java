@@ -434,9 +434,12 @@ public class ModuleAI {
                         return new Nul();
                     }
                 },
+<<<<<<< HEAD
                 /*
                     Evaluates the regression on the graph at a specific x value.
                  */
+=======
+>>>>>>> origin/dev
                 new ASObjet.Fonction("evaluer", new ASObjet.Fonction.Parametre[]{
                         new ASObjet.Fonction.Parametre(
                                 ASObjet.TypeBuiltin.nombre.asType(), "x", null)
@@ -455,6 +458,7 @@ public class ModuleAI {
                         }
                         return new Decimal(res);
                     }
+<<<<<<< HEAD
                 },
                 /*
                     a
@@ -466,6 +470,8 @@ public class ModuleAI {
                         executeurInstance.addData(new Data(Data.Id.FONCTION_COUT));
                         return new Nul();
                     }
+=======
+>>>>>>> origin/dev
                 }
         }, new ASObjet.Variable[]{});
     }

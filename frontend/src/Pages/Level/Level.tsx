@@ -104,7 +104,7 @@ const Level = ({ level: levelProp, ...props }: LevelProps) => {
 		};
 		loadLevel();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [levelId, level]);
+	}, [levelId, levelProp]);
 
 	if (!level || !progression) return <LoadingScreen />;
 
