@@ -268,42 +268,42 @@ export class Car {
 				this.shape.setImg(images.carTopD);
 			}
 		}
-		if (this.turning) {
-			const step =
+		//if (this.turning) {
+		//const step =
+		//	this.rotateSpeed *
+		//	this.rotationDir *
+		//	(this.s.maxFPS / this.s.frameRate());
+		//
+		//this.shape.setRotation(this.rotationBeforeTurn + step);
+
+		if (this.rotationGoal) {
+			const goal = this.rotationGoal;
+			const rotationStep =
 				this.rotateSpeed *
 				this.rotationDir *
 				(this.s.maxFPS / this.s.frameRate());
-
-			this.shape.setRotation(this.rotationBeforeTurn + step);
-
-			if (this.rotationGoal) {
-				const goal = this.rotationGoal;
-				const rotationStep =
-					this.rotateSpeed *
-					this.rotationDir *
-					(this.s.maxFPS / this.s.frameRate());
-				let res = 0;
-				if (Math.abs(goal - this.rotationAmount) <= Math.abs(rotationStep / 2))
-					res = goal;
-				else {
-					this.rotationAmount += rotationStep;
-					res =
-						Math.abs(goal - this.rotationAmount) <= Math.abs(rotationStep / 2)
-							? goal
-							: this.rotationAmount;
-				}
-				//let res = .translateTo(this.shape.rotationGoal, Date.now() - this.s.pdt, )
-				this.shape.setRotation(res + this.rotationBeforeTurn);
-				if (res === goal) {
-					this.rotationGoal = null;
-					this.shape.setImg(images.carTop);
-					if (this.callback != null) {
-						let tempCallback = this.callback;
-						this.callback = null;
-						tempCallback();
-					}
+			let res = 0;
+			if (Math.abs(goal - this.rotationAmount) <= Math.abs(rotationStep / 2))
+				res = goal;
+			else {
+				this.rotationAmount += rotationStep;
+				res =
+					Math.abs(goal - this.rotationAmount) <= Math.abs(rotationStep / 2)
+						? goal
+						: this.rotationAmount;
+			}
+			//let res = .translateTo(this.shape.rotationGoal, Date.now() - this.s.pdt, )
+			this.shape.setRotation(res + this.rotationBeforeTurn);
+			if (res === goal) {
+				this.rotationGoal = null;
+				this.shape.setImg(images.carTop);
+				if (this.callback != null) {
+					let tempCallback = this.callback;
+					this.callback = null;
+					tempCallback();
 				}
 			}
+			//}
 		}
 
 		if (this.i % this.updateInterval === 0) {
@@ -368,13 +368,14 @@ export class Car {
 		return Math.abs(angle / this.rotateSpeed);
 	}
 
-	turn(angle) {
+	turn(angle, callback) {
 		this.shape.setImg(angle > 0 ? images.carTopD : images.carTopG);
 		this.rotationBeforeTurn = this.shape.rotation.x;
 		this.rotationAmount = 0;
 		this.rotationDir = angle < 0 ? -1 : 1;
 		this.turning = true;
 		this.rotationGoal = angle;
+		this.callback = callback;
 	}
 
 	stopRotate() {
