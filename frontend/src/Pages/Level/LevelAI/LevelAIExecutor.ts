@@ -114,9 +114,7 @@ class LevelAIExecutor extends LevelCodeExecutor {
 						break;
 					case 801:
 						// optimiserRegression
-						const out: string = this.executableFuncs.optimizeRegression(params[0], params[1]);
-						this.cmd?.print("Nouveaux paramètres de la régression :");
-						this.cmd?.print(out);
+						this.executableFuncs.optimizeRegression(params[0], params[1]);
 						perform_action(i + 1);
 						break;
 					case 802:
@@ -131,11 +129,8 @@ class LevelAIExecutor extends LevelCodeExecutor {
 						break;
 					case 804:
 						// fonctionCout
-						console.log("cost")
-						let outCost = this.executableFuncs.costMSE();
-						console.log("printing")
-						this.cmd?.print(outCost);
-						console.log("done")
+						console.log("hello")
+						this.executableFuncs.costMSE();
 						perform_action(i + 1);
 						break;
 

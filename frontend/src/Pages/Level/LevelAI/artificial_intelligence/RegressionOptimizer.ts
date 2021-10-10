@@ -75,7 +75,7 @@ export default abstract class RegressionOptimizer {
 	 * @returns the mean squared error between the two values.
 	 */
 	public static MSE(predicted: number, real: number): number {
-		return Math.pow(predicted - real, 4);
+		return Math.pow(predicted - real, 2);
 	}
 
 	/**
@@ -93,8 +93,8 @@ export default abstract class RegressionOptimizer {
 		for (let i: number = 0; i < predicted.length; i++) {
 			sum += RegressionOptimizer.MSE(predicted[i], real[i]);
 		}
-
-		return sum / predicted.length;
+		
+		return Math.round(sum / predicted.length);
 	}
 
 	/**

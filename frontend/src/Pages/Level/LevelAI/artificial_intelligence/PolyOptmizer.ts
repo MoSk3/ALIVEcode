@@ -75,7 +75,7 @@ export default class PolyOptimizer extends RegressionOptimizer {
       predicted = regCopy.computeAll(independent);
       normPredicted = RegressionOptimizer.normalize(predicted);
       activatedPred = RegressionOptimizer.sigmoidAll(RegressionOptimizer.normalize(predicted));
-      if (this.costFunc(normPredicted, normExpected) > this.error) gradientDirection = gradientDirection * -1;
+      if (this.costFunc(predicted, expected) > this.error) gradientDirection = gradientDirection * -1;
       this.error = this.costFunc(predicted, expected);
       console.log(this.error + " and " + gradientDirection)
       numEpoch++;
