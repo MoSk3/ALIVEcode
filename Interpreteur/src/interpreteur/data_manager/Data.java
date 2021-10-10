@@ -75,12 +75,8 @@ public class Data extends JSONObject {
         CREER_REGRESSION(Categorie.AI),   // 0
         OPTIMISER_REGRESSION(Categorie.AI), // 1
         AFFICHER_NUAGE(Categorie.AI),     // 2
-<<<<<<< HEAD
         EVALUER(Categorie.AI),            // 3
-        FONCTION_COUT(Categorie.AI)       // 4
-=======
-        EVALUER(Categorie.AI)             // 3
->>>>>>> origin/dev
+        FONCTION_COUT(Categorie.AI),  // 4
         ;
 
         private final int id;
