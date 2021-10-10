@@ -3,6 +3,8 @@ import { Shape } from "../Shape";
 import { Template } from './typesSimulation';
 import { SerializableShape } from './typesSimulation';
 import { Vector } from '../Vector';
+import { loadFromTemplate } from './simulationClassUtils';
+import { images, imagesPath } from '../assets';
 
 type TemplateNamesObstacle = 'stop' | 'fall' | 'water' | 'lava';
 
@@ -28,6 +30,7 @@ export class Obstacle
 		this.class = 'Obstacle';
 		this.templateName = templateName;
 		this.carInteraction = true;
+		this.loadFromTemplate();
 	}
 
 	override collisionFct() {
@@ -42,10 +45,7 @@ export class Obstacle
 		const img = this.gameOverEvent.gameOverImg;
 		const message = this.gameOverEvent.message;
 
-		$('#level-failed-modal').on('show.bs.modal', function () {
-			$('#failure-cause').attr('src', img);
-			$('#description').text(message ?? '');
-		});
+		this.s.onLose(img, message);
 
 		//levelFailedModal.modal('show');
 	}
@@ -55,19 +55,23 @@ export class Obstacle
 	}
 
 	loadFromTemplate() {
-		Object.assign(this, this.templates[this.templateName]);
+		loadFromTemplate(this, this.templates, this.templateName);
 	}
 
 	readonly defaultTemplate: TemplateNamesObstacle = 'stop';
 	readonly templates: Template<TemplateNamesObstacle, Obstacle> = {
 		stop: {
-			isGameOver: false,
+			isGameOver: true,
+			gameOverEvent: {
+				gameOverImg: imagesPath.rocheMars1,
+				message: 'La voiture est retrée dans un mur!',
+			},
 		},
 
 		fall: {
 			isGameOver: true,
 			gameOverEvent: {
-				gameOverImg: '/static/images/gifs/hole.gif',
+				gameOverImg: imagesPath.hole,
 				message: 'La voiture est tombée dans un trou!',
 			},
 		},
@@ -75,7 +79,7 @@ export class Obstacle
 		lava: {
 			isGameOver: true,
 			gameOverEvent: {
-				gameOverImg: '/static/images/gifs/lava.gif',
+				gameOverImg: imagesPath.lava,
 				message: 'La voiture est tombée dans la lave!',
 			},
 		},
@@ -83,7 +87,7 @@ export class Obstacle
 		water: {
 			isGameOver: true,
 			gameOverEvent: {
-				gameOverImg: '/static/images/gifs/water_splash.gif',
+				gameOverImg: imagesPath.water_splash,
 				message: "La voiture est tombée dans l'eau!",
 			},
 		},

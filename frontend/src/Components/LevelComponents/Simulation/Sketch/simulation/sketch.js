@@ -33,6 +33,8 @@ export const sketch = s => {
 			s.fullscreenDiv = $(`.${props.fullscreenDiv}`).first();
 		if (props.canvasDiv) canvasDiv = $(`#${props.canvasDiv}`);
 		if (props.onChange) s.onChange = props.onChange;
+		if (props.onWin) s.onWin = props.onWin;
+		if (props.onLose) s.onLose = props.onLose;
 	};
 
 	s.preload = () => {
@@ -991,6 +993,24 @@ export const sketch = s => {
 	// #endregion
 
 	// #region Spawn Shapes and Delete Shapes
+
+	// Méthode qui sert à garder dans une seule variable la forme originale, le clone de la forme, et d'autres caractéristiques
+	s.storeShapeData = (
+		shape,
+		wasDeletedViaUndo = false,
+		wasRedo = false,
+		wasDeletedViaTrash = false,
+	) => {
+		let shapeData = {
+			originalShape: shape,
+			clonedShape: shape.cloneShape(),
+			wasDeletedViaUndo: wasDeletedViaUndo,
+			wasRedo: wasRedo,
+			wasDeletedViaTrash: wasDeletedViaTrash,
+		};
+		return shapeData;
+	};
+
 	s.addObjectToScene = (obj, z_index = 0) => {
 		if (!(z_index in s.shapes)) s.shapes[z_index] = [];
 		s.shapes[z_index].push(obj);
@@ -1110,7 +1130,8 @@ export const sketch = s => {
 				? 'objective'
 				: isButton
 				? 'button'
-				: undefined[(-w / 2, h / 2)],
+				: undefined,
+			[-w / 2, h / 2],
 			[w / 2, h / 2],
 			[w / 2, -h / 2],
 			[-w / 2, -h / 2],

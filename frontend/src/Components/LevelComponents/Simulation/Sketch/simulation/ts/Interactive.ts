@@ -2,6 +2,7 @@ import { Shape } from "../Shape";
 import { Template } from "./typesSimulation";
 import { SerializableShape } from './typesSimulation';
 import { Vector } from '../Vector';
+import { loadFromTemplate } from './simulationClassUtils';
 
 type TemplateNamesInteractive =
 	| 'objective'
@@ -40,8 +41,9 @@ export class Interactive
 		//s.addInteractiveObject(this);
 
 		//* add one to the number of colletables currently in the simulation
-		if (this.isCollectable) Interactive.totalCollectable++;
 		this.loadFromTemplate();
+		this.s.interactiveObjects.push(this);
+		if (this.isCollectable) this.s.coinsTotal++;
 	}
 
 	get uniqueProperties() {
@@ -49,11 +51,7 @@ export class Interactive
 	}
 
 	loadFromTemplate() {
-		Object.entries(this.templates[this.templateName]).forEach(
-			([name, value]) => {
-				if (name in this) (this as any)[name] = value;
-			},
-		);
+		loadFromTemplate(this, this.templates, this.templateName);
 	}
 
 	readonly defaultTemplate: TemplateNamesInteractive = 'collectable';

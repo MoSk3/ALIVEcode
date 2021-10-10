@@ -328,7 +328,7 @@ export function editModeSection(s: any) {
 			maison1.setSoundOnCollision(sounds.house_impact_audio);
 			maison1.onClickDown(() => {
 				if (!s.topMenu.hovering)
-					s.spawnShapeFromMenu(maison1, s.spawnObstacle(300, 300, false, 4));
+					s.spawnShapeFromMenu(maison1, s.spawnObstacle(300, 300, 'stop', 4));
 			});
 			s.sideMenu.addChild(maison1, true);
 
@@ -339,7 +339,7 @@ export function editModeSection(s: any) {
 			stone1.setSoundOnCollision(sounds.stone_impact_audio);
 			stone1.onClickDown(() => {
 				if (!s.topMenu.hovering)
-					s.spawnShapeFromMenu(stone1, s.spawnObstacle(150, 100, false, 4));
+					s.spawnShapeFromMenu(stone1, s.spawnObstacle(150, 100, 'stop', 4));
 			});
 			s.sideMenu.addChild(stone1, true);
 
@@ -350,7 +350,10 @@ export function editModeSection(s: any) {
 			rocheMars1.setSoundOnCollision(sounds.stone_impact_audio);
 			rocheMars1.onClickDown(() => {
 				if (!s.topMenu.hovering)
-					s.spawnShapeFromMenu(rocheMars1, s.spawnObstacle(150, 100, false, 4));
+					s.spawnShapeFromMenu(
+						rocheMars1,
+						s.spawnObstacle(150, 100, 'stop', 4),
+					);
 			});
 			s.sideMenu.addChild(rocheMars1, true);
 
@@ -361,7 +364,10 @@ export function editModeSection(s: any) {
 			rocheMars2.setSoundOnCollision(sounds.stone_impact_audio);
 			rocheMars2.onClickDown(() => {
 				if (!s.topMenu.hovering)
-					s.spawnShapeFromMenu(rocheMars2, s.spawnObstacle(150, 150, false, 4));
+					s.spawnShapeFromMenu(
+						rocheMars2,
+						s.spawnObstacle(150, 150, 'stop', 4),
+					);
 			});
 			s.sideMenu.addChild(rocheMars2, true);
 
@@ -372,7 +378,10 @@ export function editModeSection(s: any) {
 			mountains1.setSoundOnCollision(sounds.stone_impact_audio);
 			mountains1.onClickDown(() => {
 				if (!s.topMenu.hovering)
-					s.spawnShapeFromMenu(mountains1, s.spawnObstacle(150, 100, false, 4));
+					s.spawnShapeFromMenu(
+						mountains1,
+						s.spawnObstacle(150, 100, 'stop', 4),
+					);
 			});
 			s.sideMenu.addChild(mountains1, true);
 
@@ -383,7 +392,7 @@ export function editModeSection(s: any) {
 			tree1.setSoundOnCollision(sounds.tree_impact_audio);
 			tree1.onClickDown(() => {
 				if (!s.topMenu.hovering)
-					s.spawnShapeFromMenu(tree1, s.spawnObstacle(150, 150, false, 4));
+					s.spawnShapeFromMenu(tree1, s.spawnObstacle(150, 150, 'stop', 4));
 			});
 			s.sideMenu.addChild(tree1, true);
 
@@ -398,7 +407,7 @@ export function editModeSection(s: any) {
 			};
 			water1.onClickDown(() => {
 				if (!s.topMenu.hovering)
-					s.spawnShapeFromMenu(water1, s.spawnObstacle(150, 150, true, 3));
+					s.spawnShapeFromMenu(water1, s.spawnObstacle(150, 150, 'water', 3));
 			});
 			s.sideMenu.addChild(water1, true);
 
@@ -413,7 +422,7 @@ export function editModeSection(s: any) {
 			};
 			lava1.onClickDown(() => {
 				if (!s.topMenu.hovering)
-					s.spawnShapeFromMenu(lava1, s.spawnObstacle(150, 150, true, 3));
+					s.spawnShapeFromMenu(lava1, s.spawnObstacle(150, 150, 'lava', 3));
 			});
 			s.sideMenu.addChild(lava1, true);
 
@@ -428,7 +437,7 @@ export function editModeSection(s: any) {
 			};
 			hole1.onClickDown(() => {
 				if (!s.topMenu.hovering)
-					s.spawnShapeFromMenu(hole1, s.spawnObstacle(125, 75, true, 3));
+					s.spawnShapeFromMenu(hole1, s.spawnObstacle(125, 75, 'fall', 3));
 			});
 			s.sideMenu.addChild(hole1, true);
 
@@ -439,7 +448,10 @@ export function editModeSection(s: any) {
 			mars_dome1.setSoundOnCollision(sounds.metal_impact_audio);
 			mars_dome1.onClickDown(() => {
 				if (!s.topMenu.hovering)
-					s.spawnShapeFromMenu(mars_dome1, s.spawnObstacle(400, 300, false, 4));
+					s.spawnShapeFromMenu(
+						mars_dome1,
+						s.spawnObstacle(400, 300, 'stop', 4),
+					);
 			});
 			s.sideMenu.addChild(mars_dome1, true);
 
@@ -452,7 +464,7 @@ export function editModeSection(s: any) {
 				if (!s.topMenu.hovering)
 					s.spawnShapeFromMenu(
 						broken_rocket1,
-						s.spawnObstacle(150, 150, false, 4),
+						s.spawnObstacle(150, 150, 'stop', 4),
 					);
 			});
 			s.sideMenu.addChild(broken_rocket1, true);
@@ -468,7 +480,10 @@ export function editModeSection(s: any) {
 			};
 			black_hole1.onClickDown(() => {
 				if (!s.topMenu.hovering)
-					s.spawnShapeFromMenu(black_hole1, s.spawnObstacle(150, 150, true, 3));
+					s.spawnShapeFromMenu(
+						black_hole1,
+						s.spawnObstacle(150, 150, 'fall', 3),
+					);
 			});
 			s.sideMenu.addChild(black_hole1, true);
 		};
@@ -1417,23 +1432,6 @@ export function editModeSection(s: any) {
 			// Remet a sa rotation antérieur
 			shapeData.originalShape.rotation.x = 0;
 			shapeData.originalShape.rotate(shapeData.clonedShape.rotation.x);
-		};
-
-		// Méthode qui sert à garder dans une seule variable la forme originale, le clone de la forme, et d'autres caractéristiques
-		s.storeShapeData = (
-			shape: any,
-			wasDeletedViaUndo = false,
-			wasRedo = false,
-			wasDeletedViaTrash = false,
-		) => {
-			let shapeData = {
-				originalShape: shape,
-				clonedShape: shape.cloneShape(),
-				wasDeletedViaUndo: wasDeletedViaUndo,
-				wasRedo: wasRedo,
-				wasDeletedViaTrash: wasDeletedViaTrash,
-			};
-			return shapeData;
 		};
 
 		// Méthodes qui change le curseur lors d'un cas unique

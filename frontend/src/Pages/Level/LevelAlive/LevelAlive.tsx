@@ -3,7 +3,7 @@ import { useEffect, useState, useContext, useRef, useCallback } from 'react';
 import LineInterface from '../../../Components/LevelComponents/LineInterface/LineInterface';
 import { UserContext } from '../../../state/contexts/UserContext';
 import Simulation from '../../../Components/LevelComponents/Simulation/Simulation';
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, Image } from 'react-bootstrap';
 import {
 	faBookOpen,
 	faCog,
@@ -34,6 +34,7 @@ import Modal from '../../../Components/UtilsComponents/Modal/Modal';
 import useExecutor from '../../../state/hooks/useExecutor';
 import { useAlert } from 'react-alert';
 import LoadingScreen from '../../../Components/UtilsComponents/LoadingScreen/LoadingScreen';
+import Confetti from 'react-confetti';
 
 /**
  * Alive level page. Contains all the components to display and make the alive level functionnal.
@@ -73,6 +74,8 @@ const LevelAlive = ({
 	const [accountModalOpen, setAccountModalOpen] = useState(false);
 	const saveTimeout = useRef<any>(null);
 	const messageTimeout = useRef<any>(null);
+
+	const [showConfetti, setShowConfetti] = useState(false);
 
 	const level = useRef<LevelAliveModel>();
 	useEffect(() => {
@@ -289,6 +292,7 @@ const LevelAlive = ({
 											executor.init(s);
 											setSketch(s);
 											executor.loadLevelLayout(level.current?.layout ?? '[]');
+											executor.stop();
 										}}
 										onChange={(s: any) => {
 											const newLayout = executor.saveLayout(s);
@@ -301,6 +305,8 @@ const LevelAlive = ({
 											level.current!.layout = newLayout;
 											saveLevelTimed();
 										}}
+										stopExecution={() => executor.toggleExecution()}
+										setShowConfetti={set => setShowConfetti(set)}
 									/>
 								)}
 							</Row>
@@ -361,6 +367,7 @@ const LevelAlive = ({
 			) : (
 				<LoadingScreen />
 			)}
+			{showConfetti && <Confetti />}
 			<Modal
 				title={t('msg.auth.account_required')}
 				open={accountModalOpen}

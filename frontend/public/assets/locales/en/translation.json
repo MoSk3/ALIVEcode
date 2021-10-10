@@ -257,5 +257,10 @@
 				"paragraph4": "Obviously, neural networks are much more complex than that, and that's why a course on this will be available soon. Stay tuned!"
 			}
 		}
+	},
+	"simulation": {
+		"retry": "retry",
+		"lose": "you loooserrr",
+		"win": "Let's go boiiii!!!!"
 	}
 }

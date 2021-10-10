@@ -1,4 +1,5 @@
 import FillContainer from "../../UtilsComponents/FillContainer/FillContainer";
+import { Button, Modal as BootModal } from 'react-bootstrap';
 import { sketch } from './Sketch/simulation/sketch';
 import P5Wrapper from 'react-p5-wrapper';
 import { SimulationProps, StyledSimulation } from './simulationTypes';
@@ -6,7 +7,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSquare } from '@fortawesome/free-solid-svg-icons';
 import $ from 'jquery';
 import LoadingScreen from '../../UtilsComponents/LoadingScreen/LoadingScreen';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import Modal from '../../UtilsComponents/Modal/Modal';
+import { useTranslation } from 'react-i18next';
+import { Image } from 'react-bootstrap';
 
 /**
  * Simulation component that draws the car and make it functionnal
@@ -16,8 +20,32 @@ import { useState } from 'react';
  * @author Ecoral360
  * @author MoSk3
  */
-const Simulation = ({ init, onChange, id }: SimulationProps) => {
+const Simulation = ({
+	init,
+	onChange,
+	id,
+	stopExecution,
+	setShowConfetti,
+}: SimulationProps) => {
 	const [loading, setLoading] = useState(true);
+	const [loseModalOpen, setLoseModalOpen] = useState(false);
+	const [loseDescripton, setLoseDescription] = useState('');
+	const [winModalOpen, setWinModalOpen] = useState(false);
+	const [deathGif, setDeathGif] = useState<string>();
+	const { t } = useTranslation();
+
+	const onLose = (death_gif: string, msg: string) => {
+		setDeathGif(death_gif);
+		setLoseDescription(msg);
+		setLoseModalOpen(true);
+		stopExecution();
+	};
+
+	const onWin = () => {
+		setWinModalOpen(true);
+		setShowConfetti(true);
+		stopExecution();
+	};
 
 	return (
 		<StyledSimulation>
@@ -40,6 +68,8 @@ const Simulation = ({ init, onChange, id }: SimulationProps) => {
 							}}
 							sketch={sketch}
 							onChange={onChange}
+							onWin={onWin}
+							onLose={onLose}
 						/>
 					</>
 				) : (
@@ -47,6 +77,31 @@ const Simulation = ({ init, onChange, id }: SimulationProps) => {
 				)}
 			</FillContainer>
 			<FillContainer className="fullscreen-div" startAtTop />
+			<Modal
+				title={t('simulation.lose')}
+				open={loseModalOpen}
+				onClose={() => setLoseModalOpen(false)}
+				hideCloseButton
+				centered
+				submitText={t('simulation.retry')}
+			>
+				<Image alt="lose gif" src={deathGif}></Image>
+				<br />
+				{loseDescripton}
+			</Modal>
+			<Modal
+				title={t('simulation.win')}
+				open={winModalOpen}
+				onClose={() => {
+					setWinModalOpen(false);
+					setShowConfetti(false);
+				}}
+				hideCloseButton
+				centered
+				submitText={t('simulation.continue')}
+			>
+				🎉🎉🎉
+			</Modal>
 		</StyledSimulation>
 	);
 };

@@ -257,5 +257,10 @@
 				"paragraph4": "Évidemment, les réseaux de neurones sont bien plus complexes que cela, et c’est pourquoi un cours à ce sujet sera bientôt disponible. Reste à l’affût!"
 			}
 		}
+	},
+	"simulation": {
+		"retry": "réessayer",
+		"lose": "Tu as perduuuu",
+		"win": "Bravo tu as gagné!!!! 🎉"
 	}
 }
