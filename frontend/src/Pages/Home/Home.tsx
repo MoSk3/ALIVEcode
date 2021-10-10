@@ -14,6 +14,11 @@ import TypeWriter from '../../Components/UtilsComponents/TypeWriter/TypeWriter';
 import useRoutes from '../../state/hooks/useRoutes';
 import { useTranslation } from 'react-i18next';
 
+/**
+ * Home page of ALIVEcode
+ *
+ * @author MoSk3
+ */
 const Home = (props: HomeProps) => {
 	const history = useHistory();
 	const { t } = useTranslation();
@@ -22,7 +27,7 @@ const Home = (props: HomeProps) => {
 	return (
 		<>
 			<div className="header" style={{ top: '-50px' }}>
-				<h1>A.L.I.V.E.</h1>
+				<h1>ALIVEcode</h1>
 				<TypeWriter
 					lines={[t('home.msg1'), t('home.msg2'), t('home.msg3')]}
 					typeSpeed={80}

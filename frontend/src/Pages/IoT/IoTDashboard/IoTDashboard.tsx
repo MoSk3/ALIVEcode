@@ -19,6 +19,11 @@ const StyledDiv = styled(FillContainer)`
 	padding: 2vw;
 `;
 
+/**
+ * IoT dashboard page that contains all the projects, objects and stuff of the user
+ *
+ * @author MoSk3
+ */
 const IoTDashboard = (props: iotDashboardProps) => {
 	const { user } = useContext(UserContext);
 	const [projects, setProjects] = useState<IoTProject[]>();

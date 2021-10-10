@@ -1,43 +1,25 @@
-import { ButtonProps, ButtonVariants, StyledButtonProps } from './buttonTypes';
-import styled from 'styled-components';
+import {
+	ButtonProps,
+	ButtonVariants,
+	StyledSecondaryButton,
+	StyledDangerButton,
+	StyledPrimaryButton,
+} from './buttonTypes';
 import { useHistory } from 'react-router';
 
-const PrimaryButton = styled.button`
-	background-color: var(--third-color) !important;
-	border-style: none;
-	color: white;
-	padding: ${({ padding }: StyledButtonProps) => padding ?? 'none'};
-
-	&:hover {
-		background-color: var(--contrast-color) !important;
-		color: white;
-	}
-`;
-
-const DangerButton = styled.button`
-	background-color: rgb(207, 0, 0) !important;
-	border-style: none;
-	color: white;
-	padding: ${({ padding }: StyledButtonProps) => padding ?? 'none'};
-
-	&:hover {
-		background-color: var(--contrast-color) !important;
-		color: white;
-	}
-`;
-
-const SecondaryButton = styled.button`
-	background-color: var(--secondary-color) !important;
-	border-style: none;
-	color: white;
-	padding: ${({ padding }: StyledButtonProps) => padding ?? 'none'};
-
-	&:hover {
-		background-color: var(--contrast-color) !important;
-		color: white;
-	}
-`;
-
+/**
+ * Styled button with different premade variants
+ *
+ * @param {string} variant primary secondary or danger variant
+ * @param {React.ReactNode} children react children
+ * @param {string} type button type: button, submit or reset
+ * @param {() => void} onClick callback called when the button is clicked
+ * @param {string} to url to redirect on click
+ * @param {string} padding css padding
+ * @param {string} className css classes applied to the button
+ *
+ * @author MoSk3
+ */
 const Button = ({
 	variant,
 	type,
@@ -57,36 +39,36 @@ const Button = ({
 		switch (param) {
 			case 'secondary':
 				return (
-					<SecondaryButton
+					<StyledSecondaryButton
 						className={'btn ' + className}
 						padding={padding}
 						type={type}
 						onClick={customOnClick}
 					>
 						{children}
-					</SecondaryButton>
+					</StyledSecondaryButton>
 				);
 			case 'danger':
 				return (
-					<DangerButton
+					<StyledDangerButton
 						className={'btn ' + className}
 						padding={padding}
 						type={type}
 						onClick={customOnClick}
 					>
 						{children}
-					</DangerButton>
+					</StyledDangerButton>
 				);
 			default:
 				return (
-					<PrimaryButton
+					<StyledPrimaryButton
 						className={'btn ' + className}
 						padding={padding}
 						type={type}
 						onClick={customOnClick}
 					>
 						{children}
-					</PrimaryButton>
+					</StyledPrimaryButton>
 				);
 		}
 	};

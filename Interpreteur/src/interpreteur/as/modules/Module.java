@@ -11,16 +11,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
-public class Module {
-    private final String nomModule;
-    private final Fonction[] fonctions;
-    private final Variable[] variables;
-
-    Module(String nomModule, Fonction[] fonctions, Variable[] variables) {
-        this.nomModule = nomModule;
-        this.fonctions = fonctions;
-        this.variables = variables;
-    }
+public record Module(String nomModule, Fonction[] fonctions,
+                     Variable[] variables) {
 
     public void utiliser() {
         FonctionManager.ajouterStructure(nomModule);
@@ -39,7 +31,7 @@ public class Module {
                 FonctionManager.ajouterFonction(fonction);
         }
         for (Variable variable : variables) {
-            if (nomMethodes.contains(variable.obtenirNom())){
+            if (nomMethodes.contains(variable.obtenirNom())) {
                 Scope.getCurrentScope().declarerVariable(variable);
             }
         }

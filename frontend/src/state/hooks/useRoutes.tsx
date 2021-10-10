@@ -71,8 +71,7 @@ const useRoutes = () => {
 				maintenance &&
 				maintenance.started &&
 				!maintenance.finished &&
-				!route.maintenanceExempt &&
-				route.hasAccess
+				!route.maintenanceExempt
 			) {
 				if (!user || !user.isAdmin) {
 					route.component = MaintenanceError;
@@ -112,13 +111,14 @@ const useRoutes = () => {
 				else route.component = defaultRedirect;
 			});
 		}
-		return routeGroup;
+		return asRoutes(routeGroup);
 	};
 
 	const public_routes = asRoutes({
 		test: {
 			path: '/test',
 			component: Test,
+			adminOnly: true,
 		},
 		home: {
 			exact: true,
@@ -198,12 +198,10 @@ const useRoutes = () => {
 		create_course: {
 			path: '/course/create',
 			component: CourseForm,
-			adminOnly: true,
 		},
 		course: {
 			path: '/course/:id',
 			component: Course,
-			adminOnly: true,
 		},
 		account: {
 			path: '/account',
@@ -230,7 +228,7 @@ const useRoutes = () => {
 			component: LevelList,
 		},
 		level_edit: {
-			path: '/level/edit/:id',
+			path: '/level/edit/:levelId',
 			component: () => <Level editMode />,
 		},
 		level_browse: {
@@ -238,7 +236,7 @@ const useRoutes = () => {
 			component: LevelBrowse,
 		},
 		level_play: {
-			path: '/level/play/:id',
+			path: '/level/play/:levelId',
 			component: Level,
 		},
 		level_create: {

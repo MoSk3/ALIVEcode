@@ -1,5 +1,4 @@
-import styled from 'styled-components';
-import { IoTRouteCardProps } from './iotRouteCardTypes';
+import { IoTRouteCardProps, StyledRouteCard } from './iotRouteCardTypes';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
 import {
@@ -9,25 +8,14 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import AlertConfirm from '../../../UtilsComponents/Alert/AlertConfirm/AlertConfirm';
 
-const StyledRouteCard = styled.div`
-	background-color: rgba(var(--primary-color-rgb), 0.6);
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	padding: 5px 10px 5px 10px;
-
-	.icon {
-		color: var(--foreground-color);
-		transition: 0.1s;
-		cursor: pointer;
-		margin-left: 10px;
-	}
-
-	.icon:hover {
-		color: rgba(var(--foreground-color-rgb), 0.3);
-	}
-`;
-
+/**
+ * Component that shows an IoTRoute with its information
+ * (name, path)
+ *
+ * @param {IoTRoute} route IoTRoute object
+ *
+ * @author MoSk3
+ */
 const IoTRouteCard = ({ route }: IoTRouteCardProps) => {
 	const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
 

@@ -13,6 +13,12 @@ import { useHistory } from 'react-router';
 import { setAccessToken } from '../../../Types/accessToken';
 import { useTranslation } from 'react-i18next';
 
+/**
+ * Signup page that allows the user to register a new account
+ *
+ * @author MoSk3
+ *
+ */
 const SignUp = ({ userType }: SignUpProps) => {
 	const { setUser } = useContext(UserContext);
 	const {
