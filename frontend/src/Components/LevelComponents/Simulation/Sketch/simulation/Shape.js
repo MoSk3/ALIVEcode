@@ -1,6 +1,7 @@
 import { Vector } from './Vector';
 import { dist } from './functions';
 
+
 export class Shape {
 	constructor(s, ...points) {
 		this.s = s;
@@ -147,17 +148,21 @@ export class Shape {
 		let cloned;
 
 		if (this instanceof Obstacle)
-			cloned = new Obstacle(this.s, this.isGameOver, ...points);
+			cloned = new Obstacle(this.s, this.templateName, ...points);
 		else if (this instanceof Road)
-			cloned = new Road(this.s, this.minimumSize, ...points);
+			cloned = new Road(this.s, this.templateName, ...points);
 		else if (this instanceof Terrain)
-			cloned = new Terrain(this.s, this.speedMultiplier, ...points);
-		else if (this instanceof InteractiveObject)
-			cloned = new InteractiveObject(
+			cloned = new Terrain(this.s, this.templateName, ...points);
+		else if (this instanceof Interactive)
+			cloned = new Interactive(
 				this.s,
-				this.isCoin,
-				this.isObjectif,
-				this.isButton,
+				this.isCoin
+					? 'collectable'
+					: this.isObjectif
+					? 'objective'
+					: this.isButton
+					? 'button'
+					: undefined,
 				...points,
 			);
 		else cloned = new Shape(this.s, ...points);
@@ -1067,7 +1072,7 @@ export class Shape {
 
 export class ShapeException extends Error {}
 
-const Obstacle = require('./Obstacle deprecated').Obstacle;
-const Road = require('./Road').Road;
-const Terrain = require('./Terrain deprecated').Terrain;
-const InteractiveObject = require('./InteractiveObject').InteractiveObject;
+const { Obstacle } = require('./ts/Obstacle');
+const { Road } = require('./ts/Road');
+const { Terrain } = require('./ts/Terrain');
+const { Interactive } = require('./ts/Interactive');
