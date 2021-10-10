@@ -22,6 +22,7 @@ export class Car {
 
 		this.rotateSpeed = 2; // degrees / second
 		this.turning = false;
+		this.rotationGoal = null;
 
 		this.initialRotateSpeed = this.rotateSpeed;
 		this.initialPos = shape.pos.clone();
@@ -191,66 +192,59 @@ export class Car {
 		if (this.dir.y !== 0) {
 			// #region PHYSIC
 			// TODO méthode permettant de changer la vitesse de la voiture selon le terrain
-			let collisionWith = this.topShapeCollision();
-			let coef = 1;
-			if (collisionWith instanceof Terrain || collisionWith instanceof Road) {
-				coef = collisionWith.frictionCoef;
+
+			if (PhysicEngine.enabled) {
+				let collisionWith = this.topShapeCollision();
+				let coef = 1;
+				if (collisionWith instanceof Terrain || collisionWith instanceof Road) {
+					coef = collisionWith.frictionCoef;
+					coef = 1;
+				}
+
+				const orientationVec = this.shape.forward.normalize();
+				this.friction = PhysicEngine.rollingFrictionForce(
+					coef,
+					this.MASS,
+					orientationVec.clone(),
+				);
+
+				this.currentForceModulus +=
+					(this.friction.length - this.currentForceModulus) /
+					this.nbFrameToEquilibrium;
+
+				const angle = (360 - this.shape.rotation.x + 90) % 360;
+				const angleRad = (angle * Math.PI) / 180;
+				//console.log({angle});
+				const baseForce = new Vector(
+					Math.cos(angleRad) * this.currentForceModulus,
+					Math.sin(angleRad) * this.currentForceModulus,
+				);
+				const resultingForce = baseForce.clone().add(this.friction);
+				const accelerationVec = PhysicEngine.acceleration(
+					resultingForce,
+					this.MASS,
+				);
+				const speedVec = PhysicEngine.speed(
+					orientationVec.clone().multiplyScalar(this.speed),
+					accelerationVec,
+				);
+				this.speed = speedVec.length;
+
+				const timeFactor = PhysicEngine.s.maxFPS / PhysicEngine.s.frameRate();
+				this.shape.move(
+					speedVec
+						.clone()
+						.multiplyScalar(this.dir.y)
+						.multiplyScalar(timeFactor),
+				);
+			} else {
+				this.speed = 10;
+				this.shape.moveInDirection(
+					this.shape.forward,
+					this.dir.y * this.speed,
+					true,
+				);
 			}
-
-			const orientationVec = this.shape.forward.normalize();
-			this.friction = PhysicEngine.rollingFrictionForce(
-				coef,
-				this.MASS,
-				orientationVec.clone(),
-			);
-
-			this.currentForceModulus +=
-				(this.friction.length - this.currentForceModulus) /
-				this.nbFrameToEquilibrium;
-
-			const angle = (360 - this.shape.rotation.x + 90) % 360;
-			const angleRad = (angle * Math.PI) / 180;
-			//console.log({angle});
-			const baseForce = new Vector(
-				Math.cos(angleRad) * this.currentForceModulus,
-				Math.sin(angleRad) * this.currentForceModulus,
-			);
-			const resultingForce = baseForce.clone().add(this.friction);
-			const accelerationVec = PhysicEngine.acceleration(
-				resultingForce,
-				this.MASS,
-			);
-			const speedVec = PhysicEngine.speed(
-				orientationVec.clone().multiplyScalar(this.speed),
-				accelerationVec,
-			);
-			this.speed = speedVec.length;
-
-			//this.shape.moveInDirection(
-			//	this.shape.forward,
-			//	this.dir.y * this.speed_pixel_frame,
-			//	false
-			//)
-			const timeFactor = PhysicEngine.s.maxFPS / PhysicEngine.s.frameRate();
-			this.shape.move(
-				speedVec.clone().multiplyScalar(this.dir.y).multiplyScalar(timeFactor),
-			);
-
-			//console.log(`%c${this.dir.y * this.speed}🎉🎉🎉`, 'color:orange;')
-			//console.log(this.speed);
-			//console.log(
-			//	`%c${[resultingForce.x, resultingForce.y]}🎉🎉🎉`,
-			//	'color:orange;',
-			//);
-			// #endregion
-
-			/*
-			this.shape.moveInDirection(
-				this.shape.forward,
-				this.dir.y * this.speed,
-				true
-			)
-			*/
 		}
 
 		if (this.dir.x !== 0) {
@@ -270,18 +264,19 @@ export class Car {
 			this.shape.setRotation(this.rotationBeforeTurn + step);
 
 			/*
+		if (this.rotationGoal) {
 			const goal = this.rotationGoal;
-			const speed =
+			const rotationStep =
 				this.rotateSpeed *
 				this.rotationDir *
 				(this.s.maxFPS / this.s.frameRate());
 			let res = 0;
-			if (Math.abs(goal - this.rotationAmount) <= Math.abs(speed / 2))
+			if (Math.abs(goal - this.rotationAmount) <= Math.abs(rotationStep / 2))
 				res = goal;
 			else {
-				this.rotationAmount += speed;
+				this.rotationAmount += rotationStep;
 				res =
-					Math.abs(goal - this.rotationAmount) <= Math.abs(speed / 2)
+					Math.abs(goal - this.rotationAmount) <= Math.abs(rotationStep / 2)
 						? goal
 						: this.rotationAmount;
 			}
@@ -299,28 +294,6 @@ export class Car {
 			*/
 		}
 
-		/*
-        let goal = this.shape.rotationGoal.clone()
-            let rotation = this.shape.rotation.clone()
-            let speed = this.rotateSpeed * this.shape.rotationDir * ((Date.now() - this.s.pdt) / (1000 / 60))
-            let res = new Vector(0, 0)
-            if (dist(rotation, goal) <= Math.abs(speed / 2)) res = goal
-            else {
-                rotation.add(new Vector(speed, 0))
-                res = (dist(rotation, goal) <= Math.abs(speed / 2) ? goal.clone() : rotation)
-            }
-            //let res = .translateTo(this.shape.rotationGoal, Date.now() - this.s.pdt, )
-            this.shape.setRotation(res.x)
-            if (this.shape.rotation.isSimilar(goal)) {
-                this.shape.rotationGoal = null
-                this.shape.setImg(carTop)
-                if (this.callback != null) {
-                    let tempCallback = this.callback
-                    this.callback = null
-                    tempCallback()
-                }
-            }
-            */
 		if (this.i % this.updateInterval === 0) {
 			this.updateFct();
 			this.i = 1;
@@ -389,10 +362,12 @@ export class Car {
 		this.rotationAmount = 0;
 		this.rotationDir = angle < 0 ? -1 : 1;
 		this.turning = true;
+		this.rotationGoal = angle;
 	}
 
 	stopRotate() {
 		this.turning = false;
+		this.rotationGoal = null;
 		this.shape.setImg(images.carTop);
 	}
 

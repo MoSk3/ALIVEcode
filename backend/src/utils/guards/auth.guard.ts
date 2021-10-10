@@ -12,6 +12,7 @@ import { UserEntity } from '../../models/user/entities/user.entity';
 export interface MyRequest extends Request {
   user: UserEntity;
   classroom?: ClassroomEntity;
+  expiredToken?: boolean;
 }
 
 @Injectable({ scope: Scope.REQUEST })
@@ -28,13 +29,11 @@ export class RolesGuard implements CanActivate {
       if (!roles) roles = [];
 
       const user = this.req.user;
-      if (!user) throw new HttpException('Not Authenticated', HttpStatus.UNAUTHORIZED);
+      if (!user || this.req.expiredToken) throw new HttpException('Not Authenticated', HttpStatus.UNAUTHORIZED);
 
       if (!hasRole(user, ...roles)) throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
       this.req.user = user;
     } catch (err) {
-      if (err instanceof JsonWebTokenError && err.name === 'TokenExpiredError')
-        throw new HttpException('Not Authenticated', HttpStatus.UNAUTHORIZED);
       if (err instanceof HttpException) throw err;
       throw new HttpException('Internal server error', HttpStatus.INTERNAL_SERVER_ERROR);
     }

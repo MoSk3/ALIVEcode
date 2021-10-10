@@ -4,11 +4,9 @@ import { images } from '../../../Components/LevelComponents/Simulation/Sketch/si
 import { InteractiveObject } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/InteractiveObject';
 import { Shape } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/Shape';
 import { Vector } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/Vector';
-import $ from 'jquery';
 import { BaseLayoutObj } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/ts/typesSimulation';
 import { Serializer } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/ts/Serializer';
 import { makeShapeEditable } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/editMode';
-import { User } from '../../../Models/User/user.entity';
 
 // TODO: robotConnected
 const robotConnected = false;
@@ -41,9 +39,9 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 				makeShapeEditable(shape);
 			}
 
-			console.log(this.s.shapes);
+			if (process.env.REACT_APP_DEBUG) console.log(this.s.shapes);
 		}
-		if (this.creator?.id) {
+		if (this.creator) {
 			this.spawnEditorButton();
 		}
 		this.spawnRobotConnectButton();

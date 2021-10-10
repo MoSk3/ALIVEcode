@@ -6,15 +6,22 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSquare } from '@fortawesome/free-solid-svg-icons';
 import $ from 'jquery';
 import LoadingScreen from '../../UtilsComponents/LoadingScreen/LoadingScreen';
+import { useState } from 'react';
 
-const Simulation = ({ init, onChange }: SimulationProps) => {
+/**
+ * Simulation component that draws the car and make it functionnal
+ *
+ * @param {(s: any) => void} init init function that has the generated sketch as an argument
+ *
+ * @author Ecoral360
+ * @author MoSk3
+ */
+const Simulation = ({ init, onChange, id }: SimulationProps) => {
+	const [loading, setLoading] = useState(true);
+
 	return (
 		<StyledSimulation>
-			<FillContainer
-				className="simulation-div"
-				relative
-				style={{ backgroundColor: 'white' }}
-			>
+			<FillContainer id={id} relative style={{ backgroundColor: 'white' }}>
 				<FontAwesomeIcon
 					className="zoom-button"
 					icon={faSquare}

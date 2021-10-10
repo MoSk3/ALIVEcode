@@ -1,5 +1,5 @@
 import { LevelAliveProps, StyledAliveLevel } from './levelAliveTypes';
-import { useEffect, useState, useContext, useRef } from 'react';
+import { useEffect, useState, useContext, useRef, useCallback } from 'react';
 import LineInterface from '../../../Components/LevelComponents/LineInterface/LineInterface';
 import { UserContext } from '../../../state/contexts/UserContext';
 import Simulation from '../../../Components/LevelComponents/Simulation/Simulation';
@@ -35,10 +35,24 @@ import useExecutor from '../../../state/hooks/useExecutor';
 import { useAlert } from 'react-alert';
 import LoadingScreen from '../../../Components/UtilsComponents/LoadingScreen/LoadingScreen';
 
+/**
+ * Alive level page. Contains all the components to display and make the alive level functionnal.
+ *
+ * @param {LevelAliveModel} level alive level object
+ * @param {boolean} editMode if the level is in editMode or not
+ * @param {LevelProgression} progression the level progression of the current user
+ * @param {string} initialCode the initial code of the level
+ * @param {(level: LevelAliveModel) => void} setLevel callback used to modify the level in the parent state
+ * @param {(progression: LevelProgression) => void} setProgression callback used to modify the level progression in the parent state
+ *
+ * @author Ecoral360
+ * @author MoSk3
+ */
 const LevelAlive = ({
 	level: currentLevel,
 	editMode,
 	progression,
+	initialCode,
 	setLevel,
 	setProgression,
 }: LevelAliveProps) => {
@@ -76,24 +90,23 @@ const LevelAlive = ({
 	};
 
 	useEffect(() => {
-		if (user && editMode && level.current?.creator.id !== user.id)
+		if (user && editMode && level.current?.creator?.id !== user.id)
 			return history.push(routes.public.home.path);
 
 		setExecutor(new LevelAliveExecutor(level.current!.name, user ?? undefined));
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, level]);
 
-	const saveLevel = async () => {
+	const saveLevel = useCallback(async () => {
 		if (saveTimeout.current) clearTimeout(saveTimeout.current);
 		if (messageTimeout.current) clearTimeout(messageTimeout.current);
 		setSaving(true);
 		setSaved(false);
 
 		if (!level.current) {
-			console.log('save aborted');
+			if (process.env.REACT_APP_DEBUG) console.log('save aborted');
 			return;
 		}
-		console.log(level.current.layout);
 
 		const updatedLevel = (await api.db.levels.update(
 			{
@@ -111,15 +124,14 @@ const LevelAlive = ({
 		}, 500);
 
 		level.current = updatedLevel;
-		console.log(updatedLevel.layout);
-	};
+	}, [level]);
 
 	const saveLevelTimed = () => {
 		if (saveTimeout.current) clearTimeout(saveTimeout.current);
 		saveTimeout.current = setTimeout(saveLevel, 2000);
 	};
 
-	const saveProgression = async () => {
+	const saveProgression = useCallback(async () => {
 		if (!user || !progression) return;
 		if (saveTimeout.current) clearTimeout(saveTimeout.current);
 		if (messageTimeout.current) clearTimeout(messageTimeout.current);
@@ -141,7 +153,7 @@ const LevelAlive = ({
 			}, 5000);
 		}, 500);
 		setProgression(updatedProgression);
-	};
+	}, [progression, setProgression, user]);
 
 	const saveProgressionTimed = () => {
 		if (saveTimeout.current) clearTimeout(saveTimeout.current);
@@ -149,6 +161,7 @@ const LevelAlive = ({
 	};
 
 	useEffect(() => {
+		$(document).off('keydown');
 		$(document).on('keydown', e => {
 			if (e.key === 's' && e.ctrlKey) {
 				e.preventDefault();
@@ -157,7 +170,9 @@ const LevelAlive = ({
 				editMode ? saveLevel() : saveProgression();
 			}
 		});
+	}, [editMode, saveLevel, saveProgression, user]);
 
+	useEffect(() => {
 		return () => {
 			clearTimeout(saveTimeout.current);
 			clearTimeout(messageTimeout.current);
@@ -197,16 +212,18 @@ const LevelAlive = ({
 										/>
 									</>
 								)}
-								{user && !editMode && user.id === level.current?.creator.id && (
-									<IconButton
-										to={routes.auth.level_edit.path.replace(
-											':id',
-											level.current.id,
-										)}
-										icon={faPencilAlt}
-										size="2x"
-									/>
-								)}
+								{user &&
+									!editMode &&
+									user.id === level.current?.creator?.id && (
+										<IconButton
+											to={routes.auth.level_edit.path.replace(
+												':id',
+												level.current.id,
+											)}
+											icon={faPencilAlt}
+											size="2x"
+										/>
+									)}
 								<IconButton
 									onClick={() => goToNewTab(routes.public.asDocs.path)}
 									icon={faBookOpen}
@@ -253,7 +270,7 @@ const LevelAlive = ({
 								/>
 							) : (
 								<LineInterface
-									defaultContent={
+									initialContent={
 										progression?.data.code
 											? progression.data.code
 											: level.current.initialCode
@@ -266,12 +283,13 @@ const LevelAlive = ({
 							<Row id="simulation-row" style={{ height: '60%' }}>
 								{executor && level.current && (
 									<Simulation
+										id={level.current.id}
 										init={s => {
 											executor.init(s);
 											setSketch(s);
 											executor.loadLevelLayout(level.current?.layout ?? '[]');
 										}}
-										onChange={s => {
+										onChange={(s: any) => {
 											const newLayout = executor.saveLayout(s);
 											if (!newLayout) {
 												alert.error(

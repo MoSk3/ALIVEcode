@@ -31,7 +31,7 @@ export const sketch = s => {
 		if (props.init) s.init = props.init;
 		if (props.fullscreenDiv)
 			s.fullscreenDiv = $(`.${props.fullscreenDiv}`).first();
-		if (props.canvasDiv) canvasDiv = $(`.${props.canvasDiv}`).first();
+		if (props.canvasDiv) canvasDiv = $(`#${props.canvasDiv}`);
 		if (props.onChange) s.onChange = props.onChange;
 	};
 
@@ -296,7 +296,8 @@ export const sketch = s => {
 			// TODO: save
 			//Save
 			if (s.levelHasChanged) {
-				console.log('level changed, it will be saved automatically soon...');
+				if (process.env.REACT_APP_DEBUG)
+					console.log('level changed, it will be saved automatically soon...');
 				s.onChange(s);
 				s.levelHasChanged = false;
 			}
@@ -1157,6 +1158,7 @@ export const sketch = s => {
 		car.shape.setImg(images.carTop);
 		s.cars.push(car);
 		s.selectedCar = s.cars.length - 1;
+		s.car = car;
 		return car;
 	};
 
