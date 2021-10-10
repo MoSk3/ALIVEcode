@@ -111,6 +111,8 @@ const LevelAI = ({
 		borderWidth: 1,
 	});
 	let datasets = [initialDataset];
+	let pointsOnGraph: boolean = false;
+	let regOnGraph: boolean = false;
 
 	const [chartData, setChartData] = useState({
 		datasets: datasets,
@@ -145,6 +147,7 @@ const LevelAI = ({
 	 * Sets the data of the graph to the level's data and displays it on the screen
 	 */
 	function showDataCloud(): void {
+		pointsOnGraph = true;
 		setDataOnGraph(mainDataset);
 	}
 
@@ -163,6 +166,7 @@ const LevelAI = ({
 	 * Generates the regression's points and shows them on the graph.
 	 */
 	function showRegression() {
+		regOnGraph = true;
 		const points = func?.generatePoints();
 		setDataOnGraph(points);
 	}
@@ -180,6 +184,16 @@ const LevelAI = ({
 	}
 
 	/**
+	 * Calculates the MSE cost for the current regression compared to the dataset of the level.
+	 * @returns the calculated cost.
+	 */
+	function costMSE(): void {
+		if (pointsOnGraph) setDataOnGraph(mainDataset);
+		showRegression();
+		cmd?.print("Erreur du modèle : " + func.computeMSE(data));
+	}
+
+	/**
 	 * Creates a new Regression that fits as close as possible the data and shows it on
 	 * the graph.
 	 * @param lr the learning rate for the optimization algorithm.
@@ -192,9 +206,9 @@ const LevelAI = ({
 			RegressionOptimizer.costMSE,
 		);
 		func = optimizer.optimize(data);
-		console.log(optimizer.getError());
-		console.log(func);
 		showRegression();
+		cmd?.print("Nouveaux paramètres de la régression :");
+		cmd?.print(func.paramsToString());
 	}
 
 	/**
@@ -203,7 +217,8 @@ const LevelAI = ({
 	 * @returns the output of the model.
 	 */
 	function evaluate(x: number): number {
-		console.log(memorizedChartData);
+		if (pointsOnGraph) setDataOnGraph(mainDataset);
+		if (regOnGraph) showRegression();
 		return func.compute(x);
 	}
 
@@ -219,6 +234,8 @@ const LevelAI = ({
 					resetGraph,
 					optimizeRegression,
 					evaluate,
+					costMSE,
+					showRegression
 				},
 				level.name,
 				user || undefined,

@@ -1,6 +1,12 @@
 import PolyRegression from '../../../../Components/LevelComponents/LevelGraph/PolyRegression';
 import DataSample from './DataSample';
 
+/**
+ * Superclass for every Optimizer class. It contains all usefull static and abstract methods 
+ * for AI algorithms and optimization techniques.
+ * 
+ * @author Félix Jobin
+ */
 export default abstract class RegressionOptimizer {
 	protected EPSILON: number = 1e-8;
 	protected error: number;
@@ -69,7 +75,7 @@ export default abstract class RegressionOptimizer {
 	 * @returns the mean squared error between the two values.
 	 */
 	public static MSE(predicted: number, real: number): number {
-		return Math.pow(predicted - real, 4);
+		return Math.pow(predicted - real, 2);
 	}
 
 	/**
@@ -87,8 +93,8 @@ export default abstract class RegressionOptimizer {
 		for (let i: number = 0; i < predicted.length; i++) {
 			sum += RegressionOptimizer.MSE(predicted[i], real[i]);
 		}
-
-		return sum / predicted.length;
+		
+		return Math.round(sum / predicted.length);
 	}
 
 	/**
