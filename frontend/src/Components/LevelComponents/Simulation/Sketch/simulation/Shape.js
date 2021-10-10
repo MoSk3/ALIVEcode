@@ -299,8 +299,8 @@ export class Shape {
 		this.children = [];
 	}
 
-	rotate(angle, point = null) {
-		if (point == null) point = this.pos;
+	rotate(angle, point) {
+		if (point === undefined) point = this.pos;
 		this.rotation.x = (this.rotation.x + angle) % 360;
 		if (this.rotation.x < 0) this.rotation.x += 360;
 		let newAngle = 360 - angle;

@@ -16,6 +16,8 @@ import { floatEquals, overlap } from './functions';
 import $ from 'jquery';
 import { PhysicEngine } from '../physicEngine/physicEngine';
 import { Serializer } from './ts/Serializer';
+import { Decoration } from './ts/Decoration';
+import { Figure } from './ts/Figure';
 
 export const sketch = s => {
 	// #region Setup
@@ -1067,6 +1069,19 @@ export const sketch = s => {
 		return shape;
 	};
 
+	s.spawnDecoration = (x, y, w, h, z_index = 0) => {
+		let decoration = new Decoration(
+			s,
+			'base',
+			[-w / 2, h / 2],
+			[w / 2, h / 2],
+			[w / 2, -h / 2],
+			[-w / 2, -h / 2],
+		);
+		s.addObjectToScene(decoration, z_index);
+		return decoration;
+	};
+
 	/**
 	 *
 	 * @param {number} w
@@ -1144,6 +1159,12 @@ export const sketch = s => {
 
 	s.spawnFixedObject = (z_index, ...points) => {
 		let shape = new FixedObject(s, ...points);
+		s.addObjectToScene(shape, z_index);
+		return shape;
+	};
+
+	s.spawnFigure = (z_index, templateName, ...points) => {
+		let shape = new Figure(s, templateName, ...points);
 		s.addObjectToScene(shape, z_index);
 		return shape;
 	};

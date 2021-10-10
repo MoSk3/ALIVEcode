@@ -46,13 +46,14 @@ export class Serializer {
 	}
 
 	static vectorToCoord(shapeInfo: ShapeInfo): number[][] {
-		const { position: positionPoints, vertices, rotation } = shapeInfo;
-
-		const position = new Vector(positionPoints.x, positionPoints.y);
+		const { position, vertices, rotation } = shapeInfo;
 
 		const points = vertices.map(vertex => {
 			const point: Vector = new Vector(vertex.x, vertex.y);
-			point.rotate(Math.hypot(rotation.x, rotation.y), position);
+			point.rotate(
+				(rotation.x * Math.PI) / 180,
+				new Vector(position.x, position.y),
+			);
 			return [point.x, point.y];
 		});
 		if (process.env.REACT_APP_DEBUG) console.log(points);
@@ -80,14 +81,17 @@ export class Serializer {
 						},
 					);
 
-				loadImages(serializedShape.imageName);
-				shape.setImg(images[serializedShape.imageName as imageNameType]);
+				if (serializedShape.imageName) {
+					loadImages(serializedShape.imageName);
+					shape.setImg(images[serializedShape.imageName as imageNameType]);
+				}
 
 				if (serializedShape.shapeType === 'Car') {
 					s.car = s.spawnCar(0, 0, 75, 110);
 					if (process.env.REACT_APP_DEBUG) console.log(s.car);
 					continue;
 				}
+				shape.rotate(serializedShape.shapeInfo.rotation.x, shape.pos);
 				shapes.push(shape);
 			}
 			return shapes;

@@ -594,7 +594,10 @@ export function editModeSection(s: any) {
 			satelitte1.color = s.color(0, 0);
 			satelitte1.onClickDown(() => {
 				if (!s.topMenu.hovering)
-					s.spawnShapeFromMenu(satelitte1, s.spawnRect(0, 0, 150, 150, 110));
+					s.spawnShapeFromMenu(
+						satelitte1,
+						s.spawnDecoration(0, 0, 150, 150, 110),
+					);
 			});
 			s.sideMenu.addChild(satelitte1, true);
 
@@ -604,7 +607,7 @@ export function editModeSection(s: any) {
 			alien1.color = s.color(0, 0);
 			alien1.onClickDown(() => {
 				if (!s.topMenu.hovering)
-					s.spawnShapeFromMenu(alien1, s.spawnRect(0, 0, 150, 150, 110));
+					s.spawnShapeFromMenu(alien1, s.spawnDecoration(0, 0, 150, 150, 110));
 			});
 			s.sideMenu.addChild(alien1, true);
 
@@ -614,7 +617,10 @@ export function editModeSection(s: any) {
 			crackHole1.color = s.color(0, 0);
 			crackHole1.onClickDown(() => {
 				if (!s.topMenu.hovering)
-					s.spawnShapeFromMenu(crackHole1, s.spawnRect(0, 0, 150, 150, 95));
+					s.spawnShapeFromMenu(
+						crackHole1,
+						s.spawnDecoration(0, 0, 150, 150, 95),
+					);
 			});
 			s.sideMenu.addChild(crackHole1, true);
 
@@ -624,7 +630,7 @@ export function editModeSection(s: any) {
 			crack1.color = s.color(0, 0);
 			crack1.onClickDown(() => {
 				if (!s.topMenu.hovering)
-					s.spawnShapeFromMenu(crack1, s.spawnRect(0, 0, 150, 150, 95));
+					s.spawnShapeFromMenu(crack1, s.spawnDecoration(0, 0, 150, 150, 95));
 			});
 			s.sideMenu.addChild(crack1, true);
 		};
@@ -667,7 +673,7 @@ export function editModeSection(s: any) {
 				if (!s.topMenu.hovering)
 					s.spawnShapeFromMenu(
 						triangle,
-						s.spawnShape(10, [-75, -150], [0, -50], [75, -150]),
+						s.spawnFigure(10, 'base', [-75, -150], [0, -50], [75, -150]),
 					);
 			});
 			s.sideMenu.addChild(triangle, true);
@@ -677,7 +683,10 @@ export function editModeSection(s: any) {
 			carre.color = 'cyan';
 			carre.onClickDown(() => {
 				if (!s.topMenu.hovering)
-					s.spawnShapeFromMenu(carre, s.spawnRect(0, 0, 150, 150, 10));
+					s.spawnShapeFromMenu(
+						carre,
+						s.spawnFigure(10, 'base', [0, 0], [0, 150], [150, 150], [150, 0]),
+					);
 			});
 			s.sideMenu.addChild(carre, true);
 
@@ -686,7 +695,10 @@ export function editModeSection(s: any) {
 			rectangle.color = 'red';
 			rectangle.onClickDown(() => {
 				if (!s.topMenu.hovering)
-					s.spawnShapeFromMenu(rectangle, s.spawnRect(0, 0, 100, 150, 10));
+					s.spawnShapeFromMenu(
+						rectangle,
+						s.spawnFigure(10, 'base', [0, 0], [0, 100], [150, 100], [150, 0]),
+					);
 			});
 			s.sideMenu.addChild(rectangle, true);
 		};

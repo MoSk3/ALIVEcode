@@ -1,5 +1,6 @@
 import { Shape } from "../Shape";
-import { Template } from "./typesSimulation";
+import { loadFromTemplate } from "./simulationClassUtils";
+import { Template } from './typesSimulation';
 import { SerializableShape } from './typesSimulation';
 
 type TemplateNamesFigure = 'base';
@@ -15,6 +16,7 @@ export class Figure
 		super(s, ...points);
 		this.class = 'Figure';
 		this.templateName = templateName;
+		this.loadFromTemplate();
 	}
 
 	get uniqueProperties() {
@@ -24,7 +26,7 @@ export class Figure
 	}
 
 	loadFromTemplate() {
-		Object.assign(this, this.templates[this.templateName]);
+		loadFromTemplate(this, this.templates, this.templateName);
 	}
 
 	readonly defaultTemplate: TemplateNamesFigure = 'base';
