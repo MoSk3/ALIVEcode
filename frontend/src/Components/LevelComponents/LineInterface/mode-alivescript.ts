@@ -120,94 +120,6 @@ ace.define(
 			let importedModules: string[] = [];
 			//let usedVariables: string[] = []
 			//let usedConstants: string[] = []
-			/*
-				const reserved_words = {
-					boucles: [
-						'\\brepeter\\b',
-						'\\bfaire\\b',
-						'\\btant que\\b',
-						'\\bpour\\b',
-						'\\bsi\\b',
-						'\\bsinon\\b',
-						'\\.\\.\\.',
-						'\\bbond\\b',
-						'\\bdans\\b',
-						'\\bconst\\b',
-					],
-					fonctions: [
-						'\\bstructure\\b',
-						'\\bfonction\\b',
-						'\\bset\\b',
-						'\\bget\\b',
-					],
-					fonctions_built_in: [
-						'\\baleatoire\\b', 
-						'\\btypeDe\\b',
-						'\\binfo\\b',
-	
-						// liste
-						'\\bmap\\b',
-						'\\bfiltrer\\b',
-						'\\bsomme\\b',
-						'\\bmax\\b',
-						'\\bmin\\b',
-						'\\bunir\\b',
-						'\\bjoindre\\b',
-	
-						// iterable (liste + texte)
-						'\\binverser\\b',
-						'\\btailleDe\\b',
-	
-						// texte
-						'\\bmaj\\b',
-						'\\bminus\\b',
-						'\\bestNumerique\\b',
-						'\\bformat\\b',
-						'\\bsep\\b',
-	
-						// nombre (entier + decimal)
-						'\\bbin\\b',
-					],
-					fin_fonctions: [
-						'\\bfin fonction\\b',
-						'\\bfin structure\\b',
-						'\\bfin set\\b',
-						'\\bfin get\\b',
-					],
-					fin_structures: [
-						'\\bfin pour\\b',
-						'\\bfin si\\b',
-						'\\bfin tant que\\b',
-						'\\bfin repeter\\b',
-					],
-					commands: [
-						'\\bavancer\\b',
-						'\\breculer\\b',
-						'\\bdroite\\b',
-						'\\bgauche\\b',
-						'\\barreter\\b',
-						'\\blire\\b',
-						'\\bafficher\\b',
-						'\\battendre\\b',
-						'\\butiliser\\b',
-						'\\bvar\\b',
-					],
-					autres: ['\\bretourner\\b', '\\bsortir\\b', '\\bcontinuer\\b'],
-					datatypes: [
-						'\\bentier\\b',
-						'\\bdecimal\\b',
-						'\\btexte\\b',
-						'\\bbooleen\\b',
-						'\\bliste\\b',
-						'\\bfonctionType\\b',
-						'\\bnulType\\b',
-						'\\bnombre\\b',
-						'\\btout\\b',
-						'\\biterable\\b',
-					],
-					logiques: ['\\bet\\b', '\\bou\\b', '\\bpas\\b'],
-				};
-				*/
 
 			this.$rules = {
 				start: [
@@ -250,7 +162,7 @@ ace.define(
 							//usedConstants.push(variable_name)
 							return ['keyword.control.bold', 'support.italic'];
 						},
-						regex: `(\\bconst\\s+)(${lintInfo.variable})`,
+						regex: `(${lintInfo.const}\\s+)(${lintInfo.variable})`,
 					},
 					{
 						token: 'support',
@@ -259,6 +171,10 @@ ace.define(
 					{
 						token: 'variable.language',
 						regex: lintInfo.commands.join('|'),
+					},
+					{
+						token: 'keyword.control.bold',
+						regex: `(${lintInfo.const})`,
 					},
 					{
 						token: 'support.function',
