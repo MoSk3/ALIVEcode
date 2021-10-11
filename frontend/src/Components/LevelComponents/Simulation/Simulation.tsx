@@ -10,6 +10,8 @@ import { useState, useCallback } from 'react';
 import Modal from '../../UtilsComponents/Modal/Modal';
 import { useTranslation } from 'react-i18next';
 import { Image } from 'react-bootstrap';
+import FormModal from '../../UtilsComponents/FormModal/FormModal';
+import ConnectCarForm from '../ConnectCarForm/ConnectCarForm';
 
 /**
  * Simulation component that draws the car and make it functionnal
@@ -30,6 +32,7 @@ const Simulation = ({
 	const [loseModalOpen, setLoseModalOpen] = useState(false);
 	const [loseDescripton, setLoseDescription] = useState('');
 	const [winModalOpen, setWinModalOpen] = useState(false);
+	const [connectModalOpen, setConnectModalOpen] = useState(false);
 	const [deathGif, setDeathGif] = useState<string>();
 	const { t } = useTranslation();
 
@@ -48,6 +51,10 @@ const Simulation = ({
 		setShowConfetti(true);
 		stopExecution();
 	}, [stopExecution, setShowConfetti]);
+
+	const onConnectCar = useCallback(() => {
+		setConnectModalOpen(true);
+	}, []);
 
 	return (
 		<StyledSimulation>
@@ -68,6 +75,7 @@ const Simulation = ({
 							onChange={onChange}
 							onWin={onWin}
 							onLose={onLose}
+							onConnectCar={onConnectCar}
 							init={(s: any) => {
 								setLoading(false);
 								init(s);
@@ -106,6 +114,13 @@ const Simulation = ({
 			>
 				🎉🎉🎉
 			</Modal>
+			<FormModal
+				open={connectModalOpen}
+				title={t('simulation.modal.connect_car.title')}
+				onClose={() => setConnectModalOpen(false)}
+			>
+				<ConnectCarForm onClose={() => setConnectModalOpen(false)} />
+			</FormModal>
 		</StyledSimulation>
 	);
 };

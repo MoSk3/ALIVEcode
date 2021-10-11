@@ -74,8 +74,8 @@ export class CarGateway implements OnGatewayDisconnect, OnGatewayConnection, OnG
   @SubscribeMessage('connect_car')
   connectCar(@MessageBody() id: string, @ConnectedSocket() socket: WebSocket) {
     if (!id || typeof id !== 'string') throw new WsException('Bad payload');
+    if (this.cars.find(c => c.socket === socket)) throw new WsException('Already registered as a car');
     if (this.cars.find(c => c.id === id)) throw new WsException('Id already taken');
-    if (this.watchers.find(w => w.socket === socket)) throw new WsException('Already registered as a watcher');
 
     this.cars.push({
       id,
@@ -87,24 +87,31 @@ export class CarGateway implements OnGatewayDisconnect, OnGatewayConnection, OnG
 
   // TODO : payload validation
   @SubscribeMessage('connect_watcher')
-  register_light(@ConnectedSocket() socket: WebSocket, @MessageBody() payload?: WatcherConnectPayload) {
+  connect_watcher(@ConnectedSocket() socket: WebSocket, @MessageBody() payload?: WatcherConnectPayload) {
+    console.log(payload);
     if (!payload || !Array.isArray(payload.targets)) throw new WsException('Bad payload');
-    if (this.cars.find(c => c.socket === socket)) throw new WsException('Already registered as a car');
+    if (this.watchers.find(w => w.socket === socket)) throw new WsException('Already registered as a watcher');
 
     this.watchers.push({
       socket,
       targets: payload.targets,
     });
     this.logger.log(`Watcher connected: ${socket}`);
-    return 'Watcher connected';
+    return {
+      event: 'connect-success',
+      data: 'Watcher connected',
+    };
   }
 
   @SubscribeMessage('execute')
   send_light(@ConnectedSocket() socket: WebSocket, @MessageBody() payload: ExecutionPayload) {
+    if (!payload.executionResult || !Array.isArray(payload.executionResult)) throw new WsException('Bad payload');
+
     const watcher = this.watchers.find(w => w.socket === socket);
     if (!watcher) throw new WsException('Not authenticated');
 
     const { bufArray, bufView } = convertExecutionToBytes(payload.executionResult);
+    console.log(bufView);
 
     this.cars.forEach(c => {
       if (watcher.targets.find(t => t.id === c.id)) {

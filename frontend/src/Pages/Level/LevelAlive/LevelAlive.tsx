@@ -57,7 +57,7 @@ const LevelAlive = ({
 	setLevel,
 	setProgression,
 }: LevelAliveProps) => {
-	const { user } = useContext(UserContext);
+	const { user, playSocket } = useContext(UserContext);
 
 	const [cmdRef, cmd] = useCmd();
 	const { executor, setExecutor, setExecutorLines, setSketch } =
@@ -97,7 +97,7 @@ const LevelAlive = ({
 			return history.push(routes.public.home.path);
 
 		setExecutor(
-			new LevelAliveExecutor(level.current!.name, editMode, user ?? undefined),
+			new LevelAliveExecutor(level.current!.name, editMode, playSocket, user ?? undefined),
 		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, level]);

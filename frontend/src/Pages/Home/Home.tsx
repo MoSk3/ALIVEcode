@@ -13,8 +13,6 @@ import LRIMA from '../../assets/images/LRIMA.png';
 import TypeWriter from '../../Components/UtilsComponents/TypeWriter/TypeWriter';
 import useRoutes from '../../state/hooks/useRoutes';
 import { useTranslation } from 'react-i18next';
-import { useEffect } from 'react';
-import { io } from 'socket.io-client';
 
 /**
  * Home page of ALIVEcode
