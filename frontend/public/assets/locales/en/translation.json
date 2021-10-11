@@ -199,6 +199,10 @@
 			"desc": "Give this code to your students so that they can join the classroom from the website!"
 		}
 	},
+	"course": {
+		"desc": "Course of {{professor}}",
+		"subject": "Subject"
+	},
 	"menu": {
 		"signup": {
 			"professor": "Professor account",
