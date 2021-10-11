@@ -223,7 +223,7 @@ const LevelAlive = ({
 									user.id === level.current?.creator?.id && (
 										<IconButton
 											to={routes.auth.level_edit.path.replace(
-												':id',
+												':levelId',
 												level.current.id,
 											)}
 											icon={faPencilAlt}
