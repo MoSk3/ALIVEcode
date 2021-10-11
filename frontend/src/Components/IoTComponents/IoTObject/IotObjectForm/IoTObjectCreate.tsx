@@ -3,6 +3,11 @@ import { IOTOBJECT_LABEL } from '../../../../Models/Iot/IoTobject.entity';
 import { useAlert } from 'react-alert';
 import { IoTObjectCreateProps } from './iotObjectCreateProps';
 
+/**
+ * Form that creates in the database an IoTObject and returns it
+ *
+ * @author MoSk3
+ */
 const IoTObjectCreate = ({ onSubmit }: IoTObjectCreateProps) => {
 	const alert = useAlert();
 

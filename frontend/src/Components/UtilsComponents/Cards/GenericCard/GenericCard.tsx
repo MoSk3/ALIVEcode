@@ -2,6 +2,17 @@ import { CardStyles, GenericCardProps } from './genericCardTypes';
 import styled from 'styled-components';
 import { useHistory } from 'react-router';
 
+/**
+ * Generic card that can be styled as pleased
+ *
+ * @param {string} img source of the image
+ * @param {string} title title of the card
+ * @param {string} to path to redirect to on card click
+ * @param {() => void} onClick callback called when the card is clicked
+ * @param {string} className classes name of the card
+ *
+ * @author MoSk3
+ */
 const GenericCard = ({
 	img,
 	to,

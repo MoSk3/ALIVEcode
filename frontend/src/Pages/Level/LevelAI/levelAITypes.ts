@@ -7,6 +7,7 @@ export interface LevelAIProps {
 	level: LevelAI;
 	editMode: boolean;
 	progression?: LevelProgression;
+	initialCode: string;
 	setProgression: (progression: LevelProgression) => void;
 	setLevel: (level: LevelAI) => void;
 }
@@ -69,12 +70,17 @@ export const StyledAliveLevel = styled(FillContainer)`
 
 	.data-section {
 		height: 60%;
-		background: var(--pale-color);
+		background: var(--databack-color);
 		display: flex;
 		align-items: flex-start;
+		justify-content: space-around;
 	}
 
 	.graph-container {
 		height: relative;
+	}
+
+	.command {
+		height: 40%;
 	}
 `;

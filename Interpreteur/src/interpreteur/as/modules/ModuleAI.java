@@ -2,7 +2,11 @@ package interpreteur.as.modules;
 
 import interpreteur.as.Objets.ASObjet;
 import interpreteur.as.erreurs.ASErreur;
+import interpreteur.data_manager.Data;
 import interpreteur.executeur.Executeur;
+
+import java.util.EmptyStackException;
+import java.util.stream.Stream;
 
 /**
  * Module containing all methods related to artificial intelligence.
@@ -12,7 +16,29 @@ import interpreteur.executeur.Executeur;
 public class ModuleAI {
 
     //Sets how many numbers are after the coma when rounding, depending on the amount of zeroes.
-    private static final double ROUNDING_FACTOR = 10000.0;
+    private static final double ROUNDING_FACTOR = 100.0;
+
+    //Data used for the first AI course. These next constants are temporary.
+    public static final Double[] DATA_X = {
+            22.9, 26.3, 33.0, 38.7, 30.0, 28.8, 20.5, 25.4, 27.4, 27.2, 35.0, 34.4, 31.7,
+            31.6, 30.6, 25.8, 24.7, 20.9, 38.6, 27.1, 33.5, 39.0, 37.7, 25.2, 31.4,
+            44.8, 41.5, 40.7, 36.9, 37.6, 38.2, 41.9, 39.6, 35.4, 39.2, 38.3, 38.6,
+            38.5, 37.5, 37.6, 33.3, 40.4, 36.9, 44.5, 49.6, 43.3, 30.4, 44.4, 41.0,
+            38.5, 60.0, 61.7, 48.2, 51.5, 55.4, 48.1, 48.9, 55.2, 52.8, 46.7, 40.8,
+            40.3, 43.7, 49.1, 55.6, 58.6, 55.8, 48.4, 51.3, 58.0, 52.0, 54.8, 56.6,
+            57.6, 46.5, 75.2, 77.7, 71.4, 65.1, 62.4, 68.8, 69.6, 66.9, 74.8, 71.8,
+            66.5, 58.4, 73.7, 71.0, 71.5, 68.0, 60.4, 59.5, 72.0, 79.0, 71.0, 72.5, 68.7, 68.8, 66.5
+    };
+
+    public static final Double[] DATA_Y = {
+            202.0, 181.0, 225.0, 177.0, 198.0, 201.0, 198.0, 252.0, 208.0, 202.0, 200.0, 170.0, 187.0, 189.0, 202.0,
+            184.0, 182.0, 235.0, 194.0, 214.0, 195.0, 214.0, 199.0, 238.0, 215.0, 300.0, 276.0, 321.0, 326.0, 310.0,
+            355.0, 331.0, 303.0, 272.0, 280.0, 344.0, 292.0, 263.0, 257.0, 317.0, 309.0, 304.0, 327.0, 329.0, 331.0,
+            261.0, 307.0, 279.0, 287.0, 349.0, 403.0, 399.0, 424.0, 383.0, 409.0, 395.0, 390.0, 407.0, 462.0, 397.0,
+            449.0, 392.0, 410.0, 435.0, 395.0, 420.0, 431.0, 444.0, 418.0, 369.0, 419.0, 425.0, 385.0, 436.0, 353.0,
+            495.0, 479.0, 507.0, 466.0, 488.0, 498.0, 507.0, 477.0, 483.0, 460.0, 489.0, 499.0, 459.0, 541.0, 526.0,
+            518.0, 509.0, 507.0, 504.0, 534.0, 446.0, 477.0, 537.0, 566.0, 539.0
+    };
 
     /**
      * Finds the mean of all the elements in the <b>data</b> array.
@@ -24,7 +50,8 @@ public class ModuleAI {
      */
     public static double mean(Double[] data) throws NoDataException {
         //General case
-        return summation(data) / (double) data.length;
+        double mean =  summation(data) / (double) data.length;
+        return Math.round(mean * ROUNDING_FACTOR) / ROUNDING_FACTOR;
     }
 
     /**
@@ -69,7 +96,7 @@ public class ModuleAI {
             differences[i] = Math.pow(data[i] - mean, 2);
         }
         strdDev = Math.sqrt(summation(differences) / (double) differences.length);
-        return strdDev;
+        return Math.round(strdDev * ROUNDING_FACTOR) / ROUNDING_FACTOR;
     }
 
     /**
@@ -319,6 +346,125 @@ public class ModuleAI {
                             throw new ASErreur.ErreurType("La fonction ecartType prend une liste de nombre, mais la liste pass\u00E9e en param\u00E8tre n'est pas compos\u00E9e que de nombres.");
                         }
                         return new Decimal(determinationCoefficient(x, y));
+                    }
+                },
+
+                /*
+                  Returns the values of the specified column. (ONLY TAKES THE SAME DATASET FOR NOW, WILL BE CHANGED)
+                */
+                new ASObjet.Fonction("valeursColonne", new ASObjet.Fonction.Parametre[]{
+                        new ASObjet.Fonction.Parametre(
+                                ASObjet.TypeBuiltin.texte.asType(),
+                                "col",
+                                null
+                        )
+                }, ASObjet.TypeBuiltin.liste.asType()) {
+                    @Override
+                    public ASObjet<?> executer() {
+                        String col = this.getValeurParam("col").getValue().toString();
+                        Liste liste = new Liste();
+
+                        if (!(col.equalsIgnoreCase("x") || col.equalsIgnoreCase("y"))) {
+                            throw new ASErreur.ErreurInputOutput("La fonction valeursColonne() prend en param\u00E8tre le caract\u00E8re \"x\" ou \"y\" seulement.");
+                        }
+                        System.out.println(col);
+                        if (col.contains("x")) {
+                            for (Double el : DATA_X) {
+                                liste.ajouterElement(new Decimal(el));
+                            }
+                        } else {
+                            for (Double el : DATA_Y) {
+                                liste.ajouterElement(new Decimal(el));
+                            }
+                        }
+                        return liste;
+
+                        //  A TERMINER
+                    }
+                },
+                /*
+                    Shows the data on the graph as a scatter plot.
+                 */
+                new ASObjet.Fonction("afficherNuage", new ASObjet.Fonction.Parametre[]{
+                }, ASObjet.TypeBuiltin.nulType.asType()) {
+                    @Override
+                    public ASObjet<?> executer() {
+                        executeurInstance.addData(new Data(Data.Id.AFFICHER_NUAGE));
+                        return new Nul();
+                    }
+                },
+                /*
+                    Creates a new regression and shows it on the graph,
+                 */
+                new ASObjet.Fonction("creerRegression", new ASObjet.Fonction.Parametre[]{
+                        new ASObjet.Fonction.Parametre(
+                                ASObjet.TypeBuiltin.nombre.asType(), "a", null),
+                        new ASObjet.Fonction.Parametre(
+                                ASObjet.TypeBuiltin.nombre.asType(), "b", null),
+                        new ASObjet.Fonction.Parametre(
+                                ASObjet.TypeBuiltin.nombre.asType(), "c", null),
+                        new ASObjet.Fonction.Parametre(
+                                ASObjet.TypeBuiltin.nombre.asType(), "d", null)
+                }, ASObjet.TypeBuiltin.nulType.asType()){
+                    @Override
+                    public ASObjet<?> executer() {
+                        double a = ((Number) this.getValeurParam("a").getValue()).doubleValue();
+                        double b = ((Number) this.getValeurParam("b").getValue()).doubleValue();
+                        double c = ((Number) this.getValeurParam("c").getValue()).doubleValue();
+                        double d = ((Number) this.getValeurParam("d").getValue()).doubleValue();
+                        executeurInstance.addData(new Data(Data.Id.CREER_REGRESSION)
+                                .addParam(a).addParam(b).addParam(c).addParam(d));
+                        return new Nul();
+                    }
+                },
+                /*
+                    Applies an algorithm to optimize the regression with the data.
+                 */
+                new ASObjet.Fonction("optimiserRegression", new ASObjet.Fonction.Parametre[]{
+                        new ASObjet.Fonction.Parametre(
+                                ASObjet.TypeBuiltin.nombre.asType(), "lr", null),
+                        new ASObjet.Fonction.Parametre(
+                                ASObjet.TypeBuiltin.nombre.asType(), "epoch", null)
+                }, ASObjet.TypeBuiltin.nulType.asType()) {
+                    @Override
+                    public ASObjet<?> executer() {
+                        double lr = ((Number) this.getValeurParam("lr").getValue()).doubleValue();
+                        double epoch = ((Number) this.getValeurParam("epoch").getValue()).doubleValue();
+                        executeurInstance.addData(new Data(Data.Id.OPTIMISER_REGRESSION).addParam(lr).addParam(epoch));
+                        return new Nul();
+                    }
+                },
+                /*
+                    Evaluates the regression on the graph at a specific x value.
+                 */
+                new ASObjet.Fonction("evaluer", new ASObjet.Fonction.Parametre[]{
+                        new ASObjet.Fonction.Parametre(
+                                ASObjet.TypeBuiltin.nombre.asType(), "x", null)
+                }, ASObjet.TypeBuiltin.nombre.asType()) {
+                    @Override
+                    public ASObjet<?> executer() {
+                        double x = ((Number) this.getValeurParam("x").getValue()).doubleValue();
+                        executeurInstance.addData(new Data(Data.Id.EVALUER).addParam(x));
+                        double res = 0;
+                        try {
+                            Object obj = executeurInstance.getDataResponse().pop();
+                            if (obj instanceof Double) res = ((Double) obj).doubleValue();
+                            else if (obj instanceof Integer) res = ((Integer) obj).doubleValue();
+                        } catch(EmptyStackException e) {
+                            throw new ASErreur.StopGetInfo(new Data(Data.Id.GET));
+                        }
+                        return new Decimal(res);
+                    }
+                },
+                /*
+                    a
+                 */
+                new ASObjet.Fonction("fonctionCout", new ASObjet.Fonction.Parametre[]{
+                }, ASObjet.TypeBuiltin.nulType.asType()) {
+                    @Override
+                    public ASObjet<?> executer() {
+                        executeurInstance.addData(new Data(Data.Id.FONCTION_COUT));
+                        return new Nul();
                     }
                 }
         }, new ASObjet.Variable[]{});
