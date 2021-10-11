@@ -1,5 +1,6 @@
+import { validTextColour } from "../functions";
 import { Shape } from "../Shape";
-import { loadFromTemplate } from "./simulationClassUtils";
+import { loadFromTemplate } from './simulationClassUtils';
 import { Template } from './typesSimulation';
 import { SerializableShape } from './typesSimulation';
 
@@ -17,6 +18,15 @@ export class Figure
 		this.class = 'Figure';
 		this.templateName = templateName;
 		this.loadFromTemplate();
+	}
+
+	override click() {
+		super.click();
+		// key(16) == shift
+		if (this.s.editMode && this.s.keyIsDown(16)) {
+			const newColor = prompt('Changer couleur pour:');
+			if (validTextColour(newColor ?? '')) this.color = newColor ?? this.color;
+		}
 	}
 
 	get uniqueProperties() {

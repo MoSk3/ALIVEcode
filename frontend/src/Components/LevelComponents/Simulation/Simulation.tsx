@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSquare } from '@fortawesome/free-solid-svg-icons';
 import $ from 'jquery';
 import LoadingScreen from '../../UtilsComponents/LoadingScreen/LoadingScreen';
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import Modal from '../../UtilsComponents/Modal/Modal';
 import { useTranslation } from 'react-i18next';
 import { Image } from 'react-bootstrap';
@@ -33,6 +33,7 @@ const Simulation = ({
 	const [winModalOpen, setWinModalOpen] = useState(false);
 	const [deathGif, setDeathGif] = useState<string>();
 	const { t } = useTranslation();
+	const canvasDiv = useRef<any>();
 
 	const onLose = useCallback(
 		(death_gif: string, msg: string) => {
@@ -63,16 +64,16 @@ const Simulation = ({
 						{loading && <LoadingScreen relative />}
 						<P5Wrapper
 							fullscreenDiv="fullscreen-div"
-							canvasDiv={id}
+							canvasDiv={$(`#${id}`)}
 							zoomButton={''}
-							init={(s: any) => {
-								setLoading(false);
-								init(s);
-							}}
 							sketch={sketch}
 							onChange={onChange}
 							onWin={onWin}
 							onLose={onLose}
+							init={(s: any) => {
+								setLoading(false);
+								init(s);
+							}}
 						/>
 					</>
 				) : (

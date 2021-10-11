@@ -10,6 +10,29 @@ export function floatEquals(float1, float2) {
 	return Math.abs(float1 - float2) <= Number.EPSILON;
 }
 
+export function validTextColour(stringToTest) {
+	//Alter the following conditions according to your need.
+	if (stringToTest === '') {
+		return false;
+	}
+	if (stringToTest === 'inherit') {
+		return false;
+	}
+	if (stringToTest === 'transparent') {
+		return false;
+	}
+
+	var image = document.createElement('img');
+	image.style.color = 'rgb(0, 0, 0)';
+	image.style.color = stringToTest;
+	if (image.style.color !== 'rgb(0, 0, 0)') {
+		return true;
+	}
+	image.style.color = 'rgb(255, 255, 255)';
+	image.style.color = stringToTest;
+	return image.style.color !== 'rgb(255, 255, 255)';
+}
+
 export function overlap(vertices1, vertices2) {
 	let poly1 = vertices1;
 	let poly2 = vertices2;

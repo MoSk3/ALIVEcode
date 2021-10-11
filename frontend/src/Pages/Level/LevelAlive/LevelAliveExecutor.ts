@@ -7,6 +7,7 @@ import { BaseLayoutObj } from '../../../Components/LevelComponents/Simulation/Sk
 import { Serializer } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/ts/Serializer';
 import { makeShapeEditable } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/editMode';
 import { Interactive } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/ts/Interactive';
+import { User } from '../../../Models/User/user.entity';
 
 // TODO: robotConnected
 const robotConnected = false;
@@ -27,6 +28,10 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 		dD: 0,
 	};
 
+	constructor(levelName: string, private editMode: boolean, creator?: User) {
+		super(levelName, creator);
+	}
+
 	public loadLevelLayout(layout: BaseLayoutObj[] | {}) {
 		if (JSON.stringify(layout) === '{}') {
 			this.s.car = this.s.spawnCar(0, 0, 75, 110);
@@ -41,7 +46,7 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 
 			if (process.env.REACT_APP_DEBUG) console.log(this.s.shapes);
 		}
-		if (this.creator) {
+		if (this.creator && this.editMode) {
 			this.spawnEditorButton();
 		}
 		this.spawnRobotConnectButton();
@@ -422,9 +427,9 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 	}
 
 	public saveLayout(s: any) {
-		const shapes = Object.entries(s.shapes)?.flatMap(
-			([_, shape]) => shape,
-		) as Shape[];
+		const shapes = Object.entries(s.shapes)
+			?.sort(([z_idx1], [z_idx2]) => Number(z_idx1) - Number(z_idx2))
+			.flatMap(([_, shape]) => shape) as Shape[];
 
 		if (shapes === undefined) return null;
 

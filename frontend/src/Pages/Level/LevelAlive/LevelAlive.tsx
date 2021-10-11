@@ -96,7 +96,9 @@ const LevelAlive = ({
 		if (user && editMode && level.current?.creator?.id !== user.id)
 			return history.push(routes.public.home.path);
 
-		setExecutor(new LevelAliveExecutor(level.current!.name, user ?? undefined));
+		setExecutor(
+			new LevelAliveExecutor(level.current!.name, editMode, user ?? undefined),
+		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, level]);
 
@@ -285,7 +287,7 @@ const LevelAlive = ({
 						</Col>
 						<Col md={6} style={{ resize: 'both', padding: '0' }}>
 							<Row id="simulation-row" style={{ height: '60vh' }}>
-								{executor && level.current && (
+								{executor && level.current.layout && (
 									<Simulation
 										id={level.current.id}
 										init={s => {

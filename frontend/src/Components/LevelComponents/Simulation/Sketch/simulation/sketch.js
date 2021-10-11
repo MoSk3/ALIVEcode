@@ -21,7 +21,6 @@ import { Figure } from './ts/Figure';
 
 export const sketch = s => {
 	// #region Setup
-
 	let width;
 	let height;
 	let canvas;
@@ -33,7 +32,7 @@ export const sketch = s => {
 		if (props.init) s.init = props.init;
 		if (props.fullscreenDiv)
 			s.fullscreenDiv = $(`.${props.fullscreenDiv}`).first();
-		if (props.canvasDiv) canvasDiv = $(`#${props.canvasDiv}`);
+		if (props.canvasDiv) canvasDiv = props.canvasDiv;
 		if (props.onChange) s.onChange = props.onChange;
 		if (props.onWin) s.onWin = props.onWin;
 		if (props.onLose) s.onLose = props.onLose;
@@ -444,7 +443,7 @@ export const sketch = s => {
 			}
 		}
 
-		if (s.mouseButton === s.RIGHT) s.contextMenuClick();
+		//if (s.mouseButton === s.RIGHT) s.contextMenuClick();
 	};
 
 	s.mousePressedActions = () => {
@@ -601,7 +600,8 @@ export const sketch = s => {
 		// Change l'icone de la souris par rapport au dernier objet movable sélectionné / bougé
 		s.changeCursorOnMovement();
 
-		s.pressedObject.click();
+		if (s.mouseButton === s.RIGHT) s.pressedObject.rightClick();
+		else s.pressedObject.click();
 		s.pressedObject = null;
 		s.mobileClickDown = true;
 		s.levelHasChanged = true;
@@ -960,6 +960,16 @@ export const sketch = s => {
 			if (s.keyIsDown(17) && s.keyCode === 86) {
 				s.pasteShape();
 			}
+
+			// 187 == "+" et 189 == "-"
+			if (s.keyCode === 189 && s.pressedObject?.zIndex > 0) {
+				s.pressedObject.setZIndex(Number(s.pressedObject.zIndex) - 1);
+				console.log(s.pressedObject.zIndex);
+			} else if (s.keyCode === 187 && s.pressedObject?.zIndex < 400) {
+				s.pressedObject.setZIndex(Number(s.pressedObject.zIndex) + 1);
+				console.log(s.pressedObject.zIndex);
+			}
+			return false; // prevent any default behavior
 		}
 	};
 
@@ -1012,7 +1022,8 @@ export const sketch = s => {
 		return shapeData;
 	};
 
-	s.addObjectToScene = (obj, z_index = 0) => {
+	s.addObjectToScene = (obj, z_index = undefined) => {
+		if (z_index === undefined) z_index = Object.keys(s.shapes).length;
 		if (!(z_index in s.shapes)) s.shapes[z_index] = [];
 		s.shapes[z_index].push(obj);
 		obj.zIndex = z_index;
@@ -1068,7 +1079,7 @@ export const sketch = s => {
 		return shape;
 	};
 
-	s.spawnDecoration = (x, y, w, h, z_index = 0) => {
+	s.spawnDecoration = (x, y, w, h, z_index = undefined) => {
 		let decoration = new Decoration(
 			s,
 			'base',
@@ -1089,7 +1100,7 @@ export const sketch = s => {
 	 * @param {number} z_index
 	 * @returns
 	 */
-	s.spawnTerrain = (w, h, templateName, z_index = 0) => {
+	s.spawnTerrain = (w, h, templateName, z_index = undefined) => {
 		let terrain = new Terrain(
 			s,
 			templateName,
@@ -1102,7 +1113,7 @@ export const sketch = s => {
 		return terrain;
 	};
 
-	s.spawnRoad = (w, h, minimumSize, z_index = 0) => {
+	s.spawnRoad = (w, h, minimumSize, z_index = undefined) => {
 		let road = new Road(
 			s,
 			minimumSize,
@@ -1115,7 +1126,7 @@ export const sketch = s => {
 		return road;
 	};
 
-	s.spawnObstacle = (w, h, isGameOver, z_index = 0) => {
+	s.spawnObstacle = (w, h, isGameOver, z_index = undefined) => {
 		let obstacle = new Obstacle(
 			s,
 			isGameOver,
@@ -1134,7 +1145,7 @@ export const sketch = s => {
 		isCoin,
 		isObjectif,
 		isButton,
-		z_index = 0,
+		z_index = undefined,
 	) => {
 		let interaction = new InteractiveObject(
 			s,
@@ -1164,7 +1175,7 @@ export const sketch = s => {
 
 	s.spawnFigure = (z_index, templateName, ...points) => {
 		let shape = new Figure(s, templateName, ...points);
-		s.addObjectToScene(shape, z_index);
+		s.addObjectToScene(shape);
 		return shape;
 	};
 
@@ -1178,14 +1189,22 @@ export const sketch = s => {
 		);
 	};
 
-	s.spawnTextObject = (text, size, x, y, z_index = 500) => {
-		let shape = new TextObject(s, text, size, x, y);
+	s.spawnTextObject = (text, size, x, y, z_index = undefined) => {
+		let shape = new TextObject(
+			s,
+			'base',
+			[x - size / 2, y + size / 2],
+			[x + size / 2, y + size / 2],
+			[x + size / 2, y - size / 2],
+			[x - size / 2, y - size / 2],
+		);
+		shape.text = text;
 		s.addObjectToScene(shape, z_index);
 		return shape;
 	};
 
-	s.spawnFixedTextObject = (text, size, x, y, z_index = 500) => {
-		let shape = new FixedTextObject(s, text, size, x, y);
+	s.spawnFixedTextObject = (text, size, x, y, z_index = undefined) => {
+		let shape = new FixedTextObject(s, text, size, x, y, 'white');
 		s.addObjectToScene(shape, z_index);
 		return shape;
 	};

@@ -419,9 +419,7 @@ export class Shape {
 	setZIndex(newZIndex) {
 		// Retrait de l'élément
 		let shapesByZIndex = this.s.shapes[this.zIndex];
-		shapesByZIndex = shapesByZIndex.filter(el => {
-			return el !== this;
-		});
+		shapesByZIndex = shapesByZIndex.filter(el => el !== this);
 		this.s.shapes[this.zIndex] = shapesByZIndex;
 
 		// Ajout de l'élément
@@ -430,6 +428,7 @@ export class Shape {
 		} else {
 			this.s.shapes[newZIndex] = [this];
 		}
+		this.zIndex = newZIndex;
 	}
 
 	// ATTENTION PLEINS DE FONCTIONS CHIANTES POUR LES SYSTÈME D'EVENT
@@ -499,6 +498,8 @@ export class Shape {
 	onClick(fct) {
 		this.clickFct = fct;
 	}
+
+	rightClick() {}
 
 	collisionEnter(e) {
 		this.colliding.push(e.collidingWith);
