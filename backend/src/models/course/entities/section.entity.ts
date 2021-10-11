@@ -13,7 +13,7 @@ export class SectionEntity {
 
   @IsNotEmpty()
   @Column({ nullable: false })
-  @Length(3, 25)
+  @Length(3, 100)
   name: string;
 
   @ManyToMany(() => ActivityEntity)
