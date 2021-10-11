@@ -59,6 +59,7 @@ public class ASLinterApi extends BaseApi {
         List<String> commands = getPatternsOfCategory("commandes");
         // adds afficher to the commands and the command in the methode_moteur category
         commands.add("\\bafficher\\b");
+        commands.add("\\battendre\\b");
         commands.remove("\\bconst\\b");
         commands.addAll(getPatternsOfCategory("methode_moteur"));
 
@@ -83,7 +84,8 @@ public class ASLinterApi extends BaseApi {
                 .put("fonctions", getPatternsOfCategory("fonctions"))
                 .put("fin", getReglePattern("FIN"))
                 .put("fonctions_builtin", fonctionsBuiltins)
-                .put("control_flow", new JSONArray(getPatternsOfCategory("control_flow")).put("\\bconst\\b"))
+                .put("control_flow", new JSONArray(getPatternsOfCategory("control_flow")))
+                .put("const", "\\bconst\\b")
                 .put("variable", "[a-zA-Z_\\u00a1-\\uffff][a-zA-Z\\d_\\u00a1-\\uffff]*")
                 .put("operators", operators);
     }
