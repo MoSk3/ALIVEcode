@@ -6,6 +6,7 @@ import {
 import SearchBar from './SearchBar/SearchBar';
 import { useState, useEffect } from 'react';
 import Button from '../../UtilsComponents/Button/Button';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Generic browsing menu that returns an array of T based on the apiRequest made and the query.
@@ -23,6 +24,7 @@ const BrowsingMenu = <T extends any>({
 }: BrowsingMenuProps<T>) => {
 	const [query, setQuery] = useState<BrowsingQuery>({});
 	const [oldQuery, setOldQuery] = useState<BrowsingQuery>();
+	const { t } = useTranslation();
 
 	const getResults = async () => {
 		if (JSON.stringify(oldQuery) === JSON.stringify(query)) return;
@@ -50,7 +52,7 @@ const BrowsingMenu = <T extends any>({
 			</div>
 			<div>
 				<Button variant="primary" onClick={getResults}>
-					Search
+					{t('msg.search')}
 				</Button>
 			</div>
 		</StyledBrowsingMenu>

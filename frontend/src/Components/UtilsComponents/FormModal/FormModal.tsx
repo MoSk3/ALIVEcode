@@ -3,6 +3,7 @@ import { Modal } from 'react-bootstrap';
 import styled from 'styled-components';
 import Button from '../Button/Button';
 import { FormModalProps } from './formModalTypes';
+import { useTranslation } from 'react-i18next';
 
 const StyledModal = styled(Modal)`
 	.modal-content {
@@ -36,6 +37,8 @@ const FormModal = ({
 	onClose,
 	onSubmit,
 }: FormModalProps) => {
+	const { t } = useTranslation();
+
 	const makeChildrenWithProps = () => {
 		return (
 			form && isValidElement(form) && cloneElement(form as any, { onSubmit })
@@ -55,7 +58,7 @@ const FormModal = ({
 					</Button>
 				)}
 				<Button variant={buttonVariant || 'primary'} onClick={onClose}>
-					Save Changes
+					{t('modal.save')}
 				</Button>
 			</Modal.Footer>
 		</StyledModal>
