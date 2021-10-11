@@ -69,24 +69,6 @@ public interface ASObjet<T> {
         */
     }
 
-    interface Nombre extends ASObjet<Number> {
-        static boolean estNumerique(String txt) {
-            try {
-                var estDecimal = txt.contains(".");
-                if (estDecimal) Double.parseDouble(txt);
-                else Integer.parseInt(txt);
-                return true;
-            } catch (NumberFormatException err) {
-                return false;
-            }
-        }
-
-        @Override
-        default String obtenirNomType() {
-            return "nombre";
-        }
-    }
-
     interface Iterable extends ASObjet<Object> {
         boolean contient(ASObjet<?> element);
 
