@@ -1,5 +1,6 @@
 package interpreteur.as.modules.builtins;
 
+import interpreteur.as.Objets.Nombre;
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.as.Objets.ASObjet;
 import interpreteur.as.modules.ASModule;

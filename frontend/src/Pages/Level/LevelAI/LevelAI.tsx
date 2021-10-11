@@ -190,7 +190,7 @@ const LevelAI = ({
 	function costMSE(): void {
 		if (pointsOnGraph) setDataOnGraph(mainDataset);
 		showRegression();
-		cmd?.print("Erreur du modèle : " + func.computeMSE(data));
+		cmd?.print('Erreur du modèle : ' + func.computeMSE(data));
 	}
 
 	/**
@@ -207,7 +207,7 @@ const LevelAI = ({
 		);
 		func = optimizer.optimize(data);
 		showRegression();
-		cmd?.print("Nouveaux paramètres de la régression :");
+		cmd?.print('Nouveaux paramètres de la régression :');
 		cmd?.print(func.paramsToString());
 	}
 
@@ -235,7 +235,7 @@ const LevelAI = ({
 					optimizeRegression,
 					evaluate,
 					costMSE,
-					showRegression
+					showRegression,
 				},
 				level.name,
 				user || undefined,
