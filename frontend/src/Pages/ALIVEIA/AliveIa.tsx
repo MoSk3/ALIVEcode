@@ -4,10 +4,8 @@ import HeaderAI from '../../Components/ALIVEIAComponents/Header/HeaderAI';
 import InfoBox from '../../Components/ALIVEIAComponents/InfoBox/InfoBox';
 
 /**
- * Méthode retournant la page d'accueil de la section IA du site web. Elle instancie également 
- * tous ses composants.
- * @param props aucune propriété pour ce composant.
- * @returns un AliveIA.
+ * Home page of the AI section. It contains all components visible inside this page.
+ * @param props no props for this component.
  */
 const AliveIa = (props: AliveIaProps) => {
   const {t} = useTranslation();

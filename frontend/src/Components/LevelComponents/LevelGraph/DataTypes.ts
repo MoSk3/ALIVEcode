@@ -4,7 +4,11 @@
 export default interface DataTypes {
   type: string;
 	label: string;
-  data: any[];
+  data: ({
+    id: number;
+    x: number;
+    y: number;
+} | {})[];
   backgroundColor?: string;
   borderColor?: string;
 	borderWidth?: number;

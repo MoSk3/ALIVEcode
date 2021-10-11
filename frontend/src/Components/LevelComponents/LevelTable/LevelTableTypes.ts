@@ -2,7 +2,11 @@ import styled from "styled-components";
 import FillContainer from '../../UtilsComponents/FillContainer/FillContainer';
 
 export interface LevelTableProps {
-  data: any;
+  data: ({
+    id: number;
+    x: number;
+    y: number;
+} | {})[];
   xData: string;
   yData: string;
 }
