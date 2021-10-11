@@ -4,7 +4,7 @@ import { Template } from './typesSimulation';
 import { SerializableShape } from './typesSimulation';
 import { Vector } from '../Vector';
 import { loadFromTemplate } from './simulationClassUtils';
-import { images, imagesPath } from '../assets';
+import { imagesPath } from '../assets';
 
 type TemplateNamesObstacle = 'stop' | 'fall' | 'water' | 'lava';
 
@@ -64,7 +64,7 @@ export class Obstacle
 			isGameOver: true,
 			gameOverEvent: {
 				gameOverImg: imagesPath.rocheMars1,
-				message: 'La voiture est retrée dans un mur!',
+				message: 'simulation.modal.wall',
 			},
 		},
 
@@ -72,7 +72,7 @@ export class Obstacle
 			isGameOver: true,
 			gameOverEvent: {
 				gameOverImg: imagesPath.hole,
-				message: 'La voiture est tombée dans un trou!',
+				message: 'simulation.modal.hole',
 			},
 		},
 
@@ -80,7 +80,7 @@ export class Obstacle
 			isGameOver: true,
 			gameOverEvent: {
 				gameOverImg: imagesPath.lava,
-				message: 'La voiture est tombée dans la lave!',
+				message: 'simulation.modal.lava',
 			},
 		},
 
@@ -88,7 +88,7 @@ export class Obstacle
 			isGameOver: true,
 			gameOverEvent: {
 				gameOverImg: imagesPath.water_splash,
-				message: "La voiture est tombée dans l'eau!",
+				message: 'simulation.modal.water',
 			},
 		},
 	};

@@ -259,8 +259,15 @@
 		}
 	},
 	"simulation": {
-		"retry": "retry",
-		"lose": "you loooserrr",
-		"win": "Let's go boiiii!!!!"
+		"modal": {
+			"retry": "Retry?",
+			"continue": "Continue",
+			"lose": "Better luck next time!",
+			"win": "Nicely done!",
+			"water": "The car fell in water",
+			"lava": "The car fell in lava",
+			"hole": "The car fell in a hole",
+			"wall": "The car smashed in a wall"
+		}
 	}
 }

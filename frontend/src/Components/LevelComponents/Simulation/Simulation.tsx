@@ -80,19 +80,20 @@ const Simulation = ({
 			</FillContainer>
 			<FillContainer className="fullscreen-div" startAtTop />
 			<Modal
-				title={t('simulation.lose')}
+				title={t('simulation.modal.lose')}
 				open={loseModalOpen}
 				onClose={() => setLoseModalOpen(false)}
 				hideCloseButton
 				centered
-				submitText={t('simulation.retry')}
+				centeredText
+				submitText={t('simulation.modal.retry')}
 			>
-				<Image alt="lose gif" src={deathGif}></Image>
+				<Image alt="lose gif" src={deathGif} height={200}></Image>
 				<br />
-				{loseDescripton}
+				{t(loseDescripton)}
 			</Modal>
 			<Modal
-				title={t('simulation.win')}
+				title={t('simulation.modal.win')}
 				open={winModalOpen}
 				onClose={() => {
 					setWinModalOpen(false);
@@ -100,7 +101,8 @@ const Simulation = ({
 				}}
 				hideCloseButton
 				centered
-				submitText={t('simulation.continue')}
+				centeredText
+				submitText={t('simulation.modal.continue')}
 			>
 				🎉🎉🎉
 			</Modal>

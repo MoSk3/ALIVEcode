@@ -4,6 +4,16 @@ import Button from '../Button/Button';
 import { ModalProps } from './modalTypes';
 
 const StyledModal = styled(BootModal)`
+	${({ centeredText }) =>
+		centeredText &&
+		`
+		text-align: center;
+
+		.modal-header {
+			justify-content: center;
+		}
+	`}
+
 	.modal-content {
 		background-color: var(--background-color);
 	}
@@ -29,6 +39,7 @@ const StyledModal = styled(BootModal)`
  * Other
  * @param {boolean} hideFooter
  * @param {boolean} centered Centers the modal at the center of the screen
+ * @param {boolean} centeredText Centers the text inside of the modal
  * @returns
  */
 const Modal = (props: ModalProps) => {

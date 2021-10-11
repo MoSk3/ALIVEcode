@@ -1443,6 +1443,23 @@ export function editModeSection(s: any) {
 			shapeData.originalShape.rotate(shapeData.clonedShape.rotation.x);
 		};
 
+		// Méthode qui sert à garder dans une seule variable la forme originale, le clone de la forme, et d'autres caractéristiques
+		s.storeShapeData = (
+			shape: any,
+			wasDeletedViaUndo = false,
+			wasRedo = false,
+			wasDeletedViaTrash = false,
+		) => {
+			let shapeData = {
+				originalShape: shape,
+				clonedShape: shape.cloneShape(),
+				wasDeletedViaUndo: wasDeletedViaUndo,
+				wasRedo: wasRedo,
+				wasDeletedViaTrash: wasDeletedViaTrash,
+			};
+			return shapeData;
+		};
+
 		// Méthodes qui change le curseur lors d'un cas unique
 		s.changeCursorOnMovement = () => {
 			s.topMenu.children.forEach((child: any) => {
