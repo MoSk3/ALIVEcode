@@ -6,6 +6,7 @@ import java.util.*;
 import interpreteur.as.Objets.ASObjet;
 import interpreteur.as.Objets.ASObjet.FonctionManager;
 import interpreteur.as.Objets.Scope;
+import interpreteur.as.erreurs.ASErreur;
 import interpreteur.as.erreurs.ASErreur.*;
 import interpreteur.as.ASLexer;
 import interpreteur.as.modules.ASModuleManager;
@@ -189,6 +190,17 @@ public class Executeur {
 
     public Stack<Object> getDataResponse() {
         return this.dataResponse;
+    }
+
+    public Object getDataResponseOrAsk(String dataName, String... additionnalParams) {
+        if (this.dataResponse.isEmpty()) {
+            Data dataToGet = new Data(Data.Id.GET).addParam(dataName);
+            for (var param : additionnalParams)
+                dataToGet.addParam(param);
+            throw new ASErreur.StopGetInfo(dataToGet);
+        }
+        else
+            return this.dataResponse.pop();
     }
 
     public Object pushDataResponse(Object item) {
