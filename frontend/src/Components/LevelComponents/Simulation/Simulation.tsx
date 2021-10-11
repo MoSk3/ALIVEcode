@@ -1,5 +1,4 @@
 import FillContainer from "../../UtilsComponents/FillContainer/FillContainer";
-import { Button, Modal as BootModal } from 'react-bootstrap';
 import { sketch } from './Sketch/simulation/sketch';
 import P5Wrapper from 'react-p5-wrapper';
 import { SimulationProps, StyledSimulation } from './simulationTypes';
@@ -7,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSquare } from '@fortawesome/free-solid-svg-icons';
 import $ from 'jquery';
 import LoadingScreen from '../../UtilsComponents/LoadingScreen/LoadingScreen';
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import Modal from '../../UtilsComponents/Modal/Modal';
 import { useTranslation } from 'react-i18next';
 import { Image } from 'react-bootstrap';
@@ -33,7 +32,6 @@ const Simulation = ({
 	const [winModalOpen, setWinModalOpen] = useState(false);
 	const [deathGif, setDeathGif] = useState<string>();
 	const { t } = useTranslation();
-	const canvasDiv = useRef<any>();
 
 	const onLose = useCallback(
 		(death_gif: string, msg: string) => {

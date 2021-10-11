@@ -6,7 +6,6 @@ import { Vector } from '../../../Components/LevelComponents/Simulation/Sketch/si
 import { BaseLayoutObj } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/ts/typesSimulation';
 import { Serializer } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/ts/Serializer';
 import { makeShapeEditable } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/editMode';
-import { Interactive } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/ts/Interactive';
 import { User } from '../../../Models/User/user.entity';
 
 // TODO: robotConnected

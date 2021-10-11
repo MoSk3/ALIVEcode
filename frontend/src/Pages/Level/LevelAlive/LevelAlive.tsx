@@ -3,7 +3,7 @@ import { useEffect, useState, useContext, useRef, useCallback } from 'react';
 import LineInterface from '../../../Components/LevelComponents/LineInterface/LineInterface';
 import { UserContext } from '../../../state/contexts/UserContext';
 import Simulation from '../../../Components/LevelComponents/Simulation/Simulation';
-import { Row, Col, Image } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 import {
 	faBookOpen,
 	faCog,

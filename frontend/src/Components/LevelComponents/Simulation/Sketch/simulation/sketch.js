@@ -961,6 +961,7 @@ export const sketch = s => {
 				s.pasteShape();
 			}
 
+			// change de z index (+ -> + 1), (- -> -1)
 			// 187 == "+" et 189 == "-"
 			if (s.keyCode === 189 && s.pressedObject?.zIndex > 0) {
 				s.pressedObject.setZIndex(Number(s.pressedObject.zIndex) - 1);

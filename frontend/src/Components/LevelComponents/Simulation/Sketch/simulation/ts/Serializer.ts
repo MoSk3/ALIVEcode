@@ -1,5 +1,4 @@
 import { images, loadImages, imageNameType } from '../assets';
-import { Car } from '../Car';
 import { Shape } from '../Shape';
 import { Vector } from '../Vector';
 import { classes } from './SimulationClasses';
