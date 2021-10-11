@@ -5,7 +5,6 @@ import ALIVENavbar from './Components/MainComponents/Navbar/Navbar';
 import { UserContext } from './state/contexts/UserContext';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
-import BackArrow from './Components/UtilsComponents/BackArrow/BackArrow';
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.css';
 import useRoutes from './state/hooks/useRoutes';
@@ -215,9 +214,11 @@ const App = () => {
 									maintenance={maintenance}
 								/>
 							)}
+							{/**
 							<BackArrow
 								maintenancePopUp={maintenance != null && !maintenance.hidden}
 							/>
+							 */}
 						</UserContext.Provider>
 					</Router>
 				)}
