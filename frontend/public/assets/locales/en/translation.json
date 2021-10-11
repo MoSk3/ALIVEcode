@@ -257,5 +257,17 @@
 				"paragraph4": "Obviously, neural networks are much more complex than that, and that's why a course on this will be available soon. Stay tuned!"
 			}
 		}
+	},
+	"simulation": {
+		"modal": {
+			"retry": "Retry?",
+			"continue": "Continue",
+			"lose": "Better luck next time!",
+			"win": "Nicely done!",
+			"water": "The car fell in water",
+			"lava": "The car fell in lava",
+			"hole": "The car fell in a hole",
+			"wall": "The car smashed in a wall"
+		}
 	}
 }

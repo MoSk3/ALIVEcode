@@ -34,6 +34,7 @@ import Modal from '../../../Components/UtilsComponents/Modal/Modal';
 import useExecutor from '../../../state/hooks/useExecutor';
 import { useAlert } from 'react-alert';
 import LoadingScreen from '../../../Components/UtilsComponents/LoadingScreen/LoadingScreen';
+import Confetti from 'react-confetti';
 
 /**
  * Alive level page. Contains all the components to display and make the alive level functionnal.
@@ -74,6 +75,8 @@ const LevelAlive = ({
 	const saveTimeout = useRef<any>(null);
 	const messageTimeout = useRef<any>(null);
 
+	const [showConfetti, setShowConfetti] = useState(false);
+
 	const level = useRef<LevelAliveModel>();
 	useEffect(() => {
 		level.current = currentLevel;
@@ -93,7 +96,9 @@ const LevelAlive = ({
 		if (user && editMode && level.current?.creator?.id !== user.id)
 			return history.push(routes.public.home.path);
 
-		setExecutor(new LevelAliveExecutor(level.current!.name, user ?? undefined));
+		setExecutor(
+			new LevelAliveExecutor(level.current!.name, editMode, user ?? undefined),
+		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, level]);
 
@@ -124,6 +129,7 @@ const LevelAlive = ({
 		}, 500);
 
 		level.current = updatedLevel;
+		if (process.env.REACT_APP_DEBUG) console.log(level.current.layout);
 	}, [level]);
 
 	const saveLevelTimed = () => {
@@ -280,14 +286,15 @@ const LevelAlive = ({
 							)}
 						</Col>
 						<Col md={6} style={{ resize: 'both', padding: '0' }}>
-							<Row id="simulation-row" style={{ height: '60%' }}>
-								{executor && level.current && (
+							<Row id="simulation-row" style={{ height: '60vh' }}>
+								{executor && level.current.layout && (
 									<Simulation
 										id={level.current.id}
 										init={s => {
 											executor.init(s);
 											setSketch(s);
 											executor.loadLevelLayout(level.current?.layout ?? '[]');
+											executor.stop();
 										}}
 										onChange={(s: any) => {
 											const newLayout = executor.saveLayout(s);
@@ -300,10 +307,12 @@ const LevelAlive = ({
 											level.current!.layout = newLayout;
 											saveLevelTimed();
 										}}
+										stopExecution={() => executor.stop()}
+										setShowConfetti={set => setShowConfetti(set)}
 									/>
 								)}
 							</Row>
-							<Row style={{ height: '40%' }}>
+							<Row style={{ height: '40vh' }}>
 								<Cmd ref={cmdRef}></Cmd>
 							</Row>
 						</Col>
@@ -360,6 +369,7 @@ const LevelAlive = ({
 			) : (
 				<LoadingScreen />
 			)}
+			{showConfetti && <Confetti />}
 			<Modal
 				title={t('msg.auth.account_required')}
 				open={accountModalOpen}

@@ -257,5 +257,17 @@
 				"paragraph4": "Évidemment, les réseaux de neurones sont bien plus complexes que cela, et c’est pourquoi un cours à ce sujet sera bientôt disponible. Reste à l’affût!"
 			}
 		}
+	},
+	"simulation": {
+		"modal": {
+			"retry": "Réessayer?",
+			"continue": "Continuer",
+			"lose": "Meilleure chance la prochaine fois!",
+			"win": "La victoire t'appartient! 🎉",
+			"water": "La voiture est tombée dans l'eau",
+			"lava": "La voiture est tombée dans la lave",
+			"hole": "La voiture est tombée dans un trou",
+			"wall": "La voiture a foncée dans un mur"
+		}
 	}
 }
