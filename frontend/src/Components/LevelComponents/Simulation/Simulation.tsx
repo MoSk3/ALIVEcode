@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSquare } from '@fortawesome/free-solid-svg-icons';
 import $ from 'jquery';
 import LoadingScreen from '../../UtilsComponents/LoadingScreen/LoadingScreen';
-import { useState, useRef } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import Modal from '../../UtilsComponents/Modal/Modal';
 import { useTranslation } from 'react-i18next';
 import { Image } from 'react-bootstrap';
@@ -34,18 +34,21 @@ const Simulation = ({
 	const [deathGif, setDeathGif] = useState<string>();
 	const { t } = useTranslation();
 
-	const onLose = (death_gif: string, msg: string) => {
-		setDeathGif(death_gif);
-		setLoseDescription(msg);
-		setLoseModalOpen(true);
-		stopExecution();
-	};
+	const onLose = useCallback(
+		(death_gif: string, msg: string) => {
+			setDeathGif(death_gif);
+			setLoseDescription(msg);
+			setLoseModalOpen(true);
+			stopExecution();
+		},
+		[stopExecution],
+	);
 
-	const onWin = () => {
+	const onWin = useCallback(() => {
 		setWinModalOpen(true);
 		setShowConfetti(true);
 		stopExecution();
-	};
+	}, [stopExecution, setShowConfetti]);
 
 	return (
 		<StyledSimulation>

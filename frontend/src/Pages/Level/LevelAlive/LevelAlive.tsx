@@ -305,7 +305,7 @@ const LevelAlive = ({
 											level.current!.layout = newLayout;
 											saveLevelTimed();
 										}}
-										stopExecution={() => executor.toggleExecution()}
+										stopExecution={() => executor.stop()}
 										setShowConfetti={set => setShowConfetti(set)}
 									/>
 								)}
