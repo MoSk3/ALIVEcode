@@ -86,7 +86,6 @@ export const sketch = s => {
 				s.zoomButton.attr('src', '/static/images/fullscreen-on.png');
 				if (s.editMode) {
 					s.exitEditMode();
-					if (s.execution) s.playButton.click();
 				}
 				setTimeout(s.resize, 1000);
 			}

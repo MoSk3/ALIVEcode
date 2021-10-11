@@ -92,9 +92,9 @@ export function editModeSection(s: any) {
 	};
 
 	s.toggleEditMode = () => {
-		s.zoomButton.click();
-		if (s.editMode === undefined || !s.editMode) s.enterEditMode();
+		if (!s.editMode) s.enterEditMode();
 		else s.exitEditMode();
+		s.zoomButton.click();
 	};
 
 	function addMenuSection(title: string, spawnItems: () => void): void {
