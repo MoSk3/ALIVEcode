@@ -96,6 +96,7 @@ const ActivityContent = (props: ActivityContentProps) => {
 										{activity.levels &&
 											activity.levels.map((a, idx) => (
 												<div key={idx} style={{ position: 'relative' }}>
+													{console.log(a.level)}
 													<Level
 														level={a.level}
 														type={a.level.getType()}
