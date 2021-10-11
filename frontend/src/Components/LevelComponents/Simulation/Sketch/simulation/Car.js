@@ -1,10 +1,10 @@
 import { PhysicEngine } from '../physicEngine/physicEngine';
-import { Obstacle } from './ts/Obstacle.ts';
+import { Obstacle } from './ts/Obstacle';
 import { Road } from './ts/Road';
 import { Terrain } from './ts/Terrain';
 import { Interactive } from './ts/Interactive';
 import { Vector } from './Vector';
-import { images } from './assets';
+import { images, unloadImages } from './assets';
 
 export class Car {
 	#speed;
@@ -18,9 +18,10 @@ export class Car {
 
 		this.initialSpeed = 0;
 
-		this.#speed = this.initialSpeed;
+		this.#speed = 0;
 
 		this.rotateSpeed = 2; // degrees / second
+		this.turning = false;
 		this.rotationGoal = null;
 
 		this.initialRotateSpeed = this.rotateSpeed;
@@ -89,24 +90,32 @@ export class Car {
 			shapeInteraction instanceof Terrain ||
 			shapeInteraction instanceof Road
 		) {
-			//this.speed = this.initialSpeed * shapeInteraction.frictionCoef
-		} else if (!this.s.editMode && this.s.execution) {
+			//this.#speed = this.initialSpeed * shapeInteraction.frictionCoef;
+		} else if (!this.s.editMode) {
 			// Interactions avec un obstacle
 			if (shapeInteraction instanceof Obstacle) {
-				this.s.playSound(shapeInteraction.soundOnCollision, 0.3);
+				//this.s.playSound(shapeInteraction.soundOnCollision, 0.3);
 
 				this.stop(shapeInteraction);
 
 				if (shapeInteraction.isGameOver) {
 					shapeInteraction.playGameOverEvent();
-					this.s.playButton.click();
+					return;
 				}
+
+				const backward = this.shape.forward.clone();
+				backward.y = -backward.y;
+				this.shape.moveInDirection(
+					backward,
+					this.dir.y * this.speed + this.speed * 1.5,
+					true,
+				);
 			}
 			// Interactions avec un interactiveObject
 			else if (shapeInteraction instanceof Interactive) {
 				// Les coins
-				if (shapeInteraction.isCoin) {
-					this.s.playSound(this.s.newCoinCollectedAudio(), 0.3);
+				if (shapeInteraction.isCollectable) {
+					//this.s.playSound(this.s.newCoinCollectedAudio(), 0.3);
 
 					this.s.coinsToRespawn.push(shapeInteraction);
 
@@ -139,14 +148,18 @@ export class Car {
 						!objectifPresent
 					)
 						this.win();
+					return;
 				}
-				// Objctif
-				else if (shapeInteraction.isObjectif) {
-					if (this.s.coinsTotal === this.s.coinsToRespawn.length) this.win();
+				// Objectif
+				else if (
+					shapeInteraction.isObjectif &&
+					this.s.coinsTotal === this.s.coinsToRespawn.length
+				) {
+					this.win();
 				}
 				// Bouton
 				else if (shapeInteraction.isButton) {
-					shapeInteraction.setImg(this.s.green_button);
+					shapeInteraction.setImg(images.green_button_pressed);
 
 					shapeInteraction.linkedId.forEach((idLinked, index) => {
 						let shapeLinked = this.s.getShapeById(
@@ -181,10 +194,11 @@ export class Car {
 	// TODO add level complete modal
 	win() {
 		//levelCompleteModal.modal("show")
-		if (typeof this.s.winTrigger === 'function') this.s.winTrigger();
-		this.s.playSound(this.s.level_complete_audio, 0.3);
-		this.s.confetti();
-		this.s.playButton.click();
+		this.s.onWin();
+		//if (typeof this.s.winTrigger === 'function') this.s.winTrigger();
+		//this.s.playSound(this.s.level_complete_audio, 0.3);
+		//this.s.confetti();
+		//this.s.playButton.click();
 	}
 
 	update() {
@@ -254,6 +268,14 @@ export class Car {
 				this.shape.setImg(images.carTopD);
 			}
 		}
+		//if (this.turning) {
+		//const step =
+		//	this.rotateSpeed *
+		//	this.rotationDir *
+		//	(this.s.maxFPS / this.s.frameRate());
+		//
+		//this.shape.setRotation(this.rotationBeforeTurn + step);
+
 		if (this.rotationGoal) {
 			const goal = this.rotationGoal;
 			const rotationStep =
@@ -281,6 +303,7 @@ export class Car {
 					tempCallback();
 				}
 			}
+			//}
 		}
 
 		if (this.i % this.updateInterval === 0) {
@@ -345,15 +368,18 @@ export class Car {
 		return Math.abs(angle / this.rotateSpeed);
 	}
 
-	turn(angle) {
+	turn(angle, callback) {
 		this.shape.setImg(angle > 0 ? images.carTopD : images.carTopG);
 		this.rotationBeforeTurn = this.shape.rotation.x;
 		this.rotationAmount = 0;
 		this.rotationDir = angle < 0 ? -1 : 1;
+		this.turning = true;
 		this.rotationGoal = angle;
+		this.callback = callback;
 	}
 
 	stopRotate() {
+		this.turning = false;
 		this.rotationGoal = null;
 		this.shape.setImg(images.carTop);
 	}
@@ -383,7 +409,7 @@ export class Car {
 		this.shape.setRotation(this.initialRotation.x);
 		this.shape.setImg(images.carTop);
 		this.rotationGoal = null;
-		this.rotationGoal = null;
+		this.turning = false;
 		this.rotationDir = 0;
 		this.rotationAmount = 0;
 		if (this.s.canvasCamera != null)
