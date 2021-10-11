@@ -602,10 +602,7 @@ export function editModeSection(s: any) {
 			crackHole1.color = s.color(0, 0);
 			crackHole1.onClickDown(() => {
 				if (!s.topMenu.hovering)
-					s.spawnShapeFromMenu(
-						crackHole1,
-						s.spawnDecoration(0, 0, 150, 150, 95),
-					);
+					s.spawnShapeFromMenu(crackHole1, s.spawnDecoration(0, 0, 150, 150));
 			});
 			s.sideMenu.addChild(crackHole1, true);
 

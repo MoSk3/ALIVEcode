@@ -30,7 +30,7 @@ export class Serializer {
 						},
 					},
 					imageName: shape.imgName,
-					imageRes: shape.res ?? 1,
+					imageRes: shape.res ?? null,
 					properties: (shape as unknown as SerializableShape<string, any>)
 						.uniqueProperties,
 				});
@@ -83,10 +83,12 @@ export class Serializer {
 
 				if (serializedShape.imageName) {
 					loadImages(serializedShape.imageName);
-					shape.setTexture(
-						images[serializedShape.imageName as imageNameType],
-						serializedShape.imageRes,
-					);
+					if (serializedShape.imageRes !== null)
+						shape.setTexture(
+							images[serializedShape.imageName as imageNameType],
+							serializedShape.imageRes,
+						);
+					else shape.setImg(images[serializedShape.imageName as imageNameType]);
 				}
 
 				if (serializedShape.shapeType === 'Car') {

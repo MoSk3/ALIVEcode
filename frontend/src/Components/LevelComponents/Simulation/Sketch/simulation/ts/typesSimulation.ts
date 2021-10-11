@@ -76,7 +76,7 @@ export interface BaseLayoutObj {
 	templateName: string;
 	shapeInfo: ShapeInfo;
 	imageName: string;
-	imageRes: number;
+	imageRes: number | null;
 	properties: {
 		[key: string]: any;
 	};

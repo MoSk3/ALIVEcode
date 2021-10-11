@@ -2,6 +2,7 @@ import { Shape } from "../Shape";
 import { Template } from './typesSimulation';
 import { SerializableShape } from './typesSimulation';
 import { Vector } from '../Vector';
+import { loadFromTemplate } from './simulationClassUtils';
 
 type TemplateNamesDecoration = 'base';
 
@@ -27,7 +28,7 @@ export class Decoration
 	}
 
 	loadFromTemplate() {
-		Object.assign(this, this.templates[this.templateName]);
+		loadFromTemplate(this, this.templates, this.templateName);
 	}
 
 	readonly defaultTemplate: TemplateNamesDecoration = 'base';

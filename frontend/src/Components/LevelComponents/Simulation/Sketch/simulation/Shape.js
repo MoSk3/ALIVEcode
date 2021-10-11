@@ -31,6 +31,7 @@ export class Shape {
 		this.colliding = [];
 		this.children = [];
 		this.bounds = [];
+		this.res = null;
 		for (const point of points) {
 			this.vertices.push(new Vector(point[0], point[1]));
 		}
