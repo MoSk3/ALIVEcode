@@ -36,6 +36,7 @@ export const sketch = s => {
 		if (props.onChange) s.onChange = props.onChange;
 		if (props.onWin) s.onWin = props.onWin;
 		if (props.onLose) s.onLose = props.onLose;
+		if (props.onConnectCar) s.onConnectCar = props.onConnectCar;
 	};
 
 	s.preload = () => {

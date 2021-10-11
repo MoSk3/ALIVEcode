@@ -51,7 +51,7 @@ const IoTProject = (props: IoTProjectProps) => {
 	// Socket io
 	useEffect(() => {
 		if (!process.env.REACT_APP_IOT_URL) return;
-		const socket = io(process.env.REACT_APP_IOT_URL);
+		const socket = io(`${process.env.REACT_APP_IOT_URL}/iot`);
 
 		socket.emit('register_light');
 
