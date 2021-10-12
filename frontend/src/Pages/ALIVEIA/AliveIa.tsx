@@ -18,6 +18,7 @@ const AliveIa = (props: AliveIaProps) => {
         children={
           <div>
             <p>{t("ai.section.artificial-intelligence.paragraph1")}</p>
+            <br/>
             <p>{t("ai.section.artificial-intelligence.paragraph2")}</p>
             <ul>
               <li>{t("ai.section.artificial-intelligence.point1")}</li>
@@ -35,6 +36,7 @@ const AliveIa = (props: AliveIaProps) => {
         children={
           <div>
             <p>{t("ai.section.machine-learning.paragraph1")}</p>
+            <br/>
             <p>{t("ai.section.machine-learning.paragraph2")}</p>
           </div>
         }
@@ -45,7 +47,9 @@ const AliveIa = (props: AliveIaProps) => {
         children={
           <div>
             <p>{t("ai.section.deep-learning.paragraph1")}</p>
+            <br/>
             <p>{t("ai.section.deep-learning.paragraph2")}</p>
+            <br/>
             <p>{t("ai.section.deep-learning.paragraph3")}</p>
             <ol>
               <li>{t("ai.section.deep-learning.point1")}</li>

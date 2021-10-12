@@ -10,7 +10,8 @@ import brainImage from "../../../assets/images/ai/IA.png";
 const StyledHeader = styled.div`
     width: 100%;
     height: 70vh;
-    background-color: var(--primary-color);
+    background: rgb(255,255,255);
+    background: var(--headerAIBack-color);
     display: flex;
     flex-direction: row;
 
