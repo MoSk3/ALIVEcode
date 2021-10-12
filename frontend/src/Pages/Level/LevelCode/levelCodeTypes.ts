@@ -9,7 +9,7 @@ export interface LevelCodeProps {
 	progression?: LevelProgression;
 	setProgression: (progression: LevelProgression) => void;
 	setLevel: (level: LevelCode) => void;
-	initialCode: string;
+	initialCode?: string;
 }
 
 type StyledProps = {

@@ -154,8 +154,7 @@ const App = () => {
 				if (
 					error.response &&
 					error.response.data.message === 'Not Authenticated' &&
-					error.response.status === 401 &&
-					error.response.statusText === 'Unauthorized'
+					error.response.status === 401
 				) {
 					try {
 						const { accessToken } = (await axios.post('/users/refreshToken'))

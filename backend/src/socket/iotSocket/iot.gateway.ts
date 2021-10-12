@@ -13,7 +13,7 @@ import {
 import { Socket } from 'socket.io';
 import { Server, WebSocket } from 'ws';
 
-@WebSocketGateway(8888, { cors: { origin: '*' } })
+@WebSocketGateway(8881, { cors: { origin: '*' } })
 export class IoTGateway implements OnGatewayDisconnect, OnGatewayConnection, OnGatewayInit {
   private notificationClients: WebSocket[] = [];
   private lightClients: WebSocket[] = [];
@@ -27,7 +27,7 @@ export class IoTGateway implements OnGatewayDisconnect, OnGatewayConnection, OnG
   }
 
   handleConnection() {
-    this.logger.log(`Client connected`);
+    //this.logger.log(`Client connected`);
   }
 
   handleDisconnect(client: WebSocket) {

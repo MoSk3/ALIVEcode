@@ -86,13 +86,17 @@ const LevelCard = ({ level, enterEdit }: LevelCardProps) => {
 			</div>
 			<div className="footer">
 				<div>
-					Creator:{' '}
+					{t('msg.creator')}:{' '}
 					{level.creator
 						? level.creator.getDisplayName()
 						: t('msg.deleted_user')}
 				</div>
-				<div>Creation date: {level.creationDate.toLocaleString()}</div>
-				<div>Last updated: {level.creationDate.toLocaleString()}</div>
+				<div>
+					{t('msg.creation_date')}: {level.creationDate.toLocaleString()}
+				</div>
+				<div>
+					{t('msg.update_date')}: {level.creationDate.toLocaleString()}
+				</div>
 			</div>
 		</StyledLevelCard>
 	);

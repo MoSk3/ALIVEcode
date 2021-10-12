@@ -2,6 +2,7 @@ import { Modal as BootModal } from 'react-bootstrap';
 import styled from 'styled-components';
 import Button from '../Button/Button';
 import { ModalProps } from './modalTypes';
+import { useTranslation } from 'react-i18next';
 
 const StyledModal = styled(BootModal)`
 	${({ centeredText }) =>
@@ -56,6 +57,9 @@ const Modal = (props: ModalProps) => {
 		onClose,
 		...other
 	} = props;
+
+	const { t } = useTranslation();
+
 	return (
 		<StyledModal size={size} show={open} onHide={onClose} {...other}>
 			<BootModal.Header closeButton={closeCross}>
@@ -66,11 +70,11 @@ const Modal = (props: ModalProps) => {
 				<BootModal.Footer>
 					{!hideCloseButton && (
 						<Button variant="secondary" onClick={onClose}>
-							Close
+							{t('modal.close')}
 						</Button>
 					)}
 					<Button variant={buttonVariant || 'primary'} onClick={onClose}>
-						{submitText ?? 'Save Changes'}
+						{submitText ?? t('modal.save')}
 					</Button>
 				</BootModal.Footer>
 			)}

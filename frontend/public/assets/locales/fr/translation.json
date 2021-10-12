@@ -32,7 +32,18 @@
 		},
 		"title": {
 			"signin": "Connexion",
-			"signup": "Inscription"
+			"signup": "Inscription",
+			"create_classroom": "Création d'une classe",
+			"create_course": "Création d'un cours",
+			"create_level": "Création d'un niveau",
+			"create_iot_project": "Création d'un projet IoT",
+			"create_iot_object": "Création d'un objet IoT"
+		},
+		"join_classroom": {
+			"title": "Rejoindre une classe",
+			"submit": "Rejoindre",
+			"code": "Code de la classe",
+			"invalid_code": "Code non-valide"
 		},
 		"pwd": {
 			"label": "Mot de passe",
@@ -66,12 +77,22 @@
 			"required": "Votre niveau scholaire est requis"
 		}
 	},
+	"modal": {
+		"close": "Fermer",
+		"save": "Enregistrer les changements",
+		"confirm": "Confirmer",
+		"cancel": "Annuler"
+	},
 	"msg": {
 		"professor": "professeur",
 		"student": "étudiant",
+		"creator": "Créateur",
 		"understood": "C'est compris!",
 		"description": "description",
 		"deleted_user": "Ancien utilisateur",
+		"search": "Rechercher",
+		"creation_date": "Date de création",
+		"update_date": "Date de modification",
 		"time": {
 			"format": "{{dayName}}, {{day}} {{monthName}} {{year}} - {{hour}}:{{minute}}",
 			"day": {
@@ -135,10 +156,23 @@
 	},
 	"dashboard": {
 		"classrooms": {
+			"title": "Mes classes",
 			"empty": {
 				"student": "Tu ne fais parti d'aucune classe",
 				"professor": "Tu ne possède aucune classe"
 			}
+		},
+		"levels": {
+			"title": "Niveaux",
+			"my_levels": "Mes niveaux",
+			"create_level": "Créer un niveau",
+			"browse_levels": "Rechercher un niveau"
+		},
+		"quizzes": {
+			"title": "Quiz",
+			"my_quizzes": "Mes quiz",
+			"create_quiz": "Créer un quiz",
+			"browse_quizzes": "Rechercher un quiz"
 		}
 	},
 	"classroom": {
@@ -164,6 +198,10 @@
 			"title": "Code de la classe",
 			"desc": "Donnez ce code aux élèves afin qu'ils puissent rejoindre la classe depuis le site!"
 		}
+	},
+	"course": {
+		"desc": "Cours de {{professor}}",
+		"subject": "Sujet"
 	},
 	"menu": {
 		"signup": {

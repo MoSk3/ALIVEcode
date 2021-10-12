@@ -1,17 +1,17 @@
 import FillContainer from "../../UtilsComponents/FillContainer/FillContainer";
 import { sketch } from './Sketch/simulation/sketch';
-import P5Wrapper from 'react-p5-wrapper';
 import { SimulationProps, StyledSimulation } from './simulationTypes';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSquare } from '@fortawesome/free-solid-svg-icons';
 import $ from 'jquery';
 import LoadingScreen from '../../UtilsComponents/LoadingScreen/LoadingScreen';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import Modal from '../../UtilsComponents/Modal/Modal';
 import { useTranslation } from 'react-i18next';
 import { Image } from 'react-bootstrap';
 import FormModal from '../../UtilsComponents/FormModal/FormModal';
 import ConnectCarForm from '../ConnectCarForm/ConnectCarForm';
+import { ReactP5Wrapper } from 'react-p5-wrapper';
 
 /**
  * Simulation component that draws the car and make it functionnal
@@ -34,7 +34,19 @@ const Simulation = ({
 	const [winModalOpen, setWinModalOpen] = useState(false);
 	const [connectModalOpen, setConnectModalOpen] = useState(false);
 	const [deathGif, setDeathGif] = useState<string>();
+	const sketchRef = useRef<any>(null);
 	const { t } = useTranslation();
+
+	useEffect(() => {
+		return () => {
+			sketchRef.current && sketchRef.current.cleanup();
+		};
+	}, []);
+
+	useEffect(() => {
+		sketchRef.current && sketchRef.current.cleanup();
+		setLoading(true);
+	}, [id]);
 
 	const onLose = useCallback(
 		(death_gif: string, msg: string) => {
@@ -64,10 +76,10 @@ const Simulation = ({
 					icon={faSquare}
 					color="black"
 				/>
-				{$(`#${id}`) ? (
+				{$(`#${id}`).length ? (
 					<>
 						{loading && <LoadingScreen relative />}
-						<P5Wrapper
+						<ReactP5Wrapper
 							fullscreenDiv="fullscreen-div"
 							canvasDiv={$(`#${id}`)}
 							zoomButton={''}
@@ -77,6 +89,7 @@ const Simulation = ({
 							onLose={onLose}
 							onConnectCar={onConnectCar}
 							init={(s: any) => {
+								sketchRef.current = s;
 								setLoading(false);
 								init(s);
 							}}

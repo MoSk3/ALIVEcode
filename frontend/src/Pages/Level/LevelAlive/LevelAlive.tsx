@@ -223,7 +223,7 @@ const LevelAlive = ({
 									user.id === level.current?.creator?.id && (
 										<IconButton
 											to={routes.auth.level_edit.path.replace(
-												':id',
+												':levelId',
 												level.current.id,
 											)}
 											icon={faPencilAlt}
@@ -276,11 +276,7 @@ const LevelAlive = ({
 								/>
 							) : (
 								<LineInterface
-									initialContent={
-										progression?.data.code
-											? progression.data.code
-											: level.current.initialCode
-									}
+									initialContent={initialCode}
 									handleChange={lineInterfaceContentChanges}
 								/>
 							)}
@@ -340,13 +336,13 @@ const LevelAlive = ({
 									required: true,
 									default: level.current?.name,
 									minLength: 3,
-									maxLength: 25,
+									maxLength: 100,
 								},
 								{
 									name: 'description',
 									inputType: 'text',
 									default: level.current?.description,
-									maxLength: 200,
+									maxLength: 500,
 								},
 								{
 									name: 'access',

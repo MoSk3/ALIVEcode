@@ -48,7 +48,7 @@ export class Level extends CreatedByUser {
 	getType() {
 		if (this instanceof LevelAlive) return 'ALIVE';
 		if (this instanceof LevelCode) return 'code';
-		if (this instanceof LevelCode) return 'AI';
+		if (this instanceof LevelAI) return 'AI';
 		return 'code';
 	}
 
@@ -61,3 +61,4 @@ export class Level extends CreatedByUser {
 
 const LevelAlive = require('./levelAlive.entity').LevelAlive;
 const LevelCode = require('./levelCode.entity').LevelCode;
+const LevelAI = require('./levelAI.entity').LevelAI;

@@ -26,13 +26,13 @@ const IoTObjectCreate = ({ onSubmit }: IoTObjectCreateProps) => {
 					required: true,
 					inputType: 'text',
 					minLength: 3,
-					maxLength: 25,
+					maxLength: 100,
 				},
 				{
 					name: 'description',
 					required: false,
 					inputType: 'text',
-					maxLength: 200,
+					maxLength: 500,
 				},
 				{
 					name: 'label',
