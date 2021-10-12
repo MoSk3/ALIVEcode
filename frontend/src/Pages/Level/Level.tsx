@@ -16,7 +16,6 @@ import { UserContext } from '../../state/contexts/UserContext';
 import { LevelProgression } from '../../Models/Level/levelProgression';
 import { plainToClass } from 'class-transformer';
 import LevelAlive from './LevelAlive/LevelAlive';
-import useRoutes from '../../state/hooks/useRoutes';
 import { LevelAI as LevelAIModel } from '../../Models/Level/levelAI.entity';
 import LevelAI from './LevelAI/LevelAI';
 
@@ -75,8 +74,6 @@ const Level = ({ level: levelProp, ...props }: LevelProps) => {
 						currentLevel,
 					);
 				}
-				console.log(`FETCHING PROGRESSION ${currentLevel.name}`);
-				console.log(progression.data.code);
 				progression.data.code &&
 					setInitialProgressionCode(progression.data.code);
 				setProgression(progression);
@@ -129,7 +126,6 @@ const Level = ({ level: levelProp, ...props }: LevelProps) => {
 	}
 
 	if (level instanceof LevelCodeModel) {
-		console.log(level);
 		return (
 			<LevelCode
 				initialCode={
