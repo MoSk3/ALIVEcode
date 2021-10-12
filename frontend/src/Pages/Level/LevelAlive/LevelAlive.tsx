@@ -276,11 +276,7 @@ const LevelAlive = ({
 								/>
 							) : (
 								<LineInterface
-									initialContent={
-										progression?.data.code
-											? progression.data.code
-											: level.current.initialCode
-									}
+									initialContent={initialCode}
 									handleChange={lineInterfaceContentChanges}
 								/>
 							)}

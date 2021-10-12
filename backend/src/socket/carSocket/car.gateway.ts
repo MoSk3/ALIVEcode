@@ -34,7 +34,6 @@ export class CarGateway implements OnGatewayDisconnect, OnGatewayConnection, OnG
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   handleConnection(client: WebSocket) {
-    this.logger.log('A client created a connection');
     //pass
   }
 

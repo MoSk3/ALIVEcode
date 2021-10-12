@@ -38,7 +38,6 @@ const LevelGraph = React.memo((props: LevelGraphProps) => {
 							title: {
 								display: true,
 								text: props.xAxis,
-								align: 'center',
 							},
 						},
 						y: {
@@ -46,7 +45,6 @@ const LevelGraph = React.memo((props: LevelGraphProps) => {
 							title: {
 								display: true,
 								text: props.yAxis,
-								align: 'center',
 							},
 						},
 					},

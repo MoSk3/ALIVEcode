@@ -28,7 +28,7 @@ export const sketch = s => {
 	let canvasDiv;
 	let previousParent;
 
-	s.myCustomRedrawAccordingToNewPropsHandler = props => {
+	s.updateWithProps = props => {
 		if (props.init) s.init = props.init;
 		if (props.fullscreenDiv)
 			s.fullscreenDiv = $(`.${props.fullscreenDiv}`).first();

@@ -35,15 +35,11 @@ const Level = ({ level: levelProp, ...props }: LevelProps) => {
 	const { levelId } = useParams<{ levelId: string }>();
 	const { user } = useContext(UserContext);
 	const [level, setLevel] = useState<LevelModel | undefined>(() => levelProp);
-	const [progression, setProgresion] = useState<LevelProgression>();
-	const [initialCode, setInitialCode] = useState<string>('');
+	const [progression, setProgression] = useState<LevelProgression>();
+	const [initialProgressionCode, setInitialProgressionCode] =
+		useState<string>('');
 	const alert = useAlert();
 	const history = useHistory();
-	const { routes } = useRoutes();
-
-	useEffect(() => {
-		setLevel(levelProp);
-	}, [levelProp]);
 
 	useEffect(() => {
 		const loadLevel = async () => {
@@ -61,9 +57,9 @@ const Level = ({ level: levelProp, ...props }: LevelProps) => {
 			}
 
 			// If user, load or create progression
-			if (user && (level || fetchedLevel)) {
+			if (user && (levelProp || fetchedLevel)) {
 				let progression: LevelProgression;
-				const currentLevel = level ?? fetchedLevel;
+				const currentLevel = levelProp ?? fetchedLevel;
 				if (!currentLevel) return;
 				try {
 					progression = await api.db.levels.progressions.get({
@@ -79,12 +75,16 @@ const Level = ({ level: levelProp, ...props }: LevelProps) => {
 						currentLevel,
 					);
 				}
-				progression.data.code && setInitialCode(progression.data.code);
-				setProgresion(progression);
+				console.log(`FETCHING PROGRESSION ${currentLevel.name}`);
+				console.log(progression.data.code);
+				progression.data.code &&
+					setInitialProgressionCode(progression.data.code);
+				setProgression(progression);
+				setLevel(currentLevel);
 			}
 
 			// If no level loaded create an non-saved empty one
-			if (!level && !fetchedLevel) {
+			if (!level && !fetchedLevel && !levelProp) {
 				fetchedLevel = plainToClass(LevelModel, {
 					id: 'dummy',
 					name: 'New level',
@@ -108,14 +108,16 @@ const Level = ({ level: levelProp, ...props }: LevelProps) => {
 
 	if (!level || !progression) return <LoadingScreen />;
 
-	if (level instanceof LevelAliveModel || props.type === 'ALIVE') {
+	if (level instanceof LevelAliveModel) {
 		return (
 			<LevelAlive
-				initialCode={initialCode}
+				initialCode={
+					initialProgressionCode || (level as LevelAliveModel).initialCode
+				}
 				setLevel={setLevel}
 				level={level as LevelAliveModel}
 				progression={progression}
-				setProgression={setProgresion}
+				setProgression={setProgression}
 				editMode={
 					props.editMode &&
 					user != null &&
@@ -126,14 +128,17 @@ const Level = ({ level: levelProp, ...props }: LevelProps) => {
 		);
 	}
 
-	if (level instanceof LevelCodeModel || props.type === 'code')
+	if (level instanceof LevelCodeModel) {
+		console.log(level);
 		return (
 			<LevelCode
-				initialCode={initialCode}
+				initialCode={
+					initialProgressionCode || (level as LevelCodeModel).initialCode
+				}
 				setLevel={setLevel}
 				level={level as LevelCodeModel}
 				progression={progression}
-				setProgression={setProgresion}
+				setProgression={setProgression}
 				editMode={
 					props.editMode &&
 					user != null &&
@@ -142,15 +147,18 @@ const Level = ({ level: levelProp, ...props }: LevelProps) => {
 				}
 			></LevelCode>
 		);
+	}
 
-	if (level instanceof LevelAIModel || props.type === 'AI')
+	if (level instanceof LevelAIModel)
 		return (
 			<LevelAI
-				initialCode={initialCode}
+				initialCode={
+					initialProgressionCode || (level as LevelAIModel).initialCode
+				}
 				setLevel={setLevel}
 				level={level as LevelAIModel}
 				progression={progression}
-				setProgression={setProgresion}
+				setProgression={setProgression}
 				editMode={
 					props.editMode &&
 					user != null &&
@@ -159,8 +167,8 @@ const Level = ({ level: levelProp, ...props }: LevelProps) => {
 				}
 			></LevelAI>
 		);
-	history.push(routes.public.home.path);
-	return <></>;
+
+	return <LoadingScreen></LoadingScreen>;
 };
 
 export default Level;
