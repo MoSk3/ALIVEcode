@@ -1,9 +1,8 @@
 import { Button, Card, Col, Container, Form, Row, Table } from "react-bootstrap";
-import SearchBar from "../../../Components/MainComponents/BrowsingMenu/SearchBar/SearchBar";
 import CenteredContainer from "../../../Components/UtilsComponents/CenteredContainer/CenteredContainer";
 import { QuizCategoryProps } from "./Category";
 
-const QuizHome = (props: QuizCategoryProps) => {
+const QuizCategory = (props: QuizCategoryProps) => {
 
 	return (
 		<div>
@@ -30,7 +29,7 @@ const QuizHome = (props: QuizCategoryProps) => {
                                 <Col>15 Quiz</Col>
                                 <Col></Col>
                                 <Col>
-                                    <Button>Ajouter un Quiz</Button>
+                                    <Button>Ajouter un Quiz TODO</Button>
                                 </Col>
                                 <Col>
                                     <Form>
@@ -84,4 +83,4 @@ const QuizHome = (props: QuizCategoryProps) => {
 	);
 };
 
-export default QuizHome;
+export default QuizCategory;
