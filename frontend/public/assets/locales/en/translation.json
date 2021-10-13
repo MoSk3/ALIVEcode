@@ -305,7 +305,13 @@
 			"water": "The car fell in water",
 			"lava": "The car fell in lava",
 			"hole": "The car fell in a hole",
-			"wall": "The car smashed in a wall"
+			"wall": "The car smashed in a wall",
+			"connect_car": {
+				"title": "Connect a real ALIVEcar",
+				"label": "Identifier of the ALIVEcar",
+				"id": "123",
+				"button": "Connect with the real ALIVEcar"
+			}
 		}
 	}
 }

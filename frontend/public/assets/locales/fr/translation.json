@@ -305,7 +305,13 @@
 			"water": "La voiture est tombée dans l'eau",
 			"lava": "La voiture est tombée dans la lave",
 			"hole": "La voiture est tombée dans un trou",
-			"wall": "La voiture a foncée dans un mur"
+			"wall": "La voiture a foncée dans un mur",
+			"connect_car": {
+				"title": "Connecter un vrai ALIVEcar",
+				"label": "Identifiant du ALIVEcar",
+				"id": "123",
+				"button": "Se connecter avec le vrai ALIVEcar"
+			}
 		}
 	}
 }
