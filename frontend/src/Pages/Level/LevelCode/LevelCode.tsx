@@ -44,13 +44,14 @@ import Button from '../../../Components/UtilsComponents/Button/Button';
  *
  * @author MoSk3
  */
-const LevelAlive = ({
+const LevelCode = ({
 	level,
 	editMode,
 	progression,
 	initialCode,
 	setLevel,
 	setProgression,
+	askForUserInput,
 }: LevelCodeProps) => {
 	const { user } = useContext(UserContext);
 	const [cmdRef, cmd] = useCmd();
@@ -81,7 +82,9 @@ const LevelAlive = ({
 		if (user && editMode && level.creator && level.creator.id !== user.id)
 			return history.push(routes.public.home.path);
 
-		setExecutor(new LevelCodeExecutor(level.name, user ?? undefined));
+		setExecutor(
+			new LevelCodeExecutor(level.name, askForUserInput, user ?? undefined),
+		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, level]);
 
@@ -347,4 +350,4 @@ const LevelAlive = ({
 	);
 };
 
-export default LevelAlive;
+export default LevelCode;

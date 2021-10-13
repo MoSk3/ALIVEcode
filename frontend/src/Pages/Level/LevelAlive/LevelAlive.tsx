@@ -56,6 +56,7 @@ const LevelAlive = ({
 	initialCode,
 	setLevel,
 	setProgression,
+	askForUserInput
 }: LevelAliveProps) => {
 	const { user, playSocket } = useContext(UserContext);
 
@@ -97,7 +98,7 @@ const LevelAlive = ({
 			return history.push(routes.public.home.path);
 
 		setExecutor(
-			new LevelAliveExecutor(level.current!.name, editMode, playSocket, user ?? undefined),
+			new LevelAliveExecutor(level.current!.name, editMode, playSocket, askForUserInput, user ?? undefined),
 		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, level]);

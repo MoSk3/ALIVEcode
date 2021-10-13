@@ -263,6 +263,9 @@
 			"copyright_2": " 2021 Tous droits réservés par"
 		}
 	},
+	"input": {
+		"defaultValue": "Écrivez ici..."
+	},
 	"ai": {
 		"header": {
 			"title": "LE MONDE DE L'INTELLIGENCE ARTIFICIELLE AVEC ALIVESCRIPT",

@@ -5,3 +5,8 @@ export interface LevelProps {
 	type?: 'ALIVE' | 'code' | 'AI' | 'IoT';
 	level?: Level;
 }
+
+export type typeAskForUserInput = (
+	msg: string,
+	callback: (inputValue: string) => void,
+) => void;
