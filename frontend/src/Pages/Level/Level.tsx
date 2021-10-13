@@ -41,9 +41,11 @@ const Level = ({ level: levelProp, ...props }: LevelProps) => {
 	const history = useHistory();
 
 	useEffect(() => {
+		setInitialProgressionCode('');
+		setLevel(undefined);
+
 		const loadLevel = async () => {
 			let fetchedLevel: LevelModel | null = null;
-
 			// LevelId as url param
 			if (levelId) {
 				try {

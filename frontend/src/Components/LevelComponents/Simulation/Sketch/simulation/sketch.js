@@ -34,9 +34,8 @@ export const sketch = s => {
 			s.fullscreenDiv = $(`.${props.fullscreenDiv}`).first();
 		if (props.canvasDiv) {
 			canvasDiv = props.canvasDiv;
-			!s.loaded && console.log('HERE');
-			if (!s.loaded) s.setup();
-			s.loaded = true;
+			if (!s.canvasLoaded) s.setup();
+			s.canvasLoaded = true;
 		}
 		if (props.onChange) s.onChange = props.onChange;
 		if (props.onWin) s.onWin = props.onWin;
@@ -47,7 +46,7 @@ export const sketch = s => {
 	// Used when simulation unmount
 	s.cleanup = () => {
 		s.noLoop();
-		s.loaded = false;
+		s.canvasLoaded = false;
 		s.remove();
 	};
 
@@ -61,9 +60,9 @@ export const sketch = s => {
 	};
 
 	s.setup = () => {
-		console.log(canvasDiv);
 		if (canvasDiv == null) return;
-		s.loaded = true;
+		s.canvasLoaded = true;
+		s.loading = true;
 
 		editModeSection(s);
 		//************************** Setup Canvas **********************************
@@ -210,8 +209,6 @@ export const sketch = s => {
 
 		if (s.zoomButton) s.zoomButton.click(zoom);
 
-		if (s.init) s.init(s);
-
 		s.maxFPS = 30;
 		s.frameRate(60);
 		s.rectMode(s.CENTER);
@@ -228,14 +225,17 @@ export const sketch = s => {
 		//		s.levelHasChanged = false;
 		//	}
 		//}, 5000);
-		s.draw();
 	};
 
 	// #endregion
 
 	// #region Draw
 	s.draw = () => {
-		if (!s.pause && s.loaded) {
+		if (s.loading) {
+			s.loading = false;
+			if (s.init) s.init(s);
+		}
+		if (!s.pause && s.canvasLoaded) {
 			//******************************** Debut ***********************************
 			// Resize automatique du canvas
 			s.canvasAutoResize();
@@ -981,10 +981,8 @@ export const sketch = s => {
 			// 187 == "+" et 189 == "-"
 			if (s.keyCode === 189 && s.pressedObject?.zIndex > 0) {
 				s.pressedObject.setZIndex(Number(s.pressedObject.zIndex) - 1);
-				console.log(s.pressedObject.zIndex);
 			} else if (s.keyCode === 187 && s.pressedObject?.zIndex < 400) {
 				s.pressedObject.setZIndex(Number(s.pressedObject.zIndex) + 1);
-				console.log(s.pressedObject.zIndex);
 			}
 			return false; // prevent any default behavior
 		}

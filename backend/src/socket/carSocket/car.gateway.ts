@@ -66,7 +66,6 @@ export class CarGateway implements OnGatewayDisconnect, OnGatewayConnection, OnG
       return 'disconnected';
     }
 
-    this.logger.log(`Client disconnected`);
     return 'disconnected';
   }
 

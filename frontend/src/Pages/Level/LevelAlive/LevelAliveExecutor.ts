@@ -42,7 +42,6 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 	public loadLevelLayout(layout: BaseLayoutObj[] | {}) {
 		if (JSON.stringify(layout) === '{}') {
 			this.s.car = this.s.spawnCar(0, 0, 75, 110);
-			console.log('AHAHA');
 		} else {
 			const shapes = Serializer.deserialize(this.s, layout as BaseLayoutObj[]);
 
@@ -332,7 +331,7 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 									speed: car.speed,
 								};
 								res.push(infosCar);
-								if (process.env.DEBUG) console.log(res);
+								if (process.env.REACT_APP_DEBUG) console.log(res);
 								perform_action(i + 1);
 								// eslint-disable-next-line no-labels
 								break id_switch;

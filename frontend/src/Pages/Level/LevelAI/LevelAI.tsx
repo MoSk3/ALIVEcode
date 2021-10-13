@@ -272,7 +272,6 @@ const LevelAI = ({
 	};
 
 	const saveProgression = useCallback(async () => {
-		console.log(level.name);
 		if (!user || !progression) return;
 		if (saveTimeout.current) clearTimeout(saveTimeout.current);
 		if (messageTimeout.current) clearTimeout(messageTimeout.current);
