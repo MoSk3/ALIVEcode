@@ -2,9 +2,13 @@ import styled from "styled-components";
 import FillContainer from '../../UtilsComponents/FillContainer/FillContainer';
 
 export interface LevelTableProps {
-	data: any;
-	xData: string;
-	yData: string;
+  data: ({
+    id: number;
+    x: number;
+    y: number;
+} | {})[];
+  xData: string;
+  yData: string;
 }
 
 export const StyledLevelTable = styled(FillContainer)`
