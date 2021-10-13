@@ -21,15 +21,16 @@ export const StyledActivityContent = styled.div`
 		margin-right: 20px;
 	}
 
-	.course-content-padding {
+	.activity-content-padding {
 		padding: 30px;
 		height: 100%;
 	}
 
-	.course-content {
+	.activity-content-body {
 		height: 100%;
 		padding: 20px;
 		border-radius: 5px;
+		overflow-y: auto;
 		${({ theme }: { theme: Theme }) =>
 			theme.name === themes.light.name &&
 			'background-color: rgba(var(--background-color-rgb), 1);'}
