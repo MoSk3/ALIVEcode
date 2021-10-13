@@ -285,7 +285,7 @@ const LevelAI = ({
 			}, 5000);
 		}, 500);
 		setProgression(updatedProgression);
-	}, [level.id, progression, setProgression, user]);
+	}, [level, progression, setProgression, user]);
 
 	const saveProgressionTimed = () => {
 		if (saveTimeout.current) clearTimeout(saveTimeout.current);
@@ -476,13 +476,13 @@ const LevelAI = ({
 								required: true,
 								default: level.name,
 								minLength: 3,
-								maxLength: 25,
+								maxLength: 100,
 							},
 							{
 								name: 'description',
 								inputType: 'text',
 								default: level.description,
-								maxLength: 200,
+								maxLength: 500,
 							},
 							{
 								name: 'access',

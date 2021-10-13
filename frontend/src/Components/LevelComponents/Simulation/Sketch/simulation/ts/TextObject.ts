@@ -13,8 +13,9 @@ export class TextObject
 	readonly shapeType = 'TextObject';
 	readonly templateName: TemplateNamesText;
 
-	private text!: string;
-	private size!: number;
+	public text!: string;
+	public size!: number;
+
 	static readonly scalar: number = 0.8;
 	constructor(
 		s: any,

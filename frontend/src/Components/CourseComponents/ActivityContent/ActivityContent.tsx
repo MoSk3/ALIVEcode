@@ -39,8 +39,8 @@ const ActivityContent = (props: ActivityContentProps) => {
 
 	return (
 		<StyledActivityContent theme={theme}>
-			<div className="course-content-padding">
-				<div className="course-content">
+			<div className="activity-content-padding">
+				<div className="activity-content-body">
 					{activity ? (
 						<>
 							<div

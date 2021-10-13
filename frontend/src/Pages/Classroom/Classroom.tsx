@@ -68,6 +68,7 @@ const Classroom = (props: ClassroomProps) => {
 			<Container className="classroom-content">
 				{console.log(classroom)}
 				<CardContainer
+					asRow
 					title={t('classroom.container.courses.title')}
 					height="60px"
 					icon={classroom.creator.id === user.id ? faPlus : undefined}
