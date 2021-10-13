@@ -1,4 +1,4 @@
-import { Logger, WebSocketAdapter } from '@nestjs/common';
+import { Logger } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
@@ -73,7 +73,8 @@ export class CarGateway implements OnGatewayDisconnect, OnGatewayConnection, OnG
   connectCar(@MessageBody() id: string, @ConnectedSocket() socket: WebSocket) {
     if (!id || typeof id !== 'string') throw new WsException('Bad payload');
     if (this.cars.find(c => c.socket === socket)) throw new WsException('Already registered as a car');
-    if (this.cars.find(c => c.id === id)) throw new WsException('Id already taken');
+    this.cars = this.cars.filter(c => c.socket !== socket);
+    //if (this.cars.find(c => c.id === id)) throw new WsException('Id already taken');
 
     this.cars.push({
       id,
@@ -102,14 +103,13 @@ export class CarGateway implements OnGatewayDisconnect, OnGatewayConnection, OnG
   }
 
   @SubscribeMessage('execute')
-  send_light(@ConnectedSocket() socket: WebSocket, @MessageBody() payload: ExecutionPayload) {
+  send_execute(@ConnectedSocket() socket: WebSocket, @MessageBody() payload: ExecutionPayload) {
     if (!payload.executionResult || !Array.isArray(payload.executionResult)) throw new WsException('Bad payload');
 
     const watcher = this.watchers.find(w => w.socket === socket);
     if (!watcher) throw new WsException('Not authenticated');
 
     const { bufArray, bufView } = convertExecutionToBytes(payload.executionResult);
-    console.log(bufView);
 
     this.cars.forEach(c => {
       if (watcher.targets.find(t => t.id === c.id)) {
