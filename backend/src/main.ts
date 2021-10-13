@@ -4,6 +4,7 @@ import { NestFactory } from '@nestjs/core';
 import 'cookie-parser';
 import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
+import { WsAdapter } from '@nestjs/platform-ws';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -23,6 +24,8 @@ async function bootstrap() {
   );
 
   app.use(cookieParser());
+
+  app.useWebSocketAdapter(new WsAdapter(app));
 
   await app.listen(process.env.PORT);
 }

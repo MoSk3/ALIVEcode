@@ -86,7 +86,7 @@ const CourseNavigation = (props: CourseNavigationProps) => {
 							inputType: 'text',
 							required: true,
 							minLength: 3,
-							maxLength: 25,
+							maxLength: 100,
 						},
 					]}
 				/>

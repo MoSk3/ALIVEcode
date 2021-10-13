@@ -34,6 +34,7 @@ import Modal from '../../../Components/UtilsComponents/Modal/Modal';
 import useExecutor from '../../../state/hooks/useExecutor';
 import { useAlert } from 'react-alert';
 import LoadingScreen from '../../../Components/UtilsComponents/LoadingScreen/LoadingScreen';
+import Confetti from 'react-confetti';
 
 /**
  * Alive level page. Contains all the components to display and make the alive level functionnal.
@@ -56,7 +57,7 @@ const LevelAlive = ({
 	setLevel,
 	setProgression,
 }: LevelAliveProps) => {
-	const { user } = useContext(UserContext);
+	const { user, playSocket } = useContext(UserContext);
 
 	const [cmdRef, cmd] = useCmd();
 	const { executor, setExecutor, setExecutorLines, setSketch } =
@@ -73,6 +74,8 @@ const LevelAlive = ({
 	const [accountModalOpen, setAccountModalOpen] = useState(false);
 	const saveTimeout = useRef<any>(null);
 	const messageTimeout = useRef<any>(null);
+
+	const [showConfetti, setShowConfetti] = useState(false);
 
 	const level = useRef<LevelAliveModel>();
 	useEffect(() => {
@@ -93,7 +96,9 @@ const LevelAlive = ({
 		if (user && editMode && level.current?.creator?.id !== user.id)
 			return history.push(routes.public.home.path);
 
-		setExecutor(new LevelAliveExecutor(level.current!.name, user ?? undefined));
+		setExecutor(
+			new LevelAliveExecutor(level.current!.name, editMode, playSocket, user ?? undefined),
+		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, level]);
 
@@ -124,6 +129,7 @@ const LevelAlive = ({
 		}, 500);
 
 		level.current = updatedLevel;
+		if (process.env.REACT_APP_DEBUG) console.log(level.current.layout);
 	}, [level]);
 
 	const saveLevelTimed = () => {
@@ -217,7 +223,7 @@ const LevelAlive = ({
 									user.id === level.current?.creator?.id && (
 										<IconButton
 											to={routes.auth.level_edit.path.replace(
-												':id',
+												':levelId',
 												level.current.id,
 											)}
 											icon={faPencilAlt}
@@ -270,24 +276,21 @@ const LevelAlive = ({
 								/>
 							) : (
 								<LineInterface
-									initialContent={
-										progression?.data.code
-											? progression.data.code
-											: level.current.initialCode
-									}
+									initialContent={initialCode}
 									handleChange={lineInterfaceContentChanges}
 								/>
 							)}
 						</Col>
 						<Col md={6} style={{ resize: 'both', padding: '0' }}>
-							<Row id="simulation-row" style={{ height: '60%' }}>
-								{executor && level.current && (
+							<Row id="simulation-row" style={{ height: '60vh' }}>
+								{executor && level.current.layout && (
 									<Simulation
 										id={level.current.id}
 										init={s => {
 											executor.init(s);
 											setSketch(s);
 											executor.loadLevelLayout(level.current?.layout ?? '[]');
+											executor.stop();
 										}}
 										onChange={(s: any) => {
 											const newLayout = executor.saveLayout(s);
@@ -300,10 +303,12 @@ const LevelAlive = ({
 											level.current!.layout = newLayout;
 											saveLevelTimed();
 										}}
+										stopExecution={() => executor.stop()}
+										setShowConfetti={set => setShowConfetti(set)}
 									/>
 								)}
 							</Row>
-							<Row style={{ height: '40%' }}>
+							<Row style={{ height: '40vh' }}>
 								<Cmd ref={cmdRef}></Cmd>
 							</Row>
 						</Col>
@@ -331,13 +336,13 @@ const LevelAlive = ({
 									required: true,
 									default: level.current?.name,
 									minLength: 3,
-									maxLength: 25,
+									maxLength: 100,
 								},
 								{
 									name: 'description',
 									inputType: 'text',
 									default: level.current?.description,
-									maxLength: 200,
+									maxLength: 500,
 								},
 								{
 									name: 'access',
@@ -360,6 +365,7 @@ const LevelAlive = ({
 			) : (
 				<LoadingScreen />
 			)}
+			{showConfetti && <Confetti />}
 			<Modal
 				title={t('msg.auth.account_required')}
 				open={accountModalOpen}
@@ -388,3 +394,114 @@ const LevelAlive = ({
 };
 
 export default LevelAlive;
+
+
+	/*
+	useEffect(() => {
+		if (!process.env.REACT_APP_IOT_URL) return;
+
+		const socket = new WebSocket('ws://localhost:8888');
+		socket.onopen = () => {
+			console.log('YEP');
+			socket.send(
+				JSON.stringify({
+					event: 'connect_watcher',
+					data: {
+						targets: [{ id: '1' }],
+					},
+				}),
+			);
+			setTimeout(() => {
+				socket.send(
+					JSON.stringify({
+						event: 'execute',
+						data: {
+							executionResult: [
+								{
+									p: [],
+									d: 0,
+									id: 0,
+								},
+								{
+									p: [1],
+									d: 1,
+									id: 101,
+								},
+								{
+									p: [1],
+									d: 1,
+									id: 102,
+								},
+								{
+									p: [-10],
+									d: 0,
+									id: 103,
+								},
+								{
+									p: [45],
+									d: 0,
+									id: 103,
+								},
+							],
+						},
+					}),
+				);
+			}, 5000);
+		};
+
+		socket.onmessage = e => {
+			console.log(e);
+		};
+
+		const carSocket = io(`${process.env.REACT_APP_IOT_URL}`);
+
+		carSocket.emit('connect_car', '1234');
+		carSocket.on('execute', d => {
+			console.log(d);
+		});
+		const socket = io(`${process.env.REACT_APP_IOT_URL}`);
+
+		socket.emit('connect_watcher', {
+			targets: [{ id: '123' }, { id: '1234' }],
+		});
+		socket.emit('execute', {
+			executionResult: [
+				{
+					p: [1],
+					d: 1,
+					id: 101,
+				},
+				{
+					p: [1],
+					d: 1,
+					id: 102,
+				},
+				{
+					p: [-3800],
+					d: 0,
+					id: 103,
+				},
+				{
+					p: [45],
+					d: 0,
+					id: 103,
+				},
+				{
+					p: ['[exécution terminée]'],
+					d: 0,
+					id: 300,
+				},
+				{
+					p: [],
+					d: 0,
+					id: 0,
+				},
+			],
+		});
+
+		return () => {
+			socket?.close();
+			//carSocket?.close();
+		};
+	}, []);
+	*/

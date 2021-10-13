@@ -92,9 +92,9 @@ export function editModeSection(s: any) {
 	};
 
 	s.toggleEditMode = () => {
-		s.zoomButton.click();
-		if (s.editMode === undefined || !s.editMode) s.enterEditMode();
+		if (!s.editMode) s.enterEditMode();
 		else s.exitEditMode();
+		s.zoomButton.click();
 	};
 
 	function addMenuSection(title: string, spawnItems: () => void): void {
@@ -262,7 +262,7 @@ export function editModeSection(s: any) {
 			gazon1.setTexture(images.grass, (2 / 3) * 0.5);
 			gazon1.onClickDown(() => {
 				if (!s.topMenu.hovering)
-					s.spawnShapeFromMenu(gazon1, s.spawnTerrain(150, 150, 1, 0));
+					s.spawnShapeFromMenu(gazon1, s.spawnTerrain(150, 150, 'base'));
 			});
 			s.sideMenu.addChild(gazon1, true);
 
@@ -272,7 +272,7 @@ export function editModeSection(s: any) {
 			mud1.setTexture(images.mud, (2 / 3) * 0.5);
 			mud1.onClickDown(() => {
 				if (!s.topMenu.hovering)
-					s.spawnShapeFromMenu(mud1, s.spawnTerrain(150, 150, 1.08, 2));
+					s.spawnShapeFromMenu(mud1, s.spawnTerrain(150, 150, 'slower'));
 			});
 			s.sideMenu.addChild(mud1, true);
 
@@ -282,7 +282,7 @@ export function editModeSection(s: any) {
 			sand1.setTexture(images.sand, 0.5);
 			sand1.onClickDown(() => {
 				if (!s.topMenu.hovering)
-					s.spawnShapeFromMenu(sand1, s.spawnTerrain(150, 150, 1.05, 0));
+					s.spawnShapeFromMenu(sand1, s.spawnTerrain(150, 150, 'slow'));
 			});
 			s.sideMenu.addChild(sand1, true);
 
@@ -292,7 +292,7 @@ export function editModeSection(s: any) {
 			mars_terrain1.setTexture(images.mars_surface, 0.3);
 			mars_terrain1.onClickDown(() => {
 				if (!s.topMenu.hovering)
-					s.spawnShapeFromMenu(mars_terrain1, s.spawnTerrain(150, 150, 1, 0));
+					s.spawnShapeFromMenu(mars_terrain1, s.spawnTerrain(150, 150, 'base'));
 			});
 			s.sideMenu.addChild(mars_terrain1, true);
 
@@ -302,7 +302,7 @@ export function editModeSection(s: any) {
 			dark_lava1.setTexture(images.darkLava, 0.3);
 			dark_lava1.onClickDown(() => {
 				if (!s.topMenu.hovering)
-					s.spawnShapeFromMenu(dark_lava1, s.spawnTerrain(150, 150, 1.03, 0));
+					s.spawnShapeFromMenu(dark_lava1, s.spawnTerrain(150, 150, 'slow'));
 			});
 			s.sideMenu.addChild(dark_lava1, true);
 
@@ -312,7 +312,7 @@ export function editModeSection(s: any) {
 			rock1.setTexture(images.rock, 0.3);
 			rock1.onClickDown(() => {
 				if (!s.topMenu.hovering)
-					s.spawnShapeFromMenu(rock1, s.spawnTerrain(150, 150, 1, 0));
+					s.spawnShapeFromMenu(rock1, s.spawnTerrain(150, 150, 'base'));
 			});
 			s.sideMenu.addChild(rock1, true);
 		};
@@ -325,7 +325,7 @@ export function editModeSection(s: any) {
 			maison1.setSoundOnCollision(sounds.house_impact_audio);
 			maison1.onClickDown(() => {
 				if (!s.topMenu.hovering)
-					s.spawnShapeFromMenu(maison1, s.spawnObstacle(300, 300, false, 4));
+					s.spawnShapeFromMenu(maison1, s.spawnObstacle(300, 300, 'stop'));
 			});
 			s.sideMenu.addChild(maison1, true);
 
@@ -336,7 +336,7 @@ export function editModeSection(s: any) {
 			stone1.setSoundOnCollision(sounds.stone_impact_audio);
 			stone1.onClickDown(() => {
 				if (!s.topMenu.hovering)
-					s.spawnShapeFromMenu(stone1, s.spawnObstacle(150, 100, false, 4));
+					s.spawnShapeFromMenu(stone1, s.spawnObstacle(150, 100, 'stop'));
 			});
 			s.sideMenu.addChild(stone1, true);
 
@@ -347,7 +347,7 @@ export function editModeSection(s: any) {
 			rocheMars1.setSoundOnCollision(sounds.stone_impact_audio);
 			rocheMars1.onClickDown(() => {
 				if (!s.topMenu.hovering)
-					s.spawnShapeFromMenu(rocheMars1, s.spawnObstacle(150, 100, false, 4));
+					s.spawnShapeFromMenu(rocheMars1, s.spawnObstacle(150, 100, 'stop'));
 			});
 			s.sideMenu.addChild(rocheMars1, true);
 
@@ -358,7 +358,7 @@ export function editModeSection(s: any) {
 			rocheMars2.setSoundOnCollision(sounds.stone_impact_audio);
 			rocheMars2.onClickDown(() => {
 				if (!s.topMenu.hovering)
-					s.spawnShapeFromMenu(rocheMars2, s.spawnObstacle(150, 150, false, 4));
+					s.spawnShapeFromMenu(rocheMars2, s.spawnObstacle(150, 150, 'stop'));
 			});
 			s.sideMenu.addChild(rocheMars2, true);
 
@@ -369,7 +369,7 @@ export function editModeSection(s: any) {
 			mountains1.setSoundOnCollision(sounds.stone_impact_audio);
 			mountains1.onClickDown(() => {
 				if (!s.topMenu.hovering)
-					s.spawnShapeFromMenu(mountains1, s.spawnObstacle(150, 100, false, 4));
+					s.spawnShapeFromMenu(mountains1, s.spawnObstacle(150, 100, 'stop'));
 			});
 			s.sideMenu.addChild(mountains1, true);
 
@@ -380,7 +380,7 @@ export function editModeSection(s: any) {
 			tree1.setSoundOnCollision(sounds.tree_impact_audio);
 			tree1.onClickDown(() => {
 				if (!s.topMenu.hovering)
-					s.spawnShapeFromMenu(tree1, s.spawnObstacle(150, 150, false, 4));
+					s.spawnShapeFromMenu(tree1, s.spawnObstacle(150, 150, 'stop'));
 			});
 			s.sideMenu.addChild(tree1, true);
 
@@ -395,7 +395,7 @@ export function editModeSection(s: any) {
 			};
 			water1.onClickDown(() => {
 				if (!s.topMenu.hovering)
-					s.spawnShapeFromMenu(water1, s.spawnObstacle(150, 150, true, 3));
+					s.spawnShapeFromMenu(water1, s.spawnObstacle(150, 150, 'water'));
 			});
 			s.sideMenu.addChild(water1, true);
 
@@ -410,7 +410,7 @@ export function editModeSection(s: any) {
 			};
 			lava1.onClickDown(() => {
 				if (!s.topMenu.hovering)
-					s.spawnShapeFromMenu(lava1, s.spawnObstacle(150, 150, true, 3));
+					s.spawnShapeFromMenu(lava1, s.spawnObstacle(150, 150, 'lava'));
 			});
 			s.sideMenu.addChild(lava1, true);
 
@@ -425,7 +425,7 @@ export function editModeSection(s: any) {
 			};
 			hole1.onClickDown(() => {
 				if (!s.topMenu.hovering)
-					s.spawnShapeFromMenu(hole1, s.spawnObstacle(125, 75, true, 3));
+					s.spawnShapeFromMenu(hole1, s.spawnObstacle(125, 75, 'fall'));
 			});
 			s.sideMenu.addChild(hole1, true);
 
@@ -436,7 +436,10 @@ export function editModeSection(s: any) {
 			mars_dome1.setSoundOnCollision(sounds.metal_impact_audio);
 			mars_dome1.onClickDown(() => {
 				if (!s.topMenu.hovering)
-					s.spawnShapeFromMenu(mars_dome1, s.spawnObstacle(400, 300, false, 4));
+					s.spawnShapeFromMenu(
+						mars_dome1,
+						s.spawnObstacle(400, 300, 'stop', 4),
+					);
 			});
 			s.sideMenu.addChild(mars_dome1, true);
 
@@ -449,7 +452,7 @@ export function editModeSection(s: any) {
 				if (!s.topMenu.hovering)
 					s.spawnShapeFromMenu(
 						broken_rocket1,
-						s.spawnObstacle(150, 150, false, 4),
+						s.spawnObstacle(150, 150, 'stop'),
 					);
 			});
 			s.sideMenu.addChild(broken_rocket1, true);
@@ -465,7 +468,7 @@ export function editModeSection(s: any) {
 			};
 			black_hole1.onClickDown(() => {
 				if (!s.topMenu.hovering)
-					s.spawnShapeFromMenu(black_hole1, s.spawnObstacle(150, 150, true, 3));
+					s.spawnShapeFromMenu(black_hole1, s.spawnObstacle(150, 150, 'fall'));
 			});
 			s.sideMenu.addChild(black_hole1, true);
 		};
@@ -547,7 +550,10 @@ export function editModeSection(s: any) {
 			treadmill1.setTexture(images.treadmill, 0.2);
 			treadmill1.onClickDown(() => {
 				if (!s.topMenu.hovering)
-					s.spawnShapeFromMenu(treadmill1, s.spawnTerrain(150, 150, 0, 3));
+					s.spawnShapeFromMenu(
+						treadmill1,
+						s.spawnTerrain(150, 150, 'faster', 3),
+					);
 			});
 			s.sideMenu.addChild(treadmill1, true);
 
@@ -573,7 +579,10 @@ export function editModeSection(s: any) {
 			satelitte1.color = s.color(0, 0);
 			satelitte1.onClickDown(() => {
 				if (!s.topMenu.hovering)
-					s.spawnShapeFromMenu(satelitte1, s.spawnRect(0, 0, 150, 150, 110));
+					s.spawnShapeFromMenu(
+						satelitte1,
+						s.spawnDecoration(0, 0, 150, 150, 110),
+					);
 			});
 			s.sideMenu.addChild(satelitte1, true);
 
@@ -583,7 +592,7 @@ export function editModeSection(s: any) {
 			alien1.color = s.color(0, 0);
 			alien1.onClickDown(() => {
 				if (!s.topMenu.hovering)
-					s.spawnShapeFromMenu(alien1, s.spawnRect(0, 0, 150, 150, 110));
+					s.spawnShapeFromMenu(alien1, s.spawnDecoration(0, 0, 150, 150, 110));
 			});
 			s.sideMenu.addChild(alien1, true);
 
@@ -593,7 +602,7 @@ export function editModeSection(s: any) {
 			crackHole1.color = s.color(0, 0);
 			crackHole1.onClickDown(() => {
 				if (!s.topMenu.hovering)
-					s.spawnShapeFromMenu(crackHole1, s.spawnRect(0, 0, 150, 150, 95));
+					s.spawnShapeFromMenu(crackHole1, s.spawnDecoration(0, 0, 150, 150));
 			});
 			s.sideMenu.addChild(crackHole1, true);
 
@@ -603,7 +612,7 @@ export function editModeSection(s: any) {
 			crack1.color = s.color(0, 0);
 			crack1.onClickDown(() => {
 				if (!s.topMenu.hovering)
-					s.spawnShapeFromMenu(crack1, s.spawnRect(0, 0, 150, 150, 95));
+					s.spawnShapeFromMenu(crack1, s.spawnDecoration(0, 0, 150, 150, 95));
 			});
 			s.sideMenu.addChild(crack1, true);
 		};
@@ -625,8 +634,9 @@ export function editModeSection(s: any) {
 				if (!s.topMenu.hovering)
 					s.spawnShapeFromMenu(
 						fleche,
-						s.spawnShape(
-							10,
+						s.spawnFigure(
+							undefined,
+							'base',
 							[-75, 25],
 							[30, 25],
 							[30, 50],
@@ -646,7 +656,7 @@ export function editModeSection(s: any) {
 				if (!s.topMenu.hovering)
 					s.spawnShapeFromMenu(
 						triangle,
-						s.spawnShape(10, [-75, -150], [0, -50], [75, -150]),
+						s.spawnFigure(undefined, 'base', [-75, -150], [0, -50], [75, -150]),
 					);
 			});
 			s.sideMenu.addChild(triangle, true);
@@ -656,7 +666,17 @@ export function editModeSection(s: any) {
 			carre.color = 'cyan';
 			carre.onClickDown(() => {
 				if (!s.topMenu.hovering)
-					s.spawnShapeFromMenu(carre, s.spawnRect(0, 0, 150, 150, 10));
+					s.spawnShapeFromMenu(
+						carre,
+						s.spawnFigure(
+							undefined,
+							'base',
+							[0, 0],
+							[0, 150],
+							[150, 150],
+							[150, 0],
+						),
+					);
 			});
 			s.sideMenu.addChild(carre, true);
 
@@ -665,7 +685,17 @@ export function editModeSection(s: any) {
 			rectangle.color = 'red';
 			rectangle.onClickDown(() => {
 				if (!s.topMenu.hovering)
-					s.spawnShapeFromMenu(rectangle, s.spawnRect(0, 0, 100, 150, 10));
+					s.spawnShapeFromMenu(
+						rectangle,
+						s.spawnFigure(
+							undefined,
+							'base',
+							[0, 0],
+							[0, 100],
+							[150, 100],
+							[150, 0],
+						),
+					);
 			});
 			s.sideMenu.addChild(rectangle, true);
 		};
@@ -1748,7 +1778,7 @@ export function editModeSection(s: any) {
 
 			s.contextMenu.children.forEach((child: any) => {
 				child.color = 'white';
-				child.setBackgroundColor('#303030');
+				if (child.setBackgroundColor) child.setBackgroundColor('#303030');
 				child.isHelp = true;
 			});
 
@@ -1830,7 +1860,7 @@ export function editModeSection(s: any) {
 			s.contextMenu.isHelp = true;
 			s.contextMenu.scaleWithCamera = true;
 
-			let contextMenuPaste = s.spawnTextObject('Paste', 26, 0, 0, 400);
+			let contextMenuPaste = s.spawnFixedTextObject('Paste', 26, 0, 0, 400);
 
 			s.contextMenu.addChild(contextMenuPaste, true);
 

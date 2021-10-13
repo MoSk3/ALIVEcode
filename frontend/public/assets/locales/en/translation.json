@@ -32,7 +32,18 @@
 		},
 		"title": {
 			"signin": "Sign in",
-			"signup": "Sign up"
+			"signup": "Sign up",
+			"create_classroom": "Creation of a classroom",
+			"create_course": "Creation of a course",
+			"create_level": "Creation of a level",
+			"create_iot_project": "Creation of an IoT project",
+			"create_iot_object": "Creation of an IoT object"
+		},
+		"join_classroom": {
+			"title": "Join a classroom",
+			"submit": "Join",
+			"code": "Code of the classroom",
+			"invalid_code": "Invalid code"
 		},
 		"pwd": {
 			"label": "Password",
@@ -66,12 +77,22 @@
 			"required": "Your school grade is required"
 		}
 	},
+	"modal": {
+		"close": "Close",
+		"save": "Save Changes",
+		"confirm": "Confirm",
+		"cancel": "Cancel"
+	},
 	"msg": {
 		"professor": "professor",
 		"student": "student",
+		"creator": "Creator",
 		"understood": "Understood!",
 		"description": "description",
 		"deleted_user": "Deleted user",
+		"search": "Search",
+		"creation_date": "Creation date",
+		"update_date": "Update date",
 		"time": {
 			"format": "{{dayName}}, {{day}} {{monthName}} {{year}} {{hour}}:{{minute}}",
 			"day": {
@@ -135,10 +156,23 @@
 	},
 	"dashboard": {
 		"classrooms": {
+			"title": "My classrooms",
 			"empty": {
 				"student": "You are not part of any classroom",
 				"professor": "You do not have any classroom"
 			}
+		},
+		"levels": {
+			"title": "Levels",
+			"my_levels": "My levels",
+			"create_level": "Create a level",
+			"browse_levels": "Browse levels"
+		},
+		"quizzes": {
+			"title": "Quizzes",
+			"my_quizzes": "My quizzes",
+			"create_quiz": "Create a quiz",
+			"browse_quizzes": "Browse quizzes"
 		}
 	},
 	"classroom": {
@@ -164,6 +198,10 @@
 			"title": "Code of the classroom",
 			"desc": "Give this code to your students so that they can join the classroom from the website!"
 		}
+	},
+	"course": {
+		"desc": "Course of {{professor}}",
+		"subject": "Subject"
 	},
 	"menu": {
 		"signup": {
@@ -256,6 +294,18 @@
 				"point3": "Finally, it starts the whole process again until it obtains results that minimize the error as much as possible in order to be able to produce the best possible predictions!",
 				"paragraph4": "Obviously, neural networks are much more complex than that, and that's why a course on this will be available soon. Stay tuned!"
 			}
+		}
+	},
+	"simulation": {
+		"modal": {
+			"retry": "Retry?",
+			"continue": "Continue",
+			"lose": "Better luck next time!",
+			"win": "Nicely done! 🎉",
+			"water": "The car fell in water",
+			"lava": "The car fell in lava",
+			"hole": "The car fell in a hole",
+			"wall": "The car smashed in a wall"
 		}
 	}
 }
