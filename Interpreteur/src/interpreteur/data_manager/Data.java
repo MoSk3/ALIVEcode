@@ -4,11 +4,6 @@ package interpreteur.data_manager;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import javax.swing.text.BadLocationException;
-import java.util.Stack;
-import java.util.function.Consumer;
-
-
 public class Data extends JSONObject {
     /*----------------------------- ID de data -----------------------------*/
 

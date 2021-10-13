@@ -457,7 +457,7 @@ public class ModuleAI {
                     }
                 },
                 /*
-                    a
+                    Evaluates the cost function for the regression on the screen.
                  */
                 new ASObjet.Fonction("fonctionCout", new ASObjet.Fonction.Parametre[]{
                 }, ASObjet.TypeBuiltin.nulType.asType()) {
