@@ -81,6 +81,12 @@ export class Serializer {
 						},
 					);
 
+				if (serializedShape.shapeType === 'Car') {
+					s.car = s.spawnCar(0, 0, 75, 110);
+					if (process.env.REACT_APP_DEBUG) console.log(s.car);
+					continue;
+				}
+
 				if (serializedShape.imageName) {
 					loadImages(serializedShape.imageName);
 					if (serializedShape.imageRes !== null)
@@ -91,11 +97,6 @@ export class Serializer {
 					else shape.setImg(images[serializedShape.imageName as imageNameType]);
 				}
 
-				if (serializedShape.shapeType === 'Car') {
-					s.car = s.spawnCar(0, 0, 75, 110);
-					if (process.env.REACT_APP_DEBUG) console.log(s.car);
-					continue;
-				}
 				shape.rotate(serializedShape.shapeInfo.rotation.x, shape.pos);
 				shapes.push(shape);
 			}
