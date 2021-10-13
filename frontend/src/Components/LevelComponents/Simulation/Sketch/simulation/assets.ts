@@ -22,7 +22,7 @@ import undo from '../../../../../assets/images/simulation/editeur/undo.png';
 import zoom_in from '../../../../../assets/images/simulation/editeur/zoom_in.png';
 import zoom_out from '../../../../../assets/images/simulation/editeur/zoom_out.png';
 import hole from '../../../../../assets/images/simulation/gifs/hole.gif';
-import lava from '../../../../../assets/images/simulation/gifs/lava.gif';
+import lavaAnimation from '../../../../../assets/images/simulation/gifs/lava.gif';
 import water_splash from '../../../../../assets/images/simulation/gifs/water_splash.gif';
 import coin from '../../../../../assets/images/simulation/interactifs/coin.png';
 import finishLine from '../../../../../assets/images/simulation/interactifs/finishLine.png';
@@ -40,7 +40,7 @@ import black_hole from '../../../../../assets/images/simulation/obstacles/black_
 import brokenRocket from '../../../../../assets/images/simulation/obstacles/brokenRocket.png';
 import hole2 from '../../../../../assets/images/simulation/obstacles/hole.png';
 import house from '../../../../../assets/images/simulation/obstacles/house.png';
-import lava2 from '../../../../../assets/images/simulation/obstacles/lava.png';
+import lava from '../../../../../assets/images/simulation/obstacles/lava.png';
 import mars_dome from '../../../../../assets/images/simulation/obstacles/mars_dome.png';
 import mountains from '../../../../../assets/images/simulation/obstacles/mountains.png';
 import rocheMars1 from '../../../../../assets/images/simulation/obstacles/rocheMars1.png';
@@ -102,7 +102,7 @@ export type imageNameType =
 	| 'brokenRocket'
 	| 'hole2'
 	| 'house'
-	| 'lava2'
+	| 'lavaAnimation'
 	| 'mars_dome'
 	| 'mountains'
 	| 'rocheMars1'
@@ -166,7 +166,7 @@ export const imagesPath: {[key in imageNameType]: string} = {
 	zoom_in,
 	zoom_out,
 	hole,
-	lava,
+	lavaAnimation,
 	water_splash,
 	coin,
 	finishLine,
@@ -184,7 +184,7 @@ export const imagesPath: {[key in imageNameType]: string} = {
 	brokenRocket,
 	hole2,
 	house,
-	lava2,
+	lava,
 	mars_dome,
 	mountains,
 	rocheMars1,
@@ -203,6 +203,7 @@ export const imagesPath: {[key in imageNameType]: string} = {
 	rock,
 	sand,
 }
+
 
 export const images: { [key in imageNameType]: any } = {
 	alien,
@@ -229,7 +230,7 @@ export const images: { [key in imageNameType]: any } = {
 	zoom_in,
 	zoom_out,
 	hole,
-	lava,
+	lavaAnimation,
 	water_splash,
 	coin,
 	finishLine,
@@ -247,7 +248,7 @@ export const images: { [key in imageNameType]: any } = {
 	brokenRocket,
 	hole2,
 	house,
-	lava2,
+	lava,
 	mars_dome,
 	mountains,
 	rocheMars1,

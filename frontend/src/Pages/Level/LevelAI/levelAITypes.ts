@@ -7,7 +7,7 @@ export interface LevelAIProps {
 	level: LevelAI;
 	editMode: boolean;
 	progression?: LevelProgression;
-	initialCode: string;
+	initialCode?: string;
 	setProgression: (progression: LevelProgression) => void;
 	setLevel: (level: LevelAI) => void;
 }

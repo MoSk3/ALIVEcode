@@ -57,7 +57,7 @@ const LevelAlive = ({
 	setLevel,
 	setProgression,
 }: LevelAliveProps) => {
-	const { user } = useContext(UserContext);
+	const { user, playSocket } = useContext(UserContext);
 
 	const [cmdRef, cmd] = useCmd();
 	const { executor, setExecutor, setExecutorLines, setSketch } =
@@ -97,7 +97,7 @@ const LevelAlive = ({
 			return history.push(routes.public.home.path);
 
 		setExecutor(
-			new LevelAliveExecutor(level.current!.name, editMode, user ?? undefined),
+			new LevelAliveExecutor(level.current!.name, editMode, playSocket, user ?? undefined),
 		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, level]);
@@ -223,7 +223,7 @@ const LevelAlive = ({
 									user.id === level.current?.creator?.id && (
 										<IconButton
 											to={routes.auth.level_edit.path.replace(
-												':id',
+												':levelId',
 												level.current.id,
 											)}
 											icon={faPencilAlt}
@@ -276,11 +276,7 @@ const LevelAlive = ({
 								/>
 							) : (
 								<LineInterface
-									initialContent={
-										progression?.data.code
-											? progression.data.code
-											: level.current.initialCode
-									}
+									initialContent={initialCode}
 									handleChange={lineInterfaceContentChanges}
 								/>
 							)}
@@ -340,13 +336,13 @@ const LevelAlive = ({
 									required: true,
 									default: level.current?.name,
 									minLength: 3,
-									maxLength: 25,
+									maxLength: 100,
 								},
 								{
 									name: 'description',
 									inputType: 'text',
 									default: level.current?.description,
-									maxLength: 200,
+									maxLength: 500,
 								},
 								{
 									name: 'access',
@@ -398,3 +394,114 @@ const LevelAlive = ({
 };
 
 export default LevelAlive;
+
+
+	/*
+	useEffect(() => {
+		if (!process.env.REACT_APP_IOT_URL) return;
+
+		const socket = new WebSocket('ws://localhost:8888');
+		socket.onopen = () => {
+			console.log('YEP');
+			socket.send(
+				JSON.stringify({
+					event: 'connect_watcher',
+					data: {
+						targets: [{ id: '1' }],
+					},
+				}),
+			);
+			setTimeout(() => {
+				socket.send(
+					JSON.stringify({
+						event: 'execute',
+						data: {
+							executionResult: [
+								{
+									p: [],
+									d: 0,
+									id: 0,
+								},
+								{
+									p: [1],
+									d: 1,
+									id: 101,
+								},
+								{
+									p: [1],
+									d: 1,
+									id: 102,
+								},
+								{
+									p: [-10],
+									d: 0,
+									id: 103,
+								},
+								{
+									p: [45],
+									d: 0,
+									id: 103,
+								},
+							],
+						},
+					}),
+				);
+			}, 5000);
+		};
+
+		socket.onmessage = e => {
+			console.log(e);
+		};
+
+		const carSocket = io(`${process.env.REACT_APP_IOT_URL}`);
+
+		carSocket.emit('connect_car', '1234');
+		carSocket.on('execute', d => {
+			console.log(d);
+		});
+		const socket = io(`${process.env.REACT_APP_IOT_URL}`);
+
+		socket.emit('connect_watcher', {
+			targets: [{ id: '123' }, { id: '1234' }],
+		});
+		socket.emit('execute', {
+			executionResult: [
+				{
+					p: [1],
+					d: 1,
+					id: 101,
+				},
+				{
+					p: [1],
+					d: 1,
+					id: 102,
+				},
+				{
+					p: [-3800],
+					d: 0,
+					id: 103,
+				},
+				{
+					p: [45],
+					d: 0,
+					id: 103,
+				},
+				{
+					p: ['[exécution terminée]'],
+					d: 0,
+					id: 300,
+				},
+				{
+					p: [],
+					d: 0,
+					id: 0,
+				},
+			],
+		});
+
+		return () => {
+			socket?.close();
+			//carSocket?.close();
+		};
+	}, []);
+	*/

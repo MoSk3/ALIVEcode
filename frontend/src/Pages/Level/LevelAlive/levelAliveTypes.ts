@@ -7,7 +7,7 @@ export interface LevelAliveProps {
 	level: LevelAlive;
 	editMode: boolean;
 	progression?: LevelProgression;
-	initialCode: string;
+	initialCode?: string;
 	setProgression: (progression: LevelProgression) => void;
 	setLevel: (level: LevelAlive) => void;
 }

@@ -7,6 +7,7 @@ import { BaseLayoutObj } from '../../../Components/LevelComponents/Simulation/Sk
 import { Serializer } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/ts/Serializer';
 import { makeShapeEditable } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/editMode';
 import { User } from '../../../Models/User/user.entity';
+import { PlaySocket } from '../PlaySocket';
 
 // TODO: robotConnected
 const robotConnected = false;
@@ -16,6 +17,7 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 
 	public editorButton: any;
 	public robotConnectButton: any;
+	public playSocket: PlaySocket | null;
 
 	public d1?: Shape;
 	public d2?: Shape;
@@ -27,14 +29,19 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 		dD: 0,
 	};
 
-	constructor(levelName: string, private editMode: boolean, creator?: User) {
+	constructor(
+		levelName: string,
+		private editMode: boolean,
+		playSocket: PlaySocket | null,
+		creator?: User,
+	) {
 		super(levelName, creator);
+		this.playSocket = playSocket;
 	}
 
 	public loadLevelLayout(layout: BaseLayoutObj[] | {}) {
 		if (JSON.stringify(layout) === '{}') {
 			this.s.car = this.s.spawnCar(0, 0, 75, 110);
-			console.log('AHAHA');
 		} else {
 			const shapes = Serializer.deserialize(this.s, layout as BaseLayoutObj[]);
 
@@ -59,6 +66,7 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 		if (!this.s) return;
 		const s = this.s;
 
+		this.playSocket && this.playSocket.stopCompile();
 		//if(!robotConnected) {
 		s.car.reset();
 		//}
@@ -126,6 +134,8 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 
 		s.canvasCamera.setTarget(s.car.shape);
 		console.log(s.canvasCamera);
+
+		this.playSocket && this.playSocket.compile(data);
 
 		const validDataStructure = (action: any) => {
 			return (
@@ -323,7 +333,7 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 									speed: car.speed,
 								};
 								res.push(infosCar);
-								if (process.env.DEBUG) console.log(res);
+								if (process.env.REACT_APP_DEBUG) console.log(res);
 								perform_action(i + 1);
 								// eslint-disable-next-line no-labels
 								break id_switch;
@@ -421,7 +431,7 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 
 		// TODO: fix connect modal
 		this.robotConnectButton.onClick((e: any) => {
-			//connectModal.modal('show')
+			this.s.onConnectCar && this.s.onConnectCar();
 		});
 	}
 

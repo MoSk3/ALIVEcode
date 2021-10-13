@@ -28,14 +28,26 @@ export const sketch = s => {
 	let canvasDiv;
 	let previousParent;
 
-	s.myCustomRedrawAccordingToNewPropsHandler = props => {
+	s.updateWithProps = props => {
 		if (props.init) s.init = props.init;
 		if (props.fullscreenDiv)
 			s.fullscreenDiv = $(`.${props.fullscreenDiv}`).first();
-		if (props.canvasDiv) canvasDiv = props.canvasDiv;
+		if (props.canvasDiv) {
+			canvasDiv = props.canvasDiv;
+			if (!s.canvasLoaded) s.setup();
+			s.canvasLoaded = true;
+		}
 		if (props.onChange) s.onChange = props.onChange;
 		if (props.onWin) s.onWin = props.onWin;
 		if (props.onLose) s.onLose = props.onLose;
+		if (props.onConnectCar) s.onConnectCar = props.onConnectCar;
+	};
+
+	// Used when simulation unmount
+	s.cleanup = () => {
+		s.noLoop();
+		s.canvasLoaded = false;
+		s.remove();
 	};
 
 	s.preload = () => {
@@ -48,49 +60,14 @@ export const sketch = s => {
 	};
 
 	s.setup = () => {
+		if (canvasDiv == null) return;
+		s.canvasLoaded = true;
+		s.loading = true;
+
 		editModeSection(s);
 		//************************** Setup Canvas **********************************
 
 		s.zoomButton = $('.zoom-button').first();
-
-		// Fonction pour zoomer/dezoomer
-		const zoom = () => {
-			if (s.fullscreenDiv.css('display') === 'none') {
-				previousParent = canvasDiv.parent();
-				s.fullscreenDiv.css('display', 'block');
-				canvasDiv.css('height', '100%');
-				canvasDiv.appendTo(s.fullscreenDiv);
-
-				if (s.isMobile) {
-					var elem = document.documentElement;
-					if (elem.requestFullscreen) {
-						elem.requestFullscreen();
-					}
-					s.fullscreen = true;
-				}
-
-				s.zoomButton.attr('src', '/static/images/fullscreen-off.png');
-			} else if (!s.editorButton?.hovering) {
-				s.fullscreenDiv.css('display', 'none');
-				canvasDiv.css('height', '60vh');
-				canvasDiv.appendTo(previousParent);
-
-				if (s.isMobile) {
-					if (document.exitFullscreen) {
-						document.exitFullscreen();
-						s.fullscreen = false;
-					}
-				}
-
-				s.zoomButton.attr('src', '/static/images/fullscreen-on.png');
-				if (s.editMode) {
-					s.exitEditMode();
-				}
-				setTimeout(s.resize, 1000);
-			}
-		};
-
-		if (s.zoomButton) s.zoomButton.click(zoom);
 
 		width = canvasDiv.width();
 		height = canvasDiv.height();
@@ -193,7 +170,44 @@ export const sketch = s => {
 		// Call la fonction init si elle à été initialisée
 		// (sert à modifier les propriétés de la simulation pour créer divers jeux/expérimentations)
 
-		if (s.init) s.init(s);
+		// Fonction pour zoomer/dezoomer
+		const zoom = () => {
+			if (s.fullscreenDiv.css('display') === 'none') {
+				previousParent = canvasDiv.parent();
+				s.fullscreenDiv.css('display', 'block');
+				canvasDiv.css('height', '100%');
+				canvasDiv.appendTo(s.fullscreenDiv);
+
+				if (s.isMobile) {
+					var elem = document.documentElement;
+					if (elem.requestFullscreen) {
+						elem.requestFullscreen();
+					}
+					s.fullscreen = true;
+				}
+
+				s.zoomButton.attr('src', '/static/images/fullscreen-off.png');
+			} else if (!s.editorButton?.hovering) {
+				s.fullscreenDiv.css('display', 'none');
+				canvasDiv.css('height', '60vh');
+				canvasDiv.appendTo(previousParent);
+
+				if (s.isMobile) {
+					if (document.exitFullscreen) {
+						document.exitFullscreen();
+						s.fullscreen = false;
+					}
+				}
+
+				s.zoomButton.attr('src', '/static/images/fullscreen-on.png');
+				if (s.editMode) {
+					s.exitEditMode();
+				}
+				setTimeout(s.resize, 1000);
+			}
+		};
+
+		if (s.zoomButton) s.zoomButton.click(zoom);
 
 		s.maxFPS = 30;
 		s.frameRate(60);
@@ -211,15 +225,17 @@ export const sketch = s => {
 		//		s.levelHasChanged = false;
 		//	}
 		//}, 5000);
-
-		s.draw();
 	};
 
 	// #endregion
 
 	// #region Draw
 	s.draw = () => {
-		if (!s.pause) {
+		if (s.loading) {
+			s.loading = false;
+			if (s.init) s.init(s);
+		}
+		if (!s.pause && s.canvasLoaded) {
 			//******************************** Debut ***********************************
 			// Resize automatique du canvas
 			s.canvasAutoResize();
@@ -965,10 +981,8 @@ export const sketch = s => {
 			// 187 == "+" et 189 == "-"
 			if (s.keyCode === 189 && s.pressedObject?.zIndex > 0) {
 				s.pressedObject.setZIndex(Number(s.pressedObject.zIndex) - 1);
-				console.log(s.pressedObject.zIndex);
 			} else if (s.keyCode === 187 && s.pressedObject?.zIndex < 400) {
 				s.pressedObject.setZIndex(Number(s.pressedObject.zIndex) + 1);
-				console.log(s.pressedObject.zIndex);
 			}
 			return false; // prevent any default behavior
 		}

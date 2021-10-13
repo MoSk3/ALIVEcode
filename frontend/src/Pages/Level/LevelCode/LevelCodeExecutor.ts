@@ -12,6 +12,7 @@ export default class LevelCodeExecutor extends LevelExecutor {
 
 		try {
 			let data = await this.sendDataToAsServer({ lines });
+			if (process.env.REACT_APP_DEBUG) console.log(data);
 			if (data.status === 'complete') {
 				this.execute(data.result);
 				return;
@@ -19,7 +20,7 @@ export default class LevelCodeExecutor extends LevelExecutor {
 
 			const { idToken } = data;
 
-			if (process.env.DEBUG) console.log(idToken, data.data);
+			if (process.env.REACT_APP_DEBUG) console.log(idToken, data.data);
 
 			while (true) {
 				let res = this.execute(data.result);
