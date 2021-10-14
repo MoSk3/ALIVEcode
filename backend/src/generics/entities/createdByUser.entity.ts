@@ -12,7 +12,7 @@ export abstract class CreatedByUser extends BaseEntity {
 
   @Column({ nullable: false })
   @IsNotEmpty()
-  @Length(3, 25)
+  @Length(3, 100)
   @Matches(/[\w ]*/, { message: 'form.error.match.name' })
   name: string;
 
@@ -28,6 +28,6 @@ export abstract class CreatedByUser extends BaseEntity {
 
   @Column({ nullable: true })
   @IsOptional()
-  @MaxLength(200)
+  @MaxLength(500)
   description: string;
 }

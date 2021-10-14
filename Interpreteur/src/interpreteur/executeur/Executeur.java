@@ -6,6 +6,7 @@ import java.util.*;
 import interpreteur.as.Objets.ASObjet;
 import interpreteur.as.Objets.ASObjet.FonctionManager;
 import interpreteur.as.Objets.Scope;
+import interpreteur.as.erreurs.ASErreur;
 import interpreteur.as.erreurs.ASErreur.*;
 import interpreteur.as.ASLexer;
 import interpreteur.as.modules.ASModuleManager;
@@ -15,6 +16,7 @@ import interpreteur.ast.buildingBlocs.programmes.Declarer;
 import interpreteur.data_manager.Data;
 import interpreteur.data_manager.DataVoiture;
 import interpreteur.tokens.Token;
+import io.github.cdimascio.dotenv.Dotenv;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -46,6 +48,16 @@ afficher "fin"
  */
 
 public class Executeur {
+
+    private final static int MAX_DATA_BEFORE_SEND;
+
+    static {
+        Dotenv dotenv = Dotenv.configure()
+                .directory("./.env")
+                .load();
+        MAX_DATA_BEFORE_SEND = Integer.parseInt(dotenv.get("MAX_DATA_BEFORE_SEND"));
+    }
+
     // coordonne ou commencer tous les programmes
     final private static Coordonnee debutCoord = new Coordonnee("<0>main");
     // lexer et parser
@@ -189,6 +201,17 @@ public class Executeur {
 
     public Stack<Object> getDataResponse() {
         return this.dataResponse;
+    }
+
+    public Object getDataResponseOrAsk(String dataName, Object... additionnalParams) {
+        if (this.dataResponse.isEmpty()) {
+            Data dataToGet = new Data(Data.Id.GET).addParam(dataName);
+            for (var param : additionnalParams)
+                dataToGet.addParam(param);
+            throw new ASErreur.StopGetInfo(dataToGet);
+        }
+        else
+            return this.dataResponse.pop();
     }
 
     public Object pushDataResponse(Object item) {
@@ -519,6 +542,12 @@ public class Executeur {
                 } else if (resultat != null && !coordRunTime.getScope().equals("main")) {
                     // ne sera vrai que si l'on retourne d'une fonction
                     break;
+                }
+
+                if (datas.size() >= MAX_DATA_BEFORE_SEND) {
+                    synchronized(datas) {
+                        return datas.toString();
+                    }
                 }
             } catch (StopSendData e) {
                 return e.getDataString();

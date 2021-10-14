@@ -123,6 +123,12 @@ public interface ASErreur {
         }
     }
 
+    class ErreurBoucleInfini extends ErreurAliveScript {
+        public ErreurBoucleInfini(String message) {
+            super(message, "ErreurBoucleInfini");
+        }
+    }
+
     class ErreurInputOutput extends ErreurAliveScript {
         public ErreurInputOutput(String message) {
             super(message, "ErreurInputOutput");

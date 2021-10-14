@@ -22,7 +22,7 @@ import undo from '../../../../../assets/images/simulation/editeur/undo.png';
 import zoom_in from '../../../../../assets/images/simulation/editeur/zoom_in.png';
 import zoom_out from '../../../../../assets/images/simulation/editeur/zoom_out.png';
 import hole from '../../../../../assets/images/simulation/gifs/hole.gif';
-import lava from '../../../../../assets/images/simulation/gifs/lava.gif';
+import lavaAnimation from '../../../../../assets/images/simulation/gifs/lava.gif';
 import water_splash from '../../../../../assets/images/simulation/gifs/water_splash.gif';
 import coin from '../../../../../assets/images/simulation/interactifs/coin.png';
 import finishLine from '../../../../../assets/images/simulation/interactifs/finishLine.png';
@@ -40,7 +40,7 @@ import black_hole from '../../../../../assets/images/simulation/obstacles/black_
 import brokenRocket from '../../../../../assets/images/simulation/obstacles/brokenRocket.png';
 import hole2 from '../../../../../assets/images/simulation/obstacles/hole.png';
 import house from '../../../../../assets/images/simulation/obstacles/house.png';
-import lava2 from '../../../../../assets/images/simulation/obstacles/lava.png';
+import lava from '../../../../../assets/images/simulation/obstacles/lava.png';
 import mars_dome from '../../../../../assets/images/simulation/obstacles/mars_dome.png';
 import mountains from '../../../../../assets/images/simulation/obstacles/mountains.png';
 import rocheMars1 from '../../../../../assets/images/simulation/obstacles/rocheMars1.png';
@@ -102,7 +102,7 @@ export type imageNameType =
 	| 'brokenRocket'
 	| 'hole2'
 	| 'house'
-	| 'lava2'
+	| 'lavaAnimation'
 	| 'mars_dome'
 	| 'mountains'
 	| 'rocheMars1'
@@ -141,6 +141,70 @@ import  from '../../../../../assets/images/';
 //	return images;
 //};
 
+export const imagesPath: {[key in imageNameType]: string} = {
+	alien,
+	crack,
+	holeCrack,
+	satelitte,
+	copy,
+	information,
+	linkOff,
+	linkOn,
+	pasteOff,
+	pasteOn,
+	pinOff,
+	pinOn,
+	redo,
+	rotate_clockwise,
+	rotate_counterclockwise,
+	selectionOff,
+	selectionOn,
+	tools,
+	trash,
+	trashOpen,
+	undo,
+	zoom_in,
+	zoom_out,
+	hole,
+	lavaAnimation,
+	water_splash,
+	coin,
+	finishLine,
+	flag,
+	green_button_pressed,
+	red_button_unpressed,
+	repair_tools,
+	spring,
+	treadmill,
+	animatedCar,
+	carTop,
+	carTopD,
+	carTopG,
+	black_hole,
+	brokenRocket,
+	hole2,
+	house,
+	lava,
+	mars_dome,
+	mountains,
+	rocheMars1,
+	rocheMars2,
+	stone,
+	tree,
+	water,
+	bridge,
+	road1,
+	tire_tracks,
+	darkLava,
+	gazon,
+	grass,
+	mars_surface,
+	mud,
+	rock,
+	sand,
+}
+
+
 export const images: { [key in imageNameType]: any } = {
 	alien,
 	crack,
@@ -166,7 +230,7 @@ export const images: { [key in imageNameType]: any } = {
 	zoom_in,
 	zoom_out,
 	hole,
-	lava,
+	lavaAnimation,
 	water_splash,
 	coin,
 	finishLine,
@@ -184,7 +248,7 @@ export const images: { [key in imageNameType]: any } = {
 	brokenRocket,
 	hole2,
 	house,
-	lava2,
+	lava,
 	mars_dome,
 	mountains,
 	rocheMars1,

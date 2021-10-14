@@ -4,4 +4,4 @@ import { IoTGateway } from './iot.gateway';
 @Module({
   providers: [IoTGateway],
 })
-export class EventsModule {}
+export class IoTModule {}

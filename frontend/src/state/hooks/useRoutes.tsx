@@ -30,6 +30,7 @@ import { useHistory } from 'react-router';
 import ASDocs from '../../Components/AliveScriptComponents/ASDocs/ASDocs';
 import { MaintenanceError } from '../../Pages/Errors/MaintenanceError/MaintenanceError';
 import MaintenanceMenu from '../../Pages/SiteStatus/MaintenanceMenu/MaintenanceMenu';
+import ASBuiltinsDocs from '../../Components/AliveScriptComponents/ASDocs/ASBuiltinsDocs';
 
 type component =
 	| React.ComponentType<RouteComponentProps<any>>
@@ -127,8 +128,12 @@ const useRoutes = () => {
 			maintenanceExempt: true,
 		},
 		asDocs: {
-			path: '/as',
+			path: '/as/doc',
 			component: ASDocs,
+		},
+		asBuiltinsDocs: {
+			path: '/as/builtins',
+			component: ASBuiltinsDocs,
 		},
 		ai: {
 			path: '/aliveai',

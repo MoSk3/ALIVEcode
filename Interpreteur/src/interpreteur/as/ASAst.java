@@ -43,8 +43,6 @@ public class ASAst extends AstGenerator {
     }
 
 
-
-
     protected void ajouterProgrammes() {
         ajouterProgramme("", new Ast<NullType>() {
             @Override
@@ -693,6 +691,7 @@ public class ASAst extends AstGenerator {
                 });
         ajouterExpression("BRACES_OUV BRACES_FERM~"
                         + "BRACES_OUV #expression BRACES_FERM~"
+                        + "CROCHET_OUV CROCHET_FERM~"
                         + "!expression CROCHET_OUV CROCHET_FERM~"
                         + "!expression CROCHET_OUV #expression CROCHET_FERM",
                 new Ast<CreerListe>() {

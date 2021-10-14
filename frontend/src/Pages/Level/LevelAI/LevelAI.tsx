@@ -1,12 +1,5 @@
 import { LevelAIProps, StyledAliveLevel } from './levelAITypes';
-import {
-	useEffect,
-	useState,
-	useContext,
-	useRef,
-	useCallback,
-	useMemo,
-} from 'react';
+import { useEffect, useState, useContext, useRef, useCallback } from 'react';
 import LineInterface from '../../../Components/LevelComponents/LineInterface/LineInterface';
 import { UserContext } from '../../../state/contexts/UserContext';
 import { Row, Col } from 'react-bootstrap';
@@ -94,7 +87,7 @@ const LevelAI = ({
 	};
 
 	//Set the data for the level
-	const [data, setData] = useState(dataAI);
+	const [data] = useState(dataAI);
 	let func = useRef<PolyRegression>();
 	const mainDataset: DataTypes = {
 		type: 'scatter',
@@ -111,8 +104,6 @@ const LevelAI = ({
 		borderWidth: 1,
 	});
 	let datasets = useRef([initialDataset]);
-	let pointsOnGraph: boolean = false;
-	let regOnGraph: boolean = false;
 
 	const [chartData, setChartData] = useState({ datasets: datasets.current });
 
@@ -138,7 +129,6 @@ const LevelAI = ({
 	 * Sets the data of the graph to the level's data and displays it on the screen
 	 */
 	function showDataCloud(): void {
-		pointsOnGraph = true;
 		setDataOnGraph(mainDataset);
 	}
 
@@ -157,7 +147,6 @@ const LevelAI = ({
 	 * Generates the regression's points and shows them on the graph.
 	 */
 	function showRegression() {
-		regOnGraph = true;
 		const points = func.current!.generatePoints();
 		setDataOnGraph(points);
 	}
@@ -178,10 +167,10 @@ const LevelAI = ({
 	 * Calculates the MSE cost for the current regression compared to the dataset of the level.
 	 * @returns the calculated cost.
 	 */
-	function costMSE(): void {
-		if (pointsOnGraph) setDataOnGraph(mainDataset);
+	function costMSE(): string {
+		setDataOnGraph(mainDataset);
 		showRegression();
-		cmd?.print('Erreur du modèle : ' + func.current!.computeMSE(data));
+		return 'Erreur du modèle : ' + func.current!.computeMSE(data);
 	}
 
 	/**
@@ -209,8 +198,8 @@ const LevelAI = ({
 	 * @returns the output of the model.
 	 */
 	function evaluate(x: number): number {
-		if (pointsOnGraph) setDataOnGraph(mainDataset);
-		if (regOnGraph) showRegression();
+		setDataOnGraph(mainDataset);
+		showRegression();
 		return func.current!.compute(x);
 	}
 
@@ -225,8 +214,8 @@ const LevelAI = ({
 					showDataCloud,
 					resetGraph,
 					optimizeRegression,
-					evaluate,
-					costMSE,
+					evaluate: (x: number) => evaluate(x),
+					costMSE: () => costMSE(),
 					showRegression,
 				},
 				level.name,
@@ -285,7 +274,7 @@ const LevelAI = ({
 			}, 5000);
 		}, 500);
 		setProgression(updatedProgression);
-	}, [level.id, progression, setProgression, user]);
+	}, [level, progression, setProgression, user]);
 
 	const saveProgressionTimed = () => {
 		if (saveTimeout.current) clearTimeout(saveTimeout.current);
@@ -476,13 +465,13 @@ const LevelAI = ({
 								required: true,
 								default: level.name,
 								minLength: 3,
-								maxLength: 25,
+								maxLength: 100,
 							},
 							{
 								name: 'description',
 								inputType: 'text',
 								default: level.description,
-								maxLength: 200,
+								maxLength: 500,
 							},
 							{
 								name: 'access',

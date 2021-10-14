@@ -30,6 +30,7 @@ export class Serializer {
 						},
 					},
 					imageName: shape.imgName,
+					imageRes: shape.res ?? null,
 					properties: (shape as unknown as SerializableShape<string, any>)
 						.uniqueProperties,
 				});
@@ -44,14 +45,15 @@ export class Serializer {
 		return layout;
 	}
 
-	static vectorToCoord(shapeInfo: ShapeInfo) {
-		const { position: positionPoints, vertices, rotation } = shapeInfo;
-
-		const position = new Vector(positionPoints.x, positionPoints.y);
+	static vectorToCoord(shapeInfo: ShapeInfo): number[][] {
+		const { position, vertices, rotation } = shapeInfo;
 
 		const points = vertices.map(vertex => {
 			const point: Vector = new Vector(vertex.x, vertex.y);
-			point.rotate(Math.hypot(rotation.x, rotation.y), position);
+			point.rotate(
+				(rotation.x * Math.PI) / 180,
+				new Vector(position.x, position.y),
+			);
 			return [point.x, point.y];
 		});
 		if (process.env.REACT_APP_DEBUG) console.log(points);
@@ -71,19 +73,32 @@ export class Serializer {
 				](s, serializedShape.templateName, ...points);
 
 				shape.loadFromTemplate();
-				Object.assign(shape, serializedShape.properties);
-				loadImages(serializedShape.imageName);
-				shape.setImg(images[serializedShape.imageName as imageNameType]);
+
+				if (serializedShape.properties)
+					Object.entries(serializedShape.properties).forEach(
+						([name, value]) => {
+							if (name in shape) (shape as any)[name] = value;
+						},
+					);
 
 				if (serializedShape.shapeType === 'Car') {
-					console.log('YEP');
-					s.spawnCar(
-						shape.pos?.x,
-						shape.pos?.y,
-						shape.getWidth(),
-						shape.getHeight(),
-					);
-				} else shapes.push(shape);
+					s.car = s.spawnCar(0, 0, 75, 110);
+					if (process.env.REACT_APP_DEBUG) console.log(s.car);
+					continue;
+				}
+
+				if (serializedShape.imageName) {
+					loadImages(serializedShape.imageName);
+					if (serializedShape.imageRes !== null)
+						shape.setTexture(
+							images[serializedShape.imageName as imageNameType],
+							serializedShape.imageRes,
+						);
+					else shape.setImg(images[serializedShape.imageName as imageNameType]);
+				}
+
+				shape.rotate(serializedShape.shapeInfo.rotation.x, shape.pos);
+				shapes.push(shape);
 			}
 			return shapes;
 		}

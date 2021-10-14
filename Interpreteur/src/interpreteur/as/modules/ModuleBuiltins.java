@@ -1,6 +1,7 @@
 package interpreteur.as.modules;
 
 import interpreteur.as.Objets.ASObjet;
+import interpreteur.as.Objets.Nombre;
 import interpreteur.as.Objets.Scope;
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.as.modules.builtins.BuiltinsListeUtils;
@@ -27,6 +28,7 @@ public class ModuleBuiltins {
         Scope.getScopeInstanceStack().forEach(scopeInstance -> variables.addAll(scopeInstance.getVariableStack()));
         return new ASObjet.Liste(variables.stream().map(var -> new ASObjet.Texte(var.obtenirNom())).toArray(ASObjet.Texte[]::new));
     };
+
     /*
      * Module builtins: contient toutes les fonctions utiliser par defaut dans le langage
      */
@@ -44,7 +46,7 @@ public class ModuleBuiltins {
 
                 new ASObjet.Fonction("afficher", new ASObjet.Fonction.Parametre[]{
                         new ASObjet.Fonction.Parametre(new Type("tout"), "element", new ASObjet.Texte(""))
-                }, new Type("nulType")) {
+                }, ASObjet.TypeBuiltin.rien.asType()) {
                     @Override
                     public ASObjet<?> executer() {
                         ASObjet<?> element = this.getValeurParam("element");
@@ -56,7 +58,7 @@ public class ModuleBuiltins {
 
                 new ASObjet.Fonction("attendre", new ASObjet.Fonction.Parametre[]{
                         new ASObjet.Fonction.Parametre(new Type("nombre"), "duree", new ASObjet.Entier(0))
-                }, new Type("nulType")) {
+                }, ASObjet.TypeBuiltin.rien.asType()) {
                     @Override
                     public ASObjet<?> executer() {
                         ASObjet<?> duree = this.getValeurParam("duree");
@@ -125,11 +127,7 @@ public class ModuleBuiltins {
                     public ASObjet<?> executer() {
                         var txt = ((Texte) this.getValeurParam("txt")).getValue().trim();
                         if (Nombre.estNumerique(txt)) {
-                            if (txt.contains(".")) {
-                                return new Decimal(Double.parseDouble(txt));
-                            } else {
-                                return new Entier(Integer.parseInt(txt));
-                            }
+                            Nombre.parse(this.getValeurParam("txt"));
                         } else if (Booleen.estBooleen(txt)) {
                             return new Booleen(txt);
                         }
