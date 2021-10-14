@@ -52,7 +52,7 @@ public class Server {
         System.out.println("Compile alivescript programs by sending a POST request to " + AS_URL + ":" + PORT + "/" + env.get("COMPILE_PATH") + "/"
                 + " from " + env.get("CORS_ORIGIN") + ":" + env.get("HOST_PORT"));
 
-        ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
+        ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(Integer.parseInt(env.get("THREAD_POOLS")));
         server.setExecutor(threadPoolExecutor);
         server.start();
     }

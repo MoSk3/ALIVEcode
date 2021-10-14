@@ -20,10 +20,16 @@ import java.util.logging.Logger;
  */
 public class AliveScriptApi extends BaseApi {
 
+    private static Logger logger;
+
     public AliveScriptApi(String CORS_ORIGIN) {
         super(CORS_ORIGIN);
     }
-    private static Logger logger;
+
+    public static void setLogger(Logger logger) {
+        AliveScriptApi.logger = logger;
+        AliveScriptService.setLogger(logger);
+    }
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
@@ -37,12 +43,6 @@ public class AliveScriptApi extends BaseApi {
         };
         assert requestParamValue != null;
         handleResponse(httpExchange, requestParamValue);
-    }
-
-
-    public static void setLogger(Logger logger) {
-        AliveScriptApi.logger = logger;
-        AliveScriptService.setLogger(logger);
     }
 
     private boolean hasValidDataStructure(JSONObject data) {
@@ -79,7 +79,10 @@ public class AliveScriptApi extends BaseApi {
 
         aliveScriptService.update();
 
-        if (data.has("response-data")) {
+        if (data.has("status") && data.get("status").equals("interrupted")) {
+            aliveScriptService.destroy();
+
+        } else if (data.has("response-data")) {
             if (!aliveScriptService.isCompiled()) {
                 return aliveScriptService.notCompiledError().toString();
             }

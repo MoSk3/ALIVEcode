@@ -178,8 +178,8 @@ const Level = ({ level: levelProp, ...props }: LevelProps) => {
 			<Modal
 				open={userInputModalOpen}
 				onClose={() => {
-					if (userInputCallback.current)
-						userInputCallback.current(`${userInputRef.current?.value ?? ''}`);
+					if (userInputCallback.current && userInputRef.current)
+						userInputCallback.current(`${userInputRef.current.value}`);
 					setUserInputModalOpen(false);
 					userInputRef.current.value = '';
 				}}
@@ -197,7 +197,7 @@ const Level = ({ level: levelProp, ...props }: LevelProps) => {
 					onKeyPress={e => {
 						if (e.key === 'Enter') {
 							e.preventDefault();
-							if (userInputCallback.current)
+							if (userInputCallback.current && userInputRef.current)
 								userInputCallback.current(
 									`${userInputRef.current?.value ?? ''}`,
 								);

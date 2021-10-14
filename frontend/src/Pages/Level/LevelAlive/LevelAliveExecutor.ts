@@ -368,13 +368,13 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 							typeof params[2] === 'number'
 						) {
 							this.cmd?.error(params[0] + ': ' + params[1], params[2]);
-							this.stop();
+							this.interrupt();
 						}
 					}
 				}
 			} catch (error) {
 				this.whenExecutionEnd(res);
-				this.stop();
+				this.interrupt();
 			}
 		};
 

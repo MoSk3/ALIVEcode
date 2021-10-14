@@ -1,11 +1,5 @@
 import { LevelAIProps, StyledAliveLevel } from './levelAITypes';
-import {
-	useEffect,
-	useState,
-	useContext,
-	useRef,
-	useCallback,
-} from 'react';
+import { useEffect, useState, useContext, useRef, useCallback } from 'react';
 import LineInterface from '../../../Components/LevelComponents/LineInterface/LineInterface';
 import { UserContext } from '../../../state/contexts/UserContext';
 import { Row, Col } from 'react-bootstrap';
@@ -156,7 +150,6 @@ const LevelAI = ({
 	 * Generates the regression's points and shows them on the graph.
 	 */
 	function showRegression() {
-		regOnGraph = true;
 		const points = func.current!.generatePoints();
 		setDataOnGraph(points);
 	}
@@ -180,7 +173,7 @@ const LevelAI = ({
 	function costMSE(): string {
 		if (pointsOnGraph) setDataOnGraph(mainDataset);
 		showRegression();
-		return ('Erreur du modèle : ' + func.current!.computeMSE(data));
+		return 'Erreur du modèle : ' + func.current!.computeMSE(data);
 	}
 
 	/**
@@ -209,7 +202,7 @@ const LevelAI = ({
 	 */
 	function evaluate(x: number): number {
 		if (pointsOnGraph) setDataOnGraph(mainDataset);
-		if (regOnGraph) showRegression();
+		showRegression();
 		return func.current!.compute(x);
 	}
 
@@ -224,8 +217,8 @@ const LevelAI = ({
 					showDataCloud,
 					resetGraph,
 					optimizeRegression,
-					evaluate,
-					costMSE,
+					evaluate: (x: number) => evaluate(x),
+					costMSE: () => costMSE(),
 					showRegression,
 				},
 				level.name,

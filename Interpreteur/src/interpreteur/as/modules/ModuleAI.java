@@ -1,6 +1,7 @@
 package interpreteur.as.modules;
 
 import interpreteur.as.Objets.ASObjet;
+import interpreteur.as.Objets.Nombre;
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.data_manager.Data;
 import interpreteur.executeur.Executeur;
@@ -15,9 +16,6 @@ import java.util.stream.Stream;
  */
 public class ModuleAI {
 
-    //Sets how many numbers are after the coma when rounding, depending on the amount of zeroes.
-    private static final double ROUNDING_FACTOR = 100.0;
-
     //Data used for the first AI course. These next constants are temporary.
     public static final Double[] DATA_X = {
             22.9, 26.3, 33.0, 38.7, 30.0, 28.8, 20.5, 25.4, 27.4, 27.2, 35.0, 34.4, 31.7,
@@ -29,7 +27,6 @@ public class ModuleAI {
             57.6, 46.5, 75.2, 77.7, 71.4, 65.1, 62.4, 68.8, 69.6, 66.9, 74.8, 71.8,
             66.5, 58.4, 73.7, 71.0, 71.5, 68.0, 60.4, 59.5, 72.0, 79.0, 71.0, 72.5, 68.7, 68.8, 66.5
     };
-
     public static final Double[] DATA_Y = {
             202.0, 181.0, 225.0, 177.0, 198.0, 201.0, 198.0, 252.0, 208.0, 202.0, 200.0, 170.0, 187.0, 189.0, 202.0,
             184.0, 182.0, 235.0, 194.0, 214.0, 195.0, 214.0, 199.0, 238.0, 215.0, 300.0, 276.0, 321.0, 326.0, 310.0,
@@ -39,6 +36,8 @@ public class ModuleAI {
             495.0, 479.0, 507.0, 466.0, 488.0, 498.0, 507.0, 477.0, 483.0, 460.0, 489.0, 499.0, 459.0, 541.0, 526.0,
             518.0, 509.0, 507.0, 504.0, 534.0, 446.0, 477.0, 537.0, 566.0, 539.0
     };
+    //Sets how many numbers are after the coma when rounding, depending on the amount of zeroes.
+    private static final double ROUNDING_FACTOR = 100.0;
 
     /**
      * Finds the mean of all the elements in the <b>data</b> array.
@@ -50,7 +49,7 @@ public class ModuleAI {
      */
     public static double mean(Double[] data) throws NoDataException {
         //General case
-        double mean =  summation(data) / (double) data.length;
+        double mean = summation(data) / (double) data.length;
         return Math.round(mean * ROUNDING_FACTOR) / ROUNDING_FACTOR;
     }
 
@@ -405,7 +404,7 @@ public class ModuleAI {
                                 ASObjet.TypeBuiltin.nombre.asType(), "c", null),
                         new ASObjet.Fonction.Parametre(
                                 ASObjet.TypeBuiltin.nombre.asType(), "d", null)
-                }, ASObjet.TypeBuiltin.nulType.asType()){
+                }, ASObjet.TypeBuiltin.nulType.asType()) {
                     @Override
                     public ASObjet<?> executer() {
                         double a = ((Number) this.getValeurParam("a").getValue()).doubleValue();
@@ -444,16 +443,7 @@ public class ModuleAI {
                     @Override
                     public ASObjet<?> executer() {
                         double x = ((Number) this.getValeurParam("x").getValue()).doubleValue();
-                        executeurInstance.addData(new Data(Data.Id.EVALUER).addParam(x));
-                        double res = 0;
-                        try {
-                            Object obj = executeurInstance.getDataResponse().pop();
-                            if (obj instanceof Double) res = ((Double) obj).doubleValue();
-                            else if (obj instanceof Integer) res = ((Integer) obj).doubleValue();
-                        } catch(EmptyStackException e) {
-                            throw new ASErreur.StopGetInfo(new Data(Data.Id.GET));
-                        }
-                        return new Decimal(res);
+                        return Nombre.cast((Number) executeurInstance.getDataResponseOrAsk("evaluer", x));
                     }
                 },
                 /*
