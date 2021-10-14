@@ -372,6 +372,7 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 				}
 			} catch (error) {
 				this.whenExecutionEnd(res);
+				this.stop();
 			}
 		};
 
