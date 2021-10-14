@@ -177,10 +177,10 @@ const LevelAI = ({
 	 * Calculates the MSE cost for the current regression compared to the dataset of the level.
 	 * @returns the calculated cost.
 	 */
-	function costMSE(): void {
+	function costMSE(): string {
 		if (pointsOnGraph) setDataOnGraph(mainDataset);
 		showRegression();
-		cmd?.print('Erreur du modèle : ' + func.current!.computeMSE(data));
+		return ('Erreur du modèle : ' + func.current!.computeMSE(data));
 	}
 
 	/**
