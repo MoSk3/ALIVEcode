@@ -93,7 +93,7 @@ const LevelAI = ({
 	};
 
 	//Set the data for the level
-	const [data, setData] = useState(dataAI);
+	const [data] = useState(dataAI);
 	let func = useRef<PolyRegression>();
 	const mainDataset: DataTypes = {
 		type: 'scatter',

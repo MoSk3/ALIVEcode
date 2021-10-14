@@ -38,66 +38,67 @@ class LevelAIExecutor extends LevelCodeExecutor {
 		};
 
 		const perform_action = (i: number) => {
-			if (i >= data.length) {
-				//this.socket?.response(res);
+			try {
+				if (i >= data.length) {
+					//this.socket?.response(res);
+					this.whenExecutionEnd(res);
+					return;
+				}
+				const action = data[i];
+				if (validDataStructure(action)) {
+					if (action[DODO] < 0) action[DODO] = 0;
 
-				return;
-			}
-			const action = data[i];
-			if (validDataStructure(action)) {
-				if (action[DODO] < 0) action[DODO] = 0;
+					const { [DODO]: dodo, [ID]: id, [PARAMS]: params } = action;
 
-				const { [DODO]: dodo, [ID]: id, [PARAMS]: params } = action;
-
-				// Traite l'action a effectuée envoyée par le serveur
-				switch (id) {
-					/*
+					// Traite l'action a effectuée envoyée par le serveur
+					switch (id) {
+						/*
                                 ----    UTILITAIRES    ----
                         */
-					case 300:
-						/*----     print     ----*/
+						case 300:
+							/*----     print     ----*/
 
-						if (params.length > 0 && typeof params[0] === 'string') {
-							this.cmd?.print(params[0]);
-						}
-						if (dodo === 0) perform_action(i + 1);
-						else {
-							this.timeouts.push(
-								setTimeout(() => {
-									perform_action(i + 1);
-								}, dodo * 1000),
-							);
-						}
-						break;
-					case 301:
-						/*----     attendre     ----*/
-						if (params.length > 0 && typeof params[0] === 'number') {
-							this.timeouts.push(
-								setTimeout(() => {
-									perform_action(i + 1);
-								}, params[0] * 1000),
-							);
-						}
-						break;
-					/*
+							if (params.length > 0 && typeof params[0] === 'string') {
+								this.cmd?.print(params[0]);
+							}
+							if (dodo === 0) perform_action(i + 1);
+							else {
+								this.timeouts.push(
+									setTimeout(() => {
+										perform_action(i + 1);
+									}, dodo * 1000),
+								);
+							}
+							break;
+						case 301:
+							/*----     attendre     ----*/
+							if (params.length > 0 && typeof params[0] === 'number') {
+								this.timeouts.push(
+									setTimeout(() => {
+										perform_action(i + 1);
+									}, params[0] * 1000),
+								);
+							}
+							break;
+						/*
                                 ----    GET    ----
                         */
-					case 500:
-						switch (params[0]) {
-							case 'read': {
-								/*----     lire     ----*/
-								let input = prompt(params[1]);
-								res.push(input);
-								perform_action(i + 1);
+						case 500:
+							switch (params[0]) {
+								case 'read': {
+									/*----     lire     ----*/
+									let input = prompt(params[1]);
+									res.push(input);
+									perform_action(i + 1);
+								}
 							}
-						}
-						break;
-					/*
+							break;
+						/*
                                 ----    SET    ----
                         */
-					case 600:
-						break;
-					/*
+						case 600:
+							break;
+						/*
 																----		ARTIFICIAL INTELLIGENCE		----
 													*/
 					case 800:
@@ -129,25 +130,28 @@ class LevelAIExecutor extends LevelCodeExecutor {
 						break;
 					case 804:
 						// fonctionCout
-						console.log("hello")
 						this.executableFuncs.costMSE();
 						perform_action(i + 1);
 						break;
 
 				}
 
-				/*
+					/*
                             ----    ERREURS    ----
                     */
-				if (id.toString()[0] === '4') {
-					if (
-						params.length > 1 &&
-						typeof params[0] === 'string' &&
-						typeof params[2] === 'number'
-					) {
-						this.cmd?.error(params[0] + ': ' + params[1], params[2]);
+					if (id.toString()[0] === '4') {
+						if (
+							params.length > 1 &&
+							typeof params[0] === 'string' &&
+							typeof params[2] === 'number'
+						) {
+							this.cmd?.error(params[0] + ': ' + params[1], params[2]);
+							this.stop();
+						}
 					}
 				}
+			} catch (error) {
+				this.whenExecutionEnd(res);
 			}
 		};
 
