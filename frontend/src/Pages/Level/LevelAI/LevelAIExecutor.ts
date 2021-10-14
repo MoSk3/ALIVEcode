@@ -131,11 +131,11 @@ class LevelAIExecutor extends LevelCodeExecutor {
 							this.executableFuncs.showDataCloud();
 							perform_action(i + 1);
 							break;
-						//case 803:
-						//	// evaluer
-						//	res.push(this.executableFuncs.evaluate(params[0]));
-						//	perform_action(i + 1);
-						//	break;
+						case 803:
+							// evaluer
+							res.push(this.executableFuncs.evaluate(params[0]));
+							perform_action(i + 1);
+							break;
 						case 804:
 							// fonctionCout
 							const out = this.executableFuncs.costMSE();
