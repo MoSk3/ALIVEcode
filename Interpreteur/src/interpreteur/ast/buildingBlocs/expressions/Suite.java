@@ -36,14 +36,14 @@ public record Suite(Expression<?> debut,
                 /*
                  * Suite impossible
                  */
-                throw new ASErreur.ErreurSuite("Suite impossible : debutValue > finValue && 0 < bondValue");
+                throw new ASErreur.ErreurSuite("Suite impossible : debutValue > finValue et 0 < bondValue");
             }
             if (asDouble) {
-                for (double i = debutValue; debutValue < finValue ? i <= finValue : i >= finValue; i += bondValue) {
+                for (double i = debutValue; debutValue <= finValue ? i <= finValue : i >= finValue; i += bondValue) {
                     suite.ajouterElement(new ASObjet.Decimal(i));
                 }
             } else {
-                for (double i = debutValue; debutValue < finValue ? i <= finValue : i >= finValue; i += bondValue) {
+                for (double i = debutValue; debutValue <= finValue ? i <= finValue : i >= finValue; i += bondValue) {
                     suite.ajouterElement(new ASObjet.Entier(i));
                 }
             }

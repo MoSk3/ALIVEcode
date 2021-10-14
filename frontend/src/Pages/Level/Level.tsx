@@ -187,6 +187,7 @@ const Level = ({ level: levelProp, ...props }: LevelProps) => {
 				submitText="Confirmer"
 				centered
 				onShow={() => userInputRef.current.focus()}
+				centeredText
 			>
 				<input
 					ref={userInputRef}

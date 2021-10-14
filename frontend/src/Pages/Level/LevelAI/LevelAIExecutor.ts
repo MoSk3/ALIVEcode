@@ -146,6 +146,7 @@ class LevelAIExecutor extends LevelCodeExecutor {
 							typeof params[2] === 'number'
 						) {
 							this.cmd?.error(params[0] + ': ' + params[1], params[2]);
+							this.stop();
 						}
 					}
 				}

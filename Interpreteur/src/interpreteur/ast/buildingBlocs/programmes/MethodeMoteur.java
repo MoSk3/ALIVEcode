@@ -23,7 +23,7 @@ public class MethodeMoteur extends Programme {
             throw new ASErreur.ErreurType("Le param\u00E8tres 'temps' est de type 'nombre'," +
                     " mais l'argument pass\u00E9 est de type '" + this.valeur.eval().obtenirNomType() + "'.");
         }
-        
+
         double valeur = this.valeur != null ? ((Number) this.valeur.eval().getValue()).doubleValue() : 0;
         double dodo = 0;
         DataVoiture.dataVoitureHasChanged();

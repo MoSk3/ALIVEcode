@@ -26,6 +26,9 @@ export default class LevelCodeExecutor extends LevelExecutor {
 					idToken,
 					'response-data': res,
 				});
+				if (!data) {
+					return;
+				}
 				if (process.env.REACT_APP_DEBUG) console.log(data);
 				if (data.status === 'complete') {
 					this.execute(data.result);
@@ -69,7 +72,7 @@ export default class LevelCodeExecutor extends LevelExecutor {
 		} catch {
 			this.cmd?.error(
 				"Une erreur inconnue est survenue. Vérifiez pour des erreurs dans votre code, sinon, les services d'alivescript sont hors-ligne.",
-				0,
+				-1,
 			);
 		}
 	}
