@@ -1,4 +1,6 @@
+import DataSample from '../../../Pages/Level/LevelAI/artificial_intelligence/DataSample';
 import DataTypes from './DataTypes';
+import RegressionOptimizer from '../../../Pages/Level/LevelAI/artificial_intelligence/RegressionOptimizer';
 
 /**
  * This class defines a third degree polynomial function that can be shown in a scatter plot of a line graph.
@@ -12,8 +14,8 @@ import DataTypes from './DataTypes';
  * @author Félix Jobin
  */
 export default class PolyRegression {
-  private static ROUNDING = 10000;
-  private static DATA_FORMATTING = {
+  private static ROUNDING = 1000;
+  private static DATA_FORMATTING: DataTypes = {
     type: "line",
     label: "Fonction polynomiale",
     data: [{}],
@@ -54,6 +56,18 @@ export default class PolyRegression {
    */
   public computeAll(x: number[]): number[] {
     return x.map((sample: number) => this.compute(sample));
+  }
+
+  /**
+   * Calculates the MSE cost function for this regression compared to a dataset.
+   * @param dataset the dataset to fit.
+   * @returns the value of the error.
+   */
+  public computeMSE(dataset: DataSample[]): number {
+    const independent: number[] = dataset.map((sample: DataSample) => sample['x']);
+    const expected: number[] = dataset.map((sample: DataSample) => sample['y']);
+    const predicted: number[] = this.computeAll(independent);
+    return RegressionOptimizer.costMSE(predicted, expected);
   }
 
   /**
@@ -141,7 +155,15 @@ export default class PolyRegression {
   public static getRounding() {
     return PolyRegression.ROUNDING;
   }
-}
 
+  public paramsToString(): string {
+    const rounding = PolyRegression.getRounding()
+    const roundA = Math.round(this.a * rounding) / rounding;
+    const roundB = Math.round(this.b * rounding) / rounding;
+    const roundC = Math.round(this.c * rounding) / rounding;
+    const roundD = Math.round(this.d * rounding) / rounding;
+    return "a = " + roundA + ", b = " + roundB + ", c = " + roundC + ", d = " + roundD;
+  }
+}
 
 

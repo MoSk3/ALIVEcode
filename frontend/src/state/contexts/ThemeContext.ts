@@ -22,6 +22,7 @@ export type Theme = {
 		foreground_rgb: string;
 		tableback: string;
 		databack: string;
+		headerAIBack: string;
 	};
 	background: string;
 	name: string;
@@ -49,7 +50,8 @@ export const themes: { light: Theme; dark: Theme } = {
 			foreground: 'black',
 			foreground_rgb: '0,0,0',
 			tableback: '#9ecbff',
-			databack: '#f2f2f2'
+			databack: '#f2f2f2',
+			headerAIBack: "linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(9,9,121,1) 0%, rgba(0,96,171,1) 0%, rgba(0,168,255,1) 100%)"
 		},
 		background: '#ffffff',
 		name: 'light',
@@ -75,7 +77,8 @@ export const themes: { light: Theme; dark: Theme } = {
 			foreground: '#f0f6fc',
 			foreground_rgb: '240,246,252',
 			tableback: '#25496f',
-			databack: '#b0b0b0'
+			databack: '#b0b0b0',
+			headerAIBack: "linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(9,9,121,1) 0%, rgba(0,2,42,1) 0%, rgba(0,49,130,1) 100%)"
 		},
 		background: '#222222',
 		name: 'dark',
