@@ -132,8 +132,10 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 
 		const angleDroit = 90;
 		const car = s.car;
+		console.log(car);
 
 		s.canvasCamera.setTarget(s.car.shape);
+		console.log(s.canvasCamera);
 
 		this.playSocket && this.playSocket.compile(data);
 

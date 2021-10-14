@@ -1,6 +1,6 @@
 import ReactMarkdown from "react-markdown";
 import { useState, useEffect } from 'react';
-import mdPath from './asDocs.md';
+import mdPath from './asBuiltins.md';
 import styled from 'styled-components';
 import rehypeRaw from 'rehype-raw';
 
@@ -14,7 +14,7 @@ const StyledDiv = styled.div`
  *
  * @author Ecoral360 MoSk3
  */
-const ASDocs = () => {
+const ASBuiltinsDocs = () => {
 	const [text, setText] = useState('');
 
 	useEffect(() => {
@@ -30,4 +30,4 @@ const ASDocs = () => {
 	);
 };
 
-export default ASDocs;
+export default ASBuiltinsDocs;

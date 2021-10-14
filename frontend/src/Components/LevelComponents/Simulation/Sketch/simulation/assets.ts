@@ -204,6 +204,7 @@ export const imagesPath: {[key in imageNameType]: string} = {
 	sand,
 }
 
+
 export const images: { [key in imageNameType]: any } = {
 	alien,
 	crack,
