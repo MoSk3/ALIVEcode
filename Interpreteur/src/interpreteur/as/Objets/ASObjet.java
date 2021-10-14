@@ -41,6 +41,7 @@ public interface ASObjet<T> {
         iterable(TypeBuiltin.texte, TypeBuiltin.liste),
         booleen,
         nulType,
+        rien,
         fonctionType;
 
         private final TypeBuiltin[] aliases;

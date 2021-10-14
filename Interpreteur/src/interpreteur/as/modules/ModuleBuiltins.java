@@ -46,7 +46,7 @@ public class ModuleBuiltins {
 
                 new ASObjet.Fonction("afficher", new ASObjet.Fonction.Parametre[]{
                         new ASObjet.Fonction.Parametre(new Type("tout"), "element", new ASObjet.Texte(""))
-                }, new Type("nulType")) {
+                }, ASObjet.TypeBuiltin.rien.asType()) {
                     @Override
                     public ASObjet<?> executer() {
                         ASObjet<?> element = this.getValeurParam("element");
@@ -58,7 +58,7 @@ public class ModuleBuiltins {
 
                 new ASObjet.Fonction("attendre", new ASObjet.Fonction.Parametre[]{
                         new ASObjet.Fonction.Parametre(new Type("nombre"), "duree", new ASObjet.Entier(0))
-                }, new Type("nulType")) {
+                }, ASObjet.TypeBuiltin.rien.asType()) {
                     @Override
                     public ASObjet<?> executer() {
                         ASObjet<?> duree = this.getValeurParam("duree");

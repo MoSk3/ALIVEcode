@@ -316,5 +316,8 @@
 				"button": "Se connecter avec le vrai ALIVEcar"
 			}
 		}
+	},
+	"cmd": {
+		"clear": "Effacer les lignes"
 	}
 }
