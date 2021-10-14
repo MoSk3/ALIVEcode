@@ -181,6 +181,7 @@ const Level = ({ level: levelProp, ...props }: LevelProps) => {
 					if (userInputCallback.current)
 						userInputCallback.current(`${userInputRef.current?.value ?? ''}`);
 					setUserInputModalOpen(false);
+					userInputRef.current.value = '';
 				}}
 				title={inputMsg.current}
 				hideCloseButton
@@ -200,6 +201,7 @@ const Level = ({ level: levelProp, ...props }: LevelProps) => {
 								userInputCallback.current(
 									`${userInputRef.current?.value ?? ''}`,
 								);
+							userInputRef.current.value = '';
 							setUserInputModalOpen(false);
 						}
 					}}
