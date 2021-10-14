@@ -1,11 +1,5 @@
 import { LevelAIProps, StyledAliveLevel } from './levelAITypes';
-import {
-	useEffect,
-	useState,
-	useContext,
-	useRef,
-	useCallback,
-} from 'react';
+import { useEffect, useState, useContext, useRef, useCallback } from 'react';
 import LineInterface from '../../../Components/LevelComponents/LineInterface/LineInterface';
 import { UserContext } from '../../../state/contexts/UserContext';
 import { Row, Col } from 'react-bootstrap';
@@ -180,7 +174,7 @@ const LevelAI = ({
 	function costMSE(): string {
 		if (pointsOnGraph) setDataOnGraph(mainDataset);
 		showRegression();
-		return ('Erreur du modèle : ' + func.current!.computeMSE(data));
+		return 'Erreur du modèle : ' + func.current!.computeMSE(data);
 	}
 
 	/**
@@ -225,7 +219,7 @@ const LevelAI = ({
 					resetGraph,
 					optimizeRegression,
 					evaluate,
-					costMSE,
+					costMSE: () => costMSE(),
 					showRegression,
 				},
 				level.name,

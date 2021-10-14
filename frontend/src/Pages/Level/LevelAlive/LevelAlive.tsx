@@ -170,7 +170,7 @@ const LevelAlive = ({
 	useEffect(() => {
 		$(document).off('keydown');
 		$(document).on('keydown', e => {
-			if (e.key === 's' && e.ctrlKey) {
+			if (e.key.toUpperCase() === 'S' && e.ctrlKey) {
 				e.preventDefault();
 				e.stopPropagation();
 				if (!user) return setAccountModalOpen(true);
