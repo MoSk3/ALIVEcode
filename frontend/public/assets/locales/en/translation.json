@@ -263,6 +263,9 @@
 			"copyright_2": " 2021 All Rights Reserved by"
 		}
 	},
+	"input": {
+		"defaultValue": "Write your value here..."
+	},
 	"ai": {
 		"header": {
 			"title": "THE WORLD OF ARTIFICIAL INTELLIGENCE WITH ALIVESCRIPT",

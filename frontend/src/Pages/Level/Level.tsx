@@ -1,5 +1,5 @@
-import { LevelProps } from './levelTypes';
-import { useEffect, useState, useContext } from 'react';
+import { LevelProps, typeAskForUserInput } from './levelTypes';
+import { useEffect, useState, useContext, useRef } from 'react';
 import {
 	Level as LevelModel,
 	LEVEL_ACCESS,
@@ -18,6 +18,8 @@ import { plainToClass } from 'class-transformer';
 import LevelAlive from './LevelAlive/LevelAlive';
 import { LevelAI as LevelAIModel } from '../../Models/Level/levelAI.entity';
 import LevelAI from './LevelAI/LevelAI';
+import Modal from '../../Components/UtilsComponents/Modal/Modal';
+import { useTranslation } from 'react-i18next';
 
 /**
  * This component is used to load any type of Level with an id or passed as a prop.
@@ -39,6 +41,17 @@ const Level = ({ level: levelProp, ...props }: LevelProps) => {
 		useState<string>('');
 	const alert = useAlert();
 	const history = useHistory();
+	const { t } = useTranslation();
+	const userInputRef = useRef<any>();
+	const userInputCallback = useRef<(inputValue: string) => void>();
+	const inputMsg = useRef<string>(t('input.defaultMessage'));
+	const [userInputModalOpen, setUserInputModalOpen] = useState(false);
+
+	const askForUserInput: typeAskForUserInput = (msg, callback) => {
+		userInputCallback.current = callback;
+		inputMsg.current = msg;
+		setUserInputModalOpen(true);
+	};
 
 	useEffect(() => {
 		setInitialProgressionCode('');
@@ -107,6 +120,94 @@ const Level = ({ level: levelProp, ...props }: LevelProps) => {
 
 	if (!level || !progression) return <LoadingScreen />;
 
+	return (
+		<>
+			{level instanceof LevelAliveModel ? (
+				<LevelAlive
+					initialCode={
+						initialProgressionCode || (level as LevelAliveModel).initialCode
+					}
+					setLevel={setLevel}
+					level={level as LevelAliveModel}
+					progression={progression}
+					setProgression={setProgression}
+					editMode={
+						props.editMode &&
+						user != null &&
+						level.creator != null &&
+						level.creator.id === user.id
+					}
+					askForUserInput={askForUserInput}
+				></LevelAlive>
+			) : level instanceof LevelCodeModel ? (
+				<LevelCode
+					initialCode={
+						initialProgressionCode || (level as LevelCodeModel).initialCode
+					}
+					setLevel={setLevel}
+					level={level as LevelCodeModel}
+					progression={progression}
+					setProgression={setProgression}
+					editMode={
+						props.editMode &&
+						user != null &&
+						level.creator != null &&
+						level.creator.id === user.id
+					}
+					askForUserInput={askForUserInput}
+				></LevelCode>
+			) : level instanceof LevelAIModel ? (
+				<LevelAI
+					initialCode={
+						initialProgressionCode || (level as LevelAIModel).initialCode
+					}
+					setLevel={setLevel}
+					level={level as LevelAIModel}
+					progression={progression}
+					setProgression={setProgression}
+					editMode={
+						props.editMode &&
+						user != null &&
+						level.creator != null &&
+						level.creator.id === user.id
+					}
+				></LevelAI>
+			) : (
+				<LoadingScreen></LoadingScreen>
+			)}
+			<Modal
+				open={userInputModalOpen}
+				onClose={() => {
+					if (userInputCallback.current)
+						userInputCallback.current(`${userInputRef.current?.value ?? ''}`);
+					setUserInputModalOpen(false);
+				}}
+				title={inputMsg.current}
+				hideCloseButton
+				submitText="Confirmer"
+				centered
+				onShow={() => userInputRef.current.focus()}
+				centeredText
+			>
+				<input
+					ref={userInputRef}
+					placeholder={`${t('input.defaultValue')}`}
+					type="text"
+					onKeyPress={e => {
+						if (e.key === 'Enter') {
+							e.preventDefault();
+							if (userInputCallback.current)
+								userInputCallback.current(
+									`${userInputRef.current?.value ?? ''}`,
+								);
+							setUserInputModalOpen(false);
+						}
+					}}
+				/>
+			</Modal>
+		</>
+	);
+	/*
 	if (level instanceof LevelAliveModel) {
 		return (
 			<LevelAlive
@@ -167,6 +268,7 @@ const Level = ({ level: levelProp, ...props }: LevelProps) => {
 		);
 
 	return <LoadingScreen></LoadingScreen>;
+	*/
 };
 
 export default Level;

@@ -7,6 +7,7 @@ export abstract class LevelExecutor {
 	public timeouts: Array<NodeJS.Timeout> = [];
 	public execution: boolean = false;
 	public onToggleExecution?: (exec: any) => void;
+	protected whenExecutionEnd: (result: any[]) => void;
 
 	constructor(public levelName: string, public creator?: User) {}
 

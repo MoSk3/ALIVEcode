@@ -1170,7 +1170,7 @@ export const sketch = s => {
 				? 'objective'
 				: isButton
 				? 'button'
-				: undefined,
+				: 'spring',
 			[-w / 2, h / 2],
 			[w / 2, h / 2],
 			[w / 2, -h / 2],

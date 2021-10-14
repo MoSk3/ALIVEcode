@@ -51,7 +51,11 @@ export class Interactive
 	}
 
 	loadFromTemplate() {
-		loadFromTemplate(this, this.templates, this.templateName);
+		loadFromTemplate(
+			this,
+			this.templates,
+			this.templateName ?? this.defaultTemplate,
+		);
 	}
 
 	readonly defaultTemplate: TemplateNamesInteractive = 'collectable';

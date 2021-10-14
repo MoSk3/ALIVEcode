@@ -8,6 +8,7 @@ import { Serializer } from '../../../Components/LevelComponents/Simulation/Sketc
 import { makeShapeEditable } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/editMode';
 import { User } from '../../../Models/User/user.entity';
 import { PlaySocket } from '../PlaySocket';
+import { typeAskForUserInput } from '../levelTypes';
 
 // TODO: robotConnected
 const robotConnected = false;
@@ -33,9 +34,10 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 		levelName: string,
 		private editMode: boolean,
 		playSocket: PlaySocket | null,
+		askForUserInput: typeAskForUserInput,
 		creator?: User,
 	) {
-		super(levelName, creator);
+		super(levelName, askForUserInput, creator);
 		this.playSocket = playSocket;
 	}
 
@@ -147,222 +149,230 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 		};
 
 		const perform_action = (i: number) => {
-			if (i >= data.length) {
-				return;
-			}
-			const action = data[i];
-			if (validDataStructure(action)) {
-				if (action[DODO] < 0) action[DODO] = 0;
+			try {
+				if (i >= data.length) {
+					this.whenExecutionEnd(res);
+					return;
+				}
+				const action = data[i];
+				if (validDataStructure(action)) {
+					if (action[DODO] < 0) action[DODO] = 0;
 
-				const { [DODO]: dodo, [ID]: id, [PARAMS]: params } = action;
+					const { [DODO]: dodo, [ID]: id, [PARAMS]: params } = action;
 
-				// Traite l'action a effectuée envoyée par le serveur
-				id_switch: switch (id) {
-					/*
+					// Traite l'action a effectuée envoyée par le serveur
+					id_switch: switch (id) {
+						/*
                                 ----    UTILITAIRES    ----
                         */
-					/*
+						/*
                                       ----    VOITURE    ----
                               */
-					case 100:
-						/*----     arreter     ----*/
-						car.stop();
-						this.timeouts.push(
-							setTimeout(() => {
-								perform_action(i + 1);
-							}, dodo * 1000),
-						);
-						break;
-					case 101:
-						/*----     avancer     ----*/
-						car.forward();
-						this.timeouts.push(
-							setTimeout(() => {
-								if (dodo > 0) car.stop();
-								perform_action(i + 1);
-							}, dodo * 1000),
-						);
-						break;
-					case 102:
-						/*----     reculer     ----*/
-						car.backward();
-						this.timeouts.push(
-							setTimeout(() => {
-								if (dodo > 0) car.stop();
-								perform_action(i + 1);
-							}, dodo * 1000),
-						);
-						break;
-					case 103:
-						/*----     tourner     ----*/
-						if (!robotConnected) {
-							if (params.length > 0 && typeof params[0] === 'number') {
-								car.turn(-params[0], () => {
-									perform_action(i + 1);
-								});
-							}
-						} else {
-							perform_action(i + 1);
-						}
-						break;
-					case 104:
-						/*----     tournerDroite     ----*/
-						if (!robotConnected) {
-							car.turn(angleDroit, () => {
-								perform_action(i + 1);
-							});
-						} else {
-							let goal = (car.shape.rotation.x + angleDroit) % 360;
-							let interval = setInterval(() => {
-								if (Math.abs(goal - car.shape.rotation.x) <= 0.5) {
-									clearInterval(interval);
-									perform_action(i + 1);
-								}
-							});
-						}
-						break;
-					case 105:
-						/*----     tournerGauche     ----*/
-						if (!robotConnected) {
-							car.turn(-angleDroit, () => {
-								perform_action(i + 1);
-							});
-						} else {
-							let goal = (car.shape.rotation.x - angleDroit) % 360;
-							let interval = setInterval(() => {
-								if (Math.abs(goal - car.shape.rotation.x) <= 0.5) {
-									clearInterval(interval);
-									perform_action(i + 1);
-								}
-							}, 50);
-						}
-						break;
-					case 106:
-						/*----     rouler     ----*/
-						if (!robotConnected) {
-							if (params.length >= 2) {
-								car.setDirection(
-									new Vector(
-										params[0] / 255 - params[1] / 255,
-										params[0] / 500 + params[1] / 500,
-									)
-										.normalize()
-										.multiplyScalar((params[0] / 2 + params[1] / 2) / 255),
-								);
-							}
-						} else {
-							car.forward();
-						}
-						perform_action(i + 1);
-						break;
-					case 107:
-						/*----     goToAngle     ----*/
-						if (!robotConnected) {
-							if (params.length > 0 && typeof params[0] === 'number') {
-								const currentAngle = car.shape.rotation.x;
-								let angle = params[0] % 360;
-								angle = angle < 0 ? 360 - angle : angle;
-								angle = 360 - angle;
-								var rotationAmount: number;
-								if (
-									360 - currentAngle - angle < 180 &&
-									360 - currentAngle - angle >= 0
-								)
-									rotationAmount = -(360 - currentAngle - angle);
-								else rotationAmount = -(360 - angle - currentAngle);
-								car.turn(rotationAmount, () => {
-									perform_action(i + 1);
-								});
-							}
-						} else {
-							perform_action(i + 1);
-						}
-						break;
-					/*
-                                      ----    UTILITAIRES    ----
-                              */
-					case 300:
-						/*----     print     ----*/
-
-						if (params.length > 0 && typeof params[0] === 'string') {
-							this.cmd?.print(params[0]);
-						}
-						if (dodo === 0) perform_action(i + 1);
-						else {
+						case 100:
+							/*----     arreter     ----*/
+							car.stop();
 							this.timeouts.push(
 								setTimeout(() => {
 									perform_action(i + 1);
 								}, dodo * 1000),
 							);
-						}
-						break;
-					case 301:
-						/*----     attendre     ----*/
-						if (params.length > 0 && typeof params[0] === 'number') {
+							break;
+						case 101:
+							/*----     avancer     ----*/
+							car.forward();
 							this.timeouts.push(
 								setTimeout(() => {
+									if (dodo > 0) car.stop();
 									perform_action(i + 1);
-								}, params[0] * 1000),
+								}, dodo * 1000),
 							);
-						}
-						break;
-					/*
+							break;
+						case 102:
+							/*----     reculer     ----*/
+							car.backward();
+							this.timeouts.push(
+								setTimeout(() => {
+									if (dodo > 0) car.stop();
+									perform_action(i + 1);
+								}, dodo * 1000),
+							);
+							break;
+						case 103:
+							/*----     tourner     ----*/
+							if (!robotConnected) {
+								if (params.length > 0 && typeof params[0] === 'number') {
+									car.turn(-params[0], () => {
+										perform_action(i + 1);
+									});
+								}
+							} else {
+								perform_action(i + 1);
+							}
+							break;
+						case 104:
+							/*----     tournerDroite     ----*/
+							if (!robotConnected) {
+								car.turn(angleDroit, () => {
+									perform_action(i + 1);
+								});
+							} else {
+								let goal = (car.shape.rotation.x + angleDroit) % 360;
+								let interval = setInterval(() => {
+									if (Math.abs(goal - car.shape.rotation.x) <= 0.5) {
+										clearInterval(interval);
+										perform_action(i + 1);
+									}
+								});
+							}
+							break;
+						case 105:
+							/*----     tournerGauche     ----*/
+							if (!robotConnected) {
+								car.turn(-angleDroit, () => {
+									perform_action(i + 1);
+								});
+							} else {
+								let goal = (car.shape.rotation.x - angleDroit) % 360;
+								let interval = setInterval(() => {
+									if (Math.abs(goal - car.shape.rotation.x) <= 0.5) {
+										clearInterval(interval);
+										perform_action(i + 1);
+									}
+								}, 50);
+							}
+							break;
+						case 106:
+							/*----     rouler     ----*/
+							if (!robotConnected) {
+								if (params.length >= 2) {
+									car.setDirection(
+										new Vector(
+											params[0] / 255 - params[1] / 255,
+											params[0] / 500 + params[1] / 500,
+										)
+											.normalize()
+											.multiplyScalar((params[0] / 2 + params[1] / 2) / 255),
+									);
+								}
+							} else {
+								car.forward();
+							}
+							perform_action(i + 1);
+							break;
+						case 107:
+							/*----     goToAngle     ----*/
+							if (!robotConnected) {
+								if (params.length > 0 && typeof params[0] === 'number') {
+									const currentAngle = car.shape.rotation.x;
+									let angle = params[0] % 360;
+									angle = angle < 0 ? 360 - angle : angle;
+									angle = 360 - angle;
+									var rotationAmount: number;
+									if (
+										360 - currentAngle - angle < 180 &&
+										360 - currentAngle - angle >= 0
+									)
+										rotationAmount = -(360 - currentAngle - angle);
+									else rotationAmount = -(360 - angle - currentAngle);
+									car.turn(rotationAmount, () => {
+										perform_action(i + 1);
+									});
+								}
+							} else {
+								perform_action(i + 1);
+							}
+							break;
+						/*
+                                      ----    UTILITAIRES    ----
+                              */
+						case 300:
+							/*----     print     ----*/
+
+							if (params.length > 0 && typeof params[0] === 'string') {
+								this.cmd?.print(params[0]);
+							}
+							if (dodo === 0) perform_action(i + 1);
+							else {
+								this.timeouts.push(
+									setTimeout(() => {
+										perform_action(i + 1);
+									}, dodo * 1000),
+								);
+							}
+							break;
+						case 301:
+							/*----     attendre     ----*/
+							if (params.length > 0 && typeof params[0] === 'number') {
+								this.timeouts.push(
+									setTimeout(() => {
+										perform_action(i + 1);
+									}, params[0] * 1000),
+								);
+							}
+							break;
+						/*
                                       ----    GET    ----
                               */
-					case 500:
-						switch (params[0]) {
-							case 'read': {
-								/*----     lire     ----*/
-								let input = prompt(params[1]);
-								res.push(input);
-								perform_action(i + 1);
-								// eslint-disable-next-line no-labels
-								break id_switch;
-							}
+						case 500:
+							switch (params[0]) {
+								case 'read': {
+									/*----     lire     ----*/
+									console.log('read');
+									this.askForUserInput(params[1], inputValue => {
+										res.push(inputValue);
+										perform_action(i + 1);
+									});
+									break;
+								}
 
-							case 'car': {
-								/*----     voiture     ----*/
-								const infosCar = {
-									x: car.shape.pos.x,
-									y: car.shape.pos.y,
-									dA: this.sensors.dA,
-									dG: this.sensors.dG,
-									dD: this.sensors.dD,
-									speed: car.speed,
-								};
-								res.push(infosCar);
-								if (process.env.REACT_APP_DEBUG) console.log(res);
-								perform_action(i + 1);
-								// eslint-disable-next-line no-labels
-								break id_switch;
+								case 'car': {
+									/*----     voiture     ----*/
+									const infosCar = {
+										x: car.shape.pos.x,
+										y: car.shape.pos.y,
+										dA: this.sensors.dA,
+										dG: this.sensors.dG,
+										dD: this.sensors.dD,
+										speed: car.speed,
+									};
+									res.push(infosCar);
+									if (process.env.REACT_APP_DEBUG) console.log(res);
+									perform_action(i + 1);
+									// eslint-disable-next-line no-labels
+									break id_switch;
+								}
 							}
-						}
-						break;
-					/*
+							break;
+						/*
                                       ----    SET    ----
                               */
-					case 600:
-						break;
+						case 600:
+							break;
 
-					case 601:
-						/*----     vitesse voiture     ----*/
-						car.speed = params[0];
-						perform_action(i + 1);
-						break;
-				}
+						case 601:
+							/*----     vitesse voiture     ----*/
+							car.speed = params[0];
+							perform_action(i + 1);
+							break;
+					}
 
-				/*
+					/*
                             ----    ERREURS    ----
                     */
-				if (id.toString()[0] === '4') {
-					if (
-						params.length > 1 &&
-						typeof params[0] === 'string' &&
-						typeof params[2] === 'number'
-					) {
-						this.cmd?.error(params[0] + ': ' + params[1], params[2]);
+					if (id.toString()[0] === '4') {
+						if (
+							params.length > 1 &&
+							typeof params[0] === 'string' &&
+							typeof params[2] === 'number'
+						) {
+							this.cmd?.error(params[0] + ': ' + params[1], params[2]);
+							this.stop();
+						}
 					}
 				}
+			} catch (error) {
+				this.whenExecutionEnd(res);
+				this.stop();
 			}
 		};
 

@@ -2,6 +2,7 @@ import { LevelCode } from "../../../Models/Level/levelCode.entity";
 import { LevelProgression } from '../../../Models/Level/levelProgression';
 import styled from 'styled-components';
 import FillContainer from '../../../Components/UtilsComponents/FillContainer/FillContainer';
+import { typeAskForUserInput } from '../levelTypes';
 
 export interface LevelCodeProps {
 	level: LevelCode;
@@ -10,6 +11,7 @@ export interface LevelCodeProps {
 	setProgression: (progression: LevelProgression) => void;
 	setLevel: (level: LevelCode) => void;
 	initialCode?: string;
+	askForUserInput: typeAskForUserInput;
 }
 
 type StyledProps = {

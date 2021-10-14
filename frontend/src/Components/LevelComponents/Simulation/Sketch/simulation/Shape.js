@@ -157,13 +157,13 @@ export class Shape {
 		else if (this instanceof Interactive)
 			cloned = new Interactive(
 				this.s,
-				this.isCoin
+				this.isCollectable
 					? 'collectable'
 					: this.isObjectif
 					? 'objective'
 					: this.isButton
 					? 'button'
-					: undefined,
+					: 'spring',
 				...points,
 			);
 		else cloned = new Shape(this.s, ...points);
