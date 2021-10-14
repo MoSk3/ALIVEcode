@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { LevelExecutor } from '../LevelExecutor';
 import { typeAskForUserInput } from '../levelTypes';
 
@@ -11,71 +10,8 @@ export default class LevelCodeExecutor extends LevelExecutor {
 		super(levelName, creator);
 	}
 
-	public async onRun() {
-		// Envoie le code à exécuter au serveur
-		const lines: string = this.lineInterfaceContent;
-
-		try {
-			let data = await this.sendDataToAsServer({ lines });
-
-			this.whenExecutionEnd = async res => {
-				if ((Array.isArray(res) && res.length === 0) || res === undefined) {
-					return;
-				}
-				data = await this.sendDataToAsServer({
-					idToken,
-					'response-data': res,
-				});
-				if (!data) {
-					return;
-				}
-				if (process.env.REACT_APP_DEBUG) console.log(data);
-				if (data.status === 'complete') {
-					this.execute(data.result);
-					return;
-				}
-				if (process.env.REACT_APP_DEBUG) console.log(idToken, data.data);
-				this.execute(data.result);
-			};
-
-			if (process.env.REACT_APP_DEBUG) console.log(data);
-			if (data.status === 'complete') {
-				this.execute(data.result);
-				return;
-			}
-
-			const { idToken } = data;
-
-			if (process.env.REACT_APP_DEBUG) console.log(idToken, data.result);
-
-			this.execute(data.result);
-		} catch (err) {
-			this.stop();
-		}
-	}
-
 	public onStop() {}
 	public init(s: any) {}
-
-	private async sendDataToAsServer(
-		data: { lines: string } | { idToken: string; 'response-data': string[] },
-	) {
-		try {
-			return (
-				await axios({
-					method: 'POST',
-					url: '/compile/',
-					baseURL: process.env.REACT_APP_AS_URL,
-					data,
-				})
-			).data;
-		} catch {
-			this.cmd?.error(
-				"Une erreur inconnue est survenue. Vérifiez pour des erreurs dans votre code, sinon, les services d'alivescript sont hors-ligne.",
-				-1,
-			);
-		}
-	}
 
 	public execute(data: any) {
 		const res: any = [];
@@ -96,9 +32,8 @@ export default class LevelCodeExecutor extends LevelExecutor {
 
 		const perform_action = (i: number) => {
 			try {
-				if (i >= data.length) {
+				if (i >= data.length || !this.execution) {
 					//this.socket?.response(res);
-					this.stop();
 					this.whenExecutionEnd(res);
 					return;
 				}
@@ -170,6 +105,7 @@ export default class LevelCodeExecutor extends LevelExecutor {
 							typeof params[2] === 'number'
 						) {
 							this.cmd?.error(params[0] + ': ' + params[1], params[2]);
+							this.interrupt();
 						}
 					}
 				}

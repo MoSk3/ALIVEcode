@@ -5,6 +5,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -22,6 +23,7 @@ public class AliveScriptService {
      * the time since the service has been updated
      */
     private double sinceUpdate = 0;
+    private int nbOfUpdates = 0;
 
     private AliveScriptService(UUID idToken) {
         this.idToken = idToken;
@@ -37,7 +39,7 @@ public class AliveScriptService {
     }
 
     public synchronized static void updateAndCleanUp() {
-        for (var service : runningServices.values()) {
+        for (var service : new HashSet<>(runningServices.values())) {
             if (service.sinceUpdate > maxServiceLifeSpan) {
                 service.destroy();
                 logger.info("Service " + service + " destroyed");
@@ -74,6 +76,7 @@ public class AliveScriptService {
 
     public synchronized void update() {
         this.sinceUpdate = 0;
+        this.nbOfUpdates++;
     }
 
     public AliveScriptService destroy() {

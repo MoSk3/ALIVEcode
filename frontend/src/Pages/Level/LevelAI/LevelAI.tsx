@@ -150,7 +150,6 @@ const LevelAI = ({
 	 * Generates the regression's points and shows them on the graph.
 	 */
 	function showRegression() {
-		regOnGraph = true;
 		const points = func.current!.generatePoints();
 		setDataOnGraph(points);
 	}
@@ -203,7 +202,7 @@ const LevelAI = ({
 	 */
 	function evaluate(x: number): number {
 		if (pointsOnGraph) setDataOnGraph(mainDataset);
-		if (regOnGraph) showRegression();
+		showRegression();
 		return func.current!.compute(x);
 	}
 
@@ -218,7 +217,7 @@ const LevelAI = ({
 					showDataCloud,
 					resetGraph,
 					optimizeRegression,
-					evaluate,
+					evaluate: (x: number) => evaluate(x),
 					costMSE: () => costMSE(),
 					showRegression,
 				},

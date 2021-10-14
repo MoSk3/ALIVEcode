@@ -17,6 +17,7 @@ class LevelAIExecutor extends LevelCodeExecutor {
 	public init(s: any) {}
 
 	public async onRun() {
+		this.executableFuncs.resetGraph();
 		super.onRun();
 	}
 
@@ -87,9 +88,16 @@ class LevelAIExecutor extends LevelCodeExecutor {
 							switch (params[0]) {
 								case 'read': {
 									/*----     lire     ----*/
-									let input = prompt(params[1]);
-									res.push(input);
+									this.askForUserInput(params[1], inputValue => {
+										res.push(inputValue);
+										perform_action(i + 1);
+									});
+									break;
+								}
+								case 'evaluer': {
+									res.push(this.executableFuncs.evaluate(params[1]));
 									perform_action(i + 1);
+									break;
 								}
 							}
 							break;
@@ -101,41 +109,40 @@ class LevelAIExecutor extends LevelCodeExecutor {
 						/*
 																----		ARTIFICIAL INTELLIGENCE		----
 													*/
-					case 800:
-						// creerRegression
-						if (params.every((param: any) => typeof param === 'number')) {
-							this.executableFuncs.createAndShowReg(
-								params[0],
-								params[1],
-								params[2],
-								params[3],
-							);
-						}
-						perform_action(i + 1);
-						break;
-					case 801:
-						// optimiserRegression
-						this.executableFuncs.optimizeRegression(params[0], params[1]);
-						perform_action(i + 1);
-						break;
-					case 802:
-						// afficherNuage
-						this.executableFuncs.showDataCloud();
-						perform_action(i + 1);
-						break;
-					case 803:
-						// evaluer
-						res.push(this.executableFuncs.evaluate(params[0]));
-						perform_action(i + 1);
-						break;
-					case 804:
-						// fonctionCout
-						const out = this.executableFuncs.costMSE();
-						this.cmd?.print(out);
-						perform_action(i + 1);
-						break;
-
-				}
+						case 800:
+							// creerRegression
+							if (params.every((param: any) => typeof param === 'number')) {
+								this.executableFuncs.createAndShowReg(
+									params[0],
+									params[1],
+									params[2],
+									params[3],
+								);
+							}
+							perform_action(i + 1);
+							break;
+						case 801:
+							// optimiserRegression
+							this.executableFuncs.optimizeRegression(params[0], params[1]);
+							perform_action(i + 1);
+							break;
+						case 802:
+							// afficherNuage
+							this.executableFuncs.showDataCloud();
+							perform_action(i + 1);
+							break;
+						//case 803:
+						//	// evaluer
+						//	res.push(this.executableFuncs.evaluate(params[0]));
+						//	perform_action(i + 1);
+						//	break;
+						case 804:
+							// fonctionCout
+							const out = this.executableFuncs.costMSE();
+							this.cmd?.print(out);
+							perform_action(i + 1);
+							break;
+					}
 
 					/*
                             ----    ERREURS    ----
@@ -147,7 +154,7 @@ class LevelAIExecutor extends LevelCodeExecutor {
 							typeof params[2] === 'number'
 						) {
 							this.cmd?.error(params[0] + ': ' + params[1], params[2]);
-							this.stop();
+							this.interrupt();
 						}
 					}
 				}
@@ -158,7 +165,6 @@ class LevelAIExecutor extends LevelCodeExecutor {
 
 		// Check si le data est valide
 		if (Array.isArray(data) && data.length > 0) {
-			this.executableFuncs.resetGraph();
 			perform_action(0);
 		}
 		return res;

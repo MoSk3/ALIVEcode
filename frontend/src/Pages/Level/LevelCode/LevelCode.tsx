@@ -149,7 +149,7 @@ const LevelCode = ({
 		$(document).off('keydown');
 		$(document).on('keydown', e => {
 			//If ctrl + s are pressed together
-			if (e.keyCode === 83 && e.ctrlKey) {
+			if (e.key.toUpperCase() === 'S' && e.ctrlKey) {
 				e.preventDefault();
 				e.stopPropagation();
 				if (!user) return setAccountModalOpen(true);
