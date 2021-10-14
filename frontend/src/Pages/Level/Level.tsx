@@ -1,5 +1,5 @@
-import { LevelProps } from './levelTypes';
-import { useEffect, useState, useContext } from 'react';
+import { LevelProps, typeAskForUserInput } from './levelTypes';
+import { useEffect, useState, useContext, useRef } from 'react';
 import {
 	Level as LevelModel,
 	LEVEL_ACCESS,
@@ -16,9 +16,10 @@ import { UserContext } from '../../state/contexts/UserContext';
 import { LevelProgression } from '../../Models/Level/levelProgression';
 import { plainToClass } from 'class-transformer';
 import LevelAlive from './LevelAlive/LevelAlive';
-import useRoutes from '../../state/hooks/useRoutes';
 import { LevelAI as LevelAIModel } from '../../Models/Level/levelAI.entity';
 import LevelAI from './LevelAI/LevelAI';
+import Modal from '../../Components/UtilsComponents/Modal/Modal';
+import { useTranslation } from 'react-i18next';
 
 /**
  * This component is used to load any type of Level with an id or passed as a prop.
@@ -35,20 +36,29 @@ const Level = ({ level: levelProp, ...props }: LevelProps) => {
 	const { levelId } = useParams<{ levelId: string }>();
 	const { user } = useContext(UserContext);
 	const [level, setLevel] = useState<LevelModel | undefined>(() => levelProp);
-	const [progression, setProgresion] = useState<LevelProgression>();
-	const [initialCode, setInitialCode] = useState<string>('');
+	const [progression, setProgression] = useState<LevelProgression>();
+	const [initialProgressionCode, setInitialProgressionCode] =
+		useState<string>('');
 	const alert = useAlert();
 	const history = useHistory();
-	const { routes } = useRoutes();
+	const { t } = useTranslation();
+	const userInputRef = useRef<any>();
+	const userInputCallback = useRef<(inputValue: string) => void>();
+	const inputMsg = useRef<string>(t('input.defaultMessage'));
+	const [userInputModalOpen, setUserInputModalOpen] = useState(false);
+
+	const askForUserInput: typeAskForUserInput = (msg, callback) => {
+		userInputCallback.current = callback;
+		inputMsg.current = msg;
+		setUserInputModalOpen(true);
+	};
 
 	useEffect(() => {
-		setLevel(levelProp);
-	}, [levelProp]);
+		setInitialProgressionCode('');
+		setLevel(undefined);
 
-	useEffect(() => {
 		const loadLevel = async () => {
 			let fetchedLevel: LevelModel | null = null;
-
 			// LevelId as url param
 			if (levelId) {
 				try {
@@ -61,9 +71,9 @@ const Level = ({ level: levelProp, ...props }: LevelProps) => {
 			}
 
 			// If user, load or create progression
-			if (user && (level || fetchedLevel)) {
+			if (user && (levelProp || fetchedLevel)) {
 				let progression: LevelProgression;
-				const currentLevel = level ?? fetchedLevel;
+				const currentLevel = levelProp ?? fetchedLevel;
 				if (!currentLevel) return;
 				try {
 					progression = await api.db.levels.progressions.get({
@@ -79,12 +89,14 @@ const Level = ({ level: levelProp, ...props }: LevelProps) => {
 						currentLevel,
 					);
 				}
-				progression.data.code && setInitialCode(progression.data.code);
-				setProgresion(progression);
+				progression.data.code &&
+					setInitialProgressionCode(progression.data.code);
+				setProgression(progression);
+				setLevel(currentLevel);
 			}
 
 			// If no level loaded create an non-saved empty one
-			if (!level && !fetchedLevel) {
+			if (!level && !fetchedLevel && !levelProp) {
 				fetchedLevel = plainToClass(LevelModel, {
 					id: 'dummy',
 					name: 'New level',
@@ -108,14 +120,106 @@ const Level = ({ level: levelProp, ...props }: LevelProps) => {
 
 	if (!level || !progression) return <LoadingScreen />;
 
-	if (level instanceof LevelAliveModel || props.type === 'ALIVE') {
+	return (
+		<>
+			{level instanceof LevelAliveModel ? (
+				<LevelAlive
+					initialCode={
+						initialProgressionCode || (level as LevelAliveModel).initialCode
+					}
+					setLevel={setLevel}
+					level={level as LevelAliveModel}
+					progression={progression}
+					setProgression={setProgression}
+					editMode={
+						props.editMode &&
+						user != null &&
+						level.creator != null &&
+						level.creator.id === user.id
+					}
+					askForUserInput={askForUserInput}
+				></LevelAlive>
+			) : level instanceof LevelCodeModel ? (
+				<LevelCode
+					initialCode={
+						initialProgressionCode || (level as LevelCodeModel).initialCode
+					}
+					setLevel={setLevel}
+					level={level as LevelCodeModel}
+					progression={progression}
+					setProgression={setProgression}
+					editMode={
+						props.editMode &&
+						user != null &&
+						level.creator != null &&
+						level.creator.id === user.id
+					}
+					askForUserInput={askForUserInput}
+				></LevelCode>
+			) : level instanceof LevelAIModel ? (
+				<LevelAI
+					initialCode={
+						initialProgressionCode || (level as LevelAIModel).initialCode
+					}
+					setLevel={setLevel}
+					level={level as LevelAIModel}
+					progression={progression}
+					setProgression={setProgression}
+					editMode={
+						props.editMode &&
+						user != null &&
+						level.creator != null &&
+						level.creator.id === user.id
+					}
+				></LevelAI>
+			) : (
+				<LoadingScreen></LoadingScreen>
+			)}
+			<Modal
+				open={userInputModalOpen}
+				onClose={() => {
+					if (userInputCallback.current)
+						userInputCallback.current(`${userInputRef.current?.value ?? ''}`);
+					setUserInputModalOpen(false);
+					userInputRef.current.value = '';
+				}}
+				title={inputMsg.current}
+				hideCloseButton
+				submitText="Confirmer"
+				centered
+				onShow={() => userInputRef.current.focus()}
+				centeredText
+			>
+				<input
+					ref={userInputRef}
+					placeholder={`${t('input.defaultValue')}`}
+					type="text"
+					onKeyPress={e => {
+						if (e.key === 'Enter') {
+							e.preventDefault();
+							if (userInputCallback.current)
+								userInputCallback.current(
+									`${userInputRef.current?.value ?? ''}`,
+								);
+							userInputRef.current.value = '';
+							setUserInputModalOpen(false);
+						}
+					}}
+				/>
+			</Modal>
+		</>
+	);
+	/*
+	if (level instanceof LevelAliveModel) {
 		return (
 			<LevelAlive
-				initialCode={initialCode}
+				initialCode={
+					initialProgressionCode || (level as LevelAliveModel).initialCode
+				}
 				setLevel={setLevel}
 				level={level as LevelAliveModel}
 				progression={progression}
-				setProgression={setProgresion}
+				setProgression={setProgression}
 				editMode={
 					props.editMode &&
 					user != null &&
@@ -126,14 +230,16 @@ const Level = ({ level: levelProp, ...props }: LevelProps) => {
 		);
 	}
 
-	if (level instanceof LevelCodeModel || props.type === 'code')
+	if (level instanceof LevelCodeModel) {
 		return (
 			<LevelCode
-				initialCode={initialCode}
+				initialCode={
+					initialProgressionCode || (level as LevelCodeModel).initialCode
+				}
 				setLevel={setLevel}
 				level={level as LevelCodeModel}
 				progression={progression}
-				setProgression={setProgresion}
+				setProgression={setProgression}
 				editMode={
 					props.editMode &&
 					user != null &&
@@ -142,15 +248,18 @@ const Level = ({ level: levelProp, ...props }: LevelProps) => {
 				}
 			></LevelCode>
 		);
+	}
 
-	if (level instanceof LevelAIModel || props.type === 'AI')
+	if (level instanceof LevelAIModel)
 		return (
 			<LevelAI
-				initialCode={initialCode}
+				initialCode={
+					initialProgressionCode || (level as LevelAIModel).initialCode
+				}
 				setLevel={setLevel}
 				level={level as LevelAIModel}
 				progression={progression}
-				setProgression={setProgresion}
+				setProgression={setProgression}
 				editMode={
 					props.editMode &&
 					user != null &&
@@ -159,8 +268,9 @@ const Level = ({ level: levelProp, ...props }: LevelProps) => {
 				}
 			></LevelAI>
 		);
-	history.push(routes.public.home.path);
-	return <></>;
+
+	return <LoadingScreen></LoadingScreen>;
+	*/
 };
 
 export default Level;

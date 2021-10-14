@@ -38,12 +38,12 @@ const ClassroomForm = (props: ClassroomFormProps) => {
 						inputType: 'text',
 						required: true,
 						minLength: 3,
-						maxLength: 25,
+						maxLength: 100,
 					},
 					{
 						name: 'description',
 						inputType: 'textarea',
-						maxLength: 200,
+						maxLength: 500,
 					},
 					{
 						name: 'subject',

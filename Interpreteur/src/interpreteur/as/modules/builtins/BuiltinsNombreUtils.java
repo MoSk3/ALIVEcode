@@ -1,5 +1,6 @@
 package interpreteur.as.modules.builtins;
 
+import interpreteur.as.Objets.Nombre;
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.as.Objets.ASObjet;
 import interpreteur.as.modules.ASModule;
@@ -29,6 +30,14 @@ public class BuiltinsNombreUtils {
                 }
             },
 
+            new ASObjet.Fonction("abs", new ASObjet.Fonction.Parametre[]{
+                    new ASObjet.Fonction.Parametre(new Type("nombre"), "x", null)
+            }, new Type("nombre")) {
+                @Override
+                public ASObjet<?> executer() {
+                    return new Decimal(Math.abs(((Number) this.getValeurParam("x").getValue()).doubleValue()));
+                }
+            },
 
             new ASObjet.Fonction("decimal", new ASObjet.Fonction.Parametre[]{
                     new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.texte.asType(), "txt", null)

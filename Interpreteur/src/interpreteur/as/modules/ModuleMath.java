@@ -58,15 +58,6 @@ public class ModuleMath {
                     }
                 },
 
-                new ASObjet.Fonction("abs", new ASObjet.Fonction.Parametre[]{
-                        new ASObjet.Fonction.Parametre(new Type("nombre"), "x", null)
-                }, new Type("nombre")) {
-                    @Override
-                    public ASObjet<?> executer() {
-                        return new Decimal(Math.abs(((Number) this.getValeurParam("x").getValue()).doubleValue()));
-                    }
-                },
-
                 new ASObjet.Fonction("arrondir", new ASObjet.Fonction.Parametre[]{
                         new ASObjet.Fonction.Parametre(new Type("nombre"), "n", null),
                         new ASObjet.Fonction.Parametre(new Type("entier"), "nbSignificatifs", new ASObjet.Entier(0)),

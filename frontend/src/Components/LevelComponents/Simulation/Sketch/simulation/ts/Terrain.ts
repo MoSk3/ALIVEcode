@@ -21,6 +21,7 @@ export class Terrain
 		this.templateName = templateName;
 		this.carInteraction = true;
 		this.minimumSize = 75;
+		this.loadFromTemplate();
 	}
 
 	get uniqueProperties() {
@@ -28,7 +29,11 @@ export class Terrain
 	}
 
 	loadFromTemplate() {
-		Object.assign(this, this.templates[this.templateName]);
+		Object.entries(this.templates[this.templateName]).forEach(
+			([name, value]) => {
+				if (name in this) (this as any)[name] = value;
+			},
+		);
 	}
 
 	readonly defaultTemplate: TemplateNamesTerrain = 'base';

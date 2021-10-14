@@ -30,6 +30,7 @@ import { LevelCodeProps, StyledCodeLevel } from './levelCodeTypes';
 import LevelCodeExecutor from './LevelCodeExecutor';
 import Modal from '../../../Components/UtilsComponents/Modal/Modal';
 import useExecutor from '../../../state/hooks/useExecutor';
+import Button from '../../../Components/UtilsComponents/Button/Button';
 
 /**
  * Code level page. Contains all the components to display and make the code level functionnal.
@@ -43,20 +44,19 @@ import useExecutor from '../../../state/hooks/useExecutor';
  *
  * @author MoSk3
  */
-const LevelAlive = ({
+const LevelCode = ({
 	level,
 	editMode,
 	progression,
 	initialCode,
 	setLevel,
 	setProgression,
+	askForUserInput,
 }: LevelCodeProps) => {
 	const { user } = useContext(UserContext);
-
 	const [cmdRef, cmd] = useCmd();
 	const { executor, setExecutor, setExecutorLines } =
 		useExecutor<LevelCodeExecutor>(LevelCodeExecutor, cmd);
-
 	const history = useHistory();
 	const { routes, goToNewTab } = useRoutes();
 	const { t } = useTranslation();
@@ -82,7 +82,9 @@ const LevelAlive = ({
 		if (user && editMode && level.creator && level.creator.id !== user.id)
 			return history.push(routes.public.home.path);
 
-		setExecutor(new LevelCodeExecutor(level.name, user ?? undefined));
+		setExecutor(
+			new LevelCodeExecutor(level.name, askForUserInput, user ?? undefined),
+		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, level]);
 
@@ -114,13 +116,17 @@ const LevelAlive = ({
 	};
 
 	const saveProgression = useCallback(async () => {
+		console.log(level.name);
 		if (!user || !progression) return;
 		if (saveTimeout.current) clearTimeout(saveTimeout.current);
 		if (messageTimeout.current) clearTimeout(messageTimeout.current);
 		setSaving(true);
 		setSaved(false);
 		const updatedProgression = await api.db.levels.progressions.save(
-			{ id: level.id, userId: user.id },
+			{
+				id: level.id,
+				userId: user.id,
+			},
 			progression,
 		);
 		messageTimeout.current = setTimeout(() => {
@@ -132,17 +138,18 @@ const LevelAlive = ({
 			}, 5000);
 		}, 500);
 		setProgression(updatedProgression);
-	}, [level.id, progression, setProgression, user]);
+	}, [level, progression, setProgression, user]);
 
-	const saveProgressionTimed = () => {
+	const saveProgressionTimed = useCallback(() => {
 		if (saveTimeout.current) clearTimeout(saveTimeout.current);
 		saveTimeout.current = setTimeout(saveProgression, 2000);
-	};
+	}, [saveProgression]);
 
 	useEffect(() => {
 		$(document).off('keydown');
 		$(document).on('keydown', e => {
-			if (e.key === 's' && e.ctrlKey) {
+			//If ctrl + s are pressed together
+			if (e.keyCode === 83 && e.ctrlKey) {
 				e.preventDefault();
 				e.stopPropagation();
 				if (!user) return setAccountModalOpen(true);
@@ -290,13 +297,13 @@ const LevelAlive = ({
 								required: true,
 								default: level.name,
 								minLength: 3,
-								maxLength: 25,
+								maxLength: 100,
 							},
 							{
 								name: 'description',
 								inputType: 'text',
 								default: level.description,
-								maxLength: 200,
+								maxLength: 500,
 							},
 							{
 								name: 'access',
@@ -317,14 +324,30 @@ const LevelAlive = ({
 				</FormModal>
 			</StyledCodeLevel>
 			<Modal
-				title="Need to create an account"
+				title={t('msg.auth.account_required')}
 				open={accountModalOpen}
 				onClose={() => setAccountModalOpen(false)}
 			>
-				<label>SIKE</label>
+				<Button
+					variant="primary"
+					to={routes.non_auth.signup.path}
+					className="mb-2"
+				>
+					{t('msg.auth.signup')}
+				</Button>
+				<br />
+				or
+				<br />
+				<Button
+					variant="primary"
+					to={routes.non_auth.signin.path}
+					className="mt-2"
+				>
+					{t('msg.auth.signin')}
+				</Button>
 			</Modal>
 		</>
 	);
 };
 
-export default LevelAlive;
+export default LevelCode;

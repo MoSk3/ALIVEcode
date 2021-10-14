@@ -4,11 +4,6 @@ package interpreteur.data_manager;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import javax.swing.text.BadLocationException;
-import java.util.Stack;
-import java.util.function.Consumer;
-
-
 public class Data extends JSONObject {
     /*----------------------------- ID de data -----------------------------*/
 
@@ -75,7 +70,8 @@ public class Data extends JSONObject {
         CREER_REGRESSION(Categorie.AI),   // 0
         OPTIMISER_REGRESSION(Categorie.AI), // 1
         AFFICHER_NUAGE(Categorie.AI),     // 2
-        EVALUER(Categorie.AI)             // 3
+        EVALUER(Categorie.AI),            // 3
+        FONCTION_COUT(Categorie.AI),  // 4
         ;
 
         private final int id;

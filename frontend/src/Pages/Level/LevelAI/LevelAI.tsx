@@ -5,7 +5,6 @@ import {
 	useContext,
 	useRef,
 	useCallback,
-	useMemo,
 } from 'react';
 import LineInterface from '../../../Components/LevelComponents/LineInterface/LineInterface';
 import { UserContext } from '../../../state/contexts/UserContext';

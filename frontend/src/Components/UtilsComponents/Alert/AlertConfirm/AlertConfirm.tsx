@@ -50,7 +50,7 @@ const AlertConfirm = ({
 					onCancel && onCancel();
 				}}
 			>
-				{t('msg.cancel')}
+				{t('modal.cancel')}
 			</Button>
 			<Button
 				padding="15px"
@@ -60,7 +60,7 @@ const AlertConfirm = ({
 					onConfirm && onConfirm();
 				}}
 			>
-				{t('msg.confirm')}
+				{t('modal.confirm')}
 			</Button>
 		</StyledModal>
 	);

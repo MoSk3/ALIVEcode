@@ -38,12 +38,12 @@ const IoTProjectCreate = () => {
 						required: true,
 						inputType: 'text',
 						minLength: 3,
-						maxLength: 25,
+						maxLength: 100,
 					},
 					{
 						name: 'description',
 						inputType: 'text',
-						maxLength: 200,
+						maxLength: 500,
 					},
 					{
 						name: 'access',

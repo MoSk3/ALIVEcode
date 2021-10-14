@@ -1,5 +1,6 @@
 package interpreteur.ast.buildingBlocs.expressions;
 
+import interpreteur.as.Objets.Nombre;
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.as.Objets.ASObjet;
 import interpreteur.ast.buildingBlocs.Expression;
@@ -23,7 +24,7 @@ public record Suite(Expression<?> debut,
 
         ASObjet.Liste suite = new ASObjet.Liste();
 
-        if (debut instanceof ASObjet.Nombre && fin instanceof ASObjet.Nombre && bond instanceof ASObjet.Nombre) {
+        if (debut instanceof Nombre && fin instanceof Nombre && bond instanceof Nombre) {
 
             boolean asDouble = debut instanceof ASObjet.Decimal || fin instanceof ASObjet.Decimal || bond instanceof ASObjet.Decimal;
 
@@ -35,14 +36,14 @@ public record Suite(Expression<?> debut,
                 /*
                  * Suite impossible
                  */
-                throw new ASErreur.ErreurSuite("Suite impossible : debutValue > finValue && 0 < bondValue");
+                throw new ASErreur.ErreurSuite("Suite impossible : debutValue > finValue et 0 < bondValue");
             }
             if (asDouble) {
-                for (double i = debutValue; debutValue < finValue ? i <= finValue : i >= finValue; i += bondValue) {
+                for (double i = debutValue; debutValue <= finValue ? i <= finValue : i >= finValue; i += bondValue) {
                     suite.ajouterElement(new ASObjet.Decimal(i));
                 }
             } else {
-                for (double i = debutValue; debutValue < finValue ? i <= finValue : i >= finValue; i += bondValue) {
+                for (double i = debutValue; debutValue <= finValue ? i <= finValue : i >= finValue; i += bondValue) {
                     suite.ajouterElement(new ASObjet.Entier(i));
                 }
             }
