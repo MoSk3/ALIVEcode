@@ -24,7 +24,7 @@ const StyledDiv = styled.div`
 `;
 
 const Cmd = React.forwardRef<HTMLDivElement>((props: CmdProps, ref) => {
-	return <StyledDiv ref={ref} />;
+	return <StyledDiv ref={ref} ></StyledDiv>;
 });
 
 export default Cmd;

@@ -14,13 +14,13 @@ import {
 import { CourseService } from './course.service';
 import { CourseEntity, COURSE_ACCESS } from './entities/course.entity';
 import { DTOInterceptor } from '../../utils/interceptors/dto.interceptor';
-import { Auth } from 'src/utils/decorators/auth.decorator';
-import { Role } from 'src/utils/types/roles.types';
-import { User } from 'src/utils/decorators/user.decorator';
 import { SectionEntity } from './entities/section.entity';
 import { ProfessorEntity } from '../user/entities/professor.entity';
 import { UserEntity } from '../user/entities/user.entity';
 import { hasRole } from '../user/auth';
+import { Role } from '../../utils/types/roles.types';
+import { Auth } from '../../utils/decorators/auth.decorator';
+import { User } from '../../utils/decorators/user.decorator';
 
 @Controller('courses')
 @UseInterceptors(DTOInterceptor)

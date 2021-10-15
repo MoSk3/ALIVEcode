@@ -18,5 +18,6 @@
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="Interpreteur" exported="" />
+    <orderEntry type="library" name="io.github.cdimascio.dotenv.java" level="project" />
   </component>
 </module>

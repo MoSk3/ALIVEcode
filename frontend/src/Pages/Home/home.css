@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Overpass&display=swap');
+
 .header {
     position: relative;
     padding-top: 175px;
@@ -12,8 +14,8 @@
 }
 
 .header h1{
-    font-size: 50px;
-    font-family: 'Cantarell', sans-serif;
+    font-size: 1.8em;
+    font-family: 'Overpass', sans-serif;
     text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.3);
 }
 

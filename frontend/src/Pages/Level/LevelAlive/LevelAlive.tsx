@@ -32,6 +32,7 @@ import $ from 'jquery';
 import { useTranslation } from 'react-i18next';
 import Modal from '../../../Components/UtilsComponents/Modal/Modal';
 import useExecutor from '../../../state/hooks/useExecutor';
+import GamepadAlive from '../../../Components/Gamepad/GamepadAlive';
 
 const LevelAlive = ({
 	level,
@@ -68,7 +69,7 @@ const LevelAlive = ({
 	};
 
 	useEffect(() => {
-		if (user && editMode && level.creator.id !== user.id)
+		if (user && editMode && level.creator && level.creator.id !== user.id)
 			return history.push(routes.public.home.path);
 
 		setExecutor(new LevelAliveExecutor(level.name, user ?? undefined));
@@ -179,13 +180,16 @@ const LevelAlive = ({
 									/>
 								</>
 							)}
-							{user && !editMode && user.id === level.creator.id && (
-								<IconButton
-									to={routes.auth.level_edit.path.replace(':id', level.id)}
-									icon={faPencilAlt}
-									size="2x"
-								/>
-							)}
+							{user &&
+								!editMode &&
+								level.creator &&
+								user.id === level.creator.id && (
+									<IconButton
+										to={routes.auth.level_edit.path.replace(':id', level.id)}
+										icon={faPencilAlt}
+										size="2x"
+									/>
+								)}
 							<IconButton
 								onClick={() => goToNewTab(routes.public.asDocs.path)}
 								icon={faBookOpen}
@@ -249,7 +253,7 @@ const LevelAlive = ({
 							/>
 						)}
 					</Col>
-					<Col md={6} style={{ resize: 'both', padding: '0' }}>
+					<Col md={6} style={{ resize: 'both', padding: '0' , background:"#0177bc"}}>
 						<Row id="simulation-row" style={{ height: '60%' }}>
 							{executor && (
 								<Simulation
@@ -260,11 +264,15 @@ const LevelAlive = ({
 								/>
 							)}
 						</Row>
-						<Row style={{ height: '40%' }}>
+
+						<Row style={{ height: '40%', content: "center"}}>
 							<Cmd ref={cmdRef}></Cmd>
+							
+							<GamepadAlive></GamepadAlive>
 						</Row>
 					</Col>
 				</Row>
+
 				<FormModal
 					title={t('form.level.PATCH.title')}
 					onSubmit={res => {
@@ -336,6 +344,7 @@ const LevelAlive = ({
 					{t('msg.auth.signin')}
 				</Button>
 			</Modal>
+
 		</>
 	);
 };

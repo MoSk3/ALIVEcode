@@ -1,6 +1,6 @@
 import { Response } from "express";
 import { sign } from "jsonwebtoken"
-import { Role } from 'src/utils/types/roles.types';
+import { Role } from '../../utils/types/roles.types';
 import { ProfessorEntity } from './entities/professor.entity';
 import { StudentEntity } from './entities/student.entity';
 import { UserEntity } from './entities/user.entity';
@@ -32,6 +32,7 @@ export const setRefreshToken = (res: Response, token: string) => {
   res.cookie('wif', token, {
     expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
     httpOnly: true,
+    path: '/api/users/refreshToken',
   });
 };
 

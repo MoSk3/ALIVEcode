@@ -22,7 +22,7 @@ const Home = (props: HomeProps) => {
 	return (
 		<>
 			<div className="header" style={{ top: '-50px' }}>
-				<h1>A.L.I.V.E.</h1>
+				<h1>ALIVEcode</h1>
 				<TypeWriter
 					lines={[t('home.msg1'), t('home.msg2'), t('home.msg3')]}
 					typeSpeed={80}

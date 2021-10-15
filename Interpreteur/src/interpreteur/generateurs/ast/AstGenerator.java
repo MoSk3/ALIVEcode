@@ -408,7 +408,7 @@ public class AstGenerator {
 
         String programme = obtenirProgramme(listToken);
         if (programme == null) {
-            throw new Error("Programme invalide: " + listToken);
+            throw new ASErreur.ErreurSyntaxe("Syntaxe invalide: " + listToken.stream().map(Token::obtenirValeur).collect(Collectors.toList()));
         }
         //System.out.println("Programme trouvé: " + programme);
 

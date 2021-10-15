@@ -84,6 +84,7 @@ const ALIVENavbar = ({ handleLogout }: NavbarProps) => {
 						<li className="nav-item">
 							<div id="user" className="dropdown">
 								<NavDropdown
+								alignRight
 									title={
 										<svg
 											version="1.1"
@@ -160,6 +161,7 @@ const ALIVENavbar = ({ handleLogout }: NavbarProps) => {
 						<li className="nav-item">
 							<div id="user" className="dropdown">
 								<NavDropdown
+								alignRight
 									title={
 										<svg
 											xmlns="http://www.w3.org/2000/svg"

@@ -14,7 +14,6 @@ import interpreteur.ast.buildingBlocs.expressions.Type;
 import interpreteur.executeur.Coordonnee;
 import interpreteur.tokens.Token;
 import interpreteur.as.erreurs.ASErreur.*;
-import interpreteur.utils.ArraysUtils;
 
 
 /**
@@ -504,11 +503,8 @@ public interface ASObjet<T> {
         /**
          * Classe responsable de definir les proprietes des parametres des fonctions
          */
-        public static class Parametre implements ASObjet<Object> {
-            private final String nom;
-            private final Type type;
-            private final ASObjet<?> valeurParDefaut;
-
+        public record Parametre(Type type, String nom,
+                                ASObjet<?> valeurParDefaut) implements ASObjet<Object> {
             /**
              * @param type            <li>
              *                        Nom du type du parametre (ex: <i>entier</i>, <i>texte</i>, <i>liste</i>, ect.)

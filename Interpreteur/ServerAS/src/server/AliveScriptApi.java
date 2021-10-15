@@ -3,6 +3,7 @@ package server;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.*;
@@ -10,14 +11,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-public class AliveScriptApi implements HttpHandler {
+public record AliveScriptApi(String CORS_ORIGIN) implements HttpHandler {
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
         String requestParamValue;
 
         Headers headers = httpExchange.getResponseHeaders();
-        headers.set("Access-Control-Allow-Origin", "http://localhost:3000");
+        headers.set("Access-Control-Allow-Origin", CORS_ORIGIN);
         headers.set("Access-Control-Allow-Credentials", "true");
         headers.set("Access-Control-Allow-Headers", "Authorization, Content-Type");
 
@@ -50,23 +51,45 @@ public class AliveScriptApi implements HttpHandler {
 
     private String handlePostRequest(HttpExchange httpExchange) throws IOException {
         JSONObject data = byteArrayToJson(httpExchange.getRequestBody().readAllBytes());
-        String host = httpExchange.getRemoteAddress().toString().substring(1);
 
-        AliveScriptService aliveScriptService = data.has("idToken")
-                ? AliveScriptService.get(UUID.fromString(data.getString("idToken")))
-                : AliveScriptService.create();
+
+        AliveScriptService aliveScriptService;
+
+        if (data.has("idToken"))
+            try {
+                aliveScriptService = AliveScriptService.get(UUID.fromString(data.getString("idToken")));
+            } catch (IllegalArgumentException err) {
+                return new JSONObject()
+                        .put("status", AliveScriptService.ResponseStatus.FAILED)
+                        .put("message", "the id passed in the field idToken is not a valid UUID").toString();
+            }
+        else
+            aliveScriptService = AliveScriptService.create();
+
+
+        if (aliveScriptService == null) {
+            return AliveScriptService.noAliveScriptServiceWithToken().toString();
+        }
 
         if (data.has("response-data")) {
-            aliveScriptService.pushDataToExecuteur(data.getJSONArray("response-data"));
+            if (!aliveScriptService.isCompiled()) {
+                return aliveScriptService.notCompiledError().toString();
+            }
+            if (!(data.get("response-data") instanceof JSONArray responseData)) {
+                return new JSONObject()
+                        .put("status", AliveScriptService.ResponseStatus.FAILED)
+                        .put("message", "the field response-data must contain an array").toString();
+            }
+            aliveScriptService.pushDataToExecuteur(responseData);
             return aliveScriptService.execute();
 
         } else if (data.has("lines")) {
             String[] lignes = data.getString("lines").split("\n");
-            String compileResult = aliveScriptService.compile(lignes);
+            JSONArray compileResult = aliveScriptService.compile(lignes);
 
-            return compileResult.equals("[]")
+            return compileResult.length() == 0
                     ? aliveScriptService.execute()
-                    : "{\"idToken\":\"" + aliveScriptService.getIdToken() + "\", \"result\":" + compileResult + "}";
+                    : new JSONObject().put("result", compileResult).toString();
         } else {
             aliveScriptService.destroy();
         }

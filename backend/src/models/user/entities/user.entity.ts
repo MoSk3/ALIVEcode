@@ -1,18 +1,26 @@
 import { Exclude, Expose } from 'class-transformer';
 import { IsEmail, IsEmpty, IsNotEmpty, Length, Matches } from 'class-validator';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn, TableInheritance } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  TableInheritance,
+  CreateDateColumn,
+} from 'typeorm';
 import { LevelEntity } from '../../level/entities/level.entity';
 import { IoTObjectEntity } from '../../iot/IoTobject/entities/IoTobject.entity';
 import { IoTProjectEntity } from '../../iot/IoTproject/entities/IoTproject.entity';
-import { AsScriptEntity } from 'src/as-script/entities/as-script.entity';
 import { LevelProgressionEntity } from '../../level/entities/levelProgression.entity';
 import { Post as Post_Table } from "src/models/social/post/entities/post.entity";
 import { Quiz } from 'src/models/social/quizzes/entities/quiz.entity';
 import { Result } from 'src/models/social/results/entities/result.entity';
+import { AsScriptEntity } from 'src/models/as-script/entities/as-script.entity';
 
 @Entity()
 @TableInheritance({ column: { type: 'varchar', name: 'type' } })
-export class UserEntity {
+export class UserEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   @Exclude({ toClassOnly: true })
   id: string;
@@ -47,22 +55,26 @@ export class UserEntity {
   @Expose({ groups: ['admin', 'user'] })
   isSuperUser: boolean;
 
+  @CreateDateColumn()
+  @Exclude({ toClassOnly: true })
+  joinDate: Date;
+
   @OneToMany(() => LevelEntity, level => level.creator, { cascade: true })
   levels: LevelEntity[];
 
-  @OneToMany(() => AsScriptEntity, asScript => asScript.creator, { cascade: true })
+  @OneToMany(() => AsScriptEntity, asScript => asScript.creator)
   asScripts: AsScriptEntity[];
 
-  @OneToMany(() => IoTObjectEntity, iot => iot.creator, { cascade: true })
+  @OneToMany(() => IoTObjectEntity, iot => iot.creator)
   IoTObjects: IoTObjectEntity[];
 
-  @OneToMany(() => IoTProjectEntity, iot => iot.creator, { cascade: true })
+  @OneToMany(() => IoTProjectEntity, iot => iot.creator)
   IoTProjects: IoTProjectEntity[];
 
-  @OneToMany(() => IoTProjectEntity, iot => iot.creator, { cascade: true })
+  @OneToMany(() => IoTProjectEntity, iot => iot.creator)
   collabIoTProjects: IoTProjectEntity[];
 
-  @OneToMany(() => LevelProgressionEntity, prog => prog.user, { cascade: true })
+  @OneToMany(() => LevelProgressionEntity, prog => prog.user)
   levelProgressions: LevelProgressionEntity[];
 
   @OneToMany(() => Post_Table, post => post.user_id)

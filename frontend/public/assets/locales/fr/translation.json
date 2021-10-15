@@ -20,7 +20,10 @@
 		"error": {
 			"required": "Ce champs est requis",
 			"maxLength": "Ce champs dépasse {{max}} caractères",
-			"minLength": "Ce champs devrait être d'au moins {{min}} caractères"
+			"minLength": "Ce champs devrait être d'au moins {{min}} caractères",
+			"match": {
+				"name": "Ce champs doit contenir uniquement des chiffres et des lettres"
+			}
 		},
 		"level": {
 			"PATCH": {
@@ -68,6 +71,7 @@
 		"student": "étudiant",
 		"understood": "C'est compris!",
 		"description": "description",
+		"deleted_user": "Ancien utilisateur",
 		"time": {
 			"format": "{{dayName}}, {{day}} {{monthName}} {{year}} - {{hour}}:{{minute}}",
 			"day": {
@@ -161,38 +165,6 @@
 			"desc": "Donnez ce code aux élèves afin qu'ils puissent rejoindre la classe depuis le site!"
 		}
 	},
-	"dashboard": {
-		"classrooms": {
-			"empty": {
-				"student": "Tu ne fais parti d'aucune classe",
-				"professor": "Tu ne possède aucune classe"
-			}
-		}
-	},
-	"classroom": {
-		"add_students": "Ajoutez des étudiants",
-		"delete": "Supprimer la classe",
-		"leave": "Quitter la classe",
-		"container": {
-			"courses": {
-				"title": "Cours",
-				"empty": "Cette classe ne possède aucun cours"
-			},
-			"details": {
-				"title": "Détails"
-			},
-			"students": {
-				"title": "Élèves dans la classe",
-				"empty": "Il n'y a aucun élève dans la classe"
-			}
-		},
-		"desc": "Classe de {{professor}}",
-		"subject": "Sujet",
-		"code": {
-			"title": "Code de la classe",
-			"desc": "Donnez ce code aux élèves afin qu'ils puissent rejoindre la classe depuis le site!"
-		}
-	},
 	"menu": {
 		"signup": {
 			"professor": "Compte professeur",
@@ -249,7 +221,8 @@
 			},
 			"categories": "Catégories",
 			"links": "Liens pratiques",
-			"copyright": "Copyright &copy; 2021 Touts droits réservés par"
+			"copyright_1": "Copyright",
+			"copyright_2": " 2021 Tous droits réservés par"
 		}
 	},
 	"ai": {
@@ -284,5 +257,14 @@
 				"paragraph4": "Évidemment, les réseaux de neurones sont bien plus complexes que cela, et c’est pourquoi un cours à ce sujet sera bientôt disponible. Reste à l’affût!"
 			}
 		}
+	},
+	"user":{
+		"quiz": "Quiz : ",
+		"status": "Status : ",
+		"posts": "Posts : ",
+		"reward": "Récompenses : ",
+		"rank": "Rank : ",
+		"rewardTitle": "Récompenses"
+
 	}
 }

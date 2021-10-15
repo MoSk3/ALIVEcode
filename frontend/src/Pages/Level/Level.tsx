@@ -96,7 +96,10 @@ const Level = (props: LevelProps) => {
 				progression={progression}
 				setProgression={setProgresion}
 				editMode={
-					props.editMode && user != null && level.creator.id === user.id
+					props.editMode &&
+					user != null &&
+					level.creator != null &&
+					level.creator.id === user.id
 				}
 			></LevelAlive>
 		);
@@ -109,7 +112,10 @@ const Level = (props: LevelProps) => {
 				progression={progression}
 				setProgression={setProgresion}
 				editMode={
-					props.editMode && user != null && level.creator.id === user.id
+					props.editMode &&
+					user != null &&
+					level.creator != null &&
+					level.creator.id === user.id
 				}
 			></LevelCode>
 		);
@@ -123,7 +129,10 @@ const Level = (props: LevelProps) => {
 				progression={progression}
 				setProgression={setProgresion}
 				editMode={
-					props.editMode && user != null && level.creator.id === user.id
+					props.editMode &&
+					user != null &&
+					level.creator != null &&
+					level.creator.id === user.id
 				}
 			></LevelAI>
 		);

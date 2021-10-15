@@ -31,6 +31,7 @@
 		"react-alert": "^7.0.3",
 		"react-alert-template-basic": "^1.0.2",
 		"react-bootstrap": "^1.6.1",
+		"react-circular-progressbar": "^2.0.4",
 		"react-dom": "^17.0.2",
 		"react-hook-form": "^7.10.1",
 		"react-i18next": "^11.11.4",
@@ -75,5 +76,8 @@
 		"@types/react-alert": "^5.2.1",
 		"@types/react-router-dom": "^5.1.7",
 		"@types/styled-components": "^5.1.11"
+	},
+	"transform": {
+		"\\.js$": "<rootDir>/node_modules/babel-jest"
 	}
 }

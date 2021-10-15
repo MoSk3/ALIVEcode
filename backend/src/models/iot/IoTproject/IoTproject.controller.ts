@@ -16,9 +16,9 @@ import { User } from '../../../utils/decorators/user.decorator';
 import { Role } from '../../../utils/types/roles.types';
 import { IoTProjectEntity, IOTPROJECT_ACCESS } from './entities/IoTproject.entity';
 import { UserEntity } from '../../user/entities/user.entity';
-import { hasRole } from 'src/models/user/auth';
 import { DTOInterceptor } from '../../../utils/interceptors/dto.interceptor';
 import { IoTRouteEntity } from '../IoTroute/entities/IoTroute.entity';
+import { hasRole } from '../../user/auth';
 
 @Controller('iot/projects')
 @UseInterceptors(DTOInterceptor)

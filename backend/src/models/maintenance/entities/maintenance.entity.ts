@@ -1,9 +1,9 @@
 import { Exclude } from 'class-transformer';
 import { IsNotEmpty, IsOptional, MaxLength } from 'class-validator';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class MaintenanceEntity {
+export class MaintenanceEntity extends BaseEntity {
   @PrimaryGeneratedColumn('increment')
   @Exclude()
   id: string;
