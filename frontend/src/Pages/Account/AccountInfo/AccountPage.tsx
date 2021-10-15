@@ -53,18 +53,7 @@ const AccountPage = () => {
 										
 										<AboutCard name= {user.getDisplayName()} img= "https://i.imgur.com/xkH6wCg.png"/>
 								
-										{user instanceof Professor && (
-											<>
-												<label>Nom</label>
-												<br />
-												<input defaultValue={user.firstName} />
-												<br />
-												<label>Nom de famille</label>
-												<br />
-												<input defaultValue={user.lastName} />
-												<br />
-											</>
-										)}
+										
 										<div  className="text-left col-sm-6">
 											<h2>Description</h2>
 											<h3>
