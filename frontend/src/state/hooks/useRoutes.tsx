@@ -188,7 +188,7 @@ const useRoutes = () => {
 		},
 		// Only for testing, place in auth Professor in production.
 		quiz_create: {
-			path: '/quiz/category/:id/create',
+			path: '/quiz/create',
 			component: QuizCreate,
 		},
 	});

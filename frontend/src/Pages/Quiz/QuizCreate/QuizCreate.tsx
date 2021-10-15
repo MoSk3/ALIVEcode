@@ -1,4 +1,4 @@
-import { Col, Form, Row } from "react-bootstrap";
+import { Button, Card, Col, Form, Row } from "react-bootstrap";
 import CenteredContainer from '../../../Components/UtilsComponents/CenteredContainer/CenteredContainer';
 import { QuizCategoryProps } from '../QuizCategory/Category';
 
@@ -7,36 +7,38 @@ const QuizCreate = (props: QuizCategoryProps) => {
 		<div>
 			<CenteredContainer
 				horizontally
-				textAlign="center"
+				textAlign="left"
 				style={{ paddingLeft: '250px', paddingRight: '250px' }}
 			>
-				<Form>
-					<Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
-						<Form.Label column sm="2">
-							Email
-						</Form.Label>
-						<Col sm="10">
-							<Form.Control
-								plaintext
-								readOnly
-								defaultValue="email@example.com"
-							/>
-						</Col>
-					</Form.Group>
-
-					<Form.Group
-						as={Row}
-						className="mb-3"
-						controlId="formPlaintextPassword"
-					>
-						<Form.Label column sm="2">
-							Password
-						</Form.Label>
-						<Col sm="10">
-							<Form.Control type="password" placeholder="Password" />
-						</Col>
-					</Form.Group>
-				</Form>
+				<Card>
+					<Card.Body>
+						<h1>Quiz Creator</h1>
+						<Form>
+							<Form.Group>
+								<Form.Label>Quiz Category</Form.Label>
+								<Form.Control as="select" aria-label="">
+									<option value="1">One</option>
+									<option value="2">Two</option>
+									<option value="3">Three</option>
+								</Form.Control>
+							</Form.Group>
+							<Form.Group>
+								<Form.Label>Quiz Name</Form.Label>
+								<Form.Control></Form.Control>
+							</Form.Group>
+							<Form.Group>
+								<Form.Label>Quiz Description</Form.Label>
+								<Form.Control as="textarea" rows={3}></Form.Control>
+							</Form.Group>
+							<Button variant="primary" type="submit">
+								Create
+							</Button>
+							{
+								// Should now redirect to the quiz category page to show the quiz has been created
+							}
+						</Form>
+					</Card.Body>
+				</Card>
 			</CenteredContainer>
 		</div>
 	);
