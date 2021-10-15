@@ -13,6 +13,9 @@ import { LevelEntity } from '../../level/entities/level.entity';
 import { IoTObjectEntity } from '../../iot/IoTobject/entities/IoTobject.entity';
 import { IoTProjectEntity } from '../../iot/IoTproject/entities/IoTproject.entity';
 import { LevelProgressionEntity } from '../../level/entities/levelProgression.entity';
+import { Post as Post_Table } from "src/models/social/post/entities/post.entity";
+import { Quiz } from 'src/models/social/quizzes/entities/quiz.entity';
+import { Result } from 'src/models/social/results/entities/result.entity';
 import { AsScriptEntity } from '../../as-script/entities/as-script.entity';
 
 @Entity()
@@ -73,4 +76,13 @@ export class UserEntity extends BaseEntity {
 
   @OneToMany(() => LevelProgressionEntity, prog => prog.user)
   levelProgressions: LevelProgressionEntity[];
+
+  @OneToMany(() => Post_Table, post => post.user_id)
+  post: Post_Table[];
+
+  @OneToMany(() => Quiz, quiz => quiz.user_id)
+  quiz: Quiz[];
+
+  @OneToMany(() => Result, result => result.user_id)
+  result: Result[];
 } 

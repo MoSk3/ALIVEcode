@@ -30,6 +30,7 @@ import { useHistory } from 'react-router';
 import ASDocs from '../../Components/AliveScriptComponents/ASDocs/ASDocs';
 import { MaintenanceError } from '../../Pages/Errors/MaintenanceError/MaintenanceError';
 import MaintenanceMenu from '../../Pages/SiteStatus/MaintenanceMenu/MaintenanceMenu';
+import Forum from '../../Pages/Forum/Forum';
 
 type component =
 	| React.ComponentType<RouteComponentProps<any>>
@@ -173,6 +174,10 @@ const useRoutes = () => {
 			exact: true,
 			maintenanceExempt: true,
 			component: MaintenanceMenu,
+		},
+		forum: {
+			path: '/forum',
+			component: Forum,
 		},
 	});
 
