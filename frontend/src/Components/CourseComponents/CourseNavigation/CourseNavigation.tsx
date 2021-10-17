@@ -20,7 +20,8 @@ import { plainToClass } from 'class-transformer';
  * @author MoSk3
  */
 const CourseNavigation = (props: CourseNavigationProps) => {
-	const { course, addSection, canEdit } = useContext(CourseContext);
+	const { course, addSection, canEdit, isNavigationOpen } =
+		useContext(CourseContext);
 	const { theme } = useContext(ThemeContext);
 	const { routes, goTo } = useRoutes();
 
@@ -32,7 +33,7 @@ const CourseNavigation = (props: CourseNavigationProps) => {
 	}
 
 	return (
-		<StyledCourseNavigation theme={theme}>
+		<StyledCourseNavigation isNavigationOpen={isNavigationOpen} theme={theme}>
 			<CenteredContainer horizontally>
 				<div className="course-nav-header">
 					<div className="course-nav-title">{course?.name}</div>

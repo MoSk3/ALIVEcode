@@ -19,6 +19,8 @@ import { plainToClass } from 'class-transformer';
 import { Activity } from '../../Models/Course/activity.entity';
 
 const StyledDiv = styled.div`
+	display: flex;
+	width: 100%;
 	.course-body {
 	}
 `;
@@ -34,6 +36,7 @@ const Course = (props: CourseProps) => {
 	const [course, setCourse] = useState<CourseModel>();
 	const [section, setSection] = useState<Section>();
 	const [activity, setActivity] = useState<Activity>();
+	const [isNavigationOpen, setIsNavigationOpen] = useState(true);
 
 	const { t } = useTranslation();
 	const alert = useAlert();
@@ -104,11 +107,13 @@ const Course = (props: CourseProps) => {
 		section,
 		activity,
 		canEdit,
+		isNavigationOpen,
 		loadActivity,
 		addSection,
 		addActivity,
 		saveActivity,
 		saveActivityContent,
+		setIsNavigationOpen,
 	};
 
 	useEffect(() => {
