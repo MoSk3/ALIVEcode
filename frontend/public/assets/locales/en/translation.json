@@ -201,7 +201,18 @@
 	},
 	"course": {
 		"desc": "Course of {{professor}}",
-		"subject": "Subject"
+		"subject": "Subject",
+		"empty": "This course is empty.",
+		"section": {
+			"empty": "This section has no activities.",
+			"new": "New section"
+		},
+		"activity": {
+			"empty": "This activity is empty.",
+			"no_activity": "Open an activity to get started.",
+			"new": "Add an activity",
+			"new_name": "Activity #{{num}}"
+		}
 	},
 	"menu": {
 		"signup": {

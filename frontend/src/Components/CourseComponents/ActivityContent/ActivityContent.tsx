@@ -18,6 +18,7 @@ import MDEditor from '../MDEditor/MDEditor';
 import { Form } from 'react-bootstrap';
 import Button from '../../UtilsComponents/Button/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Displays the content of the activity in the CourseContext
@@ -34,6 +35,7 @@ const ActivityContent = (props: ActivityContentProps) => {
 		isNavigationOpen,
 		setIsNavigationOpen,
 	} = useContext(CourseContext);
+	const { t } = useTranslation();
 	const [editMode, setEditMode] = useState(false);
 	const [name, setName] = useState<string>('');
 	const [editingName, setEditingName] = useState(false);
@@ -131,7 +133,7 @@ const ActivityContent = (props: ActivityContentProps) => {
 											))}
 									</>
 								) : (
-									<p>Empty activity</p>
+									<p>{t('course.activity.empty')}</p>
 								)}
 							</div>
 						</>
@@ -141,7 +143,7 @@ const ActivityContent = (props: ActivityContentProps) => {
 							horizontally
 							vertically
 						>
-							Open an activity to get started
+							{t('course.activity.no_activity')}
 						</CenteredContainer>
 					)}
 				</div>

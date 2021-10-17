@@ -6,6 +6,7 @@ import Link from '../../UtilsComponents/Link/Link';
 import { Activity } from '../../../Models/Course/activity.entity';
 import { plainToClass } from 'class-transformer';
 import LoadingScreen from '../../UtilsComponents/LoadingScreen/LoadingScreen';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Component that shows the section in the navigation and handles different actions like adding in an activity onto the section
@@ -18,6 +19,7 @@ const CourseSection = ({ section }: CourseSectionProps) => {
 	const [loading, setLoading] = useState(false);
 	const { loadActivity, addActivity, course, canEdit } =
 		useContext(CourseContext);
+	const { t } = useTranslation();
 
 	const toggleOpenSection = async () => {
 		if (!course) return;
@@ -78,14 +80,16 @@ const CourseSection = ({ section }: CourseSectionProps) => {
 										addActivity(
 											section,
 											plainToClass(Activity, {
-												name: `Activity #${
-													section.activities ? section.activities.length + 1 : 1
-												}`,
+												name: t('course.activity.new_name', {
+													num: section.activities
+														? section.activities.length + 1
+														: 1,
+												}),
 											}),
 										);
 									}}
 								>
-									Add an activity
+									{t('course.activity.new')}
 								</Link>
 							)}
 						</>
