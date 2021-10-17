@@ -1,9 +1,11 @@
 import controller from '../../assets/images/controller.png';
-
 import './gamepad.css';
-import { Col } from 'react-bootstrap';
+import { Button, Col } from 'react-bootstrap';
 import styled from 'styled-components';
 import CenteredContainer from '../UtilsComponents/CenteredContainer/CenteredContainer';
+import React from 'react';
+import { event } from 'jquery';
+
 
 const StyledDiv = styled(Col)`
 	background-color: var(--primary-color);
@@ -26,66 +28,71 @@ const StyledCenteredContainer = styled(CenteredContainer)`
 		margin-bottom: 10px;
 	}
 `;
+// Hook
+const useKeyPress = (targetKey: any) => {
+	// State for keeping track of whether key is pressed
+	const [keyPressed, setKeyPressed] = React.useState(false)
+  console.log(keyPressed)
+	// If pressed key is our target key then set to true
+	const downHandler = ({key}: { key: any }) => {
+	  if (key === targetKey) {
+		setKeyPressed(true)
+	  }
+	}
+  
+	// If released key is our target key then set to false
+	const upHandler = ({ key }: { key:any }) => {
+	  if (key === targetKey) {
+		setKeyPressed(false)
+	  }
+	}
+  
+	// Add event listeners
+	React.useEffect(() => {
+	  window.addEventListener('keydown', downHandler)
+	  window.addEventListener('keyup', upHandler)
+	  // Remove event listeners on cleanup
+	  return () => {
+		window.removeEventListener('keydown', downHandler)
+		window.removeEventListener('keyup', upHandler)
+	  }
+	}, []) // Empty array ensures that effect is only run on mount and unmount
+  
+	return keyPressed
+  }
+  
 const GamepadAlive = () => {
-	document.body.onkeydown = e => {
-		if (e.code == 'Space') {
-			document.getElementById('btnStart')?.classList.add('push');
-		}
-		if (e.code == 'KeyS') {
-			document.getElementById('btnB')?.classList.add('push');
-		}
-		if (e.code == 'KeyX') {
-			document.getElementById('btnX')?.classList.add('push');
-		}
-		if (e.code == 'KeyZ') {
-			document.getElementById('btnA')?.classList.add('push');
-		}
-		if (e.code == 'KeyC') {
-			document.getElementById('btnY')?.classList.add('push');
-		}
-	};
+	const isStartPressed = useKeyPress(' ')
+  const isAPressed = useKeyPress('z')   
+  const isBPressed = useKeyPress('s')
+  const isXPressed = useKeyPress('x')
+  const isYPressed = useKeyPress('c')
+  
 
-	document.body.onkeyup = e => {
-		if (e.code === 'Space') {
-			document.getElementById('btnStart')?.classList.remove('push');
-		}
-		if (e.code === 'KeyS') {
-			document.getElementById('btnB')?.classList.remove('push');
-		}
-		if (e.code == 'KeyX') {
-			document.getElementById('btnX')?.classList.remove('push');
-		}
-		if (e.code == 'KeyZ') {
-			document.getElementById('btnA')?.classList.remove('push');
-		}
-		if (e.code == 'KeyC') {
-			document.getElementById('btnY')?.classList.remove('push');
-		}
-	};
 
 	return (
 		<>
 			<StyledCenteredContainer className="container">
 				<StyledDiv>
-					<img src={controller} alt="" />
+					<img src={controller} alt="" />   
 
-					<button className="button btnStart" id="btnStart">
+					<button  className={ 'button btnStart ' + (isStartPressed && 'push')} id="btnStart">
 						Start
 					</button>
 
-					<button className="button btnA" id="btnA">
+					<button className={"button btnA " + (isAPressed && 'push')} id="btnA">
 						A
 					</button>
 
-					<button className="button btnB" id="btnB">
+					<button className={"button btnB " + (isBPressed && 'push')} id="btnB">
 						B
 					</button>
 
-					<button className="button btnX" id="btnX">
+					<button className={"button btnX " + (isXPressed && 'push')} id="btnX">
 						X
 					</button>
 
-					<button className="button btnY" id="btnY">
+					<button className={"button btnY " + (isYPressed && 'push')}  id="btnY">
 						Y
 					</button>
 				</StyledDiv>
@@ -95,3 +102,4 @@ const GamepadAlive = () => {
 };
 
 export default GamepadAlive;
+
