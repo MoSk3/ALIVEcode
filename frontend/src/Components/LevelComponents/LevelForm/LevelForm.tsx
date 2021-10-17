@@ -12,6 +12,7 @@ import {
 import FormContainer from '../../UtilsComponents/FormContainer/FormContainer';
 import { LevelCode } from '../../../Models/Level/levelCode.entity';
 import { LevelAI } from '../../../Models/Level/levelAI.entity';
+import { MATCHES } from '../../UtilsComponents/Form/formTypes';
 
 /**
  * Component that renders the create form for the selected level type

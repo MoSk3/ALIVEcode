@@ -21,7 +21,14 @@
 			"required": "This field is required",
 			"maxLength": "This field exceeds {{max}} characters",
 			"minLength": "This field should be at least {{min}} characters",
+			"regex": "",
 			"match": {
+				"alphabetic": "This field should only contains alphabetic characters",
+				"alphabetic_lower": "This field should only contains lowercase alphabetic characters",
+				"alphabetic_upper": "This field should only contains uppercase alphabetic characters",
+				"alphanumeric": "This field should only contains alphanumeric characters",
+				"alphanumeric_underscore": "This field should only contains alphanumeric characters and underscores _",
+				"numbers": "This field should only contains numbers",
 				"name": "This field should only contains alphanumeric characters"
 			}
 		},

@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Form as BootForm, InputGroup } from 'react-bootstrap';
 import Button from '../Button/Button';
-import { FormProps, InputGroup as InputGroupModel } from './formTypes';
+import { FormProps, InputGroup as InputGroupModel, matches } from './formTypes';
 import axios, { AxiosError } from 'axios';
 import { useAlert } from 'react-alert';
 import { useHistory } from 'react-router';
@@ -106,11 +106,26 @@ const Form = (props: FormProps) => {
 			`form.${props.name}.${g.name}.placeholder`,
 			prettyField(g.name),
 		]);
-		const registerOptions = {
+		let registerOptions: any = {
 			required: g.required,
 			minLength: g.minLength,
 			maxLength: g.maxLength,
 		};
+		if (g.customMatch) {
+			registerOptions = {
+				...registerOptions,
+				pattern: {
+					value: g.match,
+				},
+			};
+		} else if (g.match) {
+			registerOptions = {
+				...registerOptions,
+				pattern: {
+					value: matches[g.match],
+				},
+			};
+		}
 		switch (g.inputType) {
 			case 'select':
 				return (
@@ -200,6 +215,13 @@ const Form = (props: FormProps) => {
 										],
 										{ min: g.minLength },
 									)}
+								{errors[g.name]?.type === 'pattern' &&
+									t([
+										`form.${props.name}.${props.action}.${g.name}.error.match`,
+										`form.${props.name}.${g.name}.error.match`,
+										`form.error.match.${g.match?.toLowerCase()}`,
+										'form.error.match.name',
+									])}
 							</BootForm.Control.Feedback>
 						)}
 					</InputGroup>
