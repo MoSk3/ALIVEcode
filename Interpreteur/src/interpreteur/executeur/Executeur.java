@@ -6,6 +6,7 @@ import java.util.*;
 import interpreteur.as.Objets.ASObjet;
 import interpreteur.as.Objets.ASObjet.FonctionManager;
 import interpreteur.as.Objets.Scope;
+import interpreteur.as.erreurs.ASErreur;
 import interpreteur.as.erreurs.ASErreur.*;
 import interpreteur.as.ASLexer;
 import interpreteur.as.modules.ASModuleManager;
@@ -15,6 +16,7 @@ import interpreteur.ast.buildingBlocs.programmes.Declarer;
 import interpreteur.data_manager.Data;
 import interpreteur.data_manager.DataVoiture;
 import interpreteur.tokens.Token;
+import io.github.cdimascio.dotenv.Dotenv;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -46,17 +48,27 @@ afficher "fin"
  */
 
 public class Executeur {
+
+    private final static int MAX_DATA_BEFORE_SEND;
+
+    static {
+        Dotenv dotenv = Dotenv.configure()
+                .directory("./.env")
+                .load();
+        MAX_DATA_BEFORE_SEND = Integer.parseInt(dotenv.get("MAX_DATA_BEFORE_SEND"));
+    }
+
     // coordonne ou commencer tous les programmes
     final private static Coordonnee debutCoord = new Coordonnee("<0>main");
     // lexer et parser
-    private static final ASLexer lexer = new ASLexer();
+    private final ASLexer lexer;
     //------------------------ compilation -----------------------------//
     private final Hashtable<String, Hashtable<String, Programme>> coordCompileDict = new Hashtable<>();
     private final ArrayList<Coordonnee> coordCompileTime = new ArrayList<>();
     // Coordonnee utilisee lors de l'execution pour savoir quelle ligne executer
     private final Coordonnee coordRunTime = new Coordonnee(debutCoord.toString());
     // modules
-    private final ASModuleManager asModuleManager = new ASModuleManager(this);
+    private final ASModuleManager asModuleManager;
 
     // data explaining the actions to do to the com.server
     private final ArrayList<Data> datas = new ArrayList<>();
@@ -71,11 +83,12 @@ public class Executeur {
     private boolean executionActive = false;
     private boolean canExecute = false;
     // ast
-    private ASAst ast;
-
+    private final ASAst ast;
 
     public Executeur() {
-        asModuleManager.init();
+        lexer =  new ASLexer();
+        asModuleManager = new ASModuleManager(this);
+        ast = new ASAst(this);
     }
 
     public static void printCompiledCode(String code) {
@@ -118,17 +131,23 @@ public class Executeur {
     /**
      * @return le lexer utilise par l'interpreteur (voir ASLexer)
      */
-    public static ASLexer getLexer() {
-        return Executeur.lexer;
+    public ASLexer getLexer() {
+        return lexer;
     }
 
     public static void main(String[] args) {
 
 
         String[] lines = """   
-                var a = "12"
-                var b = "15"
-                afficher([decimal(a) + decimal(b)] / [2])
+                var nb = "12"
+                var nb2 = "74"
+                                
+                afficher((decimal(nb) + decimal(nb2)) / 2)
+                                
+                utiliser Math
+                                
+                afficher Math.sin(Math.PI)
+                                
                 """.split("\n");
 
 
@@ -138,8 +157,13 @@ public class Executeur {
         if (!(a = executeur.compiler(lines, true)).equals("[]")) System.out.println(a);
         // executeur.printCompileDict();
         System.out.println(executeur.executerMain(false));
-        //System.out.println(compiler(lines, false));
-        //executerMain(false);
+
+        Executeur executeur2 = new Executeur();
+        executeur2.debug = true;
+        Object a2;
+        if (!(a2 = executeur2.compiler(lines, true)).equals("[]")) System.out.println(a2);
+        // executeur.printCompileDict();
+        System.out.println(executeur2.executerMain(false));
     }
 
     // methode utilisee a chaque fois qu'une info doit etre afficher par le langage
@@ -177,6 +201,17 @@ public class Executeur {
 
     public Stack<Object> getDataResponse() {
         return this.dataResponse;
+    }
+
+    public Object getDataResponseOrAsk(String dataName, Object... additionnalParams) {
+        if (this.dataResponse.isEmpty()) {
+            Data dataToGet = new Data(Data.Id.GET).addParam(dataName);
+            for (var param : additionnalParams)
+                dataToGet.addParam(param);
+            throw new ASErreur.StopGetInfo(dataToGet);
+        }
+        else
+            return this.dataResponse.pop();
     }
 
     public Object pushDataResponse(Object item) {
@@ -218,10 +253,6 @@ public class Executeur {
      */
     public ASAst getAst() {
         return ast;
-    }
-
-    public void setAst(ASAst ast) {
-        this.ast = ast;
     }
 
     public ASModuleManager getAsModuleManager() {
@@ -341,7 +372,6 @@ public class Executeur {
      *               </li>
      */
     private JSONArray compiler(String[] lignes) {
-        this.ast = new ASAst(this);
 
         // sert au calcul du temps qu'a pris le code pour etre compile
         LocalDateTime before = LocalDateTime.now();
@@ -513,6 +543,12 @@ public class Executeur {
                     // ne sera vrai que si l'on retourne d'une fonction
                     break;
                 }
+
+                if (datas.size() >= MAX_DATA_BEFORE_SEND) {
+                    synchronized(datas) {
+                        return datas.toString();
+                    }
+                }
             } catch (StopSendData e) {
                 return e.getDataString();
 
@@ -606,14 +642,16 @@ public class Executeur {
         datas.clear();
 
         FonctionManager.reset();
-        for (ASObjet.Fonction fonction : asModuleManager.getModuleBuiltins().getFonctions())
-            FonctionManager.ajouterFonction(fonction);
-        for (ASObjet.Variable variable : asModuleManager.getModuleBuiltins().getVariables()) {
-            Scope.getCurrentScope().declarerVariable(variable);
-        }
+
+        asModuleManager.utiliserModuleBuitlins();
+        //for (ASObjet.Fonction fonction : asModuleManager.getModuleBuiltins().getFonctions())
+        //    FonctionManager.ajouterFonction(fonction);
+        //for (ASObjet.Variable variable : asModuleManager.getModuleBuiltins().getVariables()) {
+        //    Scope.getCurrentScope().declarerVariable(variable);
+        //}
+        Declarer.reset();
         DataVoiture.reset();
 
-        Declarer.reset();
         // remet la coordonnee d'execution au debut du programme
         coordRunTime.setCoord(debutCoord.toString());
         //if (ast instanceof ASAstExperimental) {

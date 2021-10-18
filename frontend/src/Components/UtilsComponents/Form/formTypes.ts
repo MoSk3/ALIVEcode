@@ -1,17 +1,39 @@
 import { AxiosResponse } from "axios";
 
+
+export enum MATCHES {
+	ALPHANUMERIC = 'ALPHANUMERIC',
+	ALPHANUMERIC_UNDERSCORE = 'ALPHANUMERIC_UNDERSCORE',
+	NUMBERS = 'NUMBERS',
+	ALPHABETIC = 'ALPHABETIC',
+	ALPHABETIC_LOWER = 'ALPHABETIC_LOWER',
+	ALPHABETIC_UPPER = 'ALPHABETIC_UPPER',
+}
+
+export const matches = {
+	ALPHANUMERIC: /^[a-zA-Z0-9]*$/,
+	ALPHANUMERIC_UNDERSCORE: /^[a-zA-Z0-9_]*$/,
+	NUMBERS: /^[0-9]*$/,
+	ALPHABETIC: /^[a-zA-Z]*$/,
+	ALPHABETIC_LOWER: /^[a-z]*$/,
+	ALPHABETIC_UPPER: /^[A-Z]*$/,
+};
+
 export type FormProps = {
 	name: string;
 	url: string;
 	action: 'POST' | 'PATCH' | 'DELETE';
 	onSubmit?: (response: AxiosResponse<any>) => void;
 	inputGroups: Array<InputGroup>;
+	alterFormValues?: (formValues: any) => any;
 };
 
 export type InputGroup = {
 	required?: boolean;
 	minLength?: number;
 	maxLength?: number;
+	customMatch?: RegExp;
+	match?: MATCHES;
 	default?: any;
 	name: string;
 	selectOptions?: Array<any> | { [key: string]: any };

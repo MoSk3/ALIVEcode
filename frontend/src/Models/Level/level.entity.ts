@@ -1,6 +1,7 @@
 import { Exclude, Transform, Type, plainToClass } from 'class-transformer';
 import { CreatedByUser } from '../Generics/createdByUser.entity';
 import { User, Professor, Student } from '../User/user.entity';
+import { ActivityLevel } from '../Course/activity_level.entity';
 
 export enum LEVEL_TAG {}
 export enum LEVEL_ACCESS {
@@ -41,6 +42,16 @@ export class Level extends CreatedByUser {
 
 	tags: LEVEL_TAG[];
 
+	@Type(() => ActivityLevel)
+	activities?: ActivityLevel[];
+
+	getType() {
+		if (this instanceof LevelAlive) return 'ALIVE';
+		if (this instanceof LevelCode) return 'code';
+		if (this instanceof LevelAI) return 'AI';
+		return 'code';
+	}
+
 	getTypeDisplay() {
 		if (this instanceof LevelAlive) return 'Car coding';
 		if (this instanceof LevelCode) return 'Coding';
@@ -50,3 +61,4 @@ export class Level extends CreatedByUser {
 
 const LevelAlive = require('./levelAlive.entity').LevelAlive;
 const LevelCode = require('./levelCode.entity').LevelCode;
+const LevelAI = require('./levelAI.entity').LevelAI;

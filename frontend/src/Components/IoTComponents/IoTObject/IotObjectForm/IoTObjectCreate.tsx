@@ -3,6 +3,11 @@ import { IOTOBJECT_LABEL } from '../../../../Models/Iot/IoTobject.entity';
 import { useAlert } from 'react-alert';
 import { IoTObjectCreateProps } from './iotObjectCreateProps';
 
+/**
+ * Form that creates in the database an IoTObject and returns it
+ *
+ * @author MoSk3
+ */
 const IoTObjectCreate = ({ onSubmit }: IoTObjectCreateProps) => {
 	const alert = useAlert();
 
@@ -21,13 +26,13 @@ const IoTObjectCreate = ({ onSubmit }: IoTObjectCreateProps) => {
 					required: true,
 					inputType: 'text',
 					minLength: 3,
-					maxLength: 25,
+					maxLength: 100,
 				},
 				{
 					name: 'description',
 					required: false,
 					inputType: 'text',
-					maxLength: 200,
+					maxLength: 500,
 				},
 				{
 					name: 'label',

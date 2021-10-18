@@ -12,7 +12,15 @@ import {
 import FormContainer from '../../UtilsComponents/FormContainer/FormContainer';
 import { LevelCode } from '../../../Models/Level/levelCode.entity';
 import { LevelAI } from '../../../Models/Level/levelAI.entity';
+import { MATCHES } from '../../UtilsComponents/Form/formTypes';
 
+/**
+ * Component that renders the create form for the selected level type
+ *
+ * @param {string} type type of the level to create: ALIVE, IoT, code or AI
+ *
+ * @author MoSk3
+ */
 const LevelForm = ({ type }: LevelFormProps) => {
 	const { routes } = useRoutes();
 	const { t } = useTranslation();
@@ -27,7 +35,7 @@ const LevelForm = ({ type }: LevelFormProps) => {
 						onSubmit={res => {
 							const level: LevelAlive = res.data;
 							history.push(
-								routes.auth.level_edit.path.replace(':id', level.id),
+								routes.auth.level_edit.path.replace(':levelId', level.id),
 							);
 							return alert.success('Niveau créé avec succès');
 						}}
@@ -40,12 +48,12 @@ const LevelForm = ({ type }: LevelFormProps) => {
 								inputType: 'text',
 								required: true,
 								minLength: 3,
-								maxLength: 25,
+								maxLength: 100,
 							},
 							{
 								name: 'description',
 								inputType: 'text',
-								maxLength: 200,
+								maxLength: 500,
 							},
 							{
 								name: 'access',
@@ -69,7 +77,7 @@ const LevelForm = ({ type }: LevelFormProps) => {
 						onSubmit={res => {
 							const level: LevelAI = res.data;
 							history.push(
-								routes.auth.level_edit.path.replace(':id', level.id),
+								routes.auth.level_edit.path.replace(':levelId', level.id),
 							);
 							return alert.success('Niveau créé avec succès');
 						}}
@@ -82,12 +90,12 @@ const LevelForm = ({ type }: LevelFormProps) => {
 								inputType: 'text',
 								required: true,
 								minLength: 3,
-								maxLength: 25,
+								maxLength: 100,
 							},
 							{
 								name: 'description',
 								inputType: 'text',
-								maxLength: 200,
+								maxLength: 500,
 							},
 							{
 								name: 'access',
@@ -111,7 +119,7 @@ const LevelForm = ({ type }: LevelFormProps) => {
 						onSubmit={res => {
 							const level: LevelCode = res.data;
 							history.push(
-								routes.auth.level_edit.path.replace(':id', level.id),
+								routes.auth.level_edit.path.replace(':levelId', level.id),
 							);
 							return alert.success('Niveau créé avec succès');
 						}}
@@ -124,12 +132,12 @@ const LevelForm = ({ type }: LevelFormProps) => {
 								inputType: 'text',
 								required: true,
 								minLength: 3,
-								maxLength: 25,
+								maxLength: 100,
 							},
 							{
 								name: 'description',
 								inputType: 'text',
-								maxLength: 200,
+								maxLength: 500,
 							},
 							{
 								name: 'access',

@@ -6,10 +6,14 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { Server, Socket } from 'socket.io';
+import { Socket } from 'socket.io';
+import { Server, WebSocket } from 'ws';
 
-@WebSocketGateway(8888, { cors: { origin: '*' } })
+@WebSocketGateway(8881, { cors: { origin: '*' } })
 export class IoTGateway implements OnGatewayDisconnect, OnGatewayConnection, OnGatewayInit {
+  private notificationClients: WebSocket[] = [];
+  private lightClients: WebSocket[] = [];
+
   private logger: Logger = new Logger('IoTGateway');
 
   @WebSocketServer()
@@ -19,12 +23,18 @@ export class IoTGateway implements OnGatewayDisconnect, OnGatewayConnection, OnG
     this.logger.log(`Initialized`);
   }
 
-  handleConnection(client: Socket) {
-    this.logger.log(`Client connected: ${client.id}`);
+  handleConnection() {
+    this.logger.log(`Client connected`);
   }
 
-  handleDisconnect(client: Socket) {
-    this.logger.log(`Client disconnected: ${client.id}`);
+  handleDisconnect(client: WebSocket) {
+    this.notificationClients = this.notificationClients.filter(cl => cl !== client);
+    this.logger.log(`Client disconnected`);
+  }
+
+  @SubscribeMessage('events')
+  test(@MessageBody() data: any) {
+    console.log(data);
   }
 
   /*
@@ -39,7 +49,7 @@ export class IoTGateway implements OnGatewayDisconnect, OnGatewayConnection, OnG
   }
 
   @SubscribeMessage('register_light')
-  register_light(@ConnectedSocket() client: Socket) {
+  register_light(@ConnectedSocket() client: WebSocket) {
     this.lightClients.push(client);
   }
 

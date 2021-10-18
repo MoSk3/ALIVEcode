@@ -22,6 +22,16 @@ const StyledModal = styled(Modal)`
 	}
 `;
 
+/**
+ * Modal used to confirm an action (for example: deleting something)
+ *
+ * @param {() => void} onClose when the modal is closed
+ * @param {() => void} onConfirm when the action is confirmed
+ * @param {() => void} onCancel when the action is cancelled
+ * @param {ModalProps} other other normal modal props
+ *
+ * @author MoSk3
+ */
 const AlertConfirm = ({
 	onClose,
 	onConfirm,
@@ -40,7 +50,7 @@ const AlertConfirm = ({
 					onCancel && onCancel();
 				}}
 			>
-				{t('msg.cancel')}
+				{t('modal.cancel')}
 			</Button>
 			<Button
 				padding="15px"
@@ -50,7 +60,7 @@ const AlertConfirm = ({
 					onConfirm && onConfirm();
 				}}
 			>
-				{t('msg.confirm')}
+				{t('modal.confirm')}
 			</Button>
 		</StyledModal>
 	);

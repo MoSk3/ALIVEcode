@@ -5,7 +5,6 @@ import ALIVENavbar from './Components/MainComponents/Navbar/Navbar';
 import { UserContext } from './state/contexts/UserContext';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import axios from 'axios';
-import BackArrow from './Components/UtilsComponents/BackArrow/BackArrow';
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.css';
 import useRoutes from './state/hooks/useRoutes';
@@ -19,8 +18,10 @@ import { User, Student, Professor } from './Models/User/user.entity';
 import LoadingScreen from './Components/UtilsComponents/LoadingScreen/LoadingScreen';
 import background_image_light from './assets/images/backgroundImage4.png';
 import api from './Models/api';
-import { Maintenance } from './Models/Maintenance/maintenance.entity';
 import MaintenanceBar from './Components/SiteStatusComponents/MaintenanceBar/MaintenanceBar';
+import { Maintenance } from './Models/Maintenance/maintenance.entity';
+import openPlaySocket from './Pages/Level/PlaySocket';
+import { PlaySocket } from './Pages/Level/PlaySocket';
 
 type GlobalStyleProps = {
 	theme: Theme;
@@ -39,6 +40,15 @@ const GlobalStyle = createGlobalStyle`
 	}
 
 	${({ theme }: GlobalStyleProps) => {
+		const cssVars = [];
+		for (const [colorName, color] of Object.entries(theme.color)) {
+			const cssName = colorName.includes('rgb')
+				? `--${colorName.split('_')[0]}-color-rgb`
+				: `--${colorName}-color`;
+			cssVars.push(`${cssName}: ${color}`);
+		}
+		return ':root {' + cssVars.join(';') + '}';
+		/*
 		return `:root {
 						--primary-color: ${theme.color.primary};
 						--primary-color-rgb: ${theme.color.primary_rgb};
@@ -55,10 +65,12 @@ const GlobalStyle = createGlobalStyle`
 						--hover-color: ${theme.color.hover};
 						--background-color: ${theme.color.background};
 						--background-color-rgb: ${theme.color.background_rgb};
+						--background-hover-color: ${theme.color.background_hover};
 						--foreground-color: ${theme.color.foreground};
 						--foreground-color-rgb: ${theme.color.foreground_rgb};
 					}
 				`;
+				*/
 	}}
 `;
 
@@ -66,6 +78,7 @@ const StyledApp = styled.section``;
 
 const App = () => {
 	const [user, setUser] = useState<Student | Professor | null>(null);
+	const [playSocket, setPlaySocket] = useState<PlaySocket | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [theme, setTheme] = useState(themes.light);
 	const [maintenance, setMaintenance] = useState<Maintenance | null>(null);
@@ -76,8 +89,8 @@ const App = () => {
 
 	const history = useHistory();
 	const providerValue = useMemo(
-		() => ({ user, setUser, maintenance }),
-		[user, setUser, maintenance],
+		() => ({ user, setUser, maintenance, playSocket }),
+		[user, setUser, maintenance, playSocket],
 	);
 
 	const handleSetTheme = (theme: Theme) => {
@@ -141,8 +154,7 @@ const App = () => {
 				if (
 					error.response &&
 					error.response.data.message === 'Not Authenticated' &&
-					error.response.status === 401 &&
-					error.response.statusText === 'Unauthorized'
+					error.response.status === 401
 				) {
 					try {
 						const { accessToken } = (await axios.post('/users/refreshToken'))
@@ -175,6 +187,9 @@ const App = () => {
 			} catch {}
 		};
 		getUpcomingMaintenance();
+
+		const playSocket = openPlaySocket();
+		setPlaySocket(playSocket);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -204,9 +219,11 @@ const App = () => {
 									maintenance={maintenance}
 								/>
 							)}
+							{/**
 							<BackArrow
 								maintenancePopUp={maintenance != null && !maintenance.hidden}
 							/>
+							 */}
 						</UserContext.Provider>
 					</Router>
 				)}

@@ -1,10 +1,14 @@
 /* eslint-disable no-labels */
 import LevelCodeExecutor from '../LevelCode/LevelCodeExecutor';
 import { images } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/assets';
-import { InteractiveObject } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/InteractiveObject';
 import { Shape } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/Shape';
 import { Vector } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/Vector';
-import $ from 'jquery';
+import { BaseLayoutObj } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/ts/typesSimulation';
+import { Serializer } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/ts/Serializer';
+import { makeShapeEditable } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/editMode';
+import { User } from '../../../Models/User/user.entity';
+import { PlaySocket } from '../PlaySocket';
+import { typeAskForUserInput } from '../levelTypes';
 
 // TODO: robotConnected
 const robotConnected = false;
@@ -14,6 +18,7 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 
 	public editorButton: any;
 	public robotConnectButton: any;
+	public playSocket: PlaySocket | null;
 
 	public d1?: Shape;
 	public d2?: Shape;
@@ -25,92 +30,45 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 		dD: 0,
 	};
 
-	public init(s: any) {
-		this.s = s;
+	constructor(
+		levelName: string,
+		private editMode: boolean,
+		playSocket: PlaySocket | null,
+		askForUserInput: typeAskForUserInput,
+		creator?: User,
+	) {
+		super(levelName, askForUserInput, creator);
+		this.playSocket = playSocket;
+	}
 
-		/*this.socket.onRobotReceive((data: any) => {
-			let car = s.car;
+	public loadLevelLayout(layout: BaseLayoutObj[] | {}) {
+		if (JSON.stringify(layout) === '{}') {
+			this.s.car = this.s.spawnCar(0, 0, 75, 110);
+		} else {
+			const shapes = Serializer.deserialize(this.s, layout as BaseLayoutObj[]);
 
-			if (process.env.DEBUG) console.log(data);
-
-			if (this.d1 == null || this.d2 == null || this.d3 == null) {
-				this.d1 = s.spawnRect(0, 0, 100, 5);
-				this.d1?.setRotation(-60);
-				this.d2 = s.spawnRect(0, 0, 100, 5);
-				this.d3 = s.spawnRect(0, 0, 100, 5);
-				this.d3?.setRotation(60);
-
-				car.shape.addChild(this.d1);
-				car.shape.addChild(this.d2);
-				car.shape.addChild(this.d3);
+			for (const [idx, shape] of Object.entries(shapes)) {
+				this.s.addObjectToScene(shape, idx);
+				makeShapeEditable(shape);
 			}
 
-			if ('a' in data) {
-				car.shape.setRotation(data['a']);
-			}
-
-			let frontOfCar = car.shape.pos
-				.clone()
-				.add(car.shape.forward.clone().normalize().multiplyScalar(55));
-			let perpendicularFront = new Vector(frontOfCar.y, -frontOfCar.x)
-				.normalize()
-				.multiplyScalar(30);
-
-			this.sensors.dA = data['2'] ?? 0;
-			this.sensors.dG = data['1'] ?? 0;
-			this.sensors.dD = data['3'] ?? 0;
-
-			this.d1?.setPos(frontOfCar.clone().substract(perpendicularFront), false);
-			this.d2?.setPos(frontOfCar.clone(), false);
-			this.d3?.setPos(frontOfCar.clone().add(perpendicularFront), false);
-
-			this.d1?.moveInDirection(
-				this.d1.forward?.normalize(),
-				this.sensors.dG * 7,
-				false,
-			);
-			this.d2?.moveInDirection(
-				this.d2.forward?.normalize(),
-				this.sensors.dA * 7,
-				false,
-			);
-			this.d3?.moveInDirection(
-				this.d3.forward?.normalize(),
-				this.sensors.dD * 7,
-				false,
-			);
-		});*/
-
-		try {
-			// Clear la simulation au cas ou ce qu'il y a déjà des voitures ou autres
-			let json_script = JSON.parse($('#leveldata').text());
-
-			if (
-				json_script == null ||
-				json_script === '' ||
-				json_script === '""' ||
-				json_script.length < 100
-			)
-				throw new Error('No level loaded');
-			// Génération du niveau
-			//const level = s.load(json_script, s.creator);
-		} catch (exception) {
-			s.car = s.spawnCar(0, 0, 75, 110);
-
-			// TODO: editor reference
-			//lineInterface.setValue("# Entrer votre code ci-dessous\n\n")
+			if (process.env.REACT_APP_DEBUG) console.log(this.s.shapes);
 		}
-
-		if (this.creator) {
+		if (this.creator && this.editMode) {
 			this.spawnEditorButton();
 		}
 		this.spawnRobotConnectButton();
+	}
+
+	public init(s: any) {
+		this.s = s;
 	}
 
 	public onStop() {
 		if (!this.s) return;
 		const s = this.s;
 
+		this.playSocket && this.playSocket.stopCompile();
 		//if(!robotConnected) {
 		s.car.reset();
 		//}
@@ -142,12 +100,10 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 		}
 
 		// Méthode qui remet tout les boutons interactifs à rouge
-		for (let i = 0; i < s.movableShapes.length; i++) {
-			if (s.movableShapes[i].originalShape instanceof InteractiveObject) {
-				if (s.movableShapes[i].originalShape.isButton) {
-					// images.red_button
-					s.movableShapes[i].originalShape.setImg(images.red_button);
-				}
+		for (const interactiveShape of s.interactiveObjects) {
+			if (interactiveShape.isButton) {
+				// images.red_button
+				interactiveShape.setImg(images.red_button_unpressed);
 			}
 		}
 
@@ -161,6 +117,7 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 	}
 
 	public async onRun() {
+		//this.s.canvasCamera.setTarget(this.s.car.shape);
 		super.onRun();
 	}
 
@@ -175,8 +132,12 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 
 		const angleDroit = 90;
 		const car = s.car;
+		console.log(car);
 
 		s.canvasCamera.setTarget(s.car.shape);
+		console.log(s.canvasCamera);
+
+		this.playSocket && this.playSocket.compile(data);
 
 		const validDataStructure = (action: any) => {
 			return (
@@ -190,222 +151,230 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 		};
 
 		const perform_action = (i: number) => {
-			if (i >= data.length) {
-				return;
-			}
-			const action = data[i];
-			if (validDataStructure(action)) {
-				if (action[DODO] < 0) action[DODO] = 0;
+			try {
+				if (i >= data.length) {
+					this.whenExecutionEnd(res);
+					return;
+				}
+				const action = data[i];
+				if (validDataStructure(action)) {
+					if (action[DODO] < 0) action[DODO] = 0;
 
-				const { [DODO]: dodo, [ID]: id, [PARAMS]: params } = action;
+					const { [DODO]: dodo, [ID]: id, [PARAMS]: params } = action;
 
-				// Traite l'action a effectuée envoyée par le serveur
-				id_switch: switch (id) {
-					/*
+					// Traite l'action a effectuée envoyée par le serveur
+					id_switch: switch (id) {
+						/*
                                 ----    UTILITAIRES    ----
                         */
-					/*
+						/*
                                       ----    VOITURE    ----
                               */
-					case 100:
-						/*----     arreter     ----*/
-						car.stop();
-						this.timeouts.push(
-							setTimeout(() => {
-								perform_action(i + 1);
-							}, dodo * 1000),
-						);
-						break;
-					case 101:
-						/*----     avancer     ----*/
-						car.forward();
-						this.timeouts.push(
-							setTimeout(() => {
-								if (dodo > 0) car.stop();
-								perform_action(i + 1);
-							}, dodo * 1000),
-						);
-						break;
-					case 102:
-						/*----     reculer     ----*/
-						car.backward();
-						this.timeouts.push(
-							setTimeout(() => {
-								if (dodo > 0) car.stop();
-								perform_action(i + 1);
-							}, dodo * 1000),
-						);
-						break;
-					case 103:
-						/*----     tourner     ----*/
-						if (!robotConnected) {
-							if (params.length > 0 && typeof params[0] === 'number') {
-								car.turn(-params[0], () => {
-									perform_action(i + 1);
-								});
-							}
-						} else {
-							perform_action(i + 1);
-						}
-						break;
-					case 104:
-						/*----     tournerDroite     ----*/
-						if (!robotConnected) {
-							car.turn(angleDroit, () => {
-								perform_action(i + 1);
-							});
-						} else {
-							let goal = (car.shape.rotation.x + angleDroit) % 360;
-							let interval = setInterval(() => {
-								if (Math.abs(goal - car.shape.rotation.x) <= 0.5) {
-									clearInterval(interval);
-									perform_action(i + 1);
-								}
-							});
-						}
-						break;
-					case 105:
-						/*----     tournerGauche     ----*/
-						if (!robotConnected) {
-							car.turn(-angleDroit, () => {
-								perform_action(i + 1);
-							});
-						} else {
-							let goal = (car.shape.rotation.x - angleDroit) % 360;
-							let interval = setInterval(() => {
-								if (Math.abs(goal - car.shape.rotation.x) <= 0.5) {
-									clearInterval(interval);
-									perform_action(i + 1);
-								}
-							}, 50);
-						}
-						break;
-					case 106:
-						/*----     rouler     ----*/
-						if (!robotConnected) {
-							if (params.length >= 2) {
-								car.setDirection(
-									new Vector(
-										params[0] / 255 - params[1] / 255,
-										params[0] / 500 + params[1] / 500,
-									)
-										.normalize()
-										.multiplyScalar((params[0] / 2 + params[1] / 2) / 255),
-								);
-							}
-						} else {
-							car.forward();
-						}
-						perform_action(i + 1);
-						break;
-					case 107:
-						/*----     goToAngle     ----*/
-						if (!robotConnected) {
-							if (params.length > 0 && typeof params[0] === 'number') {
-								const currentAngle = car.shape.rotation.x;
-								let angle = params[0] % 360;
-								angle = angle < 0 ? 360 - angle : angle;
-								angle = 360 - angle;
-								var rotationAmount: number;
-								if (
-									360 - currentAngle - angle < 180 &&
-									360 - currentAngle - angle >= 0
-								)
-									rotationAmount = -(360 - currentAngle - angle);
-								else rotationAmount = -(360 - angle - currentAngle);
-								car.turn(rotationAmount, () => {
-									perform_action(i + 1);
-								});
-							}
-						} else {
-							perform_action(i + 1);
-						}
-						break;
-					/*
-                                      ----    UTILITAIRES    ----
-                              */
-					case 300:
-						/*----     print     ----*/
-
-						if (params.length > 0 && typeof params[0] === 'string') {
-							this.cmd?.print(params[0]);
-						}
-						if (dodo === 0) perform_action(i + 1);
-						else {
+						case 100:
+							/*----     arreter     ----*/
+							car.stop();
 							this.timeouts.push(
 								setTimeout(() => {
 									perform_action(i + 1);
 								}, dodo * 1000),
 							);
-						}
-						break;
-					case 301:
-						/*----     attendre     ----*/
-						if (params.length > 0 && typeof params[0] === 'number') {
+							break;
+						case 101:
+							/*----     avancer     ----*/
+							car.forward();
 							this.timeouts.push(
 								setTimeout(() => {
+									if (dodo > 0) car.stop();
 									perform_action(i + 1);
-								}, params[0] * 1000),
+								}, dodo * 1000),
 							);
-						}
-						break;
-					/*
+							break;
+						case 102:
+							/*----     reculer     ----*/
+							car.backward();
+							this.timeouts.push(
+								setTimeout(() => {
+									if (dodo > 0) car.stop();
+									perform_action(i + 1);
+								}, dodo * 1000),
+							);
+							break;
+						case 103:
+							/*----     tourner     ----*/
+							if (!robotConnected) {
+								if (params.length > 0 && typeof params[0] === 'number') {
+									car.turn(-params[0], () => {
+										perform_action(i + 1);
+									});
+								}
+							} else {
+								perform_action(i + 1);
+							}
+							break;
+						case 104:
+							/*----     tournerDroite     ----*/
+							if (!robotConnected) {
+								car.turn(angleDroit, () => {
+									perform_action(i + 1);
+								});
+							} else {
+								let goal = (car.shape.rotation.x + angleDroit) % 360;
+								let interval = setInterval(() => {
+									if (Math.abs(goal - car.shape.rotation.x) <= 0.5) {
+										clearInterval(interval);
+										perform_action(i + 1);
+									}
+								});
+							}
+							break;
+						case 105:
+							/*----     tournerGauche     ----*/
+							if (!robotConnected) {
+								car.turn(-angleDroit, () => {
+									perform_action(i + 1);
+								});
+							} else {
+								let goal = (car.shape.rotation.x - angleDroit) % 360;
+								let interval = setInterval(() => {
+									if (Math.abs(goal - car.shape.rotation.x) <= 0.5) {
+										clearInterval(interval);
+										perform_action(i + 1);
+									}
+								}, 50);
+							}
+							break;
+						case 106:
+							/*----     rouler     ----*/
+							if (!robotConnected) {
+								if (params.length >= 2) {
+									car.setDirection(
+										new Vector(
+											params[0] / 255 - params[1] / 255,
+											params[0] / 500 + params[1] / 500,
+										)
+											.normalize()
+											.multiplyScalar((params[0] / 2 + params[1] / 2) / 255),
+									);
+								}
+							} else {
+								car.forward();
+							}
+							perform_action(i + 1);
+							break;
+						case 107:
+							/*----     goToAngle     ----*/
+							if (!robotConnected) {
+								if (params.length > 0 && typeof params[0] === 'number') {
+									const currentAngle = car.shape.rotation.x;
+									let angle = params[0] % 360;
+									angle = angle < 0 ? 360 - angle : angle;
+									angle = 360 - angle;
+									var rotationAmount: number;
+									if (
+										360 - currentAngle - angle < 180 &&
+										360 - currentAngle - angle >= 0
+									)
+										rotationAmount = -(360 - currentAngle - angle);
+									else rotationAmount = -(360 - angle - currentAngle);
+									car.turn(rotationAmount, () => {
+										perform_action(i + 1);
+									});
+								}
+							} else {
+								perform_action(i + 1);
+							}
+							break;
+						/*
+                                      ----    UTILITAIRES    ----
+                              */
+						case 300:
+							/*----     print     ----*/
+
+							if (params.length > 0 && typeof params[0] === 'string') {
+								this.cmd?.print(params[0]);
+							}
+							if (dodo === 0) perform_action(i + 1);
+							else {
+								this.timeouts.push(
+									setTimeout(() => {
+										perform_action(i + 1);
+									}, dodo * 1000),
+								);
+							}
+							break;
+						case 301:
+							/*----     attendre     ----*/
+							if (params.length > 0 && typeof params[0] === 'number') {
+								this.timeouts.push(
+									setTimeout(() => {
+										perform_action(i + 1);
+									}, params[0] * 1000),
+								);
+							}
+							break;
+						/*
                                       ----    GET    ----
                               */
-					case 500:
-						switch (params[0]) {
-							case 'read': {
-								/*----     lire     ----*/
-								let input = prompt(params[1]);
-								res.push(input);
-								perform_action(i + 1);
-								// eslint-disable-next-line no-labels
-								break id_switch;
-							}
+						case 500:
+							switch (params[0]) {
+								case 'read': {
+									/*----     lire     ----*/
+									console.log('read');
+									this.askForUserInput(params[1], inputValue => {
+										res.push(inputValue);
+										perform_action(i + 1);
+									});
+									break;
+								}
 
-							case 'car': {
-								/*----     voiture     ----*/
-								const infosCar = {
-									x: car.shape.pos.x,
-									y: car.shape.pos.y,
-									dA: this.sensors.dA,
-									dG: this.sensors.dG,
-									dD: this.sensors.dD,
-									speed: car.speed,
-								};
-								res.push(infosCar);
-								if (process.env.DEBUG) console.log(res);
-								perform_action(i + 1);
-								// eslint-disable-next-line no-labels
-								break id_switch;
+								case 'car': {
+									/*----     voiture     ----*/
+									const infosCar = {
+										x: car.shape.pos.x,
+										y: car.shape.pos.y,
+										dA: this.sensors.dA,
+										dG: this.sensors.dG,
+										dD: this.sensors.dD,
+										speed: car.speed,
+									};
+									res.push(infosCar);
+									if (process.env.REACT_APP_DEBUG) console.log(res);
+									perform_action(i + 1);
+									// eslint-disable-next-line no-labels
+									break id_switch;
+								}
 							}
-						}
-						break;
-					/*
+							break;
+						/*
                                       ----    SET    ----
                               */
-					case 600:
-						break;
+						case 600:
+							break;
 
-					case 601:
-						/*----     vitesse voiture     ----*/
-						car.speed = params[0];
-						perform_action(i + 1);
-						break;
-				}
+						case 601:
+							/*----     vitesse voiture     ----*/
+							car.speed = params[0];
+							perform_action(i + 1);
+							break;
+					}
 
-				/*
+					/*
                             ----    ERREURS    ----
                     */
-				if (id.toString()[0] === '4') {
-					if (
-						params.length > 1 &&
-						typeof params[0] === 'string' &&
-						typeof params[2] === 'number'
-					) {
-						this.cmd?.error(params[0] + ': ' + params[1], params[2]);
+					if (id.toString()[0] === '4') {
+						if (
+							params.length > 1 &&
+							typeof params[0] === 'string' &&
+							typeof params[2] === 'number'
+						) {
+							this.cmd?.error(params[0] + ': ' + params[1], params[2]);
+							this.interrupt();
+						}
 					}
 				}
+			} catch (error) {
+				this.whenExecutionEnd(res);
+				this.interrupt();
 			}
 		};
 
@@ -440,7 +409,7 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 			5000,
 		);
 		// images.tools
-		this.editorButton.setImg(images.animatedCar);
+		this.editorButton.setImg(images.tools);
 		this.editorButton.color = s.color(0, 0);
 		this.editorButton.onHover((e: any) => {
 			s.strokeWeight(1);
@@ -472,8 +441,18 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 
 		// TODO: fix connect modal
 		this.robotConnectButton.onClick((e: any) => {
-			//connectModal.modal('show')
+			this.s.onConnectCar && this.s.onConnectCar();
 		});
+	}
+
+	public saveLayout(s: any) {
+		const shapes = Object.entries(s.shapes)
+			?.sort(([z_idx1], [z_idx2]) => Number(z_idx1) - Number(z_idx2))
+			.flatMap(([_, shape]) => shape) as Shape[];
+
+		if (shapes === undefined) return null;
+
+		return Serializer.serialize(shapes);
 	}
 }
 

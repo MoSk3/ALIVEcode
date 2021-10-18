@@ -23,10 +23,10 @@ public record BinOp(Expression<?> gauche,
 
     @Override
     public String toString() {
-        return "BinaryOp{" +
+        return "BinOp{" +
                 "gauche=" + gauche +
-                ", droite=" + droite +
                 ", op=" + op +
+                ", droite=" + droite +
                 '}';
     }
 

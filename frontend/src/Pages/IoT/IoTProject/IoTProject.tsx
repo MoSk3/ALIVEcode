@@ -27,6 +27,14 @@ import { plainToClass } from 'class-transformer';
 import IoTRouteCard from '../../../Components/IoTComponents/IoTRoute/IoTRouteCard/IoTRouteCard';
 import IoTProjectBody from '../../../Components/IoTComponents/IoTProject/IotProjectBody';
 
+/**
+ * IoTProject. On this page are all the components essential in the functionning of an IoTProject.
+ * Such as the routes, the settings, creation/update forms, the body with all the IoTComponents etc.
+ *
+ * @param {string} id id of the project (as url prop)
+ *
+ * @author MoSk3
+ */
 const IoTProject = (props: IoTProjectProps) => {
 	const [project, setProject] = useState<ProjectModel>();
 	const [selectedTab, setSelectedTab] = useState<IoTProjectTabs>('settings');
@@ -35,6 +43,23 @@ const IoTProject = (props: IoTProjectProps) => {
 	const alert = useAlert();
 	const { t } = useTranslation();
 	const { user } = useContext(UserContext);
+
+	// Socket io
+	useEffect(() => {
+		if (!process.env.REACT_APP_IOT_URL) return;
+		const socket = io(`${process.env.REACT_APP_IOT_URL}/iot`);
+
+		socket.emit('register_light');
+
+		socket.on('light', lightLevel => {
+			setLightLevel(lightLevel / 1000);
+		});
+
+		setSocket(socket);
+		return () => {
+			socket.close();
+		};
+	}, []);
 
 	useEffect(() => {
 		const getProject = async () => {
