@@ -44,23 +44,6 @@ const IoTProject = (props: IoTProjectProps) => {
 	const { t } = useTranslation();
 	const { user } = useContext(UserContext);
 
-	// Socket io
-	useEffect(() => {
-		if (!process.env.REACT_APP_IOT_URL) return;
-		const socket = io(`${process.env.REACT_APP_IOT_URL}/iot`);
-
-		socket.emit('register_light');
-
-		socket.on('light', lightLevel => {
-			setLightLevel(lightLevel / 1000);
-		});
-
-		setSocket(socket);
-		return () => {
-			socket.close();
-		};
-	}, []);
-
 	useEffect(() => {
 		const getProject = async () => {
 			try {

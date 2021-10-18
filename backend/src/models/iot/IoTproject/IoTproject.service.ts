@@ -4,7 +4,6 @@ import { IoTProjectEntity, IoTProjectLayout } from './entities/IoTproject.entity
 import { Repository } from 'typeorm';
 import { UserEntity } from '../../user/entities/user.entity';
 import { IoTRouteEntity } from '../IoTroute/entities/IoTroute.entity';
-import { IoTComponent } from '../../../../../frontend/src/Models/Iot/IoTProjectClasses/IoTComponent';
 
 @Injectable()
 export class IoTProjectService {

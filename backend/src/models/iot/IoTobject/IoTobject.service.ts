@@ -25,6 +25,16 @@ export class IoTObjectService {
     return iotObject;
   }
 
+  async findOneWithLoadedProjects(id: string) {
+    if (!id) throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
+    const iotObject = await this.objectRepository
+      .createQueryBuilder('iotObject')
+      .leftJoinAndSelect('iotObject.iotProjects', 'iotProject')
+      .getOne();
+    if (!iotObject) throw new HttpException('IoTObject not found', HttpStatus.NOT_FOUND);
+    return iotObject;
+  }
+
   async update(id: string, updateIoTobjectDto: IoTObjectEntity) {
     return await this.objectRepository.update(id, updateIoTobjectDto);
   }

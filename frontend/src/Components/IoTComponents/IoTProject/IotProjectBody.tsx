@@ -36,6 +36,7 @@ const IoTProjectBody = ({ project }: { project: IoTProject }) => {
 		},
 		[saveComponents],
 	);
+	console.log(project);
 
 	const socket = useMemo(
 		() =>

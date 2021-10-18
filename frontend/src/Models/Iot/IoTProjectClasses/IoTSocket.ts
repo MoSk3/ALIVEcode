@@ -1,4 +1,3 @@
-import { Socket, io } from 'socket.io-client';
 import { IoTProject, IoTProjectLayout } from '../IoTproject.entity';
 import { IoTComponentManager } from './IoTComponentManager';
 import { IoTComponent } from './IoTComponent';
@@ -9,7 +8,7 @@ export type IoTSocketUpdateRequest = {
 };
 
 export class IoTSocket {
-	private socket: Socket;
+	private socket: WebSocket;
 	private iotProject: IoTProject;
 	private iotComponentManager: IoTComponentManager;
 	private onRender: (layout: IoTProjectLayout) => void;
@@ -42,10 +41,34 @@ export class IoTSocket {
 		if (!process.env.REACT_APP_IOT_URL)
 			throw new Error('Env variable REACT_APP_IOT_URL not set');
 
-		console.log('OPEN');
-		this.socket = io(process.env.REACT_APP_IOT_URL);
+		this.socket = new WebSocket(process.env.REACT_APP_IOT_URL);
 
-		this.socket.on('update', this.onReceiveUpdate);
+		this.socket.onopen = () => {
+			this.socket.onmessage = e => {
+				console.log(e);
+				const data = e.data;
+				switch (data.event) {
+					case 'update':
+						console.log(data.data);
+						this.onReceiveUpdate(data.data);
+						break;
+				}
+			};
+
+			this.socket.send(
+				JSON.stringify({
+					event: 'connect_watcher',
+					data: {
+						iotProjectId: this.iotProject.id,
+						iotProjectName: this.iotProject.name,
+					},
+				}),
+			);
+		};
+
+		this.socket.onerror = (ev: Event) => {
+			console.log(ev);
+		};
 	}
 
 	public closeSocket() {
