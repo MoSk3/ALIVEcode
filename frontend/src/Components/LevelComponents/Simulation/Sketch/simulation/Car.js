@@ -4,7 +4,7 @@ import { Road } from './ts/Road';
 import { Terrain } from './ts/Terrain';
 import { Interactive } from './ts/Interactive';
 import { Vector } from './Vector';
-import { images, unloadImages } from './assets';
+import { images } from './assets';
 
 export class Car {
 	#speed;

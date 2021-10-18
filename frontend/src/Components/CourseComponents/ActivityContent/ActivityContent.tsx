@@ -9,9 +9,16 @@ import ReactMarkdown from 'react-markdown';
 import CenteredContainer from '../../UtilsComponents/CenteredContainer/CenteredContainer';
 import Level from '../../../Pages/Level/Level';
 import IconButton from '../../DashboardComponents/IconButton/IconButton';
-import { faCheckCircle, faPencilAlt } from '@fortawesome/free-solid-svg-icons';
+import {
+	faAngleRight,
+	faCheckCircle,
+	faPencilAlt,
+} from '@fortawesome/free-solid-svg-icons';
 import MDEditor from '../MDEditor/MDEditor';
 import { Form } from 'react-bootstrap';
+import Button from '../../UtilsComponents/Button/Button';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Displays the content of the activity in the CourseContext
@@ -20,8 +27,15 @@ import { Form } from 'react-bootstrap';
  */
 const ActivityContent = (props: ActivityContentProps) => {
 	const { theme } = useContext(ThemeContext);
-	const { activity, saveActivityContent, saveActivity, canEdit } =
-		useContext(CourseContext);
+	const {
+		activity,
+		saveActivityContent,
+		saveActivity,
+		canEdit,
+		isNavigationOpen,
+		setIsNavigationOpen,
+	} = useContext(CourseContext);
+	const { t } = useTranslation();
 	const [editMode, setEditMode] = useState(false);
 	const [name, setName] = useState<string>('');
 	const [editingName, setEditingName] = useState(false);
@@ -38,7 +52,21 @@ const ActivityContent = (props: ActivityContentProps) => {
 	}, [activity?.content?.data]);
 
 	return (
-		<StyledActivityContent theme={theme}>
+		<StyledActivityContent navigationOpen={isNavigationOpen} theme={theme}>
+			<Button
+				variant="secondary"
+				className="btn-toggle-nav"
+				onClick={() => {
+					setIsNavigationOpen(!isNavigationOpen);
+				}}
+			>
+				<FontAwesomeIcon
+					style={{ transition: '0.35s' }}
+					rotation={isNavigationOpen ? 180 : undefined}
+					icon={faAngleRight}
+					size="2x"
+				/>
+			</Button>
 			<div className="activity-content-padding">
 				<div className="activity-content-body">
 					{activity ? (
@@ -105,7 +133,7 @@ const ActivityContent = (props: ActivityContentProps) => {
 											))}
 									</>
 								) : (
-									<p>Empty activity</p>
+									<p>{t('course.activity.empty')}</p>
 								)}
 							</div>
 						</>
@@ -115,7 +143,7 @@ const ActivityContent = (props: ActivityContentProps) => {
 							horizontally
 							vertically
 						>
-							Open an activity to get started
+							{t('course.activity.no_activity')}
 						</CenteredContainer>
 					)}
 				</div>
