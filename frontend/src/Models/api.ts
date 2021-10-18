@@ -218,8 +218,8 @@ const api = {
 			projects: {
 				get: apiGet('iot/projects/:id', IoTProject, false),
 				getRoutes: apiGet('iot/projects/:id/routes', IotRoute, true),
+				getObjects: apiGet('iot/projects/:id/objects', IoTObject, true),
 				async updateLayout(id: string, layout: IoTProjectLayout) {
-					console.log(layout);
 					await axios.patch(`iot/projects/${id}/layout`, layout);
 				},
 			},

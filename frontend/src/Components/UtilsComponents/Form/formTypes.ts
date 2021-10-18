@@ -36,7 +36,10 @@ export type InputGroup = {
 	match?: MATCHES;
 	default?: any;
 	name: string;
-	selectOptions?: Array<any> | { [key: string]: any };
+	selectOptions?:
+		| Array<any>
+		| Array<{ value: string; display: string }>
+		| { [key: string]: any };
 	inputType:
 		| 'checkbox'
 		| 'color'

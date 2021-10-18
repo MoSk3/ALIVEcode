@@ -12,6 +12,13 @@ import { prettyField } from '../../../Types/formatting';
  * Form used to create or alter a relation in the database that auto-generates the fields depending of the arguments.
  * The fields can contain enums, error handling and auto-traduction.
  *
+ * @param {string} name name of the form (used for the auto-applied translations)
+ * @param {string} url url pointing to where to make the request
+ * @param {string} action action of the form ("PATCH", "DELETE", "POST")
+ * @param {(res: AxiosResponse<any>) => void} onSubmit callback called when the form has been submitted and returns the axios response
+ * @param {(formValues: any) => any} alterFormValues callback called right before making the request to alter the form values (return the new values in the callback)
+ * @param {Array<InputGroup>} inputGroups input groups of the form (see the example below or the InputGroup typing for more details)
+ *
  * example of a component creating a course:
  * 	<Form
  * 	  name='create_course'
@@ -138,11 +145,20 @@ const Form = (props: FormProps) => {
 						{...register(g.name, registerOptions)}
 					>
 						{Array.isArray(g.selectOptions)
-							? g.selectOptions?.map((opt: any, idx) => (
-									<option key={g.name + idx} value={opt}>
-										{opt}
-									</option>
-							  ))
+							? g.selectOptions?.map((opt: any, idx) => {
+									if ('display' in opt && 'value' in opt) {
+										return (
+											<option key={g.name + idx} value={opt.value}>
+												{opt.display}
+											</option>
+										);
+									}
+									return (
+										<option key={g.name + idx} value={opt}>
+											{opt}
+										</option>
+									);
+							  })
 							: Object.keys(g.selectOptions as { [key: string]: any })
 									.filter(k => isNaN(Number(k)))
 									.map((k, idx) => (

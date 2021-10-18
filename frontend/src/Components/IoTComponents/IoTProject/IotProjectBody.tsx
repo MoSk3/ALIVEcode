@@ -36,7 +36,6 @@ const IoTProjectBody = ({ project }: { project: IoTProject }) => {
 		},
 		[saveComponents],
 	);
-	console.log(project);
 
 	const socket = useMemo(
 		() =>
@@ -95,10 +94,8 @@ const IoTProjectBody = ({ project }: { project: IoTProject }) => {
 		const componentsMatrix = [];
 		for (let i = 0; i < Math.ceil(components.length / 3); i++) {
 			const row = components.slice(i * 3, i * 3 + 3);
-			console.log(components);
 			componentsMatrix.push(row);
 		}
-		console.log(componentsMatrix);
 		return componentsMatrix;
 	};
 
