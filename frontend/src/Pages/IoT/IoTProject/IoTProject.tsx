@@ -25,9 +25,7 @@ import FormModal from '../../../Components/UtilsComponents/FormModal/FormModal';
 import { IotRoute } from '../../../Models/Iot/IoTroute.entity';
 import { plainToClass } from 'class-transformer';
 import IoTRouteCard from '../../../Components/IoTComponents/IoTRoute/IoTRouteCard/IoTRouteCard';
-import { io, Socket } from 'socket.io-client';
-import Button from '../../../Components/UtilsComponents/Button/Button';
-import CenteredContainer from '../../../Components/UtilsComponents/CenteredContainer/CenteredContainer';
+import IoTProjectBody from '../../../Components/IoTComponents/IoTProject/IotProjectBody';
 
 /**
  * IoTProject. On this page are all the components essential in the functionning of an IoTProject.
@@ -40,9 +38,7 @@ import CenteredContainer from '../../../Components/UtilsComponents/CenteredConta
 const IoTProject = (props: IoTProjectProps) => {
 	const [project, setProject] = useState<ProjectModel>();
 	const [selectedTab, setSelectedTab] = useState<IoTProjectTabs>('settings');
-	const [socket, setSocket] = useState<Socket>();
 	const [routeModalOpen, setRouteModalOpen] = useState(false);
-	const [lightLevel, setLightLevel] = useState<number>(34);
 	const history = useHistory();
 	const alert = useAlert();
 	const { t } = useTranslation();
@@ -246,7 +242,15 @@ const IoTProject = (props: IoTProjectProps) => {
 				</Col>
 				<Col sm="8" id="project-body">
 					<Row className="project-top-row"></Row>
-					<CenteredContainer style={{ height: '100%' }} vertically horizontally>
+					<IoTProjectBody project={project} />
+				</Col>
+			</Row>
+		</StyledIoTProject>
+	);
+};
+
+export default IoTProject;
+/*
 						<h2 className="mb-3">Light level</h2>
 						<div className="my-progress mb-5">
 							<div className="barOverflow">
@@ -272,11 +276,4 @@ const IoTProject = (props: IoTProjectProps) => {
 						>
 							Send notification to cluster
 						</Button>
-					</CenteredContainer>
-				</Col>
-			</Row>
-		</StyledIoTProject>
-	);
-};
-
-export default IoTProject;
+						*/

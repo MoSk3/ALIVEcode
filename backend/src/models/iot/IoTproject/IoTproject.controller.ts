@@ -14,7 +14,7 @@ import { IoTProjectService } from './IoTproject.service';
 import { Auth } from '../../../utils/decorators/auth.decorator';
 import { User } from '../../../utils/decorators/user.decorator';
 import { Role } from '../../../utils/types/roles.types';
-import { IoTProjectEntity, IOTPROJECT_ACCESS } from './entities/IoTproject.entity';
+import { IoTProjectEntity, IoTProjectLayout, IOTPROJECT_ACCESS } from './entities/IoTproject.entity';
 import { UserEntity } from '../../user/entities/user.entity';
 import { DTOInterceptor } from '../../../utils/interceptors/dto.interceptor';
 import { IoTRouteEntity } from '../IoTroute/entities/IoTroute.entity';
@@ -69,6 +69,19 @@ export class IoTProjectController {
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
 
     return await this.IoTProjectService.remove(id);
+  }
+
+  @Patch(':id/layout')
+  @Auth()
+  async updateLayout(@User() user: UserEntity, @Param('id') id: string, @Body() layout: IoTProjectLayout) {
+    const project = await this.IoTProjectService.findOne(id);
+
+    if (project.creator.id === user.id || hasRole(user, Role.STAFF))
+      return await this.IoTProjectService.updateLayout(id, layout);
+    if (project.access === IOTPROJECT_ACCESS.PRIVATE) throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    // TODO : Add restriction
+    if (project.access === IOTPROJECT_ACCESS.RESTRICTED) throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    return await this.IoTProjectService.updateLayout(id, layout);
   }
 
   @Get(':id/routes')

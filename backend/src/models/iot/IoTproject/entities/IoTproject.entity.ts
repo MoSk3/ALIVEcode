@@ -1,4 +1,4 @@
-import { IsEmpty, IsNotEmpty, IsOptional } from "class-validator";
+import { IsEmpty, IsNotEmpty, IsOptional, Validate, ValidateNested } from "class-validator";
 import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany } from 'typeorm';
 import { CreatedByUser } from '../../../../generics/entities/createdByUser.entity';
 import { IoTRouteEntity } from '../../IoTroute/entities/IoTroute.entity';
@@ -17,6 +17,15 @@ export enum IOTPROJECT_ACCESS {
   PRIVATE = 'PR', // only accessible to the creator
 }
 
+type IoTComponent = {
+  id: string;
+};
+
+export class IoTProjectLayout {
+  @IsNotEmpty()
+  components: Array<IoTComponent>;
+}
+
 @Entity()
 export class IoTProjectEntity extends CreatedByUser {
   @ManyToOne(() => UserEntity, user => user.IoTProjects, { eager: true, onDelete: 'CASCADE' })
@@ -24,9 +33,9 @@ export class IoTProjectEntity extends CreatedByUser {
   creator: UserEntity;
 
   // TODO : body typing
-  @Column({ nullable: true, default: '{}' })
+  @Column({ nullable: true, type: 'json', default: { components: [] } })
   @IsOptional()
-  body: string;
+  layout: IoTProjectLayout;
 
   @Column({ enum: IOTPROJECT_ACCESS })
   @IsNotEmpty()

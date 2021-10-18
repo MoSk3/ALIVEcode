@@ -1,14 +1,10 @@
 import { Logger } from '@nestjs/common';
 import {
-  ConnectedSocket,
-  MessageBody,
   OnGatewayConnection,
   OnGatewayDisconnect,
   OnGatewayInit,
-  SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
-  WsResponse,
 } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
 import { Server, WebSocket } from 'ws';
@@ -17,6 +13,7 @@ import { Server, WebSocket } from 'ws';
 export class IoTGateway implements OnGatewayDisconnect, OnGatewayConnection, OnGatewayInit {
   private notificationClients: WebSocket[] = [];
   private lightClients: WebSocket[] = [];
+
   private logger: Logger = new Logger('IoTGateway');
 
   @WebSocketServer()
@@ -27,7 +24,7 @@ export class IoTGateway implements OnGatewayDisconnect, OnGatewayConnection, OnG
   }
 
   handleConnection() {
-    //this.logger.log(`Client connected`);
+    this.logger.log(`Client connected`);
   }
 
   handleDisconnect(client: WebSocket) {
@@ -40,6 +37,7 @@ export class IoTGateway implements OnGatewayDisconnect, OnGatewayConnection, OnG
     console.log(data);
   }
 
+  /*
   @SubscribeMessage('notification')
   notification(@MessageBody() data: string): WsResponse<string> {
     return { event: 'notification', data };
@@ -58,5 +56,5 @@ export class IoTGateway implements OnGatewayDisconnect, OnGatewayConnection, OnG
   @SubscribeMessage('send_light')
   send_light(@MessageBody() light: number) {
     this.lightClients.forEach(c => c.emit('light', light));
-  }
+  }*/
 }

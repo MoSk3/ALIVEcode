@@ -111,6 +111,7 @@ export const StyledIoTProject = styled(FillContainer)`
 		border-bottom-color: #fbff00; /* half azure */
 		border-right-color: #fbff00;
 		transform: rotate(45deg);
+		transition: 0.2s;
 	}
 
 	.my-progress-span {
