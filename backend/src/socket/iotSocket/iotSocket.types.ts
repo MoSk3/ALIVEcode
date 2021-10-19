@@ -32,7 +32,7 @@ export class Client {
     if (this instanceof WatcherClient) {
       WatcherClient.watchers = WatcherClient.watchers.filter(w => w.socket !== this.socket);
     } else if (this instanceof ObjectClient) {
-      ObjectClient.clients = ObjectClient.clients.filter(w => w.socket !== this.socket);
+      ObjectClient.objects = ObjectClient.objects.filter(w => w.socket !== this.socket);
     }
     Client.clients = Client.clients.filter(w => w.socket !== this.socket);
   }
@@ -53,7 +53,7 @@ export class WatcherClient extends Client {
 
   register() {
     super.register();
-    WatcherClient.clients.push(this);
+    WatcherClient.watchers.push(this);
   }
 
   static getClientBySocket(socket: WebSocket) {
@@ -74,7 +74,7 @@ export class WatcherClient extends Client {
 }
 
 export class ObjectClient extends Client {
-  static clients: ObjectClient[] = [];
+  static objects: ObjectClient[] = [];
   private id: string;
   private projectRights: string[];
 
@@ -86,17 +86,21 @@ export class ObjectClient extends Client {
 
   register() {
     super.register();
-    ObjectClient.clients.push(this);
+    ObjectClient.objects.push(this);
+  }
+
+  hasProjectRights(projectId: string) {
+    return this.projectRights.includes(projectId);
   }
 
   static getClientBySocket(socket: WebSocket) {
-    return ObjectClient.clients.find(w => {
+    return ObjectClient.objects.find(w => {
       return w.getSocket() === socket;
     });
   }
 
   static isSocketAlreadyWatcher(socket: WebSocket) {
-    return ObjectClient.clients.find(w => w.getSocket() === socket) != null;
+    return ObjectClient.objects.find(w => w.getSocket() === socket) != null;
   }
 
   sendUpdate(updateData: IoTSocketUpdateRequest) {

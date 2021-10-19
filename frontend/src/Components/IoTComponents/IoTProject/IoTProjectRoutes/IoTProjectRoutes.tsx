@@ -4,7 +4,6 @@ import IoTRouteCard from '../../IoTRoute/IoTRouteCard/IoTRouteCard';
 import FormModal from '../../../UtilsComponents/FormModal/FormModal';
 import { IoTProjectRoutesProps } from './IoTProjectRoutesTypes';
 import { IotRoute } from '../../../../Models/Iot/IoTroute.entity';
-import Form from '../../../UtilsComponents/Form/Form';
 import { useState } from 'react';
 import { IoTporjectAddRouteForm } from '../IoTProjectAddRouteForm/IoTProjectAddRouteForm';
 
