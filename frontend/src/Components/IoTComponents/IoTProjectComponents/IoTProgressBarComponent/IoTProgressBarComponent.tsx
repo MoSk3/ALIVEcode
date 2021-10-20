@@ -1,4 +1,5 @@
-import { IoTProgressBar } from '../../../Models/Iot/IoTProjectClasses/Components/IoTProgressBar';
+import { IoTProgressBar } from '../../../../Models/Iot/IoTProjectClasses/Components/IoTProgressBar';
+import { StyledIoTProgressBar } from './iotProgressBarComponentTypes';
 
 const IoTProgressBarComponent = ({
 	component,
@@ -8,15 +9,9 @@ const IoTProgressBarComponent = ({
 	const percentage = component.value / component.getMax();
 
 	return (
-		<div
-			style={{
-				display: 'flex',
-				flexDirection: 'column',
-				alignItems: 'center',
-			}}
-		>
-			<h4 style={{ textAlign: 'center' }}>{component.name}</h4>
-			<div className="my-progress mb-5">
+		<StyledIoTProgressBar>
+			<h4>{component.name}</h4>
+			<div className="my-progress">
 				<div className="barOverflow">
 					<div
 						className="bar"
@@ -32,7 +27,7 @@ const IoTProgressBarComponent = ({
 					{component.isPercentage && '%'}
 				</span>
 			</div>
-		</div>
+		</StyledIoTProgressBar>
 	);
 };
 

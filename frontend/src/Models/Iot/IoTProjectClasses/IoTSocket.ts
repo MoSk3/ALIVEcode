@@ -65,6 +65,12 @@ export class IoTSocket {
 					},
 				}),
 			);
+			this.socket.send(
+				JSON.stringify({
+					event: 'test/:id',
+					data: 'L',
+				}),
+			);
 		};
 
 		this.socket.onerror = (ev: Event) => {

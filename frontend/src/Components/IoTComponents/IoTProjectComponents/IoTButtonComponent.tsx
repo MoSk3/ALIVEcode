@@ -2,19 +2,7 @@ import { IoTButton } from "../../../Models/Iot/IoTProjectClasses/Components/IoTB
 import Button from '../../UtilsComponents/Button/Button';
 
 const IoTButtonComponent = ({ component }: { component: IoTButton }) => {
-	return (
-		<div
-			style={{
-				height: '100%',
-				display: 'flex',
-				flexDirection: 'column',
-				alignItems: 'center',
-				justifyContent: 'center',
-			}}
-		>
-			<Button variant="primary">{component.value}</Button>
-		</div>
-	);
+	return <Button variant="primary">{component.value}</Button>;
 };
 
 export default IoTButtonComponent;

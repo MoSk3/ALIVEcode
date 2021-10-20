@@ -4,14 +4,10 @@ import { IoTSocket } from '../../../Models/Iot/IoTProjectClasses/IoTSocket';
 import { classToPlain, plainToClass } from 'class-transformer';
 import { IoTComponent } from '../../../Models/Iot/IoTProjectClasses/IoTComponent';
 import { IOT_COMPONENT_TYPE } from '../../../Models/Iot/IoTProjectClasses/IoTComponent';
-import IoTButtonComponent from '../IoTProjectComponents/IoTButtonComponent';
-import { Col, Row, Container } from 'react-bootstrap';
-import IoTProgressBarComponent from '../IoTProjectComponents/IoTProgressBarComponent';
-import { IoTProgressBar } from '../../../Models/Iot/IoTProjectClasses/Components/IoTProgressBar';
-import IoTLogsComponent from '../IoTProjectComponents/IoTLogsComponent/IoTLogsComponent';
-import { IoTLogs } from '../../../Models/Iot/IoTProjectClasses/Components/IoTLogs';
+import { Row, Container } from 'react-bootstrap';
 import api from '../../../Models/api';
 import { StyledIoTProjectBody } from './iotProjectBodyTypes';
+import IoTGenericComponent from '../IoTProjectComponents/IoTGenericComponent/IoTGenericComponent';
 
 const IoTProjectBody = ({ project }: { project: IoTProject }) => {
 	const [components, setComponents] = useState<Array<IoTComponent>>([]);
@@ -107,19 +103,6 @@ const IoTProjectBody = ({ project }: { project: IoTProject }) => {
 		socket.setOnRender(onLayoutChange);
 	}, [socket, onLayoutChange]);
 
-	const renderComponent = (component: IoTComponent) => {
-		switch (component.type) {
-			case IOT_COMPONENT_TYPE.BUTTON:
-				return <IoTButtonComponent component={component} />;
-			case IOT_COMPONENT_TYPE.PROGRESS_BAR:
-				return (
-					<IoTProgressBarComponent component={component as IoTProgressBar} />
-				);
-			case IOT_COMPONENT_TYPE.LOGS:
-				return <IoTLogsComponent component={component as IoTLogs} />;
-		}
-	};
-
 	const getComponentsMatrix = (): Array<Array<IoTComponent>> => {
 		const componentsMatrix = [];
 		for (let i = 0; i < Math.ceil(components.length / 3); i++) {
@@ -135,7 +118,7 @@ const IoTProjectBody = ({ project }: { project: IoTProject }) => {
 				{getComponentsMatrix().map((row, idx) => (
 					<Row className="w-100" key={idx}>
 						{row.map((c, idx2) => (
-							<Col key={idx2}>{renderComponent(c)}</Col>
+							<IoTGenericComponent key={idx2} component={c} />
 						))}
 					</Row>
 				))}

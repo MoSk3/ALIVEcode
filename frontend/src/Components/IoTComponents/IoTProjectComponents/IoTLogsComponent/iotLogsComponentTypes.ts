@@ -3,15 +3,15 @@ import styled from 'styled-components';
 export const StyledIoTLogsComponent = styled.div`
 	position: relative;
 	height: 230px;
-	margin: 5px;
+	margin: 10px;
+	background-color: var(--background-color);
+	border: 1px solid var(--bg-shade-four-color);
 
 	.log-content {
 		position: relative;
 		height: 200px;
 		padding: 20px;
 	}
-
-	background-color: var(--primary-color);
 
 	.log-title {
 		font-size: 1.3em;
