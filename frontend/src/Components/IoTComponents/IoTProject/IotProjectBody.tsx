@@ -1,7 +1,7 @@
 import { IoTProject, IoTProjectLayout } from '../../../Models/Iot/IoTproject.entity';
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { IoTSocket } from '../../../Models/Iot/IoTProjectClasses/IoTSocket';
-import { classToPlain } from 'class-transformer';
+import { classToPlain, plainToClass } from 'class-transformer';
 import { IoTComponent } from '../../../Models/Iot/IoTProjectClasses/IoTComponent';
 import { IOT_COMPONENT_TYPE } from '../../../Models/Iot/IoTProjectClasses/IoTComponent';
 import IoTButtonComponent from '../IoTProjectComponents/IoTButtonComponent';
@@ -40,37 +40,67 @@ const IoTProjectBody = ({ project }: { project: IoTProject }) => {
 	const socket = useMemo(
 		() =>
 			new IoTSocket(
-				project,
-				/*plainToClass(IoTProject, {
+				//project,
+				plainToClass(IoTProject, {
 					...project,
 					layout: {
 						components: [
 							{
 								id: 'button',
 								type: IOT_COMPONENT_TYPE.BUTTON,
+								value: 'CLICK ME',
 							},
 							{
 								id: 'button2',
 								type: IOT_COMPONENT_TYPE.BUTTON,
+								value: 'LOOOL',
 							},
 							{
 								id: 'progress',
 								type: IOT_COMPONENT_TYPE.PROGRESS_BAR,
 								min: 100,
 								max: 1000,
+								value: 50,
 							},
 							{
 								id: 'logs',
 								type: IOT_COMPONENT_TYPE.LOGS,
 								value: [],
 							},
+							{
+								id: 'button3',
+								type: IOT_COMPONENT_TYPE.BUTTON,
+								value: 'CLICK ME',
+							},
+							{
+								id: 'logs3',
+								type: IOT_COMPONENT_TYPE.LOGS,
+								value: [],
+							},
+							{
+								id: 'button4',
+								type: IOT_COMPONENT_TYPE.BUTTON,
+								value: 'CLICK ME',
+							},
+							{
+								id: 'progress2',
+								type: IOT_COMPONENT_TYPE.BUTTON,
+								value: 80,
+								min: 0,
+								max: 100,
+							},
+							{
+								id: 'logs4',
+								type: IOT_COMPONENT_TYPE.LOGS,
+								value: [],
+							},
 						],
 					},
-				}),*/
+				}),
 				onLayoutChange,
 			),
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[project],
+		[],
 	);
 
 	useEffect(() => {

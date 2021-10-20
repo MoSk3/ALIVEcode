@@ -41,12 +41,13 @@ export class IoTSocket {
 		if (!process.env.REACT_APP_IOT_URL)
 			throw new Error('Env variable REACT_APP_IOT_URL not set');
 
+		if (this.socket && (this.socket.CONNECTING || this.socket.OPEN)) return;
+
 		this.socket = new WebSocket(process.env.REACT_APP_IOT_URL);
 
 		this.socket.onopen = () => {
 			this.socket.onmessage = e => {
-				console.log(e);
-				const data = e.data;
+				const data = JSON.parse(e.data);
 				switch (data.event) {
 					case 'update':
 						console.log(data.data);

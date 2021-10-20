@@ -1,8 +1,9 @@
 import styled from 'styled-components';
 
 export const StyledIoTLogsComponent = styled.div`
-	position: absolute;
+	position: relative;
 	height: 230px;
+	margin: 5px;
 
 	.log-content {
 		position: relative;

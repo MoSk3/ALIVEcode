@@ -44,6 +44,7 @@ export class IoTProject extends CreatedByUser {
 		}
 
 		value.components = value.components.map((comp: IoTComponent) => {
+			console.log(comp);
 			if (comp.type === IOT_COMPONENT_TYPE.BUTTON)
 				return plainToClass(IoTButton, comp);
 			if (comp.type === IOT_COMPONENT_TYPE.PROGRESS_BAR)
@@ -59,10 +60,10 @@ export class IoTProject extends CreatedByUser {
 		);
 		return value;
 	})
+	layout: IoTProjectLayout;
+
 	@Type(() => IoTObject)
 	iotObjects?: IoTObject[];
-
-	layout: IoTProjectLayout;
 
 	access: IOTPROJECT_ACCESS;
 
