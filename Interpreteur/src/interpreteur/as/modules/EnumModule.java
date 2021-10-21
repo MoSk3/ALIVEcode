@@ -6,8 +6,7 @@ public enum EnumModule {
     Math(ModuleMath::charger),
     Voiture(ModuleVoiture::charger),
     Dict(ModuleDict::charger),
-    Test(ModuleTest::charger),
-    Ai(ModuleAI::charger)
+    Ai(ModuleAI::charger),
     ;
 
     EnumModule(ModuleFactory moduleFactory) {
