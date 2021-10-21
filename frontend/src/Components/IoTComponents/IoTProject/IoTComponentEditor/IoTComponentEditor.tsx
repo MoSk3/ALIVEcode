@@ -16,8 +16,10 @@ const IoTComponentEditor = ({ component }: iotComponentEditorProps) => {
 				<>
 					<Form.Label>Value</Form.Label>
 					<Form.Control
-						defaultValue={component.value}
-						type="number"
+						type="range"
+						min={component.getMin()}
+						max={component.getMax()}
+						value={component.value}
 						className="mb-2"
 						onChange={(e: any) => component.setValue(e.target.value)}
 					/>
