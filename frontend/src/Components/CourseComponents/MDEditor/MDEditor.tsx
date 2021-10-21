@@ -3,6 +3,12 @@ import { StyledMDEditor, MDEditorProps } from './mdEditorTypes';
 import { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import Button from '../../UtilsComponents/Button/Button';
+import remarkGfm from 'remark-gfm';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
+import remarkBreaks from 'remark-breaks';
+
+import 'katex/dist/katex.min.css';
 
 const MDEditor = ({ onSave, defaultValue }: MDEditorProps) => {
 	const [isPreview, setIsPreview] = useState(false);
@@ -18,6 +24,10 @@ const MDEditor = ({ onSave, defaultValue }: MDEditorProps) => {
 				<div onClick={() => setIsPreview(false)}>Edit</div>
 				<div onClick={() => setIsPreview(true)}>Preview</div>
 			</div>
+			<div className="editor-toolbar">
+				<div>Color</div>
+				<div>Math</div>
+			</div>
 			<div className="editor-body">
 				{!isPreview ? (
 					<Form.Control
@@ -26,7 +36,12 @@ const MDEditor = ({ onSave, defaultValue }: MDEditorProps) => {
 						value={content}
 					/>
 				) : (
-					<ReactMarkdown>{content}</ReactMarkdown>
+					<ReactMarkdown
+						remarkPlugins={[remarkGfm, remarkMath, remarkBreaks]}
+						rehypePlugins={[rehypeKatex]}
+					>
+						{content}
+					</ReactMarkdown>
 				)}
 			</div>
 			<div className="editor-footer">

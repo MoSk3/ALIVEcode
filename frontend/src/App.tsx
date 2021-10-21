@@ -43,7 +43,7 @@ const GlobalStyle = createGlobalStyle`
 		for (const [colorName, color] of Object.entries(theme.color)) {
 			const cssName = colorName.includes('rgb')
 				? `--${colorName.split('_')[0]}-color-rgb`
-				: `--${colorName}-color`;
+				: `--${colorName.replace('_', '-')}-color`;
 			cssVars.push(`${cssName}: ${color}`);
 		}
 		return ':root {' + cssVars.join(';') + '}';
