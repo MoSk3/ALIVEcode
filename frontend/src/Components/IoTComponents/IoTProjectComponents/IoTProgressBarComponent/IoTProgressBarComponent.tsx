@@ -6,18 +6,21 @@ const IoTProgressBarComponent = ({
 }: {
 	component: IoTProgressBar;
 }) => {
-	const percentage = component.value / component.getMax();
+	const percentage =
+		(component.value - component.getMin()) /
+		(component.getMax() - component.getMin());
 
 	return (
 		<StyledIoTProgressBar>
-			<h4>{component.name}</h4>
 			<div className="my-progress">
 				<div className="barOverflow">
 					<div
 						className="bar"
 						style={{
 							transform: `rotate(${
-								(percentage <= 1 ? percentage : 1) * 180 + 45
+								(percentage <= 1 ? (percentage >= 0 ? percentage : 0) : 1) *
+									180 +
+								45
 							}deg)`,
 						}}
 					></div>
@@ -25,6 +28,7 @@ const IoTProgressBarComponent = ({
 				<span className="my-progress-span">
 					{component.value}
 					{component.isPercentage && '%'}
+					{!component.value && !component.isPercentage && '\u00A0'}
 				</span>
 			</div>
 		</StyledIoTProgressBar>

@@ -15,6 +15,21 @@ export abstract class IoTComponent {
 	@Expose()
 	public name: string;
 
+	public setName(newName: string) {
+		this.name = newName;
+		this.getComponentManager()?.render();
+	}
+
+	public setId(newId: string) {
+		this.id = newId;
+		this.getComponentManager()?.render();
+	}
+
+	public setValue(newValue: any) {
+		this.value = newValue;
+		this.getComponentManager()?.render();
+	}
+
 	@Expose()
 	public type: IOT_COMPONENT_TYPE;
 

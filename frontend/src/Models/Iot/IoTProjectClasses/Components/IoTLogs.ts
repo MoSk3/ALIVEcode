@@ -17,6 +17,12 @@ export class IoTLogs extends IoTComponent {
 		this.value = data;
 	}
 
+	updateLog(log: IoTLogModel, updatedLog: IoTLogModel) {
+		this.value = this.value.map(l => (l === log ? updatedLog : l));
+
+		this.getComponentManager()?.render();
+	}
+
 	addLog(text: string) {
 		this.value.push({
 			text,

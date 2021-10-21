@@ -2,15 +2,26 @@ import styled from 'styled-components';
 
 export const StyledIoTLogsComponent = styled.div`
 	position: relative;
-	height: 230px;
+	width: 100%;
 	margin: 10px;
 	background-color: var(--background-color);
 	border: 1px solid var(--bg-shade-four-color);
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 10px;
+
+	.log-row {
+		width: 100%;
+	}
 
 	.log-content {
 		position: relative;
-		height: 200px;
 		padding: 20px;
+		height: 300px;
+		width: 100%;
 	}
 
 	.log-title {
@@ -20,7 +31,12 @@ export const StyledIoTLogsComponent = styled.div`
 	}
 
 	.log-entries {
+		position: relative;
 		height: 100%;
-		overflow-y: auto;
+		overflow-y: scroll;
+	}
+
+	.log-entries label {
+		display: block;
 	}
 `;

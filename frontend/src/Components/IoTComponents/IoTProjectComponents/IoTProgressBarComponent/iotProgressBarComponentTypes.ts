@@ -28,8 +28,8 @@ export const StyledIoTProgressBar = styled.div`
 		border-radius: 50%;
 		box-sizing: border-box;
 		border: 15px solid #bbb; /* half gray, */
-		border-bottom-color: #fbff00; /* half azure */
-		border-right-color: #fbff00;
+		border-bottom-color: var(--contrast-color); /* half azure */
+		border-right-color: var(--contrast-color);
 		transform: rotate(45deg);
 		transition: 0.2s;
 	}

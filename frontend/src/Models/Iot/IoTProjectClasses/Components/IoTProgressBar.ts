@@ -16,6 +16,12 @@ export class IoTProgressBar extends IoTComponent {
 		this.value = data;
 	}
 
+	public setIsPercentage(newIsPercentage: boolean) {
+		this.isPercentage = newIsPercentage;
+
+		this.getComponentManager()?.render();
+	}
+
 	public setRange(min: number, max: number) {
 		this.min = min;
 		this.max = max;

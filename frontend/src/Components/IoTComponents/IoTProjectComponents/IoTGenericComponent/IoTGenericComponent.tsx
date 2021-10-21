@@ -1,14 +1,20 @@
 import { IoTGenericComponentProps, StyledIoTGenericComponent } from './iotGenericComponentTypes';
 import { IOT_COMPONENT_TYPE } from '../../../../Models/Iot/IoTProjectClasses/IoTComponent';
-import IoTButtonComponent from '../IoTButtonComponent';
+import IoTButtonComponent from '../IoTButtonComponent/IoTButtonComponent';
 import IoTProgressBarComponent from '../IoTProgressBarComponent/IoTProgressBarComponent';
 import IoTLogsComponent from '../IoTLogsComponent/IoTLogsComponent';
 import { IoTLogs } from '../../../../Models/Iot/IoTProjectClasses/Components/IoTLogs';
 import { IoTProgressBar } from '../../../../Models/Iot/IoTProjectClasses/Components/IoTProgressBar';
 import { faWrench } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useState } from 'react';
 
-const IoTGenericComponent = ({ component }: IoTGenericComponentProps) => {
+const IoTGenericComponent = ({
+	component,
+	setEditingComponent,
+}: IoTGenericComponentProps) => {
+	const [isHovering, setIsHovering] = useState(false);
+
 	const renderSpecificComponent = (): React.ReactNode => {
 		switch (component.type) {
 			case IOT_COMPONENT_TYPE.BUTTON:
@@ -23,7 +29,15 @@ const IoTGenericComponent = ({ component }: IoTGenericComponentProps) => {
 	};
 
 	return (
-		<StyledIoTGenericComponent>
+		<StyledIoTGenericComponent
+			isHovering={isHovering}
+			onMouseOver={() =>
+				setEditingComponent && !isHovering && setIsHovering(true)
+			}
+			onMouseLeave={() =>
+				setEditingComponent && isHovering && setIsHovering(false)
+			}
+		>
 			<div
 				style={{
 					height: '100%',
@@ -31,14 +45,19 @@ const IoTGenericComponent = ({ component }: IoTGenericComponentProps) => {
 					flexDirection: 'column',
 					alignItems: 'center',
 					justifyContent: 'center',
+					padding: '10px',
 				}}
 			>
+				<label className="component-name">{component.name}</label>
 				{renderSpecificComponent()}
-				<FontAwesomeIcon
-					className="edit-component-btn"
-					icon={faWrench}
-					size="2x"
-				></FontAwesomeIcon>
+				{setEditingComponent && (
+					<FontAwesomeIcon
+						onClick={() => setEditingComponent(component)}
+						className="edit-component-btn"
+						icon={faWrench}
+						size="2x"
+					/>
+				)}
 			</div>
 		</StyledIoTGenericComponent>
 	);
