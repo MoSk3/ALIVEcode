@@ -1,8 +1,6 @@
 import { IoTProjectProps, IoTProjectTabs, StyledIoTProject } from './iotProjectTypes';
 import { useEffect, useState, useContext } from 'react';
-import {
-	IoTProject as ProjectModel,
-} from '../../../Models/Iot/IoTproject.entity';
+import { IoTProject as ProjectModel } from '../../../Models/Iot/IoTproject.entity';
 import api from '../../../Models/api';
 import { useHistory } from 'react-router-dom';
 import { useAlert } from 'react-alert';
@@ -11,11 +9,7 @@ import { UserContext } from '../../../state/contexts/UserContext';
 import LoadingScreen from '../../../Components/UtilsComponents/LoadingScreen/LoadingScreen';
 import { Col, Row } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-	faRoute,
-	faCog,
-	faPlug,
-} from '@fortawesome/free-solid-svg-icons';
+import { faRoute, faCog, faPlug } from '@fortawesome/free-solid-svg-icons';
 import IoTProjectBody from '../../../Components/IoTComponents/IoTProject/IotProjectBody';
 import IoTProjectAccess from '../../../Components/IoTComponents/IoTProject/IoTProjectAccess/IoTProjectAccess';
 import IoTProjectRoutes from '../../../Components/IoTComponents/IoTProject/IoTProjectRoutes/IoTProjectRoutes';
@@ -61,11 +55,11 @@ const IoTProject = (props: IoTProjectProps) => {
 	const getTabContent = () => {
 		switch (selectedTab) {
 			case 'settings':
-				return <IoTProjectSettings setProject={setProject} project={project} />
+				return <IoTProjectSettings setProject={setProject} project={project} />;
 			case 'routes':
-				return <IoTProjectRoutes setProject={setProject} project={project} />
+				return <IoTProjectRoutes setProject={setProject} project={project} />;
 			case 'access':
-				return <IoTProjectAccess setProject={setProject} project={project} />
+				return <IoTProjectAccess setProject={setProject} project={project} />;
 		}
 	};
 
@@ -129,30 +123,3 @@ const IoTProject = (props: IoTProjectProps) => {
 };
 
 export default IoTProject;
-/*
-						<h2 className="mb-3">Light level</h2>
-						<div className="my-progress mb-5">
-							<div className="barOverflow">
-								<div
-									className="bar"
-									style={{
-										transform: `rotate(${
-											((lightLevel > 100 ? 100 : lightLevel) / 100) * 180 + 45
-										}deg)`,
-									}}
-								></div>
-							</div>
-							<span className="my-progress-span">
-								{lightLevel > 100 ? 100 : lightLevel}%
-							</span>
-						</div>
-						<h2 className="mb-3">Cluster notification</h2>
-						<Button
-							variant="primary"
-							onClick={() =>
-								socket && socket.emit('send_notification', 'notif')
-							}
-						>
-							Send notification to cluster
-						</Button>
-						*/

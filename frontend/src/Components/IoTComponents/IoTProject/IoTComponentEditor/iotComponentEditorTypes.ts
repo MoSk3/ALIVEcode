@@ -1,5 +1,6 @@
 import { IoTComponent } from '../../../../Models/Iot/IoTProjectClasses/IoTComponent';
 
-export type iotComponentEditorProps = {
+export type IoTComponentEditorProps = {
 	component: IoTComponent;
+	onClose: () => void;
 };

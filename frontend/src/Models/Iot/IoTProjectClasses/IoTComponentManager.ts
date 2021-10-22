@@ -41,7 +41,18 @@ export class IoTComponentManager {
 		return this.components;
 	}
 
-	private addComponent() {}
+	public addComponent(component: IoTComponent) {
+		component.setComponentManager(this);
+		this.components.push(component);
+		this.render();
+		return component;
+	}
+
+	public removeComponent(component: IoTComponent) {
+		this.components = this.components.filter(c => c !== component);
+		this.render();
+		return component;
+	}
 
 	public save() {}
 

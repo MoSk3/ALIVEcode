@@ -31,7 +31,7 @@ export abstract class IoTComponent {
 	}
 
 	@Expose()
-	public type: IOT_COMPONENT_TYPE;
+	public abstract type: IOT_COMPONENT_TYPE;
 
 	@Expose()
 	@Transform(({ value }) => {

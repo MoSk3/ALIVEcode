@@ -11,6 +11,8 @@ import { useState } from 'react';
 
 const IoTGenericComponent = ({
 	component,
+	selectable,
+	onSelect,
 	setEditingComponent,
 }: IoTGenericComponentProps) => {
 	const [isHovering, setIsHovering] = useState(false);
@@ -31,23 +33,12 @@ const IoTGenericComponent = ({
 	return (
 		<StyledIoTGenericComponent
 			isHovering={isHovering}
-			onMouseOver={() =>
-				setEditingComponent && !isHovering && setIsHovering(true)
-			}
-			onMouseLeave={() =>
-				setEditingComponent && isHovering && setIsHovering(false)
-			}
+			selectable={selectable ? true : false}
+			onMouseOver={() => !isHovering && setIsHovering(true)}
+			onMouseLeave={() => isHovering && setIsHovering(false)}
+			onClick={() => selectable && onSelect && onSelect()}
 		>
-			<div
-				style={{
-					height: '100%',
-					display: 'flex',
-					flexDirection: 'column',
-					alignItems: 'center',
-					justifyContent: 'center',
-					padding: '10px',
-				}}
-			>
+			<div className="component">
 				<label className="component-name">{component.name}</label>
 				{renderSpecificComponent()}
 				{setEditingComponent && (

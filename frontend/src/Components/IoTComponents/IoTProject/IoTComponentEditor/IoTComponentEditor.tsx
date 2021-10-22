@@ -1,5 +1,5 @@
 import { Col, Form, Row } from 'react-bootstrap';
-import { iotComponentEditorProps } from './iotComponentEditorTypes';
+import { IoTComponentEditorProps } from './iotComponentEditorTypes';
 import { IoTProgressBar } from '../../../../Models/Iot/IoTProjectClasses/Components/IoTProgressBar';
 import IoTGenericComponent from '../../IoTProjectComponents/IoTGenericComponent/IoTGenericComponent';
 import { IoTButton } from '../../../../Models/Iot/IoTProjectClasses/Components/IoTButton';
@@ -8,8 +8,25 @@ import Button from '../../../UtilsComponents/Button/Button';
 import Link from '../../../UtilsComponents/Link/Link';
 import DateTime from 'react-datetime';
 import moment from 'moment';
+import AlertConfirm from '../../../UtilsComponents/Alert/AlertConfirm/AlertConfirm';
+import { useState } from 'react';
+import { useAlert } from 'react-alert';
+import { useTranslation } from 'react-i18next';
 
-const IoTComponentEditor = ({ component }: iotComponentEditorProps) => {
+const IoTComponentEditor = ({
+	component,
+	onClose,
+}: IoTComponentEditorProps) => {
+	const [openDeleteMenu, setOpenDeleteMenu] = useState(false);
+	const alert = useAlert();
+	const { t } = useTranslation();
+
+	const removeComponent = () => {
+		component.getComponentManager()?.removeComponent(component);
+		onClose();
+		alert.success(t('iot.project.remove_component.success'));
+	};
+
 	const renderComponentSpecificFields = () => {
 		if (component instanceof IoTProgressBar)
 			return (
@@ -141,6 +158,18 @@ const IoTComponentEditor = ({ component }: iotComponentEditorProps) => {
 			/>
 			{renderComponentSpecificFields()}
 			<IoTGenericComponent component={component}></IoTGenericComponent>
+			<Button variant="danger" onClick={() => setOpenDeleteMenu(true)}>
+				Delete component
+			</Button>
+			<AlertConfirm
+				title={`Deletion of component ${component.name}`}
+				open={openDeleteMenu}
+				onClose={() => setOpenDeleteMenu(false)}
+				onConfirm={removeComponent}
+				onCancel={() => setOpenDeleteMenu(false)}
+			>
+				Are you sure you want to delete the component {component.name} ?
+			</AlertConfirm>
 		</div>
 	);
 };

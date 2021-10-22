@@ -4,6 +4,8 @@ import { Col } from 'react-bootstrap';
 
 export type IoTGenericComponentProps = {
 	component: IoTComponent;
+	selectable?: boolean;
+	onSelect?: () => void;
 	setEditingComponent?: (component: IoTComponent) => void;
 };
 
@@ -11,6 +13,24 @@ export const StyledIoTGenericComponent = styled(Col)`
 	background-color: var(--bg-shade-one-color);
 	margin: 5px !important;
 	border-radius: 10px;
+	${({ selectable, isHovering }: any) =>
+		selectable &&
+		isHovering &&
+		'transform: scale(105%) rotateZ(2deg); cursor: pointer;'}
+	transition: 0.2s;
+
+	label {
+		cursor: inherit;
+	}
+
+	.component {
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		padding: 10px;
+	}
 
 	.edit-component-btn {
 		position: absolute;

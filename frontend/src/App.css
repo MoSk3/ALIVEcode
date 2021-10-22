@@ -70,3 +70,7 @@ td.rdtMonth:hover,
     transform: rotate(360deg);
   }
 }
+
+	.modal-backdrop-alert-confirm {
+		z-index: 1060 !important;
+	}

@@ -9,12 +9,19 @@ import { StyledIoTProjectBody } from './iotProjectBodyTypes';
 import IoTGenericComponent from '../IoTProjectComponents/IoTGenericComponent/IoTGenericComponent';
 import Modal from '../../UtilsComponents/Modal/Modal';
 import IoTComponentEditor from './IoTComponentEditor/IoTComponentEditor';
+import Button from '../../UtilsComponents/Button/Button';
+import IoTComponentCreator from './IoTComponentCreator/IoTComponentCreator';
+import { useAlert } from 'react-alert';
+import { useTranslation } from 'react-i18next';
 
 const IoTProjectBody = ({ project }: { project: IoTProject }) => {
 	const [components, setComponents] = useState<Array<IoTComponent>>([]);
 	const [lastSaved, setLastSaved] = useState<number>(Date.now() - 4000);
 	const [editingComponent, setEditingComponent] = useState<IoTComponent>();
+	const [openComponentCreator, setOpenComponentCreator] = useState(false);
 	const saveTimeout = useRef<any>(null);
+	const alert = useAlert();
+	const { t } = useTranslation();
 
 	const saveComponents = useCallback(
 		async (components: Array<IoTComponent>) => {
@@ -51,67 +58,7 @@ const IoTProjectBody = ({ project }: { project: IoTProject }) => {
 	);
 
 	const socket = useMemo(
-		() =>
-			new IoTSocket(
-				project,
-				/*plainToClass(IoTProject, {
-					...project,
-					layout: {
-						components: [
-							{
-								id: 'button',
-								type: IOT_COMPONENT_TYPE.BUTTON,
-								value: 'CLICK ME',
-							},
-							{
-								id: 'button2',
-								type: IOT_COMPONENT_TYPE.BUTTON,
-								value: 'LOOOL',
-							},
-							{
-								id: 'progress',
-								type: IOT_COMPONENT_TYPE.PROGRESS_BAR,
-								min: 100,
-								max: 1000,
-								value: 50,
-							},
-							{
-								id: 'logs',
-								type: IOT_COMPONENT_TYPE.LOGS,
-								value: [],
-							},
-							{
-								id: 'button3',
-								type: IOT_COMPONENT_TYPE.BUTTON,
-								value: 'CLICK ME',
-							},
-							{
-								id: 'logs3',
-								type: IOT_COMPONENT_TYPE.LOGS,
-								value: [],
-							},
-							{
-								id: 'button4',
-								type: IOT_COMPONENT_TYPE.BUTTON,
-								value: 'CLICK ME',
-							},
-							{
-								id: 'progress2',
-								type: IOT_COMPONENT_TYPE.BUTTON,
-								value: 80,
-								min: 0,
-								max: 100,
-							},
-							{
-								id: 'logs4',
-								type: IOT_COMPONENT_TYPE.LOGS,
-								value: [],
-							},
-						],
-					},
-				}),*/
-				onLayoutChange,
-			),
+		() => new IoTSocket(project, onLayoutChange),
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[],
 	);
@@ -121,9 +68,10 @@ const IoTProjectBody = ({ project }: { project: IoTProject }) => {
 	}, [socket, onLayoutChange]);
 
 	const getComponentsMatrix = (): Array<Array<IoTComponent>> => {
+		const nbColumns = 2;
 		const componentsMatrix = [];
-		for (let i = 0; i < Math.ceil(components.length / 3); i++) {
-			const row = components.slice(i * 3, i * 3 + 3);
+		for (let i = 0; i < Math.ceil(components.length / nbColumns); i++) {
+			const row = components.slice(i * nbColumns, i * nbColumns + nbColumns);
 			componentsMatrix.push(row);
 		}
 		return componentsMatrix;
@@ -132,6 +80,14 @@ const IoTProjectBody = ({ project }: { project: IoTProject }) => {
 	return (
 		<StyledIoTProjectBody>
 			<Container fluid>
+				<Row className="w-100 mb-3" style={{ justifyContent: 'center' }}>
+					<Button
+						variant="secondary"
+						onClick={() => setOpenComponentCreator(!openComponentCreator)}
+					>
+						Add a component
+					</Button>
+				</Row>
 				{getComponentsMatrix().map((row, idx) => (
 					<Row className="w-100" key={idx}>
 						{row.map((c, idx2) => (
@@ -146,13 +102,35 @@ const IoTProjectBody = ({ project }: { project: IoTProject }) => {
 			</Container>
 			<Modal
 				size="lg"
+				centered
 				title="Edit component"
 				open={editingComponent ? true : false}
 				onClose={() => setEditingComponent(undefined)}
 			>
 				{editingComponent && (
-					<IoTComponentEditor component={editingComponent}></IoTComponentEditor>
+					<IoTComponentEditor
+						onClose={() => setEditingComponent(undefined)}
+						component={editingComponent}
+					></IoTComponentEditor>
 				)}
+			</Modal>
+			<Modal
+				size="xl"
+				title="Edit component"
+				centered
+				open={openComponentCreator}
+				onClose={() => setOpenComponentCreator(false)}
+			>
+				<IoTComponentCreator
+					onSelect={(c: IoTComponent) => {
+						const componentManager = socket.getComponentManager();
+						if (!componentManager) return;
+						setOpenComponentCreator(false);
+						c = componentManager.addComponent(c);
+						alert.success(t('iot.project.add_component.success'));
+						setEditingComponent(c);
+					}}
+				/>
 			</Modal>
 		</StyledIoTProjectBody>
 	);
