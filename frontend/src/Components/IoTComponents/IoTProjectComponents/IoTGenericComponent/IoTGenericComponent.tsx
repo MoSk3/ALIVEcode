@@ -8,6 +8,7 @@ import { IoTProgressBar } from '../../../../Models/Iot/IoTProjectClasses/Compone
 import { faWrench } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
+import { IoTButton } from '../../../../Models/Iot/IoTProjectClasses/Components/IoTButton';
 
 const IoTGenericComponent = ({
 	component,
@@ -20,7 +21,7 @@ const IoTGenericComponent = ({
 	const renderSpecificComponent = (): React.ReactNode => {
 		switch (component.type) {
 			case IOT_COMPONENT_TYPE.BUTTON:
-				return <IoTButtonComponent component={component} />;
+				return <IoTButtonComponent component={component as IoTButton} />;
 			case IOT_COMPONENT_TYPE.PROGRESS_BAR:
 				return (
 					<IoTProgressBarComponent component={component as IoTProgressBar} />

@@ -9,17 +9,32 @@ import Link from '../../../UtilsComponents/Link/Link';
 import DateTime from 'react-datetime';
 import moment from 'moment';
 import AlertConfirm from '../../../UtilsComponents/Alert/AlertConfirm/AlertConfirm';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAlert } from 'react-alert';
 import { useTranslation } from 'react-i18next';
+import { IoTObject } from '../../../../Models/Iot/IoTobject.entity';
+import api from '../../../../Models/api';
 
 const IoTComponentEditor = ({
 	component,
 	onClose,
 }: IoTComponentEditorProps) => {
 	const [openDeleteMenu, setOpenDeleteMenu] = useState(false);
+	const [iotObjects, setIoTObjects] = useState<IoTObject[]>();
 	const alert = useAlert();
 	const { t } = useTranslation();
+
+	useEffect(() => {
+		if (!(component instanceof IoTButton)) return;
+
+		const getIoTObjects = async () => {
+			const objects = await api.db.users.iot.getObjects({});
+			setIoTObjects(objects);
+		};
+
+		getIoTObjects();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [component.type]);
 
 	const removeComponent = () => {
 		component.getComponentManager()?.removeComponent(component);
@@ -72,11 +87,37 @@ const IoTComponentEditor = ({
 		if (component instanceof IoTButton)
 			return (
 				<>
-					<Form.Label>Value</Form.Label>
+					<Form.Label>Value (Label)</Form.Label>
 					<Form.Control
 						defaultValue={component.value}
 						className="mb-2"
 						onChange={(e: any) => component.setValue(e.target.value)}
+					/>
+					<hr />
+					<h3>On Click</h3>
+					<Form.Label>Targetted IoTObject</Form.Label>
+					<Form.Control
+						as="select"
+						className="mb-2"
+						onChange={(e: any) => component.setTargetId(e.target.value)}
+					>
+						{iotObjects?.map(obj => (
+							<option value={obj.id}>{obj.name}</option>
+						))}
+					</Form.Control>
+					<Form.Label>Action id</Form.Label>
+					<Form.Control
+						className="mb-2"
+						type="number"
+						defaultValue={component.actionId}
+						onChange={(e: any) => component.setActionId(e.target.value)}
+					/>
+					<Form.Label>Action Data</Form.Label>
+					<Form.Control
+						as="textarea"
+						className="mb-2"
+						defaultValue={component.actionData}
+						onChange={(e: any) => component.setActionData(e.target.value)}
 					/>
 				</>
 			);

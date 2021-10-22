@@ -1,4 +1,16 @@
+import { WsException } from '@nestjs/websockets';
 import { WebSocket } from 'ws';
+
+export type IoTSocketToObjectRequest = {
+  targetId: string;
+  actionId: number;
+  value: any;
+};
+
+export type IoTSocketToObjectRequestObject = {
+  id: number;
+  value: any;
+};
 
 export type IoTSocketUpdateRequest = {
   id: string;
@@ -68,8 +80,16 @@ export class WatcherClient extends Client {
     return WatcherClient.watchers.find(w => w.getSocket() === socket) != null;
   }
 
-  sendUpdate(updateData: IoTSocketUpdateRequest) {
-    this.sendCustom('update', updateData);
+  sendToObject(updateData: IoTSocketToObjectRequest) {
+    const object = ObjectClient.getClientById(updateData.targetId);
+    if (!object) throw new WsException('No matching object');
+
+    const data: IoTSocketToObjectRequestObject = {
+      id: updateData.actionId,
+      value: updateData.value,
+    };
+
+    object.getSocket().send(JSON.stringify(data));
   }
 }
 
@@ -96,6 +116,12 @@ export class ObjectClient extends Client {
   static getClientBySocket(socket: WebSocket) {
     return ObjectClient.objects.find(w => {
       return w.getSocket() === socket;
+    });
+  }
+
+  static getClientById(id: string) {
+    return ObjectClient.objects.find(o => {
+      return o.id === id;
     });
   }
 

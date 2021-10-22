@@ -27,6 +27,7 @@ export class IoTSocket {
 				this.iotProject.layout.components = components;
 				this.onRender(this.iotProject.layout);
 			},
+			this,
 		);
 		this.openSocket();
 	}
@@ -65,12 +66,6 @@ export class IoTSocket {
 					},
 				}),
 			);
-			this.socket.send(
-				JSON.stringify({
-					event: 'test/:id',
-					data: 'L',
-				}),
-			);
 		};
 
 		this.socket.onerror = (ev: Event) => {
@@ -80,6 +75,21 @@ export class IoTSocket {
 
 	public closeSocket() {
 		if (this.socket) this.socket.close();
+	}
+
+	public sendData(targetId: string, actionId: number, data: string) {
+		if (this.socket.OPEN) {
+			this.socket.send(
+				JSON.stringify({
+					event: 'send_object',
+					data: {
+						targetId,
+						actionId: Number(actionId),
+						value: JSON.parse(data),
+					},
+				}),
+			);
+		}
 	}
 
 	public onReceiveUpdate(request: IoTSocketUpdateRequest) {

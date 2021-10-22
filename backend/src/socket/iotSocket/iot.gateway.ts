@@ -11,7 +11,7 @@ import {
   WsException,
 } from '@nestjs/websockets';
 import { Server, WebSocket } from 'ws';
-import { IoTSocketUpdateRequest } from './iotSocket.types';
+import { IoTSocketToObjectRequest, IoTSocketUpdateRequest } from './iotSocket.types';
 import { IoTObjectService } from '../../models/iot/IoTobject/IoTobject.service';
 import { DTOInterceptor } from '../../utils/interceptors/dto.interceptor';
 import { IoTObjectEntity } from '../../models/iot/IoTobject/entities/IoTobject.entity';
@@ -40,8 +40,10 @@ export class IoTGateway implements OnGatewayDisconnect, OnGatewayConnection, OnG
     this.logger.log(`Client connected`);
   }
 
-  handleDisconnect() {
+  handleDisconnect(@ConnectedSocket() socket: WebSocket) {
     this.logger.log(`Client disconnected`);
+    ObjectClient.objects = ObjectClient.objects.filter(obj => obj.getSocket() !== socket);
+    WatcherClient.clients = WatcherClient.watchers.filter(w => w.getSocket() !== socket);
   }
 
   @SubscribeMessage('connect_watcher')
@@ -79,7 +81,6 @@ export class IoTGateway implements OnGatewayDisconnect, OnGatewayConnection, OnG
 
     // Logging
     this.logger.log(`IoTObject connect with id : ${payload.id}`);
-    client.sendCustom('connect-success', 'Watcher connected');
   }
 
   @SubscribeMessage('send_update')
@@ -92,5 +93,18 @@ export class IoTGateway implements OnGatewayDisconnect, OnGatewayConnection, OnG
     if (!object.hasProjectRights(payload.projectId)) throw new WsException('Forbidden');
 
     object.sendUpdate(payload);
+  }
+
+  @SubscribeMessage('send_object')
+  send_object(@ConnectedSocket() socket: WebSocket, @MessageBody() payload: IoTSocketToObjectRequest) {
+    if (!payload.targetId || !payload.actionId || !payload.value) throw new WsException('Bad payload');
+
+    const watcher = WatcherClient.getClientBySocket(socket);
+    if (!watcher) throw new WsException('Forbidden');
+
+    // TOOD : Add sending permission
+    //if (!watcher.hasProjectRights(payload.projectId)) throw new WsException('Forbidden');
+
+    watcher.sendToObject(payload);
   }
 }
