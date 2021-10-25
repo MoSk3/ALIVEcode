@@ -29,8 +29,10 @@ export class IoTObjectService {
     if (!id) throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
     const iotObject = await this.objectRepository
       .createQueryBuilder('iotObject')
+      .where(`iotObject.id = '${id}'`)
       .leftJoinAndSelect('iotObject.iotProjects', 'iotProject')
       .getOne();
+    console.log(iotObject);
     if (!iotObject) throw new HttpException('IoTObject not found', HttpStatus.NOT_FOUND);
     return iotObject;
   }

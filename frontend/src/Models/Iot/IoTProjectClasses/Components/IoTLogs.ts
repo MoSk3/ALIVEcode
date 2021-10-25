@@ -15,8 +15,7 @@ export class IoTLogs extends IoTComponent {
 	public type = IOT_COMPONENT_TYPE.LOGS;
 
 	update(data: any): void {
-		if (isNaN(data)) return;
-		this.value = data;
+		this.addLog(String(data));
 	}
 
 	updateLog(log: IoTLogModel, updatedLog: IoTLogModel) {
