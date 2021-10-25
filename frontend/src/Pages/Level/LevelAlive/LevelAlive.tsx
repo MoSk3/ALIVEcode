@@ -253,7 +253,10 @@ const LevelAlive = ({
 							/>
 						)}
 					</Col>
-					<Col md={6} style={{ resize: 'both', padding: '0' , background:"#0177bc"}}>
+					<Col
+						md={6}
+						style={{ resize: 'both', padding: '0', background: '#0177bc' }}
+					>
 						<Row id="simulation-row" style={{ height: '60%' }}>
 							{executor && (
 								<Simulation
@@ -265,9 +268,8 @@ const LevelAlive = ({
 							)}
 						</Row>
 
-						<Row style={{ height: '40%', content: "center"}}>
+						<Row style={{ height: '40%' }}>
 							<Cmd ref={cmdRef}></Cmd>
-							
 							<GamepadAlive></GamepadAlive>
 						</Row>
 					</Col>
@@ -344,7 +346,6 @@ const LevelAlive = ({
 					{t('msg.auth.signin')}
 				</Button>
 			</Modal>
-
 		</>
 	);
 };

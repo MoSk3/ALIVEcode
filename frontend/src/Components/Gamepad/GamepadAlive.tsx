@@ -1,11 +1,10 @@
 import controller from '../../assets/images/controller.png';
 import './gamepad.css';
-import { Button, Col } from 'react-bootstrap';
+import { Col } from 'react-bootstrap';
 import styled from 'styled-components';
 import CenteredContainer from '../UtilsComponents/CenteredContainer/CenteredContainer';
 import React from 'react';
-import { event } from 'jquery';
-
+import { Car } from '../LevelComponents/Simulation/Sketch/simulation/Car.js';
 
 const StyledDiv = styled(Col)`
 	background-color: var(--primary-color);
@@ -31,68 +30,69 @@ const StyledCenteredContainer = styled(CenteredContainer)`
 // Hook
 const useKeyPress = (targetKey: any) => {
 	// State for keeping track of whether key is pressed
-	const [keyPressed, setKeyPressed] = React.useState(false)
-  console.log(keyPressed)
+	const [keyPressed, setKeyPressed] = React.useState(false);
+	console.log(keyPressed);
 	// If pressed key is our target key then set to true
-	const downHandler = ({key}: { key: any }) => {
-	  if (key === targetKey) {
-		setKeyPressed(true)
-	  }
-	}
-  
+	const downHandler = ({ key }: { key: any }) => {
+		if (key === targetKey) {
+			setKeyPressed(true);
+		}
+	};
+
 	// If released key is our target key then set to false
-	const upHandler = ({ key }: { key:any }) => {
-	  if (key === targetKey) {
-		setKeyPressed(false)
-	  }
-	}
-  
+	const upHandler = ({ key }: { key: any }) => {
+		if (key === targetKey) {
+			setKeyPressed(false);
+		}
+	};
+
 	// Add event listeners
 	React.useEffect(() => {
-	  window.addEventListener('keydown', downHandler)
-	  window.addEventListener('keyup', upHandler)
-	  // Remove event listeners on cleanup
-	  return () => {
-		window.removeEventListener('keydown', downHandler)
-		window.removeEventListener('keyup', upHandler)
-	  }
-	}, []) // Empty array ensures that effect is only run on mount and unmount
-  
-	return keyPressed
-  }
-  
-const GamepadAlive = () => {
-	const isStartPressed = useKeyPress(' ')
-  const isAPressed = useKeyPress('z')   
-  const isBPressed = useKeyPress('s')
-  const isXPressed = useKeyPress('x')
-  const isYPressed = useKeyPress('c')
-  
+		window.addEventListener('keydown', downHandler);
+		window.addEventListener('keyup', upHandler);
+		// Remove event listeners on cleanup
+		return () => {
+			window.removeEventListener('keydown', downHandler);
+			window.removeEventListener('keyup', upHandler);
+		};
+	}, []); // Empty array ensures that effect is only run on mount and unmount
 
+	return keyPressed;
+};
+
+const GamepadAlive = () => {
+	const isStartPressed = useKeyPress(' ');
+	const isAPressed = useKeyPress('z');
+	const isBPressed = useKeyPress('s');
+	const isXPressed = useKeyPress('x');
+	const isYPressed = useKeyPress('c');
 
 	return (
 		<>
 			<StyledCenteredContainer className="container">
 				<StyledDiv>
-					<img src={controller} alt="" />   
+					<img src={controller} alt="" />
 
-					<button  className={ 'button btnStart ' + (isStartPressed && 'push')} id="btnStart">
+					<button
+						className={'button btnStart ' + (isStartPressed && 'push')}
+						id="btnStart"
+					>
 						Start
 					</button>
 
-					<button className={"button btnA " + (isAPressed && 'push')} id="btnA">
+					<button className={'button btnA ' + (isAPressed && 'push')} id="btnA">
 						A
 					</button>
 
-					<button className={"button btnB " + (isBPressed && 'push')} id="btnB">
+					<button className={'button btnB ' + (isBPressed && 'push')} id="btnB">
 						B
 					</button>
 
-					<button className={"button btnX " + (isXPressed && 'push')} id="btnX">
+					<button className={'button btnX ' + (isXPressed && 'push')} id="btnX">
 						X
 					</button>
 
-					<button className={"button btnY " + (isYPressed && 'push')}  id="btnY">
+					<button className={'button btnY ' + (isYPressed && 'push')} id="btnY">
 						Y
 					</button>
 				</StyledDiv>
