@@ -1,6 +1,5 @@
 package server;
 
-import interpreteur.as.erreurs.ASErreur;
 import interpreteur.executeur.Executeur;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -8,19 +7,43 @@ import org.json.JSONObject;
 
 import java.util.Hashtable;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 public class AliveScriptService {
     private final static Hashtable<UUID, AliveScriptService> runningServices = new Hashtable<>();
-    private final int LIFE_TIME = 60;
+    private static double maxServiceLifeSpan = 0;
+    private static Logger logger;
 
     private final UUID idToken;
     private final Executeur executeur;
     private boolean resume = false;
     private boolean compiled = false;
+    /**
+     * the time since the service has been updated
+     */
+    private double sinceUpdate = 0;
 
     private AliveScriptService(UUID idToken) {
         this.idToken = idToken;
         this.executeur = new Executeur();
+    }
+
+    public static void setMaxServiceLifeSpan(double maxServiceLifeSpan) {
+        AliveScriptService.maxServiceLifeSpan = maxServiceLifeSpan;
+    }
+
+    public static void setLogger(Logger logger) {
+        AliveScriptService.logger = logger;
+    }
+
+    public static void updateAndCleanUp() {
+        for (var service : runningServices.values()) {
+            if (service.sinceUpdate > maxServiceLifeSpan) {
+                service.destroy();
+                logger.info("Service " + service + " destroyed");
+            } else
+                service.sinceUpdate += 1;
+        }
     }
 
     public static JSONObject noAliveScriptServiceWithToken() {
@@ -39,7 +62,7 @@ public class AliveScriptService {
 
     public static AliveScriptService create() {
         UUID idToken = UUID.randomUUID();
-        System.out.println("New session: " + idToken);
+        logger.info("New session: " + idToken);
         AliveScriptService aliveScriptService = new AliveScriptService(idToken);
         runningServices.put(idToken, aliveScriptService);
         return aliveScriptService;
@@ -49,8 +72,12 @@ public class AliveScriptService {
         return runningServices.remove(idToken);
     }
 
+    public synchronized void update() {
+        this.sinceUpdate = 0;
+    }
+
     public AliveScriptService destroy() {
-        System.out.println("End of session: " + idToken);
+        logger.info("End of session: " + idToken);
         return runningServices.remove(this.idToken);
     }
 
