@@ -13,8 +13,8 @@ export class QuizzesController {
   }
 
   @Get()
-  findAll() {
-    return this.quizzesService.findAll();
+  async findAll() {
+    return await this.quizzesService.findAll();
   }
 
   @Get(':id')
