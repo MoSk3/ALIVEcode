@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateQuizDto } from './dto/create-quiz.dto';
@@ -18,8 +18,11 @@ export class QuizzesService {
     return await this.quizRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} quiz`;
+  async findOne(id: number) {
+    if (!id) throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
+    const quiz = await this.quizRepository.findOne(id);
+    if (!quiz) throw new HttpException('Quiz not found', HttpStatus.NOT_FOUND);
+    return quiz;
   }
 
   update(id: number, updateQuizDto: UpdateQuizDto) {
