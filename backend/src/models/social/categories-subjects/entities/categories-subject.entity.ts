@@ -6,9 +6,6 @@ export class CategoriesSubject {
     @PrimaryGeneratedColumn()
     id : number;
 
-    @Column('int')
-    id_category : number;
-
     @Column('varchar')
     name : string;
 

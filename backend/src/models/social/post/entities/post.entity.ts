@@ -28,9 +28,7 @@ export class Post{
     @JoinColumn( { name : 'id_subject' } )
     id_subject : Subject;
 
-    @OneToOne(() => CategoriesSubject)
-    @JoinColumn( { name : 'id_category' } )
-    id_category : CategoriesSubject;
+
 
 
 }

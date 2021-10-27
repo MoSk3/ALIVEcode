@@ -1,5 +1,5 @@
 import { UserEntity } from "src/models/user/entities/user.entity";
-import { Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Quiz } from "../../quizzes/entities/quiz.entity";
 
 @Entity()
@@ -15,6 +15,8 @@ export class Result {
     @JoinColumn( { name : 'id_quiz' } )
     id_quiz : Quiz;
 
+    @Column({type: 'int', default: 0})
+    percentage : number;
 
 }
 

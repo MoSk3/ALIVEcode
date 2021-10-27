@@ -7,11 +7,13 @@ import { Professor, Student } from '../../../Models/User/user.entity';
 import { buildStyles, CircularProgressbar } from 'react-circular-progressbar';
 import './accountPage.css';
 import CardContainer from '../../../Components/UtilsComponents/CardContainer/CardContainer';
-import { Row } from 'react-bootstrap';
+import { Form, Row } from 'react-bootstrap';
 import styled from 'styled-components';
 import AboutCard from '../../../Components/UtilsComponents/Cards/AboutCard/AboutCard';
 import { useTranslation } from 'react-i18next';
 import GamepadAlive from '../../../Components/Gamepad/GamepadAlive';
+import axios from 'axios';
+import { SubmitHandler, useForm } from 'react-hook-form';
 
 const StyledCenteredContainer = styled(CenteredContainer)`
 	padding: 0 10% 0 10%;
@@ -36,6 +38,11 @@ const AccountPage = () => {
 		else return 'red';
 	};
 
+	const { register, handleSubmit } = useForm();
+	const onSubmit = async (data: { file: any[] }) => {
+		console.log(data.file[0]);
+		await axios.post('users/upload', data.file[0]);
+	};
 	return (
 		<>
 			<StyledCenteredContainer>
@@ -46,41 +53,23 @@ const AccountPage = () => {
 								{!user ? (
 									<FontAwesomeIcon icon={faSpinner} />
 								) : (
-									<Row>
-										<AboutCard
-											name={user.getDisplayName()}
-											img="https://i.imgur.com/xkH6wCg.png"
-										/>
-
-										{/*user instanceof Professor && (
-                <>
-                    <label>Nom</label>
-                    <br />
-                    <input defaultValue={user.firstName} />
-                    <br />
-                    <label>Nom de famille</label>
-                    <br />
-                    <input defaultValue={user.lastName} />
-                    <br />
-                </>
-            )*/}
-										{/*<div className="text-left col-sm-6">
-                <h2>Description</h2>
-                <h3>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Morbi eleifend tempus consequat. Class aptent taciti
-                    sociosqu ad litora torquent per conubia nostra, per
-                    inceptos himenaeos.
-                </h3>
-        </div>*/}
-									</Row>
+									<>
+										<Row>
+											<AboutCard
+												name={user.getDisplayName()}
+												img="https://i.imgur.com/xkH6wCg.png"
+											/>
+										</Row>
+										<Form onSubmit={handleSubmit(onSubmit)}>
+											<Form.Row>
+												<input type="file" {...register('file')} />
+											</Form.Row>
+											<Form.Row>
+												<button type="submit">upload</button>
+											</Form.Row>
+										</Form>
+									</>
 								)}
-								{/*user instanceof Student && (
-        <>
-            <label>Nom</label>
-            <input defaultValue={user.name} />
-        </>
-    )*/}
 							</CardContainer>
 						</div>
 					</div>
