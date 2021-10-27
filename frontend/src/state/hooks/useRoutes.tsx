@@ -31,6 +31,9 @@ import ASDocs from '../../Components/AliveScriptComponents/ASDocs/ASDocs';
 import { MaintenanceError } from '../../Pages/Errors/MaintenanceError/MaintenanceError';
 import MaintenanceMenu from '../../Pages/SiteStatus/MaintenanceMenu/MaintenanceMenu';
 import Forum from '../../Pages/Forum/Forum';
+import QuizHome from '../../Pages/Quiz/QuizHome/QuizHome';
+import QuizCategory from '../../Pages/Quiz/QuizCategory/QuizCategory';
+import QuizCreate from '../../Pages/Quiz/QuizCreate/QuizCreate';
 
 type component =
 	| React.ComponentType<RouteComponentProps<any>>
@@ -178,6 +181,20 @@ const useRoutes = () => {
 		forum: {
 			path: '/forum',
 			component: Forum,
+		},
+		quiz: {
+			path: '/quiz',
+			exact: true,
+			component: QuizHome,
+		},
+		quiz_category: {
+			path: '/quiz/category/:id',
+			component: QuizCategory,
+		},
+		// Only for testing, place in auth Professor in production.
+		quiz_create: {
+			path: '/quiz/create',
+			component: QuizCreate,
 		},
 	});
 

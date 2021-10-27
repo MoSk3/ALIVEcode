@@ -31,6 +31,7 @@ import { LoggerModule } from './admin/loger/loger.module';
 import { MyLogger } from './admin/loger/logger';
 import { QuizzesModule } from './models/social/quizzes/quizzes.module';
 import { PostModule } from './models/social/post/post.module';
+import { MulterModule } from '@nestjs/platform-express';
 
 adminjs.registerAdapter({ Database, Resource });
 
@@ -58,6 +59,10 @@ adminjs.registerAdapter({ Database, Resource });
         },
       }),
     }),
+    MulterModule.register({
+        dest: './files',
+      }),
+    
     UserModule,
     ClassroomModule,
     LevelModule,

@@ -10,6 +10,7 @@ import {
   Res,
   UseInterceptors,
   Query,
+  UploadedFile,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ProfessorEntity } from './entities/professor.entity';
@@ -23,6 +24,10 @@ import { DTOInterceptor } from '../../utils/interceptors/dto.interceptor';
 import { Group } from '../../utils/decorators/group.decorator';
 import { User } from '../../utils/decorators/user.decorator';
 import { Role } from '../../utils/types/roles.types';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { editFileName, imageFileFilter } from 'src/utils/upload/file-uploading';
+
 
 @Controller('users')
 @UseInterceptors(DTOInterceptor)
@@ -157,4 +162,24 @@ export class UserController {
     if (user.id === id) return this.userService.getLevels(user, query);
     return this.userService.getLevels(await this.userService.findById(id), query);
   }
+
+  @Post('upload')
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: '../../../files',
+        filename: editFileName,
+      }),
+      fileFilter: imageFileFilter,
+    }),
+  )
+  async uploadedFile(@UploadedFile() file) {
+    const response = {
+      originalname: file.originalname,
+      filename: file.filename,
+    };
+    console.log(response)
+    return response;
+  }
+
 }
