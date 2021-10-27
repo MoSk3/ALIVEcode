@@ -1,5 +1,5 @@
 import { UserEntity } from "src/models/user/entities/user.entity";
-import { Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { CategoriesQuiz } from "../../categories-quiz/entities/categories-quiz.entity";
 import { Question } from "../../questions/entities/question.entity";
 import { Result } from "../../results/entities/result.entity";
@@ -12,6 +12,7 @@ export class Quiz {
     id : number;
 
     @ManyToOne(() => UserEntity, user => user.quiz)
+    @JoinColumn( { name : 'id_user' } )
     user_id: UserEntity;
 
     @OneToOne(() => Reward)
@@ -27,6 +28,9 @@ export class Quiz {
     @ManyToOne(() => CategoriesQuiz, category => category.id_quiz)
     @JoinColumn( { name : 'id_category' } )
     id_category: CategoriesQuiz;
+    
+    @Column('varchar')
+    name : string;
 
 
 }

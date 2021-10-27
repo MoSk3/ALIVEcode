@@ -16,7 +16,7 @@ import { LevelProgressionEntity } from '../../level/entities/levelProgression.en
 import { Post as Post_Table } from "src/models/social/post/entities/post.entity";
 import { Quiz } from 'src/models/social/quizzes/entities/quiz.entity';
 import { Result } from 'src/models/social/results/entities/result.entity';
-import { AsScriptEntity } from '../../as-script/entities/as-script.entity';
+import { AsScriptEntity } from 'src/models/as-script/entities/as-script.entity';
 
 @Entity()
 @TableInheritance({ column: { type: 'varchar', name: 'type' } })
@@ -85,4 +85,6 @@ export class UserEntity extends BaseEntity {
 
   @OneToMany(() => Result, result => result.user_id)
   result: Result[];
+  @Column({type:'varchar', default: ""})
+  avatar : string;
 } 

@@ -29,6 +29,8 @@ import { compare } from 'bcryptjs';
 import { adminOptions } from './admin/admin.options';
 import { LoggerModule } from './admin/loger/loger.module';
 import { MyLogger } from './admin/loger/logger';
+import { QuizzesModule } from './models/social/quizzes/quizzes.module';
+import { MulterModule } from '@nestjs/platform-express';
 
 adminjs.registerAdapter({ Database, Resource });
 
@@ -56,6 +58,10 @@ adminjs.registerAdapter({ Database, Resource });
         },
       }),
     }),
+    MulterModule.register({
+        dest: './files',
+      }),
+    
     UserModule,
     ClassroomModule,
     LevelModule,
@@ -66,6 +72,7 @@ adminjs.registerAdapter({ Database, Resource });
     IoTGateway,
     MaintenanceModule,
     AsScriptModule,
+    QuizzesModule,
   ],
   controllers: [AppController],
   providers: [AppService, MaintenanceService, UserService],

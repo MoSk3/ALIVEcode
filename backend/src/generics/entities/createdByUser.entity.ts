@@ -30,4 +30,5 @@ export abstract class CreatedByUser extends BaseEntity {
   @IsOptional()
   @MaxLength(200)
   description: string;
+
 }

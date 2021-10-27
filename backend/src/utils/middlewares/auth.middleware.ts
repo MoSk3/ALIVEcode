@@ -1,10 +1,10 @@
 import { NextFunction } from "express";
-import { Injectable, NestMiddleware } from '@nestjs/common';
+import { Injectable, NestMiddleware, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MaintenanceEntity } from '../../models/maintenance/entities/maintenance.entity';
 import { Repository } from 'typeorm';
 import { MyRequest } from '../guards/auth.guard';
-import { verify } from 'jsonwebtoken';
+import { verify, JsonWebTokenError } from 'jsonwebtoken';
 import { UserEntity } from '../../models/user/entities/user.entity';
 import { AuthPayload } from '../types/auth.payload';
 
@@ -27,7 +27,9 @@ export class AuthMiddleware implements NestMiddleware {
       const authPayload = payload as AuthPayload;
       user = await this.userRepository.findOne(authPayload.id);
       req.user = user;
-    } catch {}
+    } catch (err) {
+      if (err instanceof JsonWebTokenError && err.name === 'TokenExpiredError') req.expiredToken = true;
+    }
 
     next();
   }
