@@ -30,6 +30,7 @@ import { adminOptions } from './admin/admin.options';
 import { LoggerModule } from './admin/loger/loger.module';
 import { MyLogger } from './admin/loger/logger';
 import { QuizzesModule } from './models/social/quizzes/quizzes.module';
+import { PostModule } from './models/social/post/post.module';
 
 adminjs.registerAdapter({ Database, Resource });
 
@@ -68,6 +69,7 @@ adminjs.registerAdapter({ Database, Resource });
     MaintenanceModule,
     AsScriptModule,
     QuizzesModule,
+    PostModule,
   ],
   controllers: [AppController],
   providers: [AppService, MaintenanceService, UserService],
