@@ -1,6 +1,4 @@
 import Form from '../../../UtilsComponents/Form/Form';
-import { IoTProjectSettingsProps } from './IoTProjectSettingsTypes';
-import { plainToClass } from 'class-transformer';
 import { useContext } from 'react';
 import { IoTProjectContext } from '../../../../state/contexts/IoTProjectContext';
 import {

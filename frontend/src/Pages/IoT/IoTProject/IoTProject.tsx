@@ -116,7 +116,14 @@ const IoTProject = (props: IoTProjectProps) => {
 			loadIoTObjects,
 			updateProjectData,
 		};
-	}, [project, canEdit, addRoute, addIoTObject, loadIoTObjects]);
+	}, [
+		project,
+		canEdit,
+		addRoute,
+		addIoTObject,
+		loadIoTObjects,
+		updateProjectData,
+	]);
 
 	if (!project) {
 		return <LoadingScreen />;
