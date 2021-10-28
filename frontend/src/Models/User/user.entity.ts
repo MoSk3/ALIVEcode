@@ -31,6 +31,8 @@ export class User {
 
 	collabIoTProjects?: IoTProject[];
 
+	image?: string;
+
 	public getDisplayName() {
 		return this.email;
 	}

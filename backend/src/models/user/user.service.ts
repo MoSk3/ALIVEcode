@@ -16,6 +16,7 @@ import { IoTObjectEntity } from '../iot/IoTobject/entities/IoTobject.entity';
 import { LevelEntity } from '../level/entities/level.entity';
 import { CourseEntity } from '../course/entities/course.entity';
 import { MyRequest } from '../../utils/guards/auth.guard';
+import { Observable } from 'rxjs';
 
 @Injectable({ scope: Scope.REQUEST })
 export class UserService {
@@ -125,7 +126,7 @@ export class UserService {
   update(user: UserEntity, updateUserDto: UserEntity) {
     return this.userRepository.update(user, updateUserDto);
   }
-
+  
   remove(user: UserEntity) {
     return this.userRepository.remove(user);
   }

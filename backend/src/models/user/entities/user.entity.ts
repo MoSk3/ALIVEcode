@@ -85,6 +85,7 @@ export class UserEntity extends BaseEntity {
 
   @OneToMany(() => Result, result => result.user_id)
   result: Result[];
+  
   @Column({type:'varchar', default: ""})
-  avatar : string;
+  image : string;
 } 
