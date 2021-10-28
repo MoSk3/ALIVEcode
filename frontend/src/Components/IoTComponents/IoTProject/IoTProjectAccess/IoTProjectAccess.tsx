@@ -1,42 +1,41 @@
 import IconButton from '../../../DashboardComponents/IconButton/IconButton';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { IoTObjectCard } from '../../IoTObject/IoTObjectCard/IoTObjectCard';
 import LoadingScreen from '../../../UtilsComponents/LoadingScreen/LoadingScreen';
-import { IoTProjectSettingsProps } from '../IoTProjectSettings/IoTProjectSettingsTypes';
-import { IoTProject } from '../../../../Models/Iot/IoTproject.entity';
 import { plainToClass } from 'class-transformer';
 import FormModal from '../../../UtilsComponents/FormModal/FormModal';
 import Form from '../../../UtilsComponents/Form/Form';
 import { IoTObject } from '../../../../Models/Iot/IoTobject.entity';
-import api from '../../../../Models/api';
 import Modal from '../../../UtilsComponents/Modal/Modal';
-import { useAlert } from 'react-alert';
-import { useTranslation } from 'react-i18next';
+import { IoTProjectContext } from '../../../../state/contexts/IoTProjectContext';
+import api from '../../../../Models/api';
 
-export const IoTProjectAccess = ({
-	project,
-	setProject,
-	canEdit,
-}: IoTProjectSettingsProps) => {
+export const IoTProjectAccess = () => {
 	const [addObjectModalOpen, setAddObjectModalOpen] = useState(false);
-	const [iotObjects, setIoTObjects] = useState<IoTObject[]>();
-	const alert = useAlert();
-	const { t } = useTranslation();
+	const { project, canEdit, loadIoTObjects, addIoTObject } =
+		useContext(IoTProjectContext);
+	const [userIotObjects, setUserIoTObjects] = useState<IoTObject[]>();
 
 	useEffect(() => {
-		const getObjects = async () => {
-			const iotObjects = await api.db.users.iot.getObjects({});
-			await project.getIoTObjects();
+		if (!project) return;
 
-			setIoTObjects(iotObjects);
-			setProject(plainToClass(IoTProject, project));
+		// Load project objects
+		if (!project.iotObjects) loadIoTObjects();
+
+		if (!canEdit) return;
+
+		// Load user objects
+		const loadUserIoTObjects = async () => {
+			setUserIoTObjects(await api.db.users.iot.getObjects({}));
 		};
-		getObjects();
+		loadUserIoTObjects();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	const iotObjectOptions = iotObjects?.flatMap(obj => {
+	if (!project) return <></>;
+
+	const iotObjectOptions = userIotObjects?.flatMap(obj => {
 		if (project.iotObjects?.find(o => o.id === obj.id)) return [];
 		return {
 			value: obj.id,
@@ -49,10 +48,12 @@ export const IoTProjectAccess = ({
 			<div className="project-details-content-header">Access</div>
 			<h6>
 				IoTObjects{' '}
-				<IconButton
-					onClick={() => setAddObjectModalOpen(true)}
-					icon={faPlus}
-				></IconButton>
+				{canEdit && (
+					<IconButton
+						onClick={() => setAddObjectModalOpen(true)}
+						icon={faPlus}
+					/>
+				)}
 			</h6>
 			{project.iotObjects ? (
 				project.iotObjects.length > 0 ? (
@@ -77,11 +78,8 @@ export const IoTProjectAccess = ({
 			) : (
 				<FormModal
 					onSubmit={res => {
-						const iotObject = plainToClass(IoTObject, res.data);
-						project.iotObjects?.push(iotObject);
-						setProject(plainToClass(IoTProject, project));
+						addIoTObject(plainToClass(IoTObject, res.data));
 						setAddObjectModalOpen(false);
-						alert.success(t('iot.project.add_object.success'));
 					}}
 					title="Add an IoTObject to the project"
 					open={addObjectModalOpen}

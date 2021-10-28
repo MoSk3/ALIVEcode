@@ -1,4 +1,10 @@
 import styled from 'styled-components';
+import { IoTProject } from '../../../../Models/Iot/IoTproject.entity';
+
+export type IoTProjectBodyProps = {
+	project: IoTProject;
+	canEdit?: boolean;
+};
 
 export const StyledIoTProjectBody = styled.div`
 	position: relative;

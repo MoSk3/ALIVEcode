@@ -2,23 +2,25 @@ import IconButton from '../../../DashboardComponents/IconButton/IconButton';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import IoTRouteCard from '../../IoTRoute/IoTRouteCard/IoTRouteCard';
 import FormModal from '../../../UtilsComponents/FormModal/FormModal';
-import { IoTProjectRoutesProps } from './IoTProjectRoutesTypes';
+import { useState, useContext } from 'react';
+import { IoTprojectAddRouteForm } from '../IoTProjectAddRouteForm/IoTProjectAddRouteForm';
+import { IoTProjectContext } from '../../../../state/contexts/IoTProjectContext';
+import { plainToClass } from 'class-transformer';
 import { IotRoute } from '../../../../Models/Iot/IoTroute.entity';
-import { useState } from 'react';
-import { IoTporjectAddRouteForm } from '../IoTProjectAddRouteForm/IoTProjectAddRouteForm';
 
-export const IoTProjectRoutes = ({
-	project,
-	setProject,
-	canEdit,
-}: IoTProjectRoutesProps) => {
+export const IoTProjectRoutes = () => {
 	const [routeModalOpen, setRouteModalOpen] = useState(false);
+	const { project, canEdit, addRoute } = useContext(IoTProjectContext);
+
+	if (!project) return <></>;
 
 	return (
 		<>
 			<div className="project-details-content-header">
 				<label className="mr-2">Routes</label>
-				<IconButton icon={faPlus} onClick={() => setRouteModalOpen(true)} />
+				{canEdit && (
+					<IconButton icon={faPlus} onClick={() => setRouteModalOpen(true)} />
+				)}
 			</div>
 			<div>
 				{project.routes.length > 0 ? (
@@ -30,15 +32,15 @@ export const IoTProjectRoutes = ({
 			<FormModal
 				title="New route"
 				onSubmit={res => {
-					const resRoute: IotRoute = res.data;
-					project.routes.push(resRoute);
-					setProject(project);
+					console.log(res);
+					console.log(addRoute);
+					addRoute(plainToClass(IotRoute, res.data));
 					setRouteModalOpen(false);
 				}}
 				onClose={() => setRouteModalOpen(false)}
 				open={routeModalOpen}
 			>
-				<IoTporjectAddRouteForm project={project} />
+				<IoTprojectAddRouteForm project={project} />
 			</FormModal>
 		</>
 	);

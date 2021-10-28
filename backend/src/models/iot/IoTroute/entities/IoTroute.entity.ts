@@ -11,12 +11,12 @@ export class IoTRouteEntity {
 
   @Column({ nullable: false })
   @IsNotEmpty()
-  @Length(3, 25)
+  @Length(2, 100)
   name: string;
 
   @Column({ nullable: false })
   @IsNotEmpty()
-  @Length(3, 40)
+  @Length(2, 50)
   path: string;
 
   @ManyToOne(() => IoTProjectEntity, project => project.routes, { onDelete: 'CASCADE' })

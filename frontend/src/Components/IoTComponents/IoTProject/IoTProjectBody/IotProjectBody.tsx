@@ -1,20 +1,23 @@
-import { IoTProject, IoTProjectLayout } from '../../../Models/Iot/IoTproject.entity';
+import { IoTProjectLayout } from '../../../../Models/Iot/IoTproject.entity';
 import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
-import { IoTSocket } from '../../../Models/Iot/IoTProjectClasses/IoTSocket';
+import { IoTSocket } from '../../../../Models/Iot/IoTProjectClasses/IoTSocket';
 import { classToPlain } from 'class-transformer';
-import { IoTComponent } from '../../../Models/Iot/IoTProjectClasses/IoTComponent';
+import { IoTComponent } from '../../../../Models/Iot/IoTProjectClasses/IoTComponent';
 import { Row, Container } from 'react-bootstrap';
-import api from '../../../Models/api';
-import { StyledIoTProjectBody } from './iotProjectBodyTypes';
-import IoTGenericComponent from '../IoTProjectComponents/IoTGenericComponent/IoTGenericComponent';
-import Modal from '../../UtilsComponents/Modal/Modal';
-import IoTComponentEditor from './IoTComponentEditor/IoTComponentEditor';
-import Button from '../../UtilsComponents/Button/Button';
-import IoTComponentCreator from './IoTComponentCreator/IoTComponentCreator';
+import api from '../../../../Models/api';
+import {
+	StyledIoTProjectBody,
+	IoTProjectBodyProps,
+} from './iotProjectBodyTypes';
+import IoTGenericComponent from '../../IoTProjectComponents/IoTGenericComponent/IoTGenericComponent';
+import Modal from '../../../UtilsComponents/Modal/Modal';
+import IoTComponentEditor from '../IoTComponentEditor/IoTComponentEditor';
+import Button from '../../../UtilsComponents/Button/Button';
+import IoTComponentCreator from '../IoTComponentCreator/IoTComponentCreator';
 import { useAlert } from 'react-alert';
 import { useTranslation } from 'react-i18next';
 
-const IoTProjectBody = ({ project }: { project: IoTProject }) => {
+const IoTProjectBody = ({ project, canEdit }: IoTProjectBodyProps) => {
 	const [components, setComponents] = useState<Array<IoTComponent>>([]);
 	const [lastSaved, setLastSaved] = useState<number>(Date.now() - 4000);
 	const [editingComponent, setEditingComponent] = useState<IoTComponent>();
@@ -25,16 +28,18 @@ const IoTProjectBody = ({ project }: { project: IoTProject }) => {
 
 	const saveComponents = useCallback(
 		async (components: Array<IoTComponent>) => {
+			if (!canEdit) return;
 			setLastSaved(Date.now());
 			project.layout.components = components;
 			const plainProject = classToPlain(project);
 			await api.db.iot.projects.updateLayout(project.id, plainProject.layout);
 		},
-		[project],
+		[project, canEdit],
 	);
 
 	const saveComponentsTimed = useCallback(
 		async (components: Array<IoTComponent>) => {
+			if (!canEdit) return;
 			if (Date.now() - lastSaved < 2000) {
 				saveTimeout.current && clearTimeout(saveTimeout.current);
 				saveTimeout.current = setTimeout(
@@ -46,7 +51,7 @@ const IoTProjectBody = ({ project }: { project: IoTProject }) => {
 
 			saveComponents(components);
 		},
-		[lastSaved, saveComponents],
+		[lastSaved, saveComponents, canEdit],
 	);
 
 	const onLayoutChange = useCallback(

@@ -5,7 +5,6 @@ import Button from '../Button/Button';
 import { FormProps, InputGroup as InputGroupModel, matches } from './formTypes';
 import axios, { AxiosError } from 'axios';
 import { useAlert } from 'react-alert';
-import { useHistory } from 'react-router';
 import { prettyField } from '../../../Types/formatting';
 
 /**
@@ -78,7 +77,6 @@ const Form = (props: FormProps) => {
 	} = useForm();
 
 	const alert = useAlert();
-	const history = useHistory();
 
 	const onFormSubmit = async (formValues: any) => {
 		if (props.alterFormValues) formValues = props.alterFormValues(formValues);
@@ -103,7 +101,7 @@ const Form = (props: FormProps) => {
 				case 500:
 					return alert.error(t('error.500'));
 				case 403:
-					return history.push('/');
+					return alert.error(t('error.403'));
 			}
 		}
 	};
