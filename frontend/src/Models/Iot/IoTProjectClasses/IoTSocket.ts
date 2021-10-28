@@ -51,7 +51,6 @@ export class IoTSocket {
 				const data = JSON.parse(e.data);
 				switch (data.event) {
 					case 'update':
-						console.log(data.data);
 						this.onReceiveUpdate(data.data);
 						break;
 				}
@@ -69,7 +68,7 @@ export class IoTSocket {
 		};
 
 		this.socket.onerror = (ev: Event) => {
-			console.log(ev);
+			console.error(ev);
 		};
 	}
 

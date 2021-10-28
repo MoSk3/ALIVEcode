@@ -33,8 +33,8 @@ const IoTGenericComponent = ({
 
 	return (
 		<StyledIoTGenericComponent
-			isHovering={isHovering}
-			selectable={selectable ? true : false}
+			ishovering={isHovering ? 1 : 0}
+			selectable={selectable ? 1 : 0}
 			onMouseOver={() => !isHovering && setIsHovering(true)}
 			onMouseLeave={() => isHovering && setIsHovering(false)}
 			onClick={() => selectable && onSelect && onSelect()}

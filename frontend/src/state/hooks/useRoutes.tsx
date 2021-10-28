@@ -163,7 +163,7 @@ const useRoutes = () => {
 			exact: true,
 			path: '/iot',
 			component: IoTHome,
-			adminOnly: true,
+			//adminOnly: true,
 		},
 		level_alive: {
 			path: '/level/play/alive',
@@ -215,17 +215,17 @@ const useRoutes = () => {
 		iot_dashboard: {
 			path: '/iot/dashboard',
 			component: IoTDashboard,
-			adminOnly: true,
+			//adminOnly: true,
 		},
 		create_iot_project: {
 			path: '/iot/projects/create',
 			component: IoTProjectCreate,
-			adminOnly: true,
+			//adminOnly: true,
 		},
 		iot_project: {
 			path: '/iot/projects/:id',
 			component: IoTProject,
-			adminOnly: true,
+			//adminOnly: true,
 		},
 		level_list: {
 			path: '/level',

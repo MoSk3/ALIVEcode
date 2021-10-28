@@ -32,7 +32,6 @@ export class IoTObjectService {
       .where(`iotObject.id = '${id}'`)
       .leftJoinAndSelect('iotObject.iotProjects', 'iotProject')
       .getOne();
-    console.log(iotObject);
     if (!iotObject) throw new HttpException('IoTObject not found', HttpStatus.NOT_FOUND);
     return iotObject;
   }

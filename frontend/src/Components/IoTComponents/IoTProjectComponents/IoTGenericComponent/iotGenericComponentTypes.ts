@@ -13,9 +13,9 @@ export const StyledIoTGenericComponent = styled(Col)`
 	background-color: var(--bg-shade-one-color);
 	margin: 5px !important;
 	border-radius: 10px;
-	${({ selectable, isHovering }: any) =>
+	${({ selectable, ishovering }: any) =>
 		selectable &&
-		isHovering &&
+		ishovering &&
 		'transform: scale(105%) rotateZ(2deg); cursor: pointer;'}
 	transition: 0.2s;
 
@@ -41,7 +41,7 @@ export const StyledIoTGenericComponent = styled(Col)`
 		border-radius: 5px;
 		cursor: pointer;
 		transition: 0.2s;
-		${({ isHovering }: any) => (isHovering ? 'opacity: 1;' : 'opacity: 0;')}
+		${({ ishovering }: any) => (ishovering ? 'opacity: 1;' : 'opacity: 0;')}
 	}
 
 	.edit-component-btn:hover {
