@@ -1,8 +1,10 @@
 import styled from 'styled-components';
 
 export const StyledIoTProjectBody = styled.div`
-	display: flex;
-	height: 100%;
+	position: relative;
+	overflow-y: auto;
 	width: 100%;
-	padding: 100px;
+	height: calc(100% - 65px);
+	padding: 20px;
+	margin-bottom: 20px;
 `;

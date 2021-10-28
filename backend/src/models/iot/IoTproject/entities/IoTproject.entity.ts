@@ -1,8 +1,10 @@
-import { IsEmpty, IsNotEmpty, IsOptional, Validate, ValidateNested } from "class-validator";
-import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany } from 'typeorm';
+import { IsEmpty, IsNotEmpty, IsOptional } from "class-validator";
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany } from 'typeorm';
 import { CreatedByUser } from '../../../../generics/entities/createdByUser.entity';
 import { IoTRouteEntity } from '../../IoTroute/entities/IoTroute.entity';
 import { UserEntity } from '../../../user/entities/user.entity';
+import { IoTObjectEntity } from '../../IoTobject/entities/IoTobject.entity';
+import { Type } from 'class-transformer';
 
 export enum IOTPROJECT_INTERACT_RIGHTS {
   ANYONE = 'AN',
@@ -36,6 +38,11 @@ export class IoTProjectEntity extends CreatedByUser {
   @Column({ nullable: true, type: 'json', default: { components: [] } })
   @IsOptional()
   layout: IoTProjectLayout;
+
+  @ManyToMany(() => IoTObjectEntity, obj => obj.iotProjects)
+  @JoinTable()
+  @IsEmpty()
+  iotObjects: IoTObjectEntity[];
 
   @Column({ enum: IOTPROJECT_ACCESS })
   @IsNotEmpty()

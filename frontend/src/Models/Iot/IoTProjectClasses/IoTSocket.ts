@@ -1,4 +1,3 @@
-import { Socket, io } from 'socket.io-client';
 import { IoTProject, IoTProjectLayout } from '../IoTproject.entity';
 import { IoTComponentManager } from './IoTComponentManager';
 import { IoTComponent } from './IoTComponent';
@@ -9,7 +8,7 @@ export type IoTSocketUpdateRequest = {
 };
 
 export class IoTSocket {
-	private socket: Socket;
+	private socket: WebSocket;
 	private iotProject: IoTProject;
 	private iotComponentManager: IoTComponentManager;
 	private onRender: (layout: IoTProjectLayout) => void;
@@ -28,6 +27,7 @@ export class IoTSocket {
 				this.iotProject.layout.components = components;
 				this.onRender(this.iotProject.layout);
 			},
+			this,
 		);
 		this.openSocket();
 	}
@@ -42,14 +42,53 @@ export class IoTSocket {
 		if (!process.env.REACT_APP_IOT_URL)
 			throw new Error('Env variable REACT_APP_IOT_URL not set');
 
-		console.log('OPEN');
-		this.socket = io(process.env.REACT_APP_IOT_URL);
+		if (this.socket && (this.socket.CONNECTING || this.socket.OPEN)) return;
 
-		this.socket.on('update', this.onReceiveUpdate);
+		this.socket = new WebSocket(process.env.REACT_APP_IOT_URL);
+
+		this.socket.onopen = () => {
+			this.socket.onmessage = e => {
+				const data = JSON.parse(e.data);
+				switch (data.event) {
+					case 'update':
+						this.onReceiveUpdate(data.data);
+						break;
+				}
+			};
+
+			this.socket.send(
+				JSON.stringify({
+					event: 'connect_watcher',
+					data: {
+						iotProjectId: this.iotProject.id,
+						iotProjectName: this.iotProject.name,
+					},
+				}),
+			);
+		};
+
+		this.socket.onerror = (ev: Event) => {
+			console.error(ev);
+		};
 	}
 
 	public closeSocket() {
 		if (this.socket) this.socket.close();
+	}
+
+	public sendData(targetId: string, actionId: number, data: string) {
+		if (this.socket.OPEN) {
+			this.socket.send(
+				JSON.stringify({
+					event: 'send_object',
+					data: {
+						targetId,
+						actionId: Number(actionId),
+						value: JSON.parse(data),
+					},
+				}),
+			);
+		}
 	}
 
 	public onReceiveUpdate(request: IoTSocketUpdateRequest) {

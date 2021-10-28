@@ -1,5 +1,5 @@
 import { Exclude } from 'class-transformer';
-import { IoTComponent } from '../IoTComponent';
+import { IoTComponent, IOT_COMPONENT_TYPE } from '../IoTComponent';
 
 export type IoTLogModel = {
 	date: Date;
@@ -12,9 +12,16 @@ export type IoTLogsModel = Array<IoTLogModel>;
 export class IoTLogs extends IoTComponent {
 	public value: IoTLogsModel = [];
 
+	public type = IOT_COMPONENT_TYPE.LOGS;
+
 	update(data: any): void {
-		if (isNaN(data)) return;
-		this.value = data;
+		this.addLog(String(data));
+	}
+
+	updateLog(log: IoTLogModel, updatedLog: IoTLogModel) {
+		this.value = this.value.map(l => (l === log ? updatedLog : l));
+
+		this.getComponentManager()?.render();
 	}
 
 	addLog(text: string) {
@@ -30,3 +37,21 @@ export class IoTLogs extends IoTComponent {
 		this.getComponentManager()?.render();
 	}
 }
+
+export const createDefaultIoTLogs = () => {
+	const progress = new IoTLogs();
+	progress.value = [
+		{
+			date: new Date(Date.now() - 1000 * 60 * 60 * 5),
+			text: 'This a log submitted 5 hours ago',
+		},
+		{
+			date: new Date(),
+			text: 'This a log example',
+		},
+	];
+	progress.name = 'Default Logs';
+	progress.id = '';
+
+	return progress;
+};

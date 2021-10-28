@@ -1,20 +1,33 @@
-import { Logger } from '@nestjs/common';
+import { Logger, UseInterceptors, Param } from '@nestjs/common';
 import {
+  ConnectedSocket,
+  MessageBody,
   OnGatewayConnection,
   OnGatewayDisconnect,
   OnGatewayInit,
+  SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
+  WsException,
 } from '@nestjs/websockets';
-import { Socket } from 'socket.io';
 import { Server, WebSocket } from 'ws';
+import { IoTSocketToObjectRequest, IoTSocketUpdateRequest } from './iotSocket.types';
+import { IoTObjectService } from '../../models/iot/IoTobject/IoTobject.service';
+import { DTOInterceptor } from '../../utils/interceptors/dto.interceptor';
+import { IoTObjectEntity } from '../../models/iot/IoTobject/entities/IoTobject.entity';
+import {
+  WatcherClient,
+  WatcherClientConnectPayload,
+  ObjectClientConnectPayload,
+  ObjectClient,
+} from './iotSocket.types';
 
-@WebSocketGateway(8881, { cors: { origin: '*' } })
+@UseInterceptors(DTOInterceptor)
+@WebSocketGateway(8881)
 export class IoTGateway implements OnGatewayDisconnect, OnGatewayConnection, OnGatewayInit {
-  private notificationClients: WebSocket[] = [];
-  private lightClients: WebSocket[] = [];
-
   private logger: Logger = new Logger('IoTGateway');
+
+  constructor(private iotObjectService: IoTObjectService) {}
 
   @WebSocketServer()
   server: Server;
@@ -27,34 +40,71 @@ export class IoTGateway implements OnGatewayDisconnect, OnGatewayConnection, OnG
     this.logger.log(`Client connected`);
   }
 
-  handleDisconnect(client: WebSocket) {
-    this.notificationClients = this.notificationClients.filter(cl => cl !== client);
+  handleDisconnect(@ConnectedSocket() socket: WebSocket) {
     this.logger.log(`Client disconnected`);
+    ObjectClient.objects = ObjectClient.objects.filter(obj => obj.getSocket() !== socket);
+    WatcherClient.clients = WatcherClient.watchers.filter(w => w.getSocket() !== socket);
   }
 
-  @SubscribeMessage('events')
-  test(@MessageBody() data: any) {
-    console.log(data);
+  @SubscribeMessage('connect_watcher')
+  connect_watcher(@ConnectedSocket() socket: WebSocket, @MessageBody() payload: WatcherClientConnectPayload) {
+    if (!payload.iotProjectId || !payload.iotProjectName) throw new WsException('Bad payload');
+    if (WatcherClient.isSocketAlreadyWatcher(socket)) throw new WsException('Already connected as a watcher');
+
+    const client = new WatcherClient(socket, payload.iotProjectId);
+    client.register();
+
+    this.logger.log(
+      `Watcher connected and listening on project : ${payload.iotProjectName} id : ${payload.iotProjectId}`,
+    );
+
+    client.sendCustom('connect-success', 'Watcher connected');
   }
 
-  /*
-  @SubscribeMessage('notification')
-  notification(@MessageBody() data: string): WsResponse<string> {
-    return { event: 'notification', data };
+  @SubscribeMessage('connect_object')
+  async connect_object(@ConnectedSocket() socket: WebSocket, @MessageBody() payload: ObjectClientConnectPayload) {
+    if (!payload.id) throw new WsException('Bad payload');
+    if (WatcherClient.isSocketAlreadyWatcher(socket)) throw new WsException('Already connected as a watcher');
+
+    // Checks if the object exists in the database and checks for permissions for projects
+    let iotObject: IoTObjectEntity;
+    try {
+      iotObject = await this.iotObjectService.findOneWithLoadedProjects(payload.id);
+    } catch (err) {
+      throw new WsException('Id not registered on ALIVEcode');
+    }
+
+    // Register client
+    const projectRights = iotObject.iotProjects.map(p => p.id);
+    const client = new ObjectClient(socket, payload.id, projectRights);
+    client.register();
+
+    // Logging
+    this.logger.log(`IoTObject connect with id : ${payload.id}`);
   }
 
-  @SubscribeMessage('send_notification')
-  send_notification(@MessageBody() text: string) {
-    this.notificationClients.forEach(c => c.emit('notification', text));
+  @SubscribeMessage('send_update')
+  send_update(@ConnectedSocket() socket: WebSocket, @MessageBody() payload: IoTSocketUpdateRequest) {
+    if (!payload.id || !payload.projectId || !payload.value) throw new WsException('Bad payload');
+
+    const object = ObjectClient.getClientBySocket(socket);
+    if (!object) throw new WsException('Forbidden');
+
+    if (!object.hasProjectRights(payload.projectId)) throw new WsException('Forbidden');
+
+    object.sendUpdate(payload);
   }
 
-  @SubscribeMessage('register_light')
-  register_light(@ConnectedSocket() client: WebSocket) {
-    this.lightClients.push(client);
-  }
+  @SubscribeMessage('send_object')
+  send_object(@ConnectedSocket() socket: WebSocket, @MessageBody() payload: IoTSocketToObjectRequest) {
+    if (!payload.targetId || !payload.actionId || !payload.value) throw new WsException('Bad payload');
 
-  @SubscribeMessage('send_light')
-  send_light(@MessageBody() light: number) {
-    this.lightClients.forEach(c => c.emit('light', light));
-  }*/
+    const watcher = WatcherClient.getClientBySocket(socket);
+    if (!watcher) throw new WsException('Forbidden');
+
+    // TOOD : Add sending permission
+    //if (!watcher.hasProjectRights(payload.projectId)) throw new WsException('Forbidden');
+
+    watcher.sendToObject(payload);
+  }
 }

@@ -1,19 +1,27 @@
 import { Exclude, Expose } from 'class-transformer';
-import { IoTComponent } from '../IoTComponent';
+import { IoTComponent, IOT_COMPONENT_TYPE } from '../IoTComponent';
 
 @Exclude()
 export class IoTProgressBar extends IoTComponent {
 	public value: number;
 	@Expose()
-	private max: number = 100;
+	public max: number = 100;
 	@Expose()
-	private min: number = 0;
+	public min: number = 0;
 	@Expose()
 	public isPercentage: boolean = true;
+
+	public type = IOT_COMPONENT_TYPE.PROGRESS_BAR;
 
 	update(data: any): void {
 		if (isNaN(data)) return;
 		this.value = data;
+	}
+
+	public setIsPercentage(newIsPercentage: boolean) {
+		this.isPercentage = newIsPercentage;
+
+		this.getComponentManager()?.render();
 	}
 
 	public setRange(min: number, max: number) {
@@ -31,3 +39,15 @@ export class IoTProgressBar extends IoTComponent {
 		return this.max;
 	}
 }
+
+export const createDefaultIoTProgressBar = () => {
+	const progress = new IoTProgressBar();
+	progress.value = 10;
+	progress.name = 'Default Progress';
+	progress.id = '';
+	progress.min = 0;
+	progress.max = 100;
+	progress.isPercentage = true;
+
+	return progress;
+};
