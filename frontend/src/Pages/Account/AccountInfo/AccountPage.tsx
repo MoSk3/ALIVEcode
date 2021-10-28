@@ -39,10 +39,17 @@ const AccountPage = () => {
 	};
 
 	const { register, handleSubmit } = useForm();
-	const onSubmit = async (data: { file: any[] }) => {
-		console.log(data.file[0]);
-		await axios.post('users/upload', data.file[0]);
+	const onSubmit = async (image: { file: any }) => {
+		let fileData = new FormData();
+		fileData.append('image', image.file[0]);
+		console.log(fileData);
+		await axios.post('users/upload', fileData, {
+			headers: {
+				'Content-Type': image.file[0].type,
+			},
+		});
 	};
+
 	return (
 		<>
 			<StyledCenteredContainer>

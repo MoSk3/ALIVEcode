@@ -163,23 +163,18 @@ export class UserController {
     return this.userService.getLevels(await this.userService.findById(id), query);
   }
 
-  @Post('upload')
+
+  @Post("upload")
   @UseInterceptors(
-    FileInterceptor('file', {
-      storage: diskStorage({
-        destination: '../../../files',
-        filename: editFileName,
+    FileInterceptor("image", {
+       dest: "./uploads" ,
+       fileFilter: imageFileFilter,
+
       }),
-      fileFilter: imageFileFilter,
-    }),
-  )
-  async uploadedFile(@UploadedFile() file) {
-    const response = {
-      originalname: file.originalname,
-      filename: file.filename,
-    };
-    console.log(response)
-    return response;
+      )
+   uploadedFile(@UploadedFile() file) {
+  console.log(file)
   }
+
 
 }
