@@ -19,7 +19,6 @@ import { UserEntity } from '../../user/entities/user.entity';
 import { DTOInterceptor } from '../../../utils/interceptors/dto.interceptor';
 import { IoTRouteEntity } from '../IoTroute/entities/IoTroute.entity';
 import { hasRole } from '../../user/auth';
-import { IoTObjectEntity } from '../IoTobject/entities/IoTobject.entity';
 import { AddObjectDTO } from './dto/addObject.dto';
 import { IoTObjectService } from '../IoTobject/IoTobject.service';
 
@@ -82,11 +81,9 @@ export class IoTProjectController {
   async updateLayout(@User() user: UserEntity, @Param('id') id: string, @Body() layout: IoTProjectLayout) {
     const project = await this.IoTProjectService.findOne(id);
 
-    if (project.creator.id === user.id || hasRole(user, Role.STAFF))
-      return await this.IoTProjectService.updateLayout(id, layout);
-    if (project.access === IOTPROJECT_ACCESS.PRIVATE) throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
-    // TODO : Add restriction
-    if (project.access === IOTPROJECT_ACCESS.RESTRICTED) throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    if (project.creator.id !== id && !hasRole(user, Role.STAFF))
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+
     return await this.IoTProjectService.updateLayout(id, layout);
   }
 
@@ -108,11 +105,9 @@ export class IoTProjectController {
   async addRoute(@User() user: UserEntity, @Param('id') id: string, @Body() routeDTO: IoTRouteEntity) {
     const project = await this.IoTProjectService.findOne(id);
 
-    if (project.creator.id === user.id || hasRole(user, Role.STAFF))
-      return await this.IoTProjectService.addRoute(project, routeDTO);
-    if (project.access === IOTPROJECT_ACCESS.PRIVATE) throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
-    // TODO : Add restriction
-    if (project.access === IOTPROJECT_ACCESS.RESTRICTED) throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    if (project.creator.id !== id && !hasRole(user, Role.STAFF))
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+
     return await this.IoTProjectService.addRoute(project, routeDTO);
   }
 
@@ -134,13 +129,8 @@ export class IoTProjectController {
   async addObject(@User() user: UserEntity, @Param('id') id: string, @Body() addObjectDTO: AddObjectDTO) {
     const project = await this.IoTProjectService.findOne(id);
 
-    if (project.creator.id === user.id || hasRole(user, Role.STAFF)) {
-      const object = await this.IoTObjectService.findOne(addObjectDTO.id);
-      return await this.IoTProjectService.addObject(project, object);
-    }
-    if (project.access === IOTPROJECT_ACCESS.PRIVATE) throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
-    // TODO : Add restriction
-    if (project.access === IOTPROJECT_ACCESS.RESTRICTED) throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    if (project.creator.id !== id && !hasRole(user, Role.STAFF))
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
 
     const object = await this.IoTObjectService.findOne(addObjectDTO.id);
     return await this.IoTProjectService.addObject(project, object);

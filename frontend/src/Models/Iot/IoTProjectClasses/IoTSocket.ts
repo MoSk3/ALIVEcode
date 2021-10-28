@@ -47,6 +47,9 @@ export class IoTSocket {
 		this.socket = new WebSocket(process.env.REACT_APP_IOT_URL);
 
 		this.socket.onopen = () => {
+			if (process.env.REACT_APP_DEBUG)
+				console.log('Connected to IoTProjectSocket');
+
 			this.socket.onmessage = e => {
 				const data = JSON.parse(e.data);
 				switch (data.event) {
@@ -55,6 +58,16 @@ export class IoTSocket {
 						break;
 				}
 			};
+
+			this.socket.send(
+				JSON.stringify({
+					event: 'connect_watcher',
+					data: {
+						iotProjectId: this.iotProject.id,
+						iotProjectName: this.iotProject.name,
+					},
+				}),
+			);
 
 			this.socket.send(
 				JSON.stringify({
