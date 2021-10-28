@@ -25,8 +25,8 @@ export class QuizzesService {
     return quiz;
   }
 
-  update(id: number, updateQuizDto: UpdateQuizDto) {
-    return `This action updates a #${id} quiz`;
+  async update(id: number, updateQuizDto: UpdateQuizDto) {
+    return await this.quizRepository.update(id, updateQuizDto);
   }
 
   remove(id: number) {
