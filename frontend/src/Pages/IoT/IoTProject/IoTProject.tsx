@@ -31,6 +31,8 @@ const IoTProject = (props: IoTProjectProps) => {
 	const { t } = useTranslation();
 	const { user } = useContext(UserContext);
 
+	const canEdit = user?.id === project?.creator.id;
+
 	useEffect(() => {
 		const getProject = async () => {
 			try {
@@ -55,11 +57,29 @@ const IoTProject = (props: IoTProjectProps) => {
 	const getTabContent = () => {
 		switch (selectedTab) {
 			case 'settings':
-				return <IoTProjectSettings setProject={setProject} project={project} />;
+				return (
+					<IoTProjectSettings
+						canEdit={canEdit}
+						setProject={setProject}
+						project={project}
+					/>
+				);
 			case 'routes':
-				return <IoTProjectRoutes setProject={setProject} project={project} />;
+				return (
+					<IoTProjectRoutes
+						canEdit={canEdit}
+						setProject={setProject}
+						project={project}
+					/>
+				);
 			case 'access':
-				return <IoTProjectAccess setProject={setProject} project={project} />;
+				return (
+					<IoTProjectAccess
+						canEdit={canEdit}
+						setProject={setProject}
+						project={project}
+					/>
+				);
 		}
 	};
 

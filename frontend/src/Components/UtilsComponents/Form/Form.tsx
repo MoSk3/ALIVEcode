@@ -250,6 +250,7 @@ const Form = (props: FormProps) => {
 			<Button
 				variant={props.action === 'DELETE' ? 'danger' : 'primary'}
 				type="submit"
+				disabled={props.disabled}
 			>
 				{t(
 					[

@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next';
 export const IoTProjectAccess = ({
 	project,
 	setProject,
+	canEdit,
 }: IoTProjectSettingsProps) => {
 	const [addObjectModalOpen, setAddObjectModalOpen] = useState(false);
 	const [iotObjects, setIoTObjects] = useState<IoTObject[]>();

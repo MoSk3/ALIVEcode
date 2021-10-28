@@ -4,6 +4,7 @@ export type ButtonVariants = 'primary' | 'secondary' | 'danger';
 
 export type StyledButtonProps = {
 	padding?: string;
+	disabled?: boolean;
 };
 
 export type ButtonProps = {
@@ -14,6 +15,7 @@ export type ButtonProps = {
 	onClick?: () => void;
 	children?: React.ReactNode;
 	padding?: string;
+	disabled?: boolean;
 };
 
 export const StyledPrimaryButton = styled.button`
@@ -23,8 +25,9 @@ export const StyledPrimaryButton = styled.button`
 	padding: ${({ padding }: StyledButtonProps) => padding ?? 'none'};
 
 	&:hover {
-		background-color: var(--contrast-color) !important;
 		color: white;
+		${({ disabled }: StyledButtonProps) =>
+			!disabled && 'background-color: var(--contrast-color) !important;'}
 	}
 `;
 
@@ -35,8 +38,9 @@ export const StyledDangerButton = styled.button`
 	padding: ${({ padding }: StyledButtonProps) => padding ?? 'none'};
 
 	&:hover {
-		background-color: var(--contrast-color) !important;
 		color: white;
+		${({ disabled }: StyledButtonProps) =>
+			!disabled && 'background-color: var(--contrast-color) !important;'}
 	}
 `;
 
@@ -47,7 +51,8 @@ export const StyledSecondaryButton = styled.button`
 	padding: ${({ padding }: StyledButtonProps) => padding ?? 'none'};
 
 	&:hover {
-		background-color: var(--contrast-color) !important;
 		color: white;
+		${({ disabled }: StyledButtonProps) =>
+			!disabled && 'background-color: var(--contrast-color) !important;'}
 	}
 `;

@@ -1,6 +1,8 @@
 import Form from '../../../UtilsComponents/Form/Form';
 import { IoTProjectSettingsProps } from './IoTProjectSettingsTypes';
 import { plainToClass } from 'class-transformer';
+import { useContext } from 'react';
+import { UserContext } from '../../../../state/contexts/UserContext';
 import {
 	IoTProject as ProjectModel,
 	IOTPROJECT_ACCESS,
@@ -10,6 +12,7 @@ import {
 export const IoTProjectSettings = ({
 	project,
 	setProject,
+	canEdit,
 }: IoTProjectSettingsProps) => {
 	return (
 		<>
@@ -24,6 +27,7 @@ export const IoTProjectSettings = ({
 					updatedProject.layout = project.layout;
 					setProject(updatedProject);
 				}}
+				disabled={!canEdit}
 				action="PATCH"
 				name="iot_project"
 				url={`iot/projects/${project.id}`}

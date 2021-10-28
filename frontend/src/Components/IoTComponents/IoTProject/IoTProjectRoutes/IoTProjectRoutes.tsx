@@ -10,6 +10,7 @@ import { IoTporjectAddRouteForm } from '../IoTProjectAddRouteForm/IoTProjectAddR
 export const IoTProjectRoutes = ({
 	project,
 	setProject,
+	canEdit,
 }: IoTProjectRoutesProps) => {
 	const [routeModalOpen, setRouteModalOpen] = useState(false);
 
