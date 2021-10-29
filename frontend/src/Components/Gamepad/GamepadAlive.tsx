@@ -3,7 +3,7 @@ import './gamepad.css';
 import { Col } from 'react-bootstrap';
 import styled from 'styled-components';
 import CenteredContainer from '../UtilsComponents/CenteredContainer/CenteredContainer';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Car } from '../LevelComponents/Simulation/Sketch/simulation/Car.js';
 
 const StyledDiv = styled(Col)`
@@ -47,7 +47,7 @@ const useKeyPress = (targetKey: any) => {
 	};
 
 	// Add event listeners
-	React.useEffect(() => {
+	useEffect(() => {
 		window.addEventListener('keydown', downHandler);
 		window.addEventListener('keyup', upHandler);
 		// Remove event listeners on cleanup

@@ -16,10 +16,10 @@ import { IoTObjectEntity } from '../iot/IoTobject/entities/IoTobject.entity';
 import { LevelEntity } from '../level/entities/level.entity';
 import { CourseEntity } from '../course/entities/course.entity';
 import { MyRequest } from '../../utils/guards/auth.guard';
-import { Observable } from 'rxjs';
 
 @Injectable({ scope: Scope.REQUEST })
 export class UserService {
+  [x: string]: any;
   constructor(
     @InjectRepository(UserEntity) private userRepository: Repository<UserEntity>,
     @InjectRepository(ProfessorEntity)
@@ -123,10 +123,10 @@ export class UserService {
     return user;
   }
 
-  update(user: UserEntity, updateUserDto: UserEntity) {
-    return this.userRepository.update(user, updateUserDto);
+  async update(userId: string, updateUserDto: UserEntity) {
+    return await this.userRepository.update(userId, updateUserDto);
   }
-  
+
   remove(user: UserEntity) {
     return this.userRepository.remove(user);
   }

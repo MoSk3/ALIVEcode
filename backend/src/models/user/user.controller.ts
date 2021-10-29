@@ -136,8 +136,8 @@ export class UserController {
   async update(@User() user: UserEntity, @Param('id') id: string, @Body() updateUserDto: UserEntity) {
     if (!hasRole(user, Role.MOD)) throw new HttpException('You cannot do that', HttpStatus.FORBIDDEN);
 
-    if (user.id === id) return this.userService.update(user, updateUserDto);
-    return this.userService.update(await this.userService.findById(id), updateUserDto);
+    if (user.id === id) return this.userService.update(user.id, updateUserDto);
+    return this.userService.update(id, updateUserDto);
   }
 
   @Delete(':id')
@@ -180,14 +180,15 @@ export class UserController {
   @Post('upload')
   @UseInterceptors(
     FileInterceptor('image',storage))
-   
-   uploadedFile(@UploadedFile() file, @Request() req) {
-      const user: UserEntity = req.user;   
+   async uploadedFile(@UploadedFile() file, @Request() req) {
+      const user: UserEntity = req.user;  
+      user.image = file.filename;
       console.log(user)
-      console.log(file.file)
-      const tring : string= file.filename
-      return this.userService.updateOne(user,  {image : tring})
-      
+      console.log(file)
+      return await this.userService.update(user.id, user);
+
+
+   
         
    } 
 
