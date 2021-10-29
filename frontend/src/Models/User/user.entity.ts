@@ -31,11 +31,11 @@ export class User {
 
 	collabIoTProjects?: IoTProject[];
 
-	image?: string;
 
 	public getDisplayName() {
 		return this.email;
 	}
+
 
 	public isProfessor() {
 		return this instanceof Professor;
@@ -61,7 +61,7 @@ export class User {
 
 export class Student extends User {
 	name: string;
-
+	image: string;
 	async getClassrooms() {
 		return await api.db.users.getClassrooms(this.id);
 	}
@@ -69,12 +69,17 @@ export class Student extends User {
 	getDisplayName() {
 		return this.name;
 	}
+
+	getDisplayImage() {
+		return this.image;
+	}
 }
 
 export class Professor extends User {
 	firstName: string;
-
 	lastName: string;
+	image: string;
+
 
 	getCourses() {
 		return api.db.users.getCourses(this.id);
@@ -86,6 +91,9 @@ export class Professor extends User {
 
 	getDisplayName(): string {
 		return `${this.firstName} ${this.lastName}`;
+	}
+	getDisplayImage() {
+		return this.image;
 	}
 }
 // DONT REMOVE THIS HERE (prevents class used before referenced)

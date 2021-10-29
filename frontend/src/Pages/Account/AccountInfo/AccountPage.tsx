@@ -13,7 +13,7 @@ import AboutCard from '../../../Components/UtilsComponents/Cards/AboutCard/About
 import { useTranslation } from 'react-i18next';
 import GamepadAlive from '../../../Components/Gamepad/GamepadAlive';
 import axios from 'axios';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 
 const StyledCenteredContainer = styled(CenteredContainer)`
 	padding: 0 10% 0 10%;
@@ -37,7 +37,6 @@ const AccountPage = () => {
 		else if (value > 30) return 'orange';
 		else return 'red';
 	};
-
 	const { register, handleSubmit } = useForm();
 	const onSubmit = async (image: { file: any }) => {
 		let fileData = new FormData();
@@ -64,7 +63,7 @@ const AccountPage = () => {
 										<Row>
 											<AboutCard
 												name={user.getDisplayName()}
-												img="https://i.imgur.com/xkH6wCg.png"
+												img={`http://localhost:8000/${user.getDisplayImage()}`}
 											/>
 										</Row>
 										<Form onSubmit={handleSubmit(onSubmit)}>

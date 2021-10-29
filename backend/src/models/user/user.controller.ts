@@ -27,19 +27,15 @@ import { User } from '../../utils/decorators/user.decorator';
 import { Role } from '../../utils/types/roles.types';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
-import { imageFileFilter } from 'src/utils/upload/file-uploading';
+import { editFileName, imageFileFilter } from 'src/utils/upload/file-uploading';
 import  { extname } from 'path';
-import { map, Observable, tap} from 'rxjs';
 
  export const storage =  {
   fileFilter: imageFileFilter,
   storage: diskStorage({
    destination: './uploads' ,
-  filename: (req, file, cb) => {
-   const filename: string =file.originalname.replace(/\s/g, '') //+ uuidv4();
-   const extension: string = extname(file.originalname);
-   cb(null, `${filename}${extension}`)
-  }
+   filename: editFileName
+  
  })
 }
 @Controller('users')
@@ -181,15 +177,12 @@ export class UserController {
   @UseInterceptors(
     FileInterceptor('image',storage))
    async uploadedFile(@UploadedFile() file, @Request() req) {
-      const user: UserEntity = req.user;  
+      const user: UserEntity = req.user; 
+ 
       user.image = file.filename;
-      console.log(user)
+      console.log(__dirname)
       console.log(file)
       return await this.userService.update(user.id, user);
-
-
-   
-        
    } 
 
 }

@@ -218,3 +218,4 @@ fabric.properties
 out/production
 out/META-INF
 */log/
+backend/uploads/

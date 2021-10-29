@@ -31,6 +31,8 @@ import { LoggerModule } from './admin/loger/loger.module';
 import { MyLogger } from './admin/loger/logger';
 import { QuizzesModule } from './models/social/quizzes/quizzes.module';
 import { MulterModule } from '@nestjs/platform-express';
+import { ServeStaticModule } from '@nestjs/serve-static/dist/serve-static.module';
+import { join } from 'path';
 
 adminjs.registerAdapter({ Database, Resource });
 
@@ -59,9 +61,12 @@ adminjs.registerAdapter({ Database, Resource });
       }),
     }),
     MulterModule.register({
-        dest: './files',
+        dest: './uploads',
       }),
-    
+      ServeStaticModule.forRoot({
+        rootPath: join( 'uploads'),
+        
+    }),
     UserModule,
     ClassroomModule,
     LevelModule,
