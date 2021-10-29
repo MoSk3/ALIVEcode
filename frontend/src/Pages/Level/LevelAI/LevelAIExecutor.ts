@@ -123,7 +123,14 @@ class LevelAIExecutor extends LevelCodeExecutor {
 							break;
 						case 801:
 							// optimiserRegression
-							this.executableFuncs.optimizeRegression(params[0], params[1]);
+							const paramRegression = this.executableFuncs.optimizeRegression(
+								params[0],
+								params[1],
+							);
+							if (paramRegression !== undefined) {
+								this.cmd?.print('Nouveaux paramètres de la régression :');
+								this.cmd?.print(paramRegression);
+							}
 							perform_action(i + 1);
 							break;
 						case 802:

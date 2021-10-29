@@ -181,7 +181,7 @@ const LevelAI = ({
 	 * the graph.
 	 * @param lr the learning rate for the optimization algorithm.
 	 */
-	function optimizeRegression(lr: number, epoch: number): void {
+	function optimizeRegression(lr: number, epoch: number): string | void {
 		if (!func.current) return;
 		const optimizer: PolyOptimizer = new PolyOptimizer(
 			func.current,
@@ -191,8 +191,7 @@ const LevelAI = ({
 		);
 		func.current = optimizer.optimize(data);
 		showRegression();
-		cmd?.print('Nouveaux paramètres de la régression :');
-		cmd?.print(func.current.paramsToString());
+		return func.current.paramsToString();
 	}
 
 	/**
