@@ -16,15 +16,17 @@ export class Quiz {
     @JoinColumn( { name : 'id_user' } )
     user_id: UserEntity;
 
-    @OneToOne(() => Reward, { eager: true })
+    @OneToOne(() => Reward)
     @JoinColumn()
     reward : Reward;
 
-    @OneToMany(() => Question, question => question.id_quiz)
-    id_questions: Question[];
+    @OneToMany(() => Question, question => question.quiz)
+    @JoinColumn()
+    questions: Question[];
 
-    @OneToMany(() => Result, result => result.id_quiz)
-    id_result: Result[];
+    @OneToMany(() => Result, result => result.quiz)
+    @JoinColumn()
+    results: Result[];
 
     @ManyToOne(() => CategoriesQuiz, category => category.id, { eager: true })
     @JoinColumn()

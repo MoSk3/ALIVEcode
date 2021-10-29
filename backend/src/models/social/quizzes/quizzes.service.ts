@@ -10,12 +10,13 @@ export class QuizzesService {
   constructor(
     @InjectRepository(Quiz) private quizRepository: Repository<Quiz>,
   ) {}
-  create(createQuizDto: CreateQuizDto) {
-    return 'This action adds a new quiz';
+  async create(createQuizDto: Quiz) {
+    const quiz = this.quizRepository.save(this.quizRepository.create(createQuizDto));
+    return await quiz;
   }
 
   async findAll() {
-    return await this.quizRepository.find();
+    return await this.quizRepository.find({ relations: ['reward', 'questions'] });
   }
 
   async findOne(id: number) {
@@ -26,7 +27,7 @@ export class QuizzesService {
   }
 
   async update(id: number, updateQuizDto: UpdateQuizDto) {
-    return await this.quizRepository.update(id, updateQuizDto);
+    return 'This Updates a Quiz';
   }
 
   remove(id: number) {

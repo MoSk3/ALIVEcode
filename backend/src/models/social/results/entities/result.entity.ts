@@ -11,9 +11,9 @@ export class Result {
     @JoinColumn( { name : 'id_user' } )
     user_id: UserEntity;
 
-    @ManyToOne(() => Quiz, quiz => quiz.id_result)
-    @JoinColumn( { name : 'id_quiz' } )
-    id_quiz : Quiz;
+    @ManyToOne(() => Quiz, quiz => quiz.results)
+    @JoinColumn()
+    quiz : Quiz;
 
     @Column({type: 'int', default: 0})
     percentage : number;
