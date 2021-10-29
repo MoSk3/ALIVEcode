@@ -11,22 +11,14 @@ export class Quiz {
     @PrimaryGeneratedColumn()
     id : number;
 
-    @Column({ name: 'id_user' })
-    id_user: number;
-
-    @Column({ name: 'id_reward'})
-    id_reward: number;
-
-    @Column({ name: 'id_category'})
-    id_category: number;
-
 
     @ManyToOne(() => UserEntity, user => user.quiz)
     @JoinColumn( { name : 'id_user' } )
     user_id: UserEntity;
 
-    @OneToOne(() => Reward)
-    @JoinColumn( { name : 'id_reward' } )
+    @OneToOne(() => Reward, { eager: true })
+    @JoinColumn()
+    reward : Reward;
 
     @OneToMany(() => Question, question => question.id_quiz)
     id_questions: Question[];
@@ -34,8 +26,9 @@ export class Quiz {
     @OneToMany(() => Result, result => result.id_quiz)
     id_result: Result[];
 
-    @ManyToOne(() => CategoriesQuiz, category => category.id_quiz)
-    @JoinColumn( { name : 'id_category' } )
+    @ManyToOne(() => CategoriesQuiz, category => category.id, { eager: true })
+    @JoinColumn()
+    category: CategoriesQuiz;
     
     @Column('varchar')
     name : string;
