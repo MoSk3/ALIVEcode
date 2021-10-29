@@ -34,6 +34,7 @@ import Forum from '../../Pages/Forum/Forum';
 import QuizHome from '../../Pages/Quiz/QuizHome/QuizHome';
 import QuizCategory from '../../Pages/Quiz/QuizCategory/QuizCategory';
 import QuizCreate from '../../Pages/Quiz/QuizCreate/QuizCreate';
+import CategoriesForum from '../../Pages/Forum/CategoriesForum';
 
 type component =
 	| React.ComponentType<RouteComponentProps<any>>
@@ -181,6 +182,10 @@ const useRoutes = () => {
 		forum: {
 			path: '/forum',
 			component: Forum,
+		},
+		categoriesForum: {
+			path: '/categoriesForum',
+			component: CategoriesForum,
 		},
 		quiz: {
 			path: '/quiz',
