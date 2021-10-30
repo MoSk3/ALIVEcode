@@ -41,11 +41,6 @@ const LineInterface = memo(
 
 		const ref = useRef<AceEditor>(null);
 
-		useEffect(() => {
-			if (!ref.current || !initialContent) return;
-			ref.current.editor.setValue(initialContent);
-		}, [initialContent]);
-
 		const setOpenedTab = (idx: number) => {
 			const updatedTabs = tabs.map((t, i) => {
 				if (i === idx) handleChange(t.content);

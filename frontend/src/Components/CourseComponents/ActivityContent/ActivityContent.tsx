@@ -139,7 +139,7 @@ const ActivityContent = (props: ActivityContentProps) => {
 														level={a.level}
 														type={a.level.getType()}
 														editMode={false}
-													></Level>
+													/>
 												</div>
 											))}
 									</>
