@@ -668,7 +668,7 @@ public class ASAst extends AstGenerator {
                                 .findFirst()
                                 .orElse(null);
 
-                        // pas de deux points, forme val[idx]
+                        // pas de deux points, forme val[idxOrKey]
                         if (deux_pointsToken == null) {
                             Expression<?> idx = evalOneExpr(new ArrayList<>(p.subList(2, p.size() - 1)), null);
                             return new CreerListe.SousSection.IndexSection((Expression<?>) p.get(0), idx);

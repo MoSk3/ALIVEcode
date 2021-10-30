@@ -70,10 +70,10 @@ public interface ASObjet<T> {
         */
     }
 
-    interface Iterable extends ASObjet<Object> {
+    interface Iterable<T> extends ASObjet<T> {
         boolean contient(ASObjet<?> element);
 
-        Iterable sousSection(int debut, int fin);
+        Iterable<T> sousSection(int debut, int fin);
 
         ASObjet<?> get(int index);
 
@@ -778,7 +778,7 @@ public interface ASObjet<T> {
         }
     }
 
-    class Texte implements Iterable {
+    class Texte implements Iterable<String> {
         private final String valeur;
 
         public Texte(Token valeur) {
@@ -824,7 +824,7 @@ public interface ASObjet<T> {
         }
 
         @Override
-        public Iterable sousSection(int debut, int fin) {
+        public Iterable<String> sousSection(int debut, int fin) {
             return new Texte(this.valeur.substring(debut, idxRelatif(Arrays.asList(this.arrayDeLettres()), fin)));
         }
 
@@ -861,13 +861,13 @@ public interface ASObjet<T> {
         }
     }
 
-    class Liste implements Iterable {
+    class Liste implements Iterable<Object> {
         private ArrayList<ASObjet<?>> valeur = new ArrayList<>();
 
         public Liste() {
         }
 
-        public Liste(ASObjet<?>[] valeurs) {
+        public Liste(ASObjet<?>... valeurs) {
             this.valeur = new ArrayList<>(Arrays.asList(valeurs));
         }
 
