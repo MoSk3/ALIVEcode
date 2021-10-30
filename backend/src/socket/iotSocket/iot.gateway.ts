@@ -15,6 +15,7 @@ import { IoTSocketToObjectRequest, IoTSocketUpdateRequest } from './iotSocket.ty
 import { IoTObjectService } from '../../models/iot/IoTobject/IoTobject.service';
 import { DTOInterceptor } from '../../utils/interceptors/dto.interceptor';
 import { IoTObjectEntity } from '../../models/iot/IoTobject/entities/IoTobject.entity';
+import { IoTProjectService } from '../../models/iot/IoTproject/IoTproject.service';
 import {
   WatcherClient,
   WatcherClientConnectPayload,
@@ -27,7 +28,7 @@ import {
 export class IoTGateway implements OnGatewayDisconnect, OnGatewayConnection, OnGatewayInit {
   private logger: Logger = new Logger('IoTGateway');
 
-  constructor(private iotObjectService: IoTObjectService) {}
+  constructor(private iotObjectService: IoTObjectService, private iotProjectService: IoTProjectService) {}
 
   @WebSocketServer()
   server: Server;
@@ -84,13 +85,18 @@ export class IoTGateway implements OnGatewayDisconnect, OnGatewayConnection, OnG
   }
 
   @SubscribeMessage('send_update')
-  send_update(@ConnectedSocket() socket: WebSocket, @MessageBody() payload: IoTSocketUpdateRequest) {
+  async send_update(@ConnectedSocket() socket: WebSocket, @MessageBody() payload: IoTSocketUpdateRequest) {
     if (!payload.id || !payload.projectId || !payload.value) throw new WsException('Bad payload');
 
     const object = ObjectClient.getClientBySocket(socket);
     if (!object) throw new WsException('Forbidden');
 
     if (!object.hasProjectRights(payload.projectId)) throw new WsException('Forbidden');
+
+    const project = await this.iotProjectService.findOne(payload.projectId);
+    if (!project) throw new WsException('No project with id');
+
+    await this.iotProjectService.updateComponent(project, payload.id, payload.value);
 
     object.sendUpdate(payload);
   }

@@ -68,4 +68,10 @@ export class IoTProjectService {
     await this.projectRepository.save(project);
     return object;
   }
+
+  async updateComponent(project: IoTProjectEntity, componentId: string, value: any): Promise<void> {
+    const layoutManager = project.getLayoutManager();
+    layoutManager.updateComponent(componentId, value);
+    await this.projectRepository.save(project);
+  }
 }
