@@ -4,7 +4,6 @@ import { CreatedByUser } from '../../../../generics/entities/createdByUser.entit
 import { IoTRouteEntity } from '../../IoTroute/entities/IoTroute.entity';
 import { UserEntity } from '../../../user/entities/user.entity';
 import { IoTObjectEntity } from '../../IoTobject/entities/IoTobject.entity';
-import { Type } from 'class-transformer';
 import { IoTLayoutManager } from '../IoTLayoutManager';
 
 export enum IOTPROJECT_INTERACT_RIGHTS {
