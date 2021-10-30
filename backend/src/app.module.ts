@@ -30,7 +30,9 @@ import { adminOptions } from './admin/admin.options';
 import { LoggerModule } from './admin/loger/loger.module';
 import { MyLogger } from './admin/loger/logger';
 import { QuizzesModule } from './models/social/quizzes/quizzes.module';
+import { PostModule } from './models/social/post/post.module';
 import { MulterModule } from '@nestjs/platform-express';
+import { CategoriesSubjectsModule } from './models/social/categories-subjects/categories-subjects.module';
 import { ServeStaticModule } from '@nestjs/serve-static/dist/serve-static.module';
 import { join } from 'path';
 
@@ -78,6 +80,9 @@ adminjs.registerAdapter({ Database, Resource });
     MaintenanceModule,
     AsScriptModule,
     QuizzesModule,
+    PostModule,
+    CategoriesSubjectsModule,
+
   ],
   controllers: [AppController],
   providers: [AppService, MaintenanceService, UserService],
