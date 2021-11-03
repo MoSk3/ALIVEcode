@@ -32,7 +32,8 @@ export class QuizzesService {
     return await quiz
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} quiz`;
+  async remove(id: number) {
+    const quiz = await this.quizRepository.delete(id);
+    return await quiz
   }
 }

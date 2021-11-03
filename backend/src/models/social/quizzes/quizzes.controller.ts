@@ -30,7 +30,7 @@ export class QuizzesController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.quizzesService.remove(+id);
+  async remove(@Param('id') id: string) {
+    return await this.quizzesService.remove(+id);
   }
 }
