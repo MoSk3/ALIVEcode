@@ -1,3 +1,4 @@
+import { IsNotEmpty } from "class-validator";
 import { UserEntity } from "src/models/user/entities/user.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { CategoriesQuiz } from "../../categories-quiz/entities/categories-quiz.entity";
@@ -12,6 +13,7 @@ export class Quiz {
     id : number;
     
     @Column('varchar')
+    @IsNotEmpty()
     name : string;
 
 
