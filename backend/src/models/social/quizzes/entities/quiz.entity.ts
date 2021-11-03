@@ -17,9 +17,9 @@ export class Quiz {
     name : string;
 
 
-    @ManyToOne(() => UserEntity, user => user.quiz)
-    @JoinColumn( { name : 'id_user' } )
-    user_id: UserEntity;
+    @ManyToOne(() => UserEntity, user => user.quiz, { eager: true })
+    @JoinColumn()
+    user: UserEntity;
 
     @OneToOne(() => Reward)
     @JoinColumn()
@@ -36,7 +36,5 @@ export class Quiz {
     @ManyToOne(() => CategoriesQuiz, category => category.id, { eager: true })
     @JoinColumn()
     category: CategoriesQuiz;
-    
-
 
 }

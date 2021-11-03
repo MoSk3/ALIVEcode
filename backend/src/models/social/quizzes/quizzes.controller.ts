@@ -25,7 +25,7 @@ export class QuizzesController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateQuizDto: UpdateQuizDto) {
+  update(@Param('id') id: string, @Body() updateQuizDto: Quiz) {
     return this.quizzesService.update(+id, updateQuizDto);
   }
 

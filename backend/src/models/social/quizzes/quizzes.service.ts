@@ -26,8 +26,10 @@ export class QuizzesService {
     return quiz;
   }
 
-  async update(id: number, updateQuizDto: UpdateQuizDto) {
-    return 'This Updates a Quiz';
+  async update(id: number, updateQuizDto: Quiz) {
+    updateQuizDto.id = id;
+    const quiz = this.quizRepository.save(updateQuizDto);
+    return await quiz
   }
 
   remove(id: number) {
