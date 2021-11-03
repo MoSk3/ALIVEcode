@@ -4,14 +4,11 @@ import { Col } from 'react-bootstrap';
 import styled from 'styled-components';
 import CenteredContainer from '../UtilsComponents/CenteredContainer/CenteredContainer';
 import React, { useEffect } from 'react';
-import { Car } from '../LevelComponents/Simulation/Sketch/simulation/Car.js';
 
 const StyledDiv = styled(Col)`
 	background-color: var(--primary-color);
-
 	width: 500px;
 	height: 300px;
-
 	img {
 		border-radius: 20px;
 		width: 500px;
@@ -21,7 +18,6 @@ const StyledDiv = styled(Col)`
 
 const StyledCenteredContainer = styled(CenteredContainer)`
 	padding: 0 0 0 22%;
-
 	.row-prof {
 		margin-top: 10px;
 		margin-bottom: 10px;
@@ -38,14 +34,12 @@ const useKeyPress = (targetKey: any) => {
 			setKeyPressed(true);
 		}
 	};
-
 	// If released key is our target key then set to false
 	const upHandler = ({ key }: { key: any }) => {
 		if (key === targetKey) {
 			setKeyPressed(false);
 		}
 	};
-
 	// Add event listeners
 	useEffect(() => {
 		window.addEventListener('keydown', downHandler);
@@ -55,6 +49,7 @@ const useKeyPress = (targetKey: any) => {
 			window.removeEventListener('keydown', downHandler);
 			window.removeEventListener('keyup', upHandler);
 		};
+		// eslint-disable-next-line
 	}, []); // Empty array ensures that effect is only run on mount and unmount
 
 	return keyPressed;

@@ -17,6 +17,8 @@ import { LevelAI } from './Level/levelAI.entity';
 import { IoTObject } from './Iot/IoTobject.entity';
 import { Maintenance } from './Maintenance/maintenance.entity';
 import { QueryDTO } from '../../../backend/src/models/level/dto/query.dto';
+import { Quiz } from './Social/quiz.entity';
+import { Result } from './Social/result.entity';
 
 type urlArgType<S extends string> = S extends `${infer _}:${infer A}/${infer B}`
 	? A | urlArgType<B>
@@ -125,6 +127,9 @@ const api = {
 				getProjects: apiGet('users/iot/projects', IoTProject, true),
 				getObjects: apiGet('users/iot/objects', IoTObject, true),
 			},
+			social:{
+				getResults: apiGet('users/quizzes/results', Result, true)
+			},
 			//get: apiGetter('users', User),
 			getClassrooms: apiGet('users/:id/classrooms', Classroom, true),
 			getCourses: apiGet('users/:id/courses', Course, true),
@@ -179,6 +184,22 @@ const api = {
 				getRoutes: apiGet('iot/projects/:id/routes', IotRoute, true),
 			},
 		},
+		quiz:{
+			all: apiGet('quizzes', Quiz, true),
+			get: apiGet('quizzes/:id/', Quiz, false),
+			create: apiCreate('quizzes', Quiz),
+			delete: apiDelete('quizzes/:id'),
+
+		},
+		results:{
+			all: apiGet('results', Result, true),
+			get: apiGet('results/:id/', Result, false),
+			create: apiCreate('results', Result),
+			delete: apiDelete('results/:id'),
+			getresultuser : apiGet('results/user', Result, true),
+
+		
+		}
 	},
 };
 

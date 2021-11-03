@@ -80,10 +80,10 @@ export class UserEntity extends BaseEntity {
   @OneToMany(() => Post_Table, post => post.user_id)
   post: Post_Table[];
 
-  @OneToMany(() => Quiz, quiz => quiz.user_id)
+  @OneToMany(() => Quiz, quiz => quiz.user)
   quiz: Quiz[];
 
-  @OneToMany(() => Result, result => result.user_id)
+  @OneToMany(() => Result, result => result.user, { cascade: true })
   result: Result[];
   
   @Column({type:'varchar', default: ""})

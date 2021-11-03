@@ -16,6 +16,7 @@ import { IoTObjectEntity } from '../iot/IoTobject/entities/IoTobject.entity';
 import { LevelEntity } from '../level/entities/level.entity';
 import { CourseEntity } from '../course/entities/course.entity';
 import { MyRequest } from '../../utils/guards/auth.guard';
+import { Result } from '../social/results/entities/result.entity';
 
 @Injectable({ scope: Scope.REQUEST })
 export class UserService {
@@ -32,7 +33,6 @@ export class UserService {
     @InjectRepository(LevelEntity) private levelRepository: Repository<LevelEntity>,
     @Inject(REQUEST) private req: MyRequest,
   ) {}
-
   async createStudent(createStudentDto: UserEntity) {
     // TODO: random salt
     const hashedPassword = await hash(createStudentDto.password, 12);
@@ -152,7 +152,9 @@ export class UserService {
   async getIoTObjects(user: UserEntity) {
     return await this.iotObjectRepository.find({ where: { creator: user } });
   }
-
+  async getResults(user: UserEntity) {
+    return await this.userRepository.find({ where: {id: user } });
+  }
   async getLevels(user: UserEntity, query: string) {
     return await this.levelRepository.find({
       where: { creator: user, name: ILike(`%${query ?? ''}%`) },

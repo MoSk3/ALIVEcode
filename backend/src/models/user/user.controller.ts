@@ -33,7 +33,7 @@ import  { extname } from 'path';
  export const storage =  {
   fileFilter: imageFileFilter,
   storage: diskStorage({
-   destination: './uploads' ,
+   destination: 'images/uploads' ,
    filename: editFileName
   
  })
@@ -118,7 +118,11 @@ export class UserController {
   async getObjects(@User() user: UserEntity) {
     return await this.userService.getIoTObjects(user);
   }
-
+  @Get('quizzes/results')
+  @Auth()
+  async getResults(@User() user: UserEntity) {
+    return await this.userService.getResults(user);
+  }
   @Get(':id')
   @Auth()
   findOneStudent(@User() user: UserEntity, @Param('id') id: string) {

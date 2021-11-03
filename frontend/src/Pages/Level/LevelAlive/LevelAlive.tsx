@@ -263,6 +263,7 @@ const LevelAlive = ({
 									init={s => {
 										executor.init(s);
 										setSketch(s);
+										s.enableCarController();
 									}}
 								/>
 							)}

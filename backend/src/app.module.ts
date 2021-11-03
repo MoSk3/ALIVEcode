@@ -35,6 +35,8 @@ import { MulterModule } from '@nestjs/platform-express';
 import { CategoriesSubjectsModule } from './models/social/categories-subjects/categories-subjects.module';
 import { ServeStaticModule } from '@nestjs/serve-static/dist/serve-static.module';
 import { join } from 'path';
+import { Result } from './models/social/results/entities/result.entity';
+import { ResultsModule } from './models/social/results/results.module';
 
 adminjs.registerAdapter({ Database, Resource });
 
@@ -63,12 +65,12 @@ adminjs.registerAdapter({ Database, Resource });
       }),
     }),
     MulterModule.register({
-        dest: './uploads',
+        dest: 'images/uploads',
       }),
       ServeStaticModule.forRoot({
-        rootPath: join( 'uploads'),
-        
+        rootPath: join( 'images'),
     }),
+
     UserModule,
     ClassroomModule,
     LevelModule,
@@ -82,6 +84,7 @@ adminjs.registerAdapter({ Database, Resource });
     QuizzesModule,
     PostModule,
     CategoriesSubjectsModule,
+    ResultsModule, 
 
   ],
   controllers: [AppController],

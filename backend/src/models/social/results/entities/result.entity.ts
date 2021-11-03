@@ -7,13 +7,12 @@ export class Result {
     @PrimaryGeneratedColumn()
     id : number;
 
-    @ManyToOne(() => UserEntity, user => user.result)
-    @JoinColumn( { name : 'id_user' } )
-    user_id: UserEntity;
+    @ManyToOne(() => UserEntity, user => user.result,  { eager: true})
+    user: UserEntity;
 
     @ManyToOne(() => Quiz, quiz => quiz.results)
     @JoinColumn()
-    quiz : Quiz;
+    quiz : Quiz[];
 
     @Column({type: 'int', default: 0})
     percentage : number;

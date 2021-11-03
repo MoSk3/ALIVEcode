@@ -1,3 +1,4 @@
+import { IsNotEmpty } from "class-validator";
 import { UserEntity } from "src/models/user/entities/user.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { CategoriesQuiz } from "../../categories-quiz/entities/categories-quiz.entity";
@@ -11,10 +12,12 @@ export class Quiz {
     @PrimaryGeneratedColumn()
     id : number;
 
+    @Column('varchar')
+    @IsNotEmpty()
+    name : string;
 
     @ManyToOne(() => UserEntity, user => user.quiz)
-    @JoinColumn( { name : 'id_user' } )
-    user_id: UserEntity;
+    user: UserEntity;
 
     @OneToOne(() => Reward)
     @JoinColumn()
@@ -32,8 +35,7 @@ export class Quiz {
     @JoinColumn()
     category: CategoriesQuiz;
     
-    @Column('varchar')
-    name : string;
+   
 
 
 }
