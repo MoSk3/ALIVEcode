@@ -1,9 +1,12 @@
 import CenteredContainer from '../../../Components/UtilsComponents/CenteredContainer/CenteredContainer';
 import CardContainer from '../../../Components/UtilsComponents/CardContainer/CardContainer';
 import SmallCard from '../../../Components/UtilsComponents/Cards/SmallCard/SmallCard';
+import { useEffect, useState } from 'react';
+import { Quiz } from '../../../Models/Quiz/quiz.entity';
+import api from '../../../Models/api';
+import { plainToClass } from 'class-transformer';
 
 const QuizHome = () => {
-
 	return (
 		<div>
 			<CenteredContainer
