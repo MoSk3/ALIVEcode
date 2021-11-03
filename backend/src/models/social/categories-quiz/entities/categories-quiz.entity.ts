@@ -8,7 +8,7 @@ export class CategoriesQuiz {
     id : number;
 
     @OneToMany(() => Quiz, quiz => quiz.category)
-    quiz : Quiz;
+    quizzes : Quiz[];
 
     @Column('varchar')
     name : string;
