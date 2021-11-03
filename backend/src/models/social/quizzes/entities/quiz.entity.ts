@@ -10,6 +10,9 @@ export class Quiz {
  
     @PrimaryGeneratedColumn()
     id : number;
+    
+    @Column('varchar')
+    name : string;
 
 
     @ManyToOne(() => UserEntity, user => user.quiz)
@@ -32,8 +35,6 @@ export class Quiz {
     @JoinColumn()
     category: CategoriesQuiz;
     
-    @Column('varchar')
-    name : string;
 
 
 }
