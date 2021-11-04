@@ -1,4 +1,4 @@
-import { LevelExecutor } from '../LevelExecutor';
+import { LevelExecutor } from '../AbstractLevelExecutor';
 import { typeAskForUserInput } from '../levelTypes';
 
 export default class LevelCodeExecutor extends LevelExecutor {
@@ -8,6 +8,52 @@ export default class LevelCodeExecutor extends LevelExecutor {
 		public creator?: any,
 	) {
 		super(levelName, creator);
+
+		this.registerActions(
+			{
+				actionId: 300,
+				action: {
+					label: 'afficher',
+					type: 'NORMAL',
+					apply: params => {
+						if (params.length > 0 && typeof params[0] === 'string') {
+							this.cmd?.print(params[0]);
+						}
+					},
+				},
+			},
+			{
+				actionId: 301,
+				action: {
+					label: 'attendre',
+					type: 'NORMAL',
+					apply: params => {
+						if (params.length > 0 && typeof params[0] === 'number') {
+							this.timeouts.push(
+								setTimeout(() => {
+									this.perform_next();
+								}, params[0] * 1000),
+							);
+						}
+					},
+					handleNext: true,
+				},
+			},
+			{
+				actionId: 1,
+				action: {
+					label: 'read input',
+					type: 'GET',
+					apply: (params, _, response) => {
+						this.askForUserInput(params[1], inputValue => {
+							response?.push(inputValue);
+							this.perform_next();
+						});
+					},
+					handleNext: true,
+				},
+			},
+		);
 	}
 
 	public onStop() {}
@@ -34,7 +80,7 @@ export default class LevelCodeExecutor extends LevelExecutor {
 			try {
 				if (i >= data.length || !this.execution) {
 					//this.socket?.response(res);
-					this.whenExecutionEnd(res);
+					// this.whenExecutionEnd(res);
 					return;
 				}
 				const action = data[i];
@@ -111,7 +157,7 @@ export default class LevelCodeExecutor extends LevelExecutor {
 				}
 			} catch (error) {
 				if (process.env.REACT_APP_DEBUG) console.log(error);
-				this.whenExecutionEnd(res);
+				// this.whenExecutionEnd(res);
 			}
 		};
 
