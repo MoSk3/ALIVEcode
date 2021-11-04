@@ -5,7 +5,7 @@ import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/theme-cobalt';
 import './mode-alivescript';
 import EditorTab from '../../AliveScriptComponents/EditorTab/EditorTab';
-import { useState, useRef, useEffect, memo } from 'react';
+import { useState, useRef, memo } from 'react';
 
 /**
  * Line interface to write the code on
