@@ -19,9 +19,9 @@ export class QuizzesService {
     return await this.quizRepository.find({ relations: ['reward', 'questions'] });
   }
 
-  async findOne(id: number) {
+  async findOne(id: number,) {
     if (!id) throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
-    const quiz = await this.quizRepository.findOne(id);
+    const quiz = await this.quizRepository.findOne(id, { relations: ['reward', 'questions'] });
     if (!quiz) throw new HttpException('Quiz not found', HttpStatus.NOT_FOUND);
     return quiz;
   }

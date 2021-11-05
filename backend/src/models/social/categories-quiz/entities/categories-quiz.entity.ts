@@ -1,3 +1,4 @@
+import { IsNotEmpty } from "class-validator";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Quiz } from "../../quizzes/entities/quiz.entity";
 
@@ -11,5 +12,6 @@ export class CategoriesQuiz {
     quizzes : Quiz[];
 
     @Column('varchar')
+    @IsNotEmpty()
     name : string;
 }

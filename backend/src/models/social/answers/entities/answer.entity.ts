@@ -10,9 +10,9 @@ export class Answer {
     @Column('varchar')
     value : string;
 
-    @ManyToOne(() => Question, question => question.id_answer)
-    @JoinColumn( { name : 'id_question' } )
-    id_question : Question;
+    @ManyToOne(() => Question, question => question.answers)
+    @JoinColumn()
+    question : Question;
 
     @Column({ default: false})
     is_good: boolean;

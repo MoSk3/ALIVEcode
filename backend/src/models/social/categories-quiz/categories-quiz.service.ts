@@ -20,12 +20,15 @@ export class CategoriesQuizService {
     return await this.CategoriesRepository.find({ relations: ['quizzes'] });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} categoriesQuiz`;
+  async findOne(id: number) {
+    return await this.CategoriesRepository.findOne(id, { relations: ['quizzes'] });
   }
 
-  update(id: number, updateCategoriesQuizDto: UpdateCategoriesQuizDto) {
-    return `This action updates a #${id} categoriesQuiz`;
+  async update(id: number, updateCategoriesQuizDto: CategoriesQuiz) {
+    updateCategoriesQuizDto.id = id;
+    console.log(updateCategoriesQuizDto);
+    const category = this.CategoriesRepository.save(updateCategoriesQuizDto);
+    return await category
   }
 
   remove(id: number) {
