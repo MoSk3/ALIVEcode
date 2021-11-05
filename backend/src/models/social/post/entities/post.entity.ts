@@ -6,9 +6,6 @@ import { Subject } from "../../subjects/entities/subject.entity";
 export class Post{
     @PrimaryGeneratedColumn()
     id : number;
-
-    @Column('int')
-    id_user : number;
     
     @Column('varchar')
     title : string;
@@ -19,13 +16,13 @@ export class Post{
     @Column('varchar')
     created_at : Timestamp;
 
-    @ManyToOne(() => UserEntity, user => user.post)
-    @JoinColumn( { name : 'id_user' } )
-    user_id: UserEntity;
+    @ManyToOne(() => UserEntity, user => user.post, { eager: true })
+    @JoinColumn()
+    user: UserEntity;
 
     @ManyToOne(() => Subject, subject => subject.posts)
-    @JoinColumn( { name : 'id_subject' } )
-    id_subject : Subject;
+    @JoinColumn()
+    subject : Subject;
 
 
 

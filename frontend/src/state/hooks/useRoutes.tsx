@@ -35,6 +35,7 @@ import QuizHome from '../../Pages/Quiz/QuizHome/QuizHome';
 import QuizCategory from '../../Pages/Quiz/QuizCategory/QuizCategory';
 import QuizCreate from '../../Pages/Quiz/QuizCreate/QuizCreate';
 import CategoriesForum from '../../Pages/Forum/CategoriesForum';
+import SubjectList from '../../Pages/Forum/SubjectList';
 
 type component =
 	| React.ComponentType<RouteComponentProps<any>>
@@ -186,6 +187,10 @@ const useRoutes = () => {
 		categoriesForum: {
 			path: '/categoriesForum',
 			component: CategoriesForum,
+		},
+		subjectList: {
+			path: '/subjectList/:id',
+			component: SubjectList,
 		},
 		quiz: {
 			path: '/quiz',

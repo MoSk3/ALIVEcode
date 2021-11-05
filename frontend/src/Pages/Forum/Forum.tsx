@@ -3,9 +3,24 @@ import CenteredContainer from '../../Components/UtilsComponents/CenteredContaine
 import CardContainer from '../../Components/UtilsComponents/CardContainer/CardContainer';
 import { Card, Col, Row } from 'react-bootstrap';
 import NavBarSocial from './NavBarSocial';
+import { Post as PostModel } from '../../Models/Forum/post.entity';
+import { useEffect, useState } from 'react';
+import api from '../../Models/api';
+import { plainToClass } from 'class-transformer';
+
+
 
 const Forum = () => {
-
+	const [post, setPost] = useState<PostModel[]>([]);
+	
+	useEffect(() => {
+		const getPost = async () => {
+			const data = await api.db.forum.getLastPost({});
+			setPost(data.map((d: any) => plainToClass(PostModel, d)))
+		};
+		getPost();
+	}, [])
+	
 	return (
 		<div>
             <CenteredContainer
@@ -87,20 +102,21 @@ const Forum = () => {
 						<Button variant={'primary'} className="btn-lg mt-5">Créer un sujet</Button>
 						<CardContainer asRow title="Derniers sujets">
 							<div>
+							{post.map((p) => 
 							<Card className="ml-2 mr-2">
 								<div className="card-content">
 									<div className="media">
 										<img className="rounded-circle mt-1 ml-1 mr-3" src="https://bulma.io/images/placeholders/64x64.png" alt=""/>
-										<Card.Title className="mt-1">John Smith</Card.Title>
+										<Card.Title className="mt-1">{p.user.name}</Card.Title>
 									</div>
 								</div>
 								<Card.Text className="ml-2">
-									Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-									Phasellus nec iaculis mauris
+									{p.title}
 									<br/>
-									<Card.Text><small className="text-muted">11:09 PM - 1 Jan 2016</small></Card.Text>
+									<Card.Text><small className="text-muted">111</small></Card.Text>
 								</Card.Text>
 							</Card>
+							)}
 							</div>
 						</CardContainer>
 					</Col>

@@ -17,6 +17,8 @@ import { LevelAI } from './Level/levelAI.entity';
 import { IoTObject } from './Iot/IoTobject.entity';
 import { Maintenance } from './Maintenance/maintenance.entity';
 import { QueryDTO } from '../../../backend/src/models/level/dto/query.dto';
+import { Post } from './Forum/post.entity';
+import { CategorySubject } from './Forum/categorySubject.entity';
 
 type urlArgType<S extends string> = S extends `${infer _}:${infer A}/${infer B}`
 	? A | urlArgType<B>
@@ -178,6 +180,13 @@ const api = {
 				get: apiGet('iot/projects/:id', IoTProject, false),
 				getRoutes: apiGet('iot/projects/:id/routes', IotRoute, true),
 			},
+		},
+		forum: {
+			categories: {
+				get: apiGet('categories-subjects', CategorySubject, true),
+				getById: apiGet('categories-subjects/:id', CategorySubject, false),
+			},
+			getLastPost: apiGet('post/lastPost', Post, true),
 		},
 	},
 };

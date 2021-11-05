@@ -10,6 +10,7 @@ const NavBarSocial = () => {
 					<Nav.Link href="#home">Home</Nav.Link>
 					<Nav.Link href="#link">Forum</Nav.Link>
 					<Nav.Link href="#link">Message</Nav.Link>
+					<Nav.Link href="/categoriesForum">Catégories</Nav.Link>
 				</Nav>
 				</Navbar.Collapse>
 				<Form className="d-flex">

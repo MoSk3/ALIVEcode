@@ -33,6 +33,7 @@ import { QuizzesModule } from './models/social/quizzes/quizzes.module';
 import { PostModule } from './models/social/post/post.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { CategoriesSubjectsModule } from './models/social/categories-subjects/categories-subjects.module';
+import { SubjectsModule } from './models/social/subjects/subjects.module';
 
 adminjs.registerAdapter({ Database, Resource });
 
@@ -77,6 +78,7 @@ adminjs.registerAdapter({ Database, Resource });
     QuizzesModule,
     PostModule,
     CategoriesSubjectsModule,
+    SubjectsModule,
 
   ],
   controllers: [AppController],

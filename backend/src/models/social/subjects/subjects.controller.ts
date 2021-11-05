@@ -18,8 +18,8 @@ export class SubjectsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.subjectsService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    return await this.subjectsService.findOne(+id);
   }
 
   @Patch(':id')

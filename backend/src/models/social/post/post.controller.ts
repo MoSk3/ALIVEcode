@@ -13,8 +13,8 @@ export class PostController {
   }
 
   @Get()
-  async findAll() {
-    return await this.postService.findAll();
+  findAll() {
+    return this.postService.findAll();
   }
 
   @Get('lastPost')
