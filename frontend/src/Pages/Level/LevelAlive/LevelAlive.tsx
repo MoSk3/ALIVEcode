@@ -35,6 +35,7 @@ import useExecutor from '../../../state/hooks/useExecutor';
 import { useAlert } from 'react-alert';
 import LoadingScreen from '../../../Components/UtilsComponents/LoadingScreen/LoadingScreen';
 import Confetti from 'react-confetti';
+import { useForceUpdate } from '../../../state/hooks/useForceUpdate';
 
 /**
  * Alive level page. Contains all the components to display and make the alive level functionnal.
@@ -61,9 +62,11 @@ const LevelAlive = ({
 	const { user, playSocket } = useContext(UserContext);
 
 	const [cmdRef, cmd] = useCmd();
-	const { executor, setExecutor, setExecutorLines, setSketch } =
+	const forceUpdate = useForceUpdate();
+	const executor = useRef<LevelAliveExecutor | null>(null);
+	/*const { executor, setExecutor, setExecutorLines, setSketch } =
 		useExecutor<LevelAliveExecutor>(LevelAliveExecutor, cmd);
-
+*/
 	const history = useHistory();
 	const alert = useAlert();
 	const { routes, goToNewTab } = useRoutes();
@@ -78,13 +81,10 @@ const LevelAlive = ({
 
 	const [showConfetti, setShowConfetti] = useState(false);
 
-	const level = useRef<LevelAliveModel>();
-	useEffect(() => {
-		level.current = currentLevel;
-	}, [currentLevel]);
+	const level = useRef<LevelAliveModel>(currentLevel);
 
 	const lineInterfaceContentChanges = (content: any) => {
-		setExecutorLines(content);
+		if(executor.current) executor.current.lineInterfaceContent = content;
 		if (!editMode && progression) {
 			progression.data.code = content;
 			const updatedProgression = progression;
@@ -94,14 +94,13 @@ const LevelAlive = ({
 	};
 
 	useEffect(() => {
-		if (user && editMode && level.current?.creator?.id !== user.id)
-			return history.push(routes.public.home.path);
-
-		setExecutor(
-			new LevelAliveExecutor(level.current!.name, editMode, playSocket, askForUserInput, user ?? undefined),
-		);
+		executor.current = new LevelAliveExecutor(level.current!.name, editMode, playSocket, askForUserInput, user ?? undefined);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, level]);
+
+	useEffect(() => {
+		if(cmd && executor.current) executor.current.cmd = cmd;
+	}, [cmd]);
 
 	const saveLevel = useCallback(async () => {
 		if (saveTimeout.current) clearTimeout(saveTimeout.current);
@@ -239,8 +238,11 @@ const LevelAlive = ({
 								<IconButton icon={faQuestionCircle} size="2x" />
 								{/* Do not change the onClick method!! it MUST be a method that calls the toggleExecution */}
 								<IconButton
-									onClick={() => executor?.toggleExecution()}
-									icon={executor?.execution ? faPauseCircle : faPlayCircle}
+									onClick={() => {
+										forceUpdate();
+										executor.current?.toggleExecution()
+									}}
+									icon={executor.current?.execution ? faPauseCircle : faPlayCircle}
 									size="2x"
 								/>
 								{(saving || saved) && (
@@ -288,13 +290,13 @@ const LevelAlive = ({
 									<Simulation
 										id={level.current.id}
 										init={s => {
-											executor.init(s);
-											setSketch(s);
-											executor.loadLevelLayout(level.current?.layout ?? '[]');
-											executor.stop();
+											executor.current?.init(s);
+											//setSketch(s);
+											executor.current?.loadLevelLayout(level.current?.layout ?? '[]');
+											executor.current?.stop();
 										}}
 										onChange={(s: any) => {
-											const newLayout = executor.saveLayout(s);
+											const newLayout = executor.current?.saveLayout(s);
 											if (!newLayout) {
 												alert.error(
 													'Une erreur est survenue lors de la sauvegarde du niveau',
@@ -304,7 +306,7 @@ const LevelAlive = ({
 											level.current!.layout = newLayout;
 											saveLevelTimed();
 										}}
-										stopExecution={() => executor.stop()}
+										stopExecution={() => executor.current?.stop()}
 										setShowConfetti={set => setShowConfetti(set)}
 									/>
 								)}

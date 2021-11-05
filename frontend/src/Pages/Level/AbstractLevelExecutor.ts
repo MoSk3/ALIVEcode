@@ -10,8 +10,18 @@ export class LevelExecutor {
 	public execution: boolean = false;
 	public onToggleExecution?: (exec: any) => void;
 	private idToken: string;
-	private current_execution: Generator | null = null;
-	private registeredActions: { [actionId: number]: typeAction };
+	private registeredActions: { [actionId: number]: typeAction } = {
+		0: {
+			label: 'Stop Execution',
+			type: 'NORMAL',
+			apply: () => {},
+		},
+	};
+
+	public current_execution: {
+		next: () => void;
+		getIndex: () => number;
+	} | null;
 
 	/** function called before the exection of the code */
 	private _beforeRun: () => void;
@@ -49,7 +59,7 @@ export class LevelExecutor {
 	}
 
 	protected registerActions(
-		...actions: { actionId: number; action: typeAction }[]
+		actions: { actionId: number; action: typeAction }[],
 	) {
 		actions.forEach(
 			action => (this.registeredActions[action.actionId] = action.action),
@@ -58,6 +68,7 @@ export class LevelExecutor {
 
 	public toggleExecution() {
 		this.onToggleExecution && this.onToggleExecution(this);
+		this.execution = !this.execution;
 		this.execution ? this.run() : this.interrupt();
 	}
 
@@ -68,6 +79,7 @@ export class LevelExecutor {
 	}
 
 	public stop() {
+		this._beforeStop && this._beforeStop();
 		this.execution && this.onToggleExecution && this.onToggleExecution(this);
 		// Clear all the timouts of the execution
 		for (let timeout of this.timeouts) {
@@ -124,29 +136,41 @@ export class LevelExecutor {
 		}
 	}
 
-	private *perform_actions(
+	private perform_actions(
 		actions: { id: number; params: any[]; dodo: number }[],
 	) {
 		const response: any[] = [];
 
-		for (const action of actions) {
+		const perform_action = (index: number) => {
+			const action = actions[index];
+			const performedAction = this.registeredActions[action.id];
 			if (!(action.id in this.registeredActions)) {
 				throw new Error(
 					`The action id: ${action.id} is not in the registered actions`,
 				);
 			}
-			const performedAction = this.registeredActions[action.id];
 			performedAction.apply(action.params, action.dodo, response);
-			if (performedAction.handleNext) yield;
-		}
+			if (!performedAction.handleNext) {
+				this.perform_next();
+			}
+		};
+
+		let i = -1;
+		return {
+			next: () => {
+				i++;
+				if (i >= actions.length) return;
+				perform_action(i);
+			},
+			getIndex: () => i,
+		};
 	}
 
-	protected perform_next() {
-		this.current_execution?.next();
+	public perform_next() {
+		this.current_execution && this.current_execution.next();
 	}
 
-	protected execute(actions: any[]): void {
-		const res: any = [];
+	private execute(actions: any[]): void {
 		const ID = 'id';
 		const DODO = 'd';
 		const PARAMS = 'p';
@@ -174,6 +198,7 @@ export class LevelExecutor {
 		});
 
 		this.current_execution = this.perform_actions(formatedActions);
+		this.current_execution.next();
 	}
 
 	public beforeRun(callback: () => void): void {
