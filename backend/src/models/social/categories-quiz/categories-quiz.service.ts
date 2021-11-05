@@ -26,12 +26,11 @@ export class CategoriesQuizService {
 
   async update(id: number, updateCategoriesQuizDto: CategoriesQuiz) {
     updateCategoriesQuizDto.id = id;
-    console.log(updateCategoriesQuizDto);
     const category = this.CategoriesRepository.save(updateCategoriesQuizDto);
     return await category
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} categoriesQuiz`;
+  async remove(id: number) {
+    return await this.CategoriesRepository.delete(id);
   }
 }
