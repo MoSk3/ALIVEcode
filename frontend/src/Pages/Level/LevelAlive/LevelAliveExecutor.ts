@@ -197,7 +197,7 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 			},
 		]);
 
-		this.beforeInterrupt(() => {
+		this.doBeforeInterrupt(() => {
 			if (!this.s) return;
 			const s = this.s;
 

@@ -12,12 +12,12 @@ class LevelAIExecutor extends LevelCodeExecutor {
 	) {
 		super(levelName, creator);
 
-		this.beforeRun(() => {
+		this.doBeforeRun(() => {
 			this.executableFuncs.resetGraph();
 			super.onRun();
 		});
 
-		this.afterStop(() => {
+		this.doAfterStop(() => {
 			this.executableFuncs.resetGraph();
 		});
 

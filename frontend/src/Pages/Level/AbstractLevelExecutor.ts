@@ -201,19 +201,19 @@ export class LevelExecutor {
 		this.current_execution.next();
 	}
 
-	public beforeRun(callback: () => void): void {
+	public doBeforeRun(callback: () => void): void {
 		this._beforeRun = callback;
 	}
 
-	public beforeInterrupt(callback: () => void): void {
+	public doBeforeInterrupt(callback: () => void): void {
 		this._beforeInterrupt = callback;
 	}
 
-	public beforeStop(callback: () => void): void {
+	public doBeforeStop(callback: () => void): void {
 		this._beforeStop = callback;
 	}
 
-	public afterStop(callback: () => void): any {
+	public doAfterStop(callback: () => void): any {
 		this._afterStop = callback;
 	}
 }
