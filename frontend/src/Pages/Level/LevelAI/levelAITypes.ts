@@ -1,15 +1,8 @@
 import styled from 'styled-components';
 import FillContainer from '../../../Components/UtilsComponents/FillContainer/FillContainer';
-import { LevelProgression } from '../../../Models/Level/levelProgression';
-import { LevelAI } from '../../../Models/Level/levelAI.entity';
 
 export interface LevelAIProps {
-	level: LevelAI;
-	editMode: boolean;
-	progression?: LevelProgression;
 	initialCode?: string;
-	setProgression: (progression: LevelProgression) => void;
-	setLevel: (level: LevelAI) => void;
 }
 
 type StyledProps = {

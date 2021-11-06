@@ -1,12 +1,11 @@
 import axios from 'axios';
 import { CMD } from '../../Components/LevelComponents/Cmd/cmdTypes';
-import { User } from '../../Models/User/user.entity';
 import { typeAction } from './levelTypes';
 
 export class LevelExecutor {
 	public cmd?: CMD;
 	public lineInterfaceContent: string = '';
-	public timeouts: Array<NodeJS.Timeout> = [];
+	private timeouts: Array<NodeJS.Timeout> = [];
 	public execution: boolean = false;
 	public onToggleExecution?: (exec: any) => void;
 	private idToken: string;
@@ -33,7 +32,7 @@ export class LevelExecutor {
 	/** function called after the end or the interruption of the exection of the code */
 	private _afterStop: () => void;
 
-	constructor(public levelName: string, public creator?: User) {}
+	constructor(public levelName: string) {}
 
 	protected async sendDataToAsServer(
 		data:
@@ -145,9 +144,10 @@ export class LevelExecutor {
 			const action = actions[index];
 			const performedAction = this.registeredActions[action.id];
 			if (!(action.id in this.registeredActions)) {
-				throw new Error(
+				console.error(
 					`The action id: ${action.id} is not in the registered actions`,
 				);
+				return this.perform_next();
 			}
 			performedAction.apply(action.params, action.dodo, response);
 			if (!performedAction.handleNext) {
@@ -199,6 +199,10 @@ export class LevelExecutor {
 
 		this.current_execution = this.perform_actions(formatedActions);
 		this.current_execution.next();
+	}
+
+	public wait(callback: () => void, duration: number) {
+		this.timeouts.push(setTimeout(callback, duration));
 	}
 
 	public doBeforeRun(callback: () => void): void {

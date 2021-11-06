@@ -6,7 +6,6 @@ import { Vector } from '../../../Components/LevelComponents/Simulation/Sketch/si
 import { BaseLayoutObj } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/ts/typesSimulation';
 import { Serializer } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/ts/Serializer';
 import { makeShapeEditable } from '../../../Components/LevelComponents/Simulation/Sketch/simulation/editMode';
-import { User } from '../../../Models/User/user.entity';
 import { PlaySocket } from '../PlaySocket';
 import { typeAskForUserInput } from '../levelTypes';
 
@@ -35,9 +34,8 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 		private editMode: boolean,
 		playSocket: PlaySocket | null,
 		askForUserInput: typeAskForUserInput,
-		creator?: User,
 	) {
-		super(levelName, askForUserInput, creator);
+		super(levelName, askForUserInput);
 
 		this.registerActions([
 			{
@@ -62,7 +60,7 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 							params[0] > 0
 						) {
 							this.s.car.forward();
-							setTimeout(() => {
+							this.wait(() => {
 								this.s.car.stop();
 								this.perform_next();
 							}, params[0] * 1000);
@@ -82,7 +80,7 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 					apply: params => {
 						if (params.length > 0 && typeof params[0] === 'number') {
 							this.s.car.backward();
-							setTimeout(() => {
+							this.wait(() => {
 								this.s.car.stop();
 								this.perform_next();
 							}, params[0] * 1000);
@@ -243,11 +241,6 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 				}
 			}
 
-			// Clear tous les timeouts de la simulation
-			for (let timeout of this.timeouts) {
-				clearTimeout(timeout);
-			}
-
 			// Reset focus
 			if (s.canvasCamera != null) s.canvasCamera.setTarget(null);
 		});
@@ -268,7 +261,7 @@ class LevelAliveExecutor extends LevelCodeExecutor {
 
 			if (process.env.REACT_APP_DEBUG) console.log(this.s.shapes);
 		}
-		if (this.creator && this.editMode) {
+		if (this.editMode) {
 			this.spawnEditorButton();
 		}
 		this.spawnRobotConnectButton();

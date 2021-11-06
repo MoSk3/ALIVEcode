@@ -5,7 +5,7 @@ import { User } from '../../Models/User/user.entity';
 export abstract class LevelExecutor {
 	public cmd?: CMD;
 	public lineInterfaceContent: string = '';
-	public timeouts: Array<NodeJS.Timeout> = [];
+	private timeouts: Array<NodeJS.Timeout> = [];
 	public execution: boolean = false;
 	public onToggleExecution?: (exec: any) => void;
 	protected whenExecutionEnd: (result: any[]) => void;

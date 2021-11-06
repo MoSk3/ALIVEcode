@@ -5,9 +5,8 @@ export default class LevelCodeExecutor extends LevelExecutor {
 	constructor(
 		public levelName: string,
 		protected askForUserInput: typeAskForUserInput,
-		public creator?: any,
 	) {
-		super(levelName, creator);
+		super(levelName);
 
 		this.registerActions([
 			{
@@ -17,7 +16,6 @@ export default class LevelCodeExecutor extends LevelExecutor {
 					type: 'NORMAL',
 					apply: params => {
 						if (params.length > 0 && typeof params[0] === 'string') {
-							console.log(this.cmd);
 							this.cmd?.print(params[0]);
 						}
 					},
@@ -30,11 +28,9 @@ export default class LevelCodeExecutor extends LevelExecutor {
 					type: 'NORMAL',
 					apply: params => {
 						if (params.length > 0 && typeof params[0] === 'number') {
-							this.timeouts.push(
-								setTimeout(() => {
-									this.perform_next();
-								}, params[0] * 1000),
-							);
+							this.wait(() => {
+								this.perform_next();
+							}, params[0] * 1000);
 						} else {
 							this.perform_next();
 						}

@@ -1,4 +1,5 @@
 import LevelCodeExecutor from '../LevelCode/LevelCodeExecutor';
+import { typeAskForUserInput } from '../levelTypes';
 
 // TODO: robotConnected
 
@@ -8,13 +9,12 @@ class LevelAIExecutor extends LevelCodeExecutor {
 	constructor(
 		executables: { [key: string]: CallableFunction },
 		levelName: string,
-		creator?: any,
+		askForUserInput: typeAskForUserInput,
 	) {
-		super(levelName, creator);
+		super(levelName, askForUserInput);
 
 		this.doBeforeRun(() => {
 			this.executableFuncs.resetGraph();
-			super.onRun();
 		});
 
 		this.doAfterStop(() => {
@@ -86,15 +86,12 @@ class LevelAIExecutor extends LevelCodeExecutor {
 						const out = this.executableFuncs.costMSE();
 						this.cmd?.print(out);
 					},
-					handleNext: true,
 				},
 			},
 		]);
 
 		this.executableFuncs = executables;
 	}
-
-	public init(s: any) {}
 }
 
 export default LevelAIExecutor;
