@@ -227,7 +227,12 @@ const api = {
 			return (await axios.post('as/compile', data)).data;
 		},
 		async getLintInfo() {
-			return (await axios.get('as/lintinfo')).data;
+			return (
+				await axios({
+					method: 'GET',
+					url: `${process.env.REACT_APP_BACKEND_URL}/as/lintinfo`,
+				})
+			).data;
 		},
 	},
 };

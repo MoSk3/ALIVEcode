@@ -1,5 +1,4 @@
 import ace from 'ace-builds/src-noconflict/ace'
-import axios from 'axios';
 import cacheLintInfo from './cache_lintinfo.json';
 import api from '../../../Models/api';
 
