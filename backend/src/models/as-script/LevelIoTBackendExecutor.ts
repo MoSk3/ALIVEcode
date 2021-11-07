@@ -1,6 +1,7 @@
 import { LevelExecutor } from "./AbstractLevelExecutor";
 import { AsScriptService } from './as-script.service';
 import { IoTProjectService } from '../iot/IoTproject/IoTproject.service';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
 export default class LevelIoTBackendExecutor extends LevelExecutor {
   constructor(asScriptService: AsScriptService, iotProjectService: IoTProjectService, actions: any) {
@@ -15,8 +16,13 @@ export default class LevelIoTBackendExecutor extends LevelExecutor {
           apply: async params => {
             if (params.length >= 3 && typeof params[0] === 'string' && typeof params[1] === 'string') {
               const [projectId, id, value] = params;
-              const iotProject = await iotProjectService.findOne(projectId);
-              await iotProjectService.updateComponent(iotProject, id, value);
+              let iotProject;
+              try {
+                iotProject = await iotProjectService.findOne(projectId);
+              } catch {
+                return this.throwError('InvalidProjectIdError', 'Invalid project id');
+              }
+              await iotProjectService.updateComponent(iotProject, id, value, true);
             }
           },
         },

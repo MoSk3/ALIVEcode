@@ -35,7 +35,12 @@ export class AsScriptService {
   async compileBackend(data: any) {
     const res = await this.sendDataToAsServer(data);
     const executor = new LevelIoTBackendExecutor(this, this.iotProjectService, res.result);
-    executor.toggleExecution();
+    await executor.toggleExecution();
+
+    if (res.result) {
+      const index = res.result.findIndex((action: any) => action.id === 0);
+      res.result.splice(index >= 0 ? index : res.result.length, 0, ...executor.getActionsResponse());
+    }
     return res;
   }
 

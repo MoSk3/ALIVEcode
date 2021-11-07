@@ -5,6 +5,8 @@ import { Repository } from 'typeorm';
 import { UserEntity } from '../../user/entities/user.entity';
 import { IoTRouteEntity } from '../IoTroute/entities/IoTroute.entity';
 import { IoTObjectEntity } from '../IoTobject/entities/IoTobject.entity';
+import { IoTSocketUpdateRequestWatcher, WatcherClient } from '../../../socket/iotSocket/iotSocket.types';
+import { validUUID } from '../../../utils/types/validation.types';
 
 @Injectable()
 export class IoTProjectService {
@@ -24,7 +26,7 @@ export class IoTProjectService {
   }
 
   async findOne(id: string) {
-    if (!id) throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
+    if (!id || !validUUID(id)) throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
     const iotObject = await this.projectRepository.findOne(id);
     if (!iotObject) throw new HttpException('IoTObject not found', HttpStatus.NOT_FOUND);
     return iotObject;
@@ -69,9 +71,20 @@ export class IoTProjectService {
     return object;
   }
 
-  async updateComponent(project: IoTProjectEntity, componentId: string, value: any): Promise<void> {
+  async updateComponent(project: IoTProjectEntity, componentId: string, value: any, sendUpdate = false): Promise<void> {
     const layoutManager = project.getLayoutManager();
     layoutManager.updateComponent(componentId, value);
     await this.projectRepository.save(project);
+
+    if (sendUpdate) {
+      const watchers = WatcherClient.getClientsByProject(project.id);
+
+      const data: IoTSocketUpdateRequestWatcher = {
+        id: componentId,
+        value,
+      };
+
+      watchers.forEach(w => w.sendCustom('update', data));
+    }
   }
 }

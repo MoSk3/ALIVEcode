@@ -6,6 +6,7 @@ export class LevelExecutor {
   public execution = false;
   public onToggleExecution?: (exec: any) => void;
   private idToken: string;
+  private actionsResponse: { p: Array<any>; d: number; id: number }[] = [];
   private registeredActions: { [actionId: number]: typeAction } = {
     0: {
       label: 'Stop Execution',
@@ -16,7 +17,7 @@ export class LevelExecutor {
   };
 
   public current_execution: {
-    next: () => void;
+    next: () => Promise<void>;
     getIndex: () => number;
   } | null;
 
@@ -36,15 +37,15 @@ export class LevelExecutor {
     actions.forEach(action => (this.registeredActions[action.actionId] = action.action));
   }
 
-  public toggleExecution() {
+  public async toggleExecution() {
     this.onToggleExecution && this.onToggleExecution(this);
     this.execution = !this.execution;
-    this.execution ? this.run() : this.interrupt();
+    this.execution ? await this.run() : this.interrupt();
   }
 
-  public run() {
+  public async run() {
     !this.execution && this.onToggleExecution && this.onToggleExecution(this);
-    this.onRun();
+    await this.onRun();
   }
 
   public stop() {
@@ -70,6 +71,14 @@ export class LevelExecutor {
       }
       this.stop();
     }
+  }
+
+  public throwError(errorType: string, errorMessage: string, line = 0) {
+    this.actionsResponse.push({ id: 400, p: [errorType, errorMessage, line], d: 0 });
+  }
+
+  public getActionsResponse() {
+    return this.actionsResponse;
   }
 
   private async executeNext(res: string[], firstTime = false) {
@@ -99,7 +108,7 @@ export class LevelExecutor {
     this._beforeRun && this._beforeRun();
     try {
       // Envoie le code à exécuter au serveur
-      this.execute(this.actions);
+      await this.execute(this.actions);
     } catch (err) {
       this.interrupt();
     }
@@ -113,11 +122,11 @@ export class LevelExecutor {
       const performedAction = this.registeredActions[action.id];
       if (!(action.id in this.registeredActions)) {
         console.error(`The action id: ${action.id} is not in the registered actions`);
-        return this.perform_next();
+        return await this.perform_next();
       }
-      performedAction.apply(action.params, action.dodo, response);
+      await performedAction.apply(action.params, action.dodo, response);
 
-      if (!performedAction.handleNext && performedAction.type !== 'GET') this.perform_next();
+      if (!performedAction.handleNext && performedAction.type !== 'GET') await this.perform_next();
     };
 
     let i = -1;
@@ -125,28 +134,30 @@ export class LevelExecutor {
       next: async () => {
         if (i >= 0) {
           const action = actions[i];
-          const performedAction = this.registeredActions[action.id];
-          if (performedAction.type === 'GET') {
-            const data = await this.asScriptService.sendDataToAsServer({
-              idToken: this.idToken,
-              responseData: response,
-            });
-            return this.execute(data.result);
+          if (action.id in this.registeredActions) {
+            const performedAction = this.registeredActions[action.id];
+            if (performedAction.type === 'GET') {
+              const data = await this.asScriptService.sendDataToAsServer({
+                idToken: this.idToken,
+                responseData: response,
+              });
+              return await this.execute(data.result);
+            }
           }
         }
         i++;
         if (i >= actions.length) return;
-        perform_action(i);
+        await perform_action(i);
       },
       getIndex: () => i,
     };
   }
 
-  public perform_next() {
-    this.current_execution && this.current_execution.next();
+  public async perform_next() {
+    this.current_execution && (await this.current_execution.next());
   }
 
-  private execute(actions: any[]): void {
+  private async execute(actions: any[]): Promise<void> {
     const ID = 'id';
     const DODO = 'd';
     const PARAMS = 'p';
@@ -174,7 +185,7 @@ export class LevelExecutor {
     });
 
     this.current_execution = this.perform_actions(formatedActions);
-    this.current_execution.next();
+    await this.current_execution.next();
   }
 
   public wait(callback: () => void, duration: number) {

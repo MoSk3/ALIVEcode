@@ -56,7 +56,4 @@ export default class LevelCodeExecutor extends LevelExecutor {
 			},
 		]);
 	}
-
-	public onStop() {}
-	public init(s: any) {}
 }

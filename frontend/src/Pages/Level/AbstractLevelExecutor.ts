@@ -15,7 +15,26 @@ export class LevelExecutor {
 		0: {
 			label: 'Stop Execution',
 			type: 'NORMAL',
-			apply: () => {},
+			apply: () => {
+				if (this.cmd) {
+					this.cmd.print('[exécution terminée]');
+				}
+			},
+		},
+		400: {
+			label: 'Error',
+			type: 'NORMAL',
+			apply: params => {
+				if (
+					params.length >= 3 &&
+					typeof params[0] === 'string' &&
+					typeof params[1] === 'string' &&
+					typeof params[2] === 'number'
+				)
+					if (this.cmd) {
+						this.cmd.error(`${params[0]}: ${params[1]}`, params[2]);
+					}
+			},
 		},
 	};
 
@@ -71,6 +90,7 @@ export class LevelExecutor {
 	}
 
 	public stop() {
+		console.log('STOP');
 		this._beforeStop && this._beforeStop();
 		this.execution && this.onToggleExecution && this.onToggleExecution(this);
 		// Clear all the timouts of the execution
