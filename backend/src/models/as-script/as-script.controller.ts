@@ -1,19 +1,7 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  HttpException,
-  HttpStatus,
-  UseInterceptors,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors } from '@nestjs/common';
 import { AsScriptService } from './as-script.service';
 import { CompileDTO } from './dto/compile.dto';
 import axios from 'axios';
-import { AxiosResponse } from 'axios';
 import { DTOInterceptor } from '../../utils/interceptors/dto.interceptor';
 
 export interface Datatype {
@@ -46,19 +34,7 @@ export class AsScriptController {
 
   @Post('compile')
   async compile(@Body() compileDto: CompileDTO) {
-    let res: AxiosResponse;
-    try {
-      res = await axios({
-        method: 'POST',
-        url: '/compile/',
-        baseURL: process.env.AS_URL,
-        data: compileDto,
-      });
-    } catch {
-      throw new HttpException('AliveScript service crashed', HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-    const { data } = res;
-    return data;
+    return this.asScriptService.compile(compileDto);
   }
 
   @Get('lintinfo')

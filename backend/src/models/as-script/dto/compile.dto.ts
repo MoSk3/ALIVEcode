@@ -6,6 +6,9 @@ enum CompileStatus {
 
 export class CompileDTO {
   @IsOptional()
+  backendCompiling: boolean;
+
+  @IsOptional()
   lines: string;
 
   @IsOptional()
