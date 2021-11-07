@@ -89,7 +89,6 @@ const Level = ({ level: levelProp, ...props }: LevelProps) => {
 
 	useEffect(() => {
 		setInitialProgressionCode('');
-		setLevel(undefined);
 
 		const loadLevel = async () => {
 			let fetchedLevel: LevelModel | null = null;

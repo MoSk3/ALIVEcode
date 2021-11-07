@@ -28,6 +28,7 @@ const Button = ({
 	children,
 	padding,
 	className,
+	disabled,
 }: ButtonProps) => {
 	const history = useHistory();
 
@@ -36,37 +37,30 @@ const Button = ({
 	};
 
 	const renderSwitch = (param: ButtonVariants) => {
+		const defaultInputOptions = {
+			className: 'btn ' + className,
+			padding,
+			type,
+			disabled,
+			onClick: customOnClick,
+		};
+
 		switch (param) {
 			case 'secondary':
 				return (
-					<StyledSecondaryButton
-						className={'btn ' + className}
-						padding={padding}
-						type={type}
-						onClick={customOnClick}
-					>
+					<StyledSecondaryButton {...defaultInputOptions}>
 						{children}
 					</StyledSecondaryButton>
 				);
 			case 'danger':
 				return (
-					<StyledDangerButton
-						className={'btn ' + className}
-						padding={padding}
-						type={type}
-						onClick={customOnClick}
-					>
+					<StyledDangerButton {...defaultInputOptions}>
 						{children}
 					</StyledDangerButton>
 				);
 			default:
 				return (
-					<StyledPrimaryButton
-						className={'btn ' + className}
-						padding={padding}
-						type={type}
-						onClick={customOnClick}
-					>
+					<StyledPrimaryButton {...defaultInputOptions}>
 						{children}
 					</StyledPrimaryButton>
 				);

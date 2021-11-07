@@ -4,7 +4,7 @@ import { CreatedByUser } from '../../../../generics/entities/createdByUser.entit
 import { IoTRouteEntity } from '../../IoTroute/entities/IoTroute.entity';
 import { UserEntity } from '../../../user/entities/user.entity';
 import { IoTObjectEntity } from '../../IoTobject/entities/IoTobject.entity';
-import { Type } from 'class-transformer';
+import { IoTLayoutManager } from '../IoTLayoutManager';
 
 export enum IOTPROJECT_INTERACT_RIGHTS {
   ANYONE = 'AN',
@@ -20,6 +20,7 @@ export enum IOTPROJECT_ACCESS {
 }
 
 type IoTComponent = {
+  value: any;
   id: string;
 };
 
@@ -60,4 +61,8 @@ export class IoTProjectEntity extends CreatedByUser {
   @OneToMany(() => IoTRouteEntity, route => route.project, { eager: true })
   @IsEmpty()
   routes: IoTRouteEntity[];
+
+  getLayoutManager() {
+    return new IoTLayoutManager(this.layout);
+  }
 }

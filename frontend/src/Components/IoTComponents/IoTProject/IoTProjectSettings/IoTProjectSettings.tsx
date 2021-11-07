@@ -1,29 +1,25 @@
 import Form from '../../../UtilsComponents/Form/Form';
-import { IoTProjectSettingsProps } from './IoTProjectSettingsTypes';
-import { plainToClass } from 'class-transformer';
+import { useContext } from 'react';
+import { IoTProjectContext } from '../../../../state/contexts/IoTProjectContext';
 import {
-	IoTProject as ProjectModel,
 	IOTPROJECT_ACCESS,
 	IOTPROJECT_INTERACT_RIGHTS,
 } from '../../../../Models/Iot/IoTproject.entity';
 
-export const IoTProjectSettings = ({
-	project,
-	setProject,
-}: IoTProjectSettingsProps) => {
+export const IoTProjectSettings = () => {
+	const { project, canEdit, updateProjectData } = useContext(IoTProjectContext);
+
+	if (!project) return <></>;
+
 	return (
 		<>
 			<div className="project-details-content-header">Settings</div>
 			<Form
 				onSubmit={res => {
-					const updatedProject: ProjectModel = plainToClass(
-						ProjectModel,
-						res.data,
-					);
-					updatedProject.routes = project.routes;
-					updatedProject.layout = project.layout;
-					setProject(updatedProject);
+					const { name, desc, access, interactRights } = res.data;
+					updateProjectData(name, desc, access, interactRights);
 				}}
+				disabled={!canEdit}
 				action="PATCH"
 				name="iot_project"
 				url={`iot/projects/${project.id}`}

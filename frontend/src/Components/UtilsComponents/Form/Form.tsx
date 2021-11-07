@@ -5,7 +5,6 @@ import Button from '../Button/Button';
 import { FormProps, InputGroup as InputGroupModel, matches } from './formTypes';
 import axios, { AxiosError } from 'axios';
 import { useAlert } from 'react-alert';
-import { useHistory } from 'react-router';
 import { prettyField } from '../../../Types/formatting';
 
 /**
@@ -18,6 +17,7 @@ import { prettyField } from '../../../Types/formatting';
  * @param {(res: AxiosResponse<any>) => void} onSubmit callback called when the form has been submitted and returns the axios response
  * @param {(formValues: any) => any} alterFormValues callback called right before making the request to alter the form values (return the new values in the callback)
  * @param {Array<InputGroup>} inputGroups input groups of the form (see the example below or the InputGroup typing for more details)
+ * @param {boolean} disabled if the fields should be all disabled
  *
  * example of a component creating a course:
  * 	<Form
@@ -77,7 +77,6 @@ const Form = (props: FormProps) => {
 	} = useForm();
 
 	const alert = useAlert();
-	const history = useHistory();
 
 	const onFormSubmit = async (formValues: any) => {
 		if (props.alterFormValues) formValues = props.alterFormValues(formValues);
@@ -102,7 +101,7 @@ const Form = (props: FormProps) => {
 				case 500:
 					return alert.error(t('error.500'));
 				case 403:
-					return history.push('/');
+					return alert.error(t('error.403'));
 			}
 		}
 	};
@@ -113,6 +112,15 @@ const Form = (props: FormProps) => {
 			`form.${props.name}.${g.name}.placeholder`,
 			prettyField(g.name),
 		]);
+
+		const defaultInputOptions = {
+			style: { paddingRight: 0 },
+			isInvalid: errors[g.name]?.type,
+			placeholder: placeholderValue,
+			defaultValue: g.default,
+			disabled: g.disabled != null ? g.disabled : props.disabled,
+		};
+
 		let registerOptions: any = {
 			required: g.required,
 			minLength: g.minLength,
@@ -137,11 +145,8 @@ const Form = (props: FormProps) => {
 			case 'select':
 				return (
 					<BootForm.Control
-						style={{ paddingRight: 0 }}
-						isInvalid={errors[g.name]?.type}
+						{...defaultInputOptions}
 						as="select"
-						placeholder={placeholderValue}
-						defaultValue={g.default}
 						{...register(g.name, registerOptions)}
 					>
 						{Array.isArray(g.selectOptions)
@@ -174,11 +179,8 @@ const Form = (props: FormProps) => {
 			default:
 				return (
 					<BootForm.Control
-						style={{ paddingRight: 0 }}
-						isInvalid={errors[g.name]?.type}
+						{...defaultInputOptions}
 						type={g.inputType}
-						defaultValue={g.default}
-						placeholder={placeholderValue}
 						{...register(g.name, registerOptions)}
 					/>
 				);
@@ -246,6 +248,7 @@ const Form = (props: FormProps) => {
 			<Button
 				variant={props.action === 'DELETE' ? 'danger' : 'primary'}
 				type="submit"
+				disabled={props.disabled}
 			>
 				{t(
 					[

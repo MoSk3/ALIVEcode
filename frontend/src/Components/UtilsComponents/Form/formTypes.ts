@@ -26,6 +26,7 @@ export type FormProps = {
 	onSubmit?: (response: AxiosResponse<any>) => void;
 	inputGroups: Array<InputGroup>;
 	alterFormValues?: (formValues: any) => any;
+	disabled?: boolean;
 };
 
 export type InputGroup = {
@@ -36,6 +37,7 @@ export type InputGroup = {
 	match?: MATCHES;
 	default?: any;
 	name: string;
+	disabled?: boolean;
 	selectOptions?:
 		| Array<any>
 		| Array<{ value: string; display: string }>
