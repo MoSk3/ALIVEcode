@@ -1,7 +1,7 @@
 package interpreteur.ast.buildingBlocs.expressions;
 
-import interpreteur.as.Objets.ASDict;
 import interpreteur.as.Objets.ASObjet;
+import interpreteur.as.Objets.ASPaire;
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.ast.buildingBlocs.Expression;
 
@@ -54,10 +54,12 @@ public class CreerListe implements Expression<ASObjet.Liste> {
             @Override
             public ASObjet<?> eval() {
                 ASObjet<?> evalExpr = this.expr.eval();
+                if (evalExpr instanceof ASObjet.Liste liste && idxOrKey.eval() instanceof ASObjet.Texte texte) {
+                    var result = liste.get(texte);
+                    return result instanceof ASPaire paire ? paire.valeur() : result;
+                }
                 if (evalExpr instanceof ASObjet.Iterable iterable)
                     return indexOfIterable(iterable);
-                if (evalExpr instanceof ASDict dict)
-                    return valueOfDict(dict);
                 throw new ASErreur.ErreurType("L'op\u00E9ration d'index n'est pas d\u00E9finie pour " +
                         "un \u00E9l\u00E9ment de type '" + evalExpr.obtenirNomType() + "'.");
             }
@@ -71,10 +73,6 @@ public class CreerListe implements Expression<ASObjet.Liste> {
                     throw new ASErreur.ErreurIndex("L'index " + idx + " est hors de port\u00E9 (entre " + -(bound + 1) + " et " + bound + ")");
                 }
                 return iterable.get(idx);
-            }
-
-            private ASObjet<?> valueOfDict(ASDict dict) {
-                return dict.get(this.idxOrKey.eval());
             }
 
             @Override
@@ -152,7 +150,7 @@ public class CreerListe implements Expression<ASObjet.Liste> {
             return exprs;
         }
 
-        public CreerListe build() {
+        public CreerListe buildCreerListe() {
             return new CreerListe(exprs.toArray(Expression[]::new));
         }
 

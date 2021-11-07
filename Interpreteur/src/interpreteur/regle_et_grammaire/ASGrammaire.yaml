@@ -88,6 +88,7 @@ Ajouter:
         NOM_TOUT: '\btout\b'
         NOM_RIEN: '\brien\b'
         NOM_DICT: '\bdict\b'
+        NOM_PAIRE: '\bpaire\b'
 
     comparaison:
         EGAL: "(={2})|(==)"

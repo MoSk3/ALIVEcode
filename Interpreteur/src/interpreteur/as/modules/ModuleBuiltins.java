@@ -1,6 +1,7 @@
 package interpreteur.as.modules;
 
 import interpreteur.as.Objets.ASObjet;
+import interpreteur.as.Objets.ASPaire;
 import interpreteur.as.Objets.Nombre;
 import interpreteur.as.Objets.Scope;
 import interpreteur.as.erreurs.ASErreur;
@@ -132,6 +133,24 @@ public class ModuleBuiltins {
                             return new Booleen(txt);
                         }
                         return new Texte(txt);
+                    }
+                },
+
+                new ASObjet.Fonction("clef", new ASObjet.Fonction.Parametre[]{
+                        new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.paire.asType(), "_paire", null)
+                }, ASObjet.TypeBuiltin.texte.asType()) {
+                    @Override
+                    public ASObjet<?> executer() {
+                        return ((ASPaire) getValeurParam("_paire")).clef();
+                    }
+                },
+
+                new ASObjet.Fonction("val", new ASObjet.Fonction.Parametre[]{
+                        new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.paire.asType(), "_paire", null)
+                }, ASObjet.TypeBuiltin.texte.asType()) {
+                    @Override
+                    public ASObjet<?> executer() {
+                        return ((ASPaire) getValeurParam("_paire")).valeur();
                     }
                 },
 

@@ -9,6 +9,7 @@ import interpreteur.tokens.Token;
 
 import javax.lang.model.type.NullType;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -38,10 +39,12 @@ public interface ASObjet<T> {
         nombre(TypeBuiltin.entier, TypeBuiltin.decimal),
         texte,
         liste,
-        iterable(TypeBuiltin.texte, TypeBuiltin.liste),
+        dict,
+        iterable(TypeBuiltin.texte, TypeBuiltin.liste, TypeBuiltin.dict),
         booleen,
         nulType,
         rien,
+        paire,
         fonctionType;
 
         private final TypeBuiltin[] aliases;
@@ -127,6 +130,7 @@ public interface ASObjet<T> {
 
         /**
          * applique le setter
+         *
          * @param valeur
          */
         public void changerValeur(ASObjet<?> valeur) {
@@ -137,15 +141,6 @@ public interface ASObjet<T> {
                     this.valeur = valeur;
                 }
             }
-        }
-
-        /**
-         * by pass the setter
-         * @param valeur
-         */
-        public void setValeur(ASObjet<?> valeur) {
-            if (nouvelleValeurValide(valeur))
-                this.valeur = valeur;
         }
 
         @Override
@@ -198,10 +193,19 @@ public interface ASObjet<T> {
                     '}';
         }
 
-
         /* différentes manières de get la valeur stockée dans la variable */
         public ASObjet<?> getValeur() {
             return this.valeur;
+        }
+
+        /**
+         * by pass the setter
+         *
+         * @param valeur
+         */
+        public void setValeur(ASObjet<?> valeur) {
+            if (nouvelleValeurValide(valeur))
+                this.valeur = valeur;
         }
 
         public ASObjet<?> getValeurApresGetter() {
@@ -884,10 +888,14 @@ public interface ASObjet<T> {
             return this;
         }
 
-        public void retirerElement(int idx) {
-            this.valeur.remove(idxRelatif(this.valeur, idx));
+        public boolean estDict() {
+            return valeur.stream().allMatch(ASPaire.class::isInstance);
         }
 
+
+        public void retirerElement(int idx) {
+            ASObjet<?> element = this.valeur.remove(idxRelatif(this.valeur, idx));
+        }
 
         public Liste remplacer(int idx, ASObjet<?> valeur) {
             this.valeur.set(idxRelatif(this.valeur, idx), valeur);
@@ -910,6 +918,13 @@ public interface ASObjet<T> {
             return this.valeur.stream().map(mappingFunction).collect(Collectors.toCollection(ArrayList::new));
         }
 
+        public ASObjet<?> get(Texte texte) {
+            return valeur.stream()
+                    .filter(val -> val instanceof ASPaire pair && pair.clef().equals(texte))
+                    .findFirst()
+                    .orElse(new Nul());
+        }
+
         @Override
         public ASObjet<?> get(int idx) {
             return this.valeur.get(idxRelatif(this.valeur, idx));
@@ -927,7 +942,9 @@ public interface ASObjet<T> {
 
         @Override
         public boolean contient(ASObjet<?> element) {
-            return this.valeur.contains(element);
+            return this.valeur.contains(element)
+                    ||
+                    (element instanceof Texte texte && this.valeur.stream().anyMatch(val -> val instanceof ASPaire pair && pair.clef().equals(texte)));
         }
 
         @Override
@@ -937,15 +954,21 @@ public interface ASObjet<T> {
 
         @Override
         public String toString() {
-            final char openingSymbol = '[';
-            final char closingSymbol = ']';
+            AtomicInteger nbPair = new AtomicInteger(0);
 
-            return openingSymbol +
-                    String.join(", ", this.valeur
-                            .stream()
-                            .map(e -> e instanceof Texte ? "\"" + e + "\"" : e.toString())
-                            .toArray(String[]::new))
-                    + closingSymbol;
+            String toString = String.join(", ", this.valeur
+                    .stream()
+                    .map(e -> {
+                        if (e instanceof Texte) return "\"" + e + "\"";
+                        else if (e instanceof ASPaire) nbPair.set(nbPair.get() + 1);
+                        return e.toString();
+                    })
+                    .toArray(String[]::new));
+
+            final char openingSymbol = nbPair.get() != taille() ? '[' : '{';
+            final char closingSymbol = nbPair.get() != taille() ? ']' : '}';
+
+            return openingSymbol + toString + closingSymbol;
         }
 
         @Override
@@ -960,7 +983,7 @@ public interface ASObjet<T> {
 
         @Override
         public String obtenirNomType() {
-            return "liste";
+            return estDict() ? "dict" : "liste";
         }
 
         @Override
