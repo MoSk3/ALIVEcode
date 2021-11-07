@@ -6,7 +6,7 @@ import { Course } from './Course/course.entity';
 import { Section } from './Course/section.entity';
 import { Classroom } from './Classroom/classroom.entity';
 import { Professor, Student, User } from './User/user.entity';
-import { IoTProject } from './Iot/IoTproject.entity';
+import { IoTProject, IoTProjectLayout } from './Iot/IoTproject.entity';
 import { IotRoute } from './Iot/IoTroute.entity';
 import { Level } from './Level/level.entity';
 import { LevelAlive } from './Level/levelAlive.entity';
@@ -219,6 +219,10 @@ const api = {
 			projects: {
 				get: apiGet('iot/projects/:id', IoTProject, false),
 				getRoutes: apiGet('iot/projects/:id/routes', IotRoute, true),
+				getObjects: apiGet('iot/projects/:id/objects', IoTObject, true),
+				async updateLayout(id: string, layout: IoTProjectLayout) {
+					await axios.patch(`iot/projects/${id}/layout`, layout);
+				},
 			},
 		},
 	},

@@ -13,6 +13,7 @@ import FormModal from '../../UtilsComponents/FormModal/FormModal';
 import Form from '../../UtilsComponents/Form/Form';
 import { Section } from '../../../Models/Course/section.entity';
 import { plainToClass } from 'class-transformer';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Navigation menu of a course containing all the sections and activities
@@ -20,9 +21,11 @@ import { plainToClass } from 'class-transformer';
  * @author MoSk3
  */
 const CourseNavigation = (props: CourseNavigationProps) => {
-	const { course, addSection, canEdit } = useContext(CourseContext);
+	const { course, addSection, canEdit, isNavigationOpen } =
+		useContext(CourseContext);
 	const { theme } = useContext(ThemeContext);
 	const { routes, goTo } = useRoutes();
+	const { t } = useTranslation();
 
 	const [openModalSection, setOpenModalSection] = useState(false);
 
@@ -32,7 +35,7 @@ const CourseNavigation = (props: CourseNavigationProps) => {
 	}
 
 	return (
-		<StyledCourseNavigation theme={theme}>
+		<StyledCourseNavigation isNavigationOpen={isNavigationOpen} theme={theme}>
 			<CenteredContainer horizontally>
 				<div className="course-nav-header">
 					<div className="course-nav-title">{course?.name}</div>
@@ -50,16 +53,16 @@ const CourseNavigation = (props: CourseNavigationProps) => {
 									dark
 									block
 								>
-									New section
+									{t('course.section.new')}
 								</Link>
 							)}
 						</>
 					) : (
 						<div style={{ textAlign: 'center' }}>
-							<label>There are no sections in this course</label>
+							<label>{t('course.empty')}</label>
 							{canEdit && (
 								<Link onClick={() => setOpenModalSection(true)} dark block>
-									New section
+									{t('course.section.new')}
 								</Link>
 							)}
 						</div>

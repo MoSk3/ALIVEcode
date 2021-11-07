@@ -1,10 +1,6 @@
 import { IoTProjectProps, IoTProjectTabs, StyledIoTProject } from './iotProjectTypes';
 import { useEffect, useState, useContext } from 'react';
-import {
-	IoTProject as ProjectModel,
-	IOTPROJECT_ACCESS,
-	IOTPROJECT_INTERACT_RIGHTS,
-} from '../../../Models/Iot/IoTproject.entity';
+import { IoTProject as ProjectModel } from '../../../Models/Iot/IoTproject.entity';
 import api from '../../../Models/api';
 import { useHistory } from 'react-router-dom';
 import { useAlert } from 'react-alert';
@@ -13,21 +9,11 @@ import { UserContext } from '../../../state/contexts/UserContext';
 import LoadingScreen from '../../../Components/UtilsComponents/LoadingScreen/LoadingScreen';
 import { Col, Row } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-	faRoute,
-	faCog,
-	faPlug,
-	faPlus,
-} from '@fortawesome/free-solid-svg-icons';
-import Form from '../../../Components/UtilsComponents/Form/Form';
-import IconButton from '../../../Components/DashboardComponents/IconButton/IconButton';
-import FormModal from '../../../Components/UtilsComponents/FormModal/FormModal';
-import { IotRoute } from '../../../Models/Iot/IoTroute.entity';
-import { plainToClass } from 'class-transformer';
-import IoTRouteCard from '../../../Components/IoTComponents/IoTRoute/IoTRouteCard/IoTRouteCard';
-import { io, Socket } from 'socket.io-client';
-import Button from '../../../Components/UtilsComponents/Button/Button';
-import CenteredContainer from '../../../Components/UtilsComponents/CenteredContainer/CenteredContainer';
+import { faRoute, faCog, faPlug } from '@fortawesome/free-solid-svg-icons';
+import IoTProjectBody from '../../../Components/IoTComponents/IoTProject/IotProjectBody';
+import IoTProjectAccess from '../../../Components/IoTComponents/IoTProject/IoTProjectAccess/IoTProjectAccess';
+import IoTProjectRoutes from '../../../Components/IoTComponents/IoTProject/IoTProjectRoutes/IoTProjectRoutes';
+import IoTProjectSettings from '../../../Components/IoTComponents/IoTProject/IoTProjectSettings/IoTProjectSettings';
 
 /**
  * IoTProject. On this page are all the components essential in the functionning of an IoTProject.
@@ -40,30 +26,10 @@ import CenteredContainer from '../../../Components/UtilsComponents/CenteredConta
 const IoTProject = (props: IoTProjectProps) => {
 	const [project, setProject] = useState<ProjectModel>();
 	const [selectedTab, setSelectedTab] = useState<IoTProjectTabs>('settings');
-	const [socket, setSocket] = useState<Socket>();
-	const [routeModalOpen, setRouteModalOpen] = useState(false);
-	const [lightLevel, setLightLevel] = useState<number>(34);
 	const history = useHistory();
 	const alert = useAlert();
 	const { t } = useTranslation();
 	const { user } = useContext(UserContext);
-
-	// Socket io
-	useEffect(() => {
-		if (!process.env.REACT_APP_IOT_URL) return;
-		const socket = io(`${process.env.REACT_APP_IOT_URL}/iot`);
-
-		socket.emit('register_light');
-
-		socket.on('light', lightLevel => {
-			setLightLevel(lightLevel / 1000);
-		});
-
-		setSocket(socket);
-		return () => {
-			socket.close();
-		};
-	}, []);
 
 	useEffect(() => {
 		const getProject = async () => {
@@ -89,108 +55,11 @@ const IoTProject = (props: IoTProjectProps) => {
 	const getTabContent = () => {
 		switch (selectedTab) {
 			case 'settings':
-				return (
-					<>
-						<div className="project-details-content-header">Settings</div>
-						<Form
-							onSubmit={res => {
-								const updatedProject: ProjectModel = plainToClass(
-									ProjectModel,
-									res.data,
-								);
-								updatedProject.routes = project.routes;
-								setProject(updatedProject);
-							}}
-							action="PATCH"
-							name="iot_project"
-							url={`iot/projects/${project.id}`}
-							inputGroups={[
-								{
-									name: 'name',
-									required: true,
-									default: project.name,
-									inputType: 'text',
-								},
-								{
-									name: 'description',
-									required: true,
-									default: project.description,
-									inputType: 'text',
-								},
-								{
-									name: 'access',
-									required: true,
-									inputType: 'select',
-									default: project.access,
-									selectOptions: IOTPROJECT_ACCESS,
-								},
-								{
-									name: 'interactRights',
-									required: true,
-									default: project.interactRights,
-									inputType: 'select',
-									selectOptions: IOTPROJECT_INTERACT_RIGHTS,
-								},
-							]}
-						/>
-					</>
-				);
+				return <IoTProjectSettings setProject={setProject} project={project} />;
 			case 'routes':
-				return (
-					<>
-						<div className="project-details-content-header">
-							<label className="mr-2">Routes</label>
-							<IconButton
-								icon={faPlus}
-								onClick={() => setRouteModalOpen(true)}
-							/>
-						</div>
-						<div>
-							{project.routes.length > 0 ? (
-								project.routes.map((r, idx) => (
-									<IoTRouteCard key={idx} route={r} />
-								))
-							) : (
-								<label className="disabled-text">No route</label>
-							)}
-						</div>
-						<FormModal
-							title="New route"
-							onSubmit={res => {
-								const resRoute: IotRoute = res.data;
-								project.routes.push(resRoute);
-								setProject(project);
-								setRouteModalOpen(false);
-							}}
-							onClose={() => setRouteModalOpen(false)}
-							open={routeModalOpen}
-						>
-							<Form
-								action="POST"
-								name="create_iot_route"
-								url={`iot/projects/${project.id}/routes`}
-								inputGroups={[
-									{
-										name: 'name',
-										required: true,
-										inputType: 'text',
-									},
-									{
-										name: 'path',
-										required: true,
-										inputType: 'text',
-									},
-								]}
-							/>
-						</FormModal>
-					</>
-				);
+				return <IoTProjectRoutes setProject={setProject} project={project} />;
 			case 'access':
-				return (
-					<>
-						<div className="project-details-content-header">Access</div>
-					</>
-				);
+				return <IoTProjectAccess setProject={setProject} project={project} />;
 		}
 	};
 
@@ -246,33 +115,7 @@ const IoTProject = (props: IoTProjectProps) => {
 				</Col>
 				<Col sm="8" id="project-body">
 					<Row className="project-top-row"></Row>
-					<CenteredContainer style={{ height: '100%' }} vertically horizontally>
-						<h2 className="mb-3">Light level</h2>
-						<div className="my-progress mb-5">
-							<div className="barOverflow">
-								<div
-									className="bar"
-									style={{
-										transform: `rotate(${
-											((lightLevel > 100 ? 100 : lightLevel) / 100) * 180 + 45
-										}deg)`,
-									}}
-								></div>
-							</div>
-							<span className="my-progress-span">
-								{lightLevel > 100 ? 100 : lightLevel}%
-							</span>
-						</div>
-						<h2 className="mb-3">Cluster notification</h2>
-						<Button
-							variant="primary"
-							onClick={() =>
-								socket && socket.emit('send_notification', 'notif')
-							}
-						>
-							Send notification to cluster
-						</Button>
-					</CenteredContainer>
+					<IoTProjectBody project={project} />
 				</Col>
 			</Row>
 		</StyledIoTProject>

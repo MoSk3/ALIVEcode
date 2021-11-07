@@ -1,9 +1,10 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { IoTProjectEntity } from './entities/IoTproject.entity';
+import { IoTProjectEntity, IoTProjectLayout } from './entities/IoTproject.entity';
 import { Repository } from 'typeorm';
 import { UserEntity } from '../../user/entities/user.entity';
 import { IoTRouteEntity } from '../IoTroute/entities/IoTroute.entity';
+import { IoTObjectEntity } from '../IoTobject/entities/IoTobject.entity';
 
 @Injectable()
 export class IoTProjectService {
@@ -37,6 +38,13 @@ export class IoTProjectService {
     return await this.projectRepository.delete(id);
   }
 
+  async updateLayout(id: string, layout: IoTProjectLayout) {
+    const project = await this.findOne(id);
+
+    layout.components = layout.components.filter((c: any) => c != null && JSON.stringify(c) != '{}');
+
+    return await this.projectRepository.save({ ...project, layout });
+  }
   async getRoutes(project: IoTProjectEntity) {
     return (await this.projectRepository.findOne(project.id, { relations: ['routes'] })).routes;
   }
@@ -48,5 +56,16 @@ export class IoTProjectService {
     project.routes.push(newRoute);
     await this.projectRepository.save(project);
     return newRoute;
+  }
+
+  async getObjects(project: IoTProjectEntity) {
+    return (await this.projectRepository.findOne(project.id, { relations: ['iotObjects'] })).iotObjects;
+  }
+
+  async addObject(project: IoTProjectEntity, object: IoTObjectEntity) {
+    project = await this.projectRepository.findOne(project.id, { relations: ['iotObjects'] });
+    project.iotObjects.push(object);
+    await this.projectRepository.save(project);
+    return object;
   }
 }

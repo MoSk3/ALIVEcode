@@ -104,7 +104,8 @@ const LevelAI = ({ initialCode }: LevelAIProps) => {
 	});
 	let datasets = useRef([initialDataset]);
 	let pointsOnGraph: boolean = false;
-	//let regOnGraph: boolean = false;
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	let regOnGraph: boolean = false;
 
 	const [chartData, setChartData] = useState({ datasets: datasets.current });
 

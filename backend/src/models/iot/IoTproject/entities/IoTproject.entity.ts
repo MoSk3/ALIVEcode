@@ -1,8 +1,10 @@
 import { IsEmpty, IsNotEmpty, IsOptional } from "class-validator";
-import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany } from 'typeorm';
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany } from 'typeorm';
 import { CreatedByUser } from '../../../../generics/entities/createdByUser.entity';
 import { IoTRouteEntity } from '../../IoTroute/entities/IoTroute.entity';
 import { UserEntity } from '../../../user/entities/user.entity';
+import { IoTObjectEntity } from '../../IoTobject/entities/IoTobject.entity';
+import { Type } from 'class-transformer';
 
 export enum IOTPROJECT_INTERACT_RIGHTS {
   ANYONE = 'AN',
@@ -17,6 +19,15 @@ export enum IOTPROJECT_ACCESS {
   PRIVATE = 'PR', // only accessible to the creator
 }
 
+type IoTComponent = {
+  id: string;
+};
+
+export class IoTProjectLayout {
+  @IsNotEmpty()
+  components: Array<IoTComponent>;
+}
+
 @Entity()
 export class IoTProjectEntity extends CreatedByUser {
   @ManyToOne(() => UserEntity, user => user.IoTProjects, { eager: true, onDelete: 'CASCADE' })
@@ -24,9 +35,14 @@ export class IoTProjectEntity extends CreatedByUser {
   creator: UserEntity;
 
   // TODO : body typing
-  @Column({ nullable: true, default: '{}' })
+  @Column({ nullable: true, type: 'json', default: { components: [] } })
   @IsOptional()
-  body: string;
+  layout: IoTProjectLayout;
+
+  @ManyToMany(() => IoTObjectEntity, obj => obj.iotProjects)
+  @JoinTable()
+  @IsEmpty()
+  iotObjects: IoTObjectEntity[];
 
   @Column({ enum: IOTPROJECT_ACCESS })
   @IsNotEmpty()

@@ -10,7 +10,6 @@ import { IoTObjectModule } from './models/iot/IoTobject/IoTobject.module';
 import { IoTProjectModule } from './models/iot/IoTproject/IoTproject.module';
 import { IoTRouteModule } from './models/iot/IoTroute/IoTroute.module';
 import { LevelModule } from './models/level/level.module';
-import { IoTGateway } from './socket/iotSocket/iot.gateway';
 import { MaintenanceModule } from './models/maintenance/maintenance.module';
 import { MaintenanceMiddleware } from './utils/middlewares/maintenance.middleware';
 import { MaintenanceEntity } from './models/maintenance/entities/maintenance.entity';
@@ -30,6 +29,7 @@ import { adminOptions } from './admin/admin.options';
 import { LoggerModule } from './admin/loger/loger.module';
 import { MyLogger } from './admin/loger/logger';
 import { CarModule } from './socket/carSocket/carSocket.module';
+import { IoTModule } from './socket/iotSocket/iotSocket.module';
 
 adminjs.registerAdapter({ Database, Resource });
 
@@ -64,7 +64,7 @@ adminjs.registerAdapter({ Database, Resource });
     IoTObjectModule,
     IoTProjectModule,
     IoTRouteModule,
-    IoTGateway,
+    IoTModule,
     MaintenanceModule,
     AsScriptModule,
     CarModule,

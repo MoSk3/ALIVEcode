@@ -5,6 +5,8 @@ import Button from '../../Button/Button';
 import { useTranslation } from 'react-i18next';
 
 const StyledModal = styled(Modal)`
+	z-index: 1075;
+
 	.modal-content {
 		background-color: var(--background-color);
 		color: white;
@@ -41,7 +43,14 @@ const AlertConfirm = ({
 	const { t } = useTranslation();
 
 	return (
-		<StyledModal closeButton={false} hideFooter size="md" centered {...other}>
+		<StyledModal
+			backdropClassName="modal-backdrop-alert-confirm"
+			closeButton={false}
+			hideFooter
+			size="md"
+			centered
+			{...other}
+		>
 			<Button
 				padding="15px"
 				variant="primary"
