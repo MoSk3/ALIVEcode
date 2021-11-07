@@ -128,7 +128,6 @@ const IoTProject = ({ id: idProps }: IoTProjectProps) => {
 		return <LoadingScreen />;
 	}
 
-	console.log(idParam);
 	return (
 		<IoTProjectContext.Provider value={providerValues}>
 			{idProps ? <IoTProjectComponent /> : <IoTProjectPage />}

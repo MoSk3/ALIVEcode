@@ -95,6 +95,14 @@ public class AliveScriptService {
         return result;
     }
 
+    public JSONArray compile(String[] lines, JSONObject context) {
+        resume = false;
+        executeur.setContext(context);
+        JSONArray result = executeur.compiler(lines, true);
+        compiled = true;
+        return result;
+    }
+
     public void pushDataToExecuteur(JSONArray responseData) {
         for (int i = 0; i < responseData.length(); i++)
             executeur.pushDataResponse(responseData.get(i));

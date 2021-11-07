@@ -10,7 +10,6 @@ import {
   HttpException,
   UseInterceptors,
 } from '@nestjs/common';
-import { IoTProjectService } from './IoTproject.service';
 import { Auth } from '../../../utils/decorators/auth.decorator';
 import { User } from '../../../utils/decorators/user.decorator';
 import { Role } from '../../../utils/types/roles.types';
@@ -20,6 +19,7 @@ import { DTOInterceptor } from '../../../utils/interceptors/dto.interceptor';
 import { IoTRouteEntity } from '../IoTroute/entities/IoTroute.entity';
 import { hasRole } from '../../user/auth';
 import { AddObjectDTO } from './dto/addObject.dto';
+import { IoTProjectService } from './IoTproject.service';
 import { IoTObjectService } from '../IoTobject/IoTobject.service';
 
 @Controller('iot/projects')

@@ -76,9 +76,6 @@ const LineInterface = memo(
 									}
 									defaultValue={t.defaultContent}
 									value={t.content}
-									enableSnippets
-									enableBasicAutocompletion
-									enableLiveAutocompletion
 									mode="alivescript"
 									theme="cobalt"
 									onLoad={() => {
@@ -110,9 +107,6 @@ const LineInterface = memo(
 					<AceEditor
 						ref={ref}
 						className="ace-editor relative w-100 h-100"
-						enableSnippets
-						enableBasicAutocompletion
-						enableLiveAutocompletion
 						mode="alivescript"
 						theme="cobalt"
 						defaultValue={initialContent}

@@ -10,3 +10,10 @@ export type typeAskForUserInput = (
 	msg: string,
 	callback: (inputValue: string) => void,
 ) => void;
+
+export type typeAction = {
+	label: string;
+	type: 'NORMAL' | 'GET' | 'SET' | 'ERROR';
+	apply: (params: any[], dodo?: number, response?: any[]) => any;
+	handleNext?: boolean;
+};

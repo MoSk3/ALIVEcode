@@ -18,6 +18,7 @@ import { IoTObject } from './Iot/IoTobject.entity';
 import { QueryDTO } from '../../../backend/src/models/level/dto/query.dto';
 import { Activity, ActivityContent } from './Course/activity.entity';
 import { Maintenance } from './Maintenance/maintenance.entity';
+import { CompileDTO } from './ASModels';
 
 type urlArgType<S extends string> = S extends `${infer _}:${infer A}/${infer B}`
 	? A | urlArgType<B>
@@ -223,6 +224,19 @@ const api = {
 					await axios.patch(`iot/projects/${id}/layout`, layout);
 				},
 			},
+		},
+	},
+	as: {
+		async compile(data: CompileDTO) {
+			return (await axios.post('as/compile', data)).data;
+		},
+		async getLintInfo() {
+			return (
+				await axios({
+					method: 'GET',
+					url: `${process.env.REACT_APP_BACKEND_URL}/as/lintinfo`,
+				})
+			).data;
 		},
 	},
 };

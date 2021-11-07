@@ -32,8 +32,6 @@ export const IoTProjectRoutes = () => {
 			<FormModal
 				title="New route"
 				onSubmit={res => {
-					console.log(res);
-					console.log(addRoute);
 					addRoute(plainToClass(IotRoute, res.data));
 					setRouteModalOpen(false);
 				}}

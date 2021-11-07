@@ -68,16 +68,6 @@ export class IoTSocket {
 					},
 				}),
 			);
-
-			this.socket.send(
-				JSON.stringify({
-					event: 'connect_watcher',
-					data: {
-						iotProjectId: this.iotProject.id,
-						iotProjectName: this.iotProject.name,
-					},
-				}),
-			);
 		};
 
 		this.socket.onerror = (ev: Event) => {
