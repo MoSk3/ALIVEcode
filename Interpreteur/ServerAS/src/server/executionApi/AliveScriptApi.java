@@ -81,14 +81,14 @@ public class AliveScriptApi extends BaseApi {
         if (data.has("status") && data.get("status").equals("interrupted")) {
             aliveScriptService.destroy();
 
-        } else if (data.has("response-data")) {
+        } else if (data.has("responseData")) {
             if (!aliveScriptService.isCompiled()) {
                 return aliveScriptService.notCompiledError().toString();
             }
-            if (!(data.get("response-data") instanceof JSONArray responseData)) {
+            if (!(data.get("responseData") instanceof JSONArray responseData)) {
                 return new JSONObject()
                         .put("status", AliveScriptService.ResponseStatus.FAILED)
-                        .put("message", "the field response-data must contain an array").toString();
+                        .put("message", "the field responseData must contain an array").toString();
             }
             aliveScriptService.pushDataToExecuteur(responseData);
             return aliveScriptService.execute();

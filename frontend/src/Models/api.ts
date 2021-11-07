@@ -18,6 +18,7 @@ import { IoTObject } from './Iot/IoTobject.entity';
 import { QueryDTO } from '../../../backend/src/models/level/dto/query.dto';
 import { Activity, ActivityContent } from './Course/activity.entity';
 import { Maintenance } from './Maintenance/maintenance.entity';
+import { CompileDTO } from './ASModels';
 
 type urlArgType<S extends string> = S extends `${infer _}:${infer A}/${infer B}`
 	? A | urlArgType<B>
@@ -219,6 +220,14 @@ const api = {
 				get: apiGet('iot/projects/:id', IoTProject, false),
 				getRoutes: apiGet('iot/projects/:id/routes', IotRoute, true),
 			},
+		},
+	},
+	as: {
+		async compile(data: CompileDTO) {
+			return (await axios.post('as/compile', data)).data;
+		},
+		async getLintInfo() {
+			return (await axios.get('as/lintinfo')).data;
 		},
 	},
 };

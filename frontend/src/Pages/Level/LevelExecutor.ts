@@ -16,7 +16,7 @@ export abstract class LevelExecutor {
 	protected async sendDataToAsServer(
 		data:
 			| { lines: string }
-			| { idToken: string; 'response-data': string[] }
+			| { idToken: string; responseData: string[] }
 			| { idToken: string; status: 'interrupted' },
 	) {
 		try {
@@ -78,7 +78,7 @@ export abstract class LevelExecutor {
 			this.whenExecutionEnd = async res => {
 				data = await this.sendDataToAsServer({
 					idToken: this.idToken,
-					'response-data': res,
+					responseData: res,
 				});
 				if (!data || !this.execution) {
 					this.interrupt();

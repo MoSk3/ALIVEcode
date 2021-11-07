@@ -1,6 +1,7 @@
-import axios from 'axios';
 import { CMD } from '../../Components/LevelComponents/Cmd/cmdTypes';
 import { typeAction } from './levelTypes';
+import { CompileDTO, CompileStatus } from '../../Models/ASModels';
+import api from '../../Models/api';
 
 export class LevelExecutor {
 	public cmd?: CMD;
@@ -34,21 +35,9 @@ export class LevelExecutor {
 
 	constructor(public levelName: string) {}
 
-	protected async sendDataToAsServer(
-		data:
-			| { lines: string }
-			| { idToken: string; 'response-data': string[] }
-			| { idToken: string; status: 'interrupted' },
-	) {
+	protected async sendDataToAsServer(data: CompileDTO) {
 		try {
-			return (
-				await axios({
-					method: 'POST',
-					url: '/compile/',
-					baseURL: process.env.REACT_APP_AS_URL,
-					data,
-				})
-			).data;
+			return await api.as.compile(data);
 		} catch {
 			this.cmd?.error(
 				"Une erreur inconnue est survenue. Vérifiez pour des erreurs dans votre code, sinon, les services d'alivescript sont hors-ligne.",
@@ -95,7 +84,7 @@ export class LevelExecutor {
 			if (this.idToken) {
 				await this.sendDataToAsServer({
 					idToken: this.idToken,
-					status: 'interrupted',
+					status: CompileStatus.INTERRUPT,
 				});
 			}
 			this.stop();
@@ -110,7 +99,7 @@ export class LevelExecutor {
 				  }
 				: {
 						idToken: this.idToken,
-						'response-data': res,
+						responseData: res,
 				  },
 		);
 
