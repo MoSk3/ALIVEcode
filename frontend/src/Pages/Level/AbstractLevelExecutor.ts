@@ -129,7 +129,7 @@ export class LevelExecutor {
 	) {
 		const response: any[] = [];
 
-		const perform_action = (index: number) => {
+		const perform_action = async (index: number) => {
 			const action = actions[index];
 			const performedAction = this.registeredActions[action.id];
 			if (!(action.id in this.registeredActions)) {
@@ -139,14 +139,25 @@ export class LevelExecutor {
 				return this.perform_next();
 			}
 			performedAction.apply(action.params, action.dodo, response);
-			if (!performedAction.handleNext) {
+
+			if (!performedAction.handleNext && performedAction.type !== 'GET')
 				this.perform_next();
-			}
 		};
 
 		let i = -1;
 		return {
-			next: () => {
+			next: async () => {
+				if (i >= 0) {
+					const action = actions[i];
+					const performedAction = this.registeredActions[action.id];
+					if (performedAction.type === 'GET') {
+						const data = await this.sendDataToAsServer({
+							idToken: this.idToken,
+							responseData: response,
+						});
+						return this.execute(data.result);
+					}
+				}
 				i++;
 				if (i >= actions.length) return;
 				perform_action(i);
