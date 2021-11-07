@@ -1,9 +1,53 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors } from '@nestjs/common';
 import { AsScriptService } from './as-script.service';
+import { CompileDTO } from './dto/compile.dto';
+import axios from 'axios';
+import { DTOInterceptor } from '../../utils/interceptors/dto.interceptor';
 
-@Controller('as-script')
+export interface Datatype {
+  nul: string;
+  entier: string;
+  texte: string;
+  decimal: string;
+  booleen: string;
+}
+
+export interface LinterFormatType {
+  blocs: string[];
+  datatype: Datatype;
+  logiques: string[];
+  operators: string[];
+  fonctions: string[];
+  variable: string;
+  datatypes_names: string[];
+  fin: string;
+  fonctions_builtin: string[];
+  control_flow: string[];
+  const: string;
+  modules: string[];
+  commands: string[];
+}
+@Controller('as')
+@UseInterceptors(DTOInterceptor)
 export class AsScriptController {
   constructor(private readonly asScriptService: AsScriptService) {}
+
+  @Post('compile')
+  async compile(@Body() compileDto: CompileDTO) {
+    return this.asScriptService.compile(compileDto);
+  }
+
+  @Get('lintinfo')
+  async getLintInfo() {
+    const lintInfo: LinterFormatType = await (
+      await axios({
+        method: 'GET',
+        url: '/lintinfo/',
+        baseURL: process.env.AS_URL,
+      })
+    ).data;
+    return lintInfo;
+  }
 
   @Post()
   create(@Body() createAsScriptDto: any) {
