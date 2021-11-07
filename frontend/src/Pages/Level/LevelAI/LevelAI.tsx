@@ -1,12 +1,5 @@
 import { LevelAIProps, StyledAliveLevel } from './levelAITypes';
-import {
-	useEffect,
-	useState,
-	useContext,
-	useRef,
-	useCallback,
-	useMemo,
-} from 'react';
+import { useEffect, useState, useContext, useRef, useCallback } from 'react';
 import LineInterface from '../../../Components/LevelComponents/LineInterface/LineInterface';
 import { UserContext } from '../../../state/contexts/UserContext';
 import { Row, Col } from 'react-bootstrap';
@@ -95,7 +88,7 @@ const LevelAI = ({
 
 	//Set the data for the level
 	const [data] = useState(dataAI);
-	let func: PolyRegression;
+	let func = useRef<PolyRegression>();
 	const mainDataset: DataTypes = {
 		type: 'scatter',
 		label: "Distance parcourue en fonction de l'énergie",
@@ -110,22 +103,18 @@ const LevelAI = ({
 		backgroundColor: 'var(--contrast-color)',
 		borderWidth: 1,
 	});
-	let datasets = [initialDataset];
+	let datasets = useRef([initialDataset]);
 	let pointsOnGraph: boolean = false;
 	let regOnGraph: boolean = false;
 
-	const [chartData, setChartData] = useState({
-		datasets: datasets,
-	});
+	const [chartData, setChartData] = useState({ datasets: datasets.current });
 
 	/**
 	 * Resets the datasets array and the data shown on the graph.
 	 */
 	function resetGraph() {
-		datasets = [initialDataset];
-		setChartData({
-			datasets: datasets,
-		});
+		datasets.current = [initialDataset];
+		setChartData({ datasets: datasets.current });
 	}
 
 	/**
@@ -133,14 +122,9 @@ const LevelAI = ({
 	 * @param newData the new dataset to add.
 	 */
 	function setDataOnGraph(newData: DataTypes): void {
-		datasets.push(newData);
-		setChartData({
-			datasets: datasets,
-		});
+		datasets.current.push(newData);
+		setChartData({ datasets: datasets.current });
 	}
-	const memorizedData = useMemo(() => data, [data]);
-	const memorizedChartData = useMemo(() => chartData, [chartData]);
-
 	//-------------------------- Alivescript functions ----------------------------//
 
 	/**
@@ -159,15 +143,14 @@ const LevelAI = ({
 	 * @param d the param d of a polynomial regression.
 	 */
 	function createRegression(a: number, b: number, c: number, d: number) {
-		func = new PolyRegression(a, b, c, d);
+		func.current = new PolyRegression(a, b, c, d);
 	}
 
 	/**
 	 * Generates the regression's points and shows them on the graph.
 	 */
 	function showRegression() {
-		regOnGraph = true;
-		const points = func?.generatePoints();
+		const points = func.current!.generatePoints();
 		setDataOnGraph(points);
 	}
 
@@ -187,10 +170,10 @@ const LevelAI = ({
 	 * Calculates the MSE cost for the current regression compared to the dataset of the level.
 	 * @returns the calculated cost.
 	 */
-	function costMSE(): void {
+	function costMSE(): string {
 		if (pointsOnGraph) setDataOnGraph(mainDataset);
 		showRegression();
-		cmd?.print("Erreur du modèle : " + func.computeMSE(data));
+		return 'Erreur du modèle : ' + func.current!.computeMSE(data);
 	}
 
 	/**
@@ -199,16 +182,17 @@ const LevelAI = ({
 	 * @param lr the learning rate for the optimization algorithm.
 	 */
 	function optimizeRegression(lr: number, epoch: number): void {
+		if (!func.current) return;
 		const optimizer: PolyOptimizer = new PolyOptimizer(
-			func,
+			func.current,
 			lr,
 			epoch,
 			RegressionOptimizer.costMSE,
 		);
-		func = optimizer.optimize(data);
+		func.current = optimizer.optimize(data);
 		showRegression();
-		cmd?.print("Nouveaux paramètres de la régression :");
-		cmd?.print(func.paramsToString());
+		cmd?.print('Nouveaux paramètres de la régression :');
+		cmd?.print(func.current.paramsToString());
 	}
 
 	/**
@@ -218,8 +202,8 @@ const LevelAI = ({
 	 */
 	function evaluate(x: number): number {
 		if (pointsOnGraph) setDataOnGraph(mainDataset);
-		if (regOnGraph) showRegression();
-		return func.compute(x);
+		showRegression();
+		return func.current!.compute(x);
 	}
 
 	useEffect(() => {
@@ -233,9 +217,9 @@ const LevelAI = ({
 					showDataCloud,
 					resetGraph,
 					optimizeRegression,
-					evaluate,
-					costMSE,
-					showRegression
+					evaluate: (x: number) => evaluate(x),
+					costMSE: () => costMSE(),
+					showRegression,
 				},
 				level.name,
 				user || undefined,
@@ -293,7 +277,7 @@ const LevelAI = ({
 			}, 5000);
 		}, 500);
 		setProgression(updatedProgression);
-	}, [level.id, progression, setProgression, user]);
+	}, [level, progression, setProgression, user]);
 
 	const saveProgressionTimed = () => {
 		if (saveTimeout.current) clearTimeout(saveTimeout.current);
@@ -437,7 +421,7 @@ const LevelAI = ({
 						<Row className="data-section">
 							<Col md={3}>
 								<LevelTable
-									data={memorizedData}
+									data={data}
 									xData="Énergie utilisée (kWh)"
 									yData="Distance parcourue (km)"
 								/>
@@ -445,7 +429,7 @@ const LevelAI = ({
 							<Col md={8} style={{ padding: '0' }}>
 								<div className="graph-container">
 									<LevelGraph
-										data={memorizedChartData}
+										data={chartData}
 										title="Distance parcourue selon l'énergie utilisée"
 										xAxis="Énergie utilisée (kWh)"
 										yAxis="Distance parcourue (km)"
@@ -484,13 +468,13 @@ const LevelAI = ({
 								required: true,
 								default: level.name,
 								minLength: 3,
-								maxLength: 25,
+								maxLength: 100,
 							},
 							{
 								name: 'description',
 								inputType: 'text',
 								default: level.description,
-								maxLength: 200,
+								maxLength: 500,
 							},
 							{
 								name: 'access',

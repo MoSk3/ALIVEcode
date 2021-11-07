@@ -2,6 +2,7 @@ import ReactMarkdown from "react-markdown";
 import { useState, useEffect } from 'react';
 import mdPath from './asDocs.md';
 import styled from 'styled-components';
+import rehypeRaw from 'rehype-raw';
 
 const StyledDiv = styled.div`
 	padding: 80px;
@@ -24,7 +25,7 @@ const ASDocs = () => {
 
 	return (
 		<StyledDiv>
-			<ReactMarkdown>{text}</ReactMarkdown>
+			<ReactMarkdown children={text} rehypePlugins={[rehypeRaw]} />
 		</StyledDiv>
 	);
 };

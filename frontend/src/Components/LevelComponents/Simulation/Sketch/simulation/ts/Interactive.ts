@@ -2,6 +2,7 @@ import { Shape } from "../Shape";
 import { Template } from "./typesSimulation";
 import { SerializableShape } from './typesSimulation';
 import { Vector } from '../Vector';
+import { loadFromTemplate } from './simulationClassUtils';
 
 type TemplateNamesInteractive =
 	| 'objective'
@@ -37,10 +38,12 @@ export class Interactive
 		this.carInteraction = true;
 
 		//* add the object in the interactive object's list
-		s.addInteractiveObject(this);
+		//s.addInteractiveObject(this);
 
 		//* add one to the number of colletables currently in the simulation
-		if (this.isCollectable) Interactive.totalCollectable++;
+		this.loadFromTemplate();
+		this.s.interactiveObjects.push(this);
+		if (this.isCollectable) this.s.coinsTotal++;
 	}
 
 	get uniqueProperties() {
@@ -48,7 +51,11 @@ export class Interactive
 	}
 
 	loadFromTemplate() {
-		Object.assign(this, this.templates[this.templateName]);
+		loadFromTemplate(
+			this,
+			this.templates,
+			this.templateName ?? this.defaultTemplate,
+		);
 	}
 
 	readonly defaultTemplate: TemplateNamesInteractive = 'collectable';

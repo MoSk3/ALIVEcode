@@ -26,6 +26,7 @@ const LevelGraph = React.memo((props: LevelGraphProps) => {
 				options={{
 					responsive: true,
 					aspectRatio: 1.3,
+					events: [],
 					layout: {
 						padding: {
 							left: 25,
@@ -38,7 +39,6 @@ const LevelGraph = React.memo((props: LevelGraphProps) => {
 							title: {
 								display: true,
 								text: props.xAxis,
-								align: 'center',
 							},
 						},
 						y: {
@@ -46,7 +46,6 @@ const LevelGraph = React.memo((props: LevelGraphProps) => {
 							title: {
 								display: true,
 								text: props.yAxis,
-								align: 'center',
 							},
 						},
 					},

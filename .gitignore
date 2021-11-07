@@ -218,3 +218,4 @@ node_modules
 out/production
 out/META-INF
 */log/
+node_modules

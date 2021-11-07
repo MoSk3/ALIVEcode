@@ -15,7 +15,7 @@ import RegressionOptimizer from '../../../Pages/Level/LevelAI/artificial_intelli
  */
 export default class PolyRegression {
   private static ROUNDING = 1000;
-  private static DATA_FORMATTING = {
+  private static DATA_FORMATTING: DataTypes = {
     type: "line",
     label: "Fonction polynomiale",
     data: [{}],
@@ -165,6 +165,5 @@ export default class PolyRegression {
     return "a = " + roundA + ", b = " + roundB + ", c = " + roundC + ", d = " + roundD;
   }
 }
-
 
 

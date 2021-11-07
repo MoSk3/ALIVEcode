@@ -1,5 +1,7 @@
+import { validTextColour } from "../functions";
 import { Shape } from "../Shape";
-import { Template } from "./typesSimulation";
+import { loadFromTemplate } from './simulationClassUtils';
+import { Template } from './typesSimulation';
 import { SerializableShape } from './typesSimulation';
 
 type TemplateNamesFigure = 'base';
@@ -15,6 +17,16 @@ export class Figure
 		super(s, ...points);
 		this.class = 'Figure';
 		this.templateName = templateName;
+		this.loadFromTemplate();
+	}
+
+	override click() {
+		super.click();
+		// key(16) == shift
+		if (this.s.editMode && this.s.keyIsDown(16)) {
+			const newColor = prompt('Changer couleur pour:');
+			if (validTextColour(newColor ?? '')) this.color = newColor ?? this.color;
+		}
 	}
 
 	get uniqueProperties() {
@@ -24,7 +36,7 @@ export class Figure
 	}
 
 	loadFromTemplate() {
-		Object.assign(this, this.templates[this.templateName]);
+		loadFromTemplate(this, this.templates, this.templateName);
 	}
 
 	readonly defaultTemplate: TemplateNamesFigure = 'base';

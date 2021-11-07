@@ -1,6 +1,8 @@
 import { CmdProps } from './cmdTypes';
 import styled from 'styled-components';
 import React from 'react';
+import Button from '../../UtilsComponents/Button/Button';
+import { useTranslation } from 'react-i18next';
 
 const StyledDiv = styled.div`
 	background-color: var(--primary-color);
@@ -21,6 +23,9 @@ const StyledDiv = styled.div`
 	a {
 		cursor: pointer;
 	}
+	.btn-clearCmdLines {
+		right: 0%;
+	}
 `;
 
 /**
@@ -29,7 +34,23 @@ const StyledDiv = styled.div`
  * @author MoSk3
  */
 const Cmd = React.forwardRef<HTMLDivElement>((props: CmdProps, ref) => {
-	return <StyledDiv ref={ref} />;
+	const { t } = useTranslation();
+
+	return (
+		<StyledDiv>
+			<Button
+				variant="primary"
+				onClick={() => {
+					if (!ref || !('current' in ref) || !ref.current) return;
+					ref.current.innerHTML = '';
+				}}
+				className="btn-clearCmdLines"
+			>
+				{t('cmd.clear')}
+			</Button>
+			<div ref={ref}></div>
+		</StyledDiv>
+	);
 });
 
 export default Cmd;

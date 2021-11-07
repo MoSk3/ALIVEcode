@@ -351,7 +351,7 @@ export function editModeSection(s) {
 		lava1.setTexture(images.lava, 0.3);
 		lava1.setSoundOnCollision(sounds.lava_bubbles_audio);
 		lava1.gameOverEvent = {
-			gameOverImg: '/static/images/gifs/lava.gif',
+			gameOverImg: images.lavaAnimation,
 			message: 'La voiture est tombée dans la lave!',
 		};
 		lava1.onClickDown(() => {

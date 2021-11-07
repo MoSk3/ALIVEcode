@@ -41,6 +41,7 @@ public interface ASObjet<T> {
         iterable(TypeBuiltin.texte, TypeBuiltin.liste),
         booleen,
         nulType,
+        rien,
         fonctionType;
 
         private final TypeBuiltin[] aliases;
@@ -67,24 +68,6 @@ public interface ASObjet<T> {
             return aliases == null ? super.toString() : ArraysUtils.join("|", aliases);
         }
         */
-    }
-
-    interface Nombre extends ASObjet<Number> {
-        static boolean estNumerique(String txt) {
-            try {
-                var estDecimal = txt.contains(".");
-                if (estDecimal) Double.parseDouble(txt);
-                else Integer.parseInt(txt);
-                return true;
-            } catch (NumberFormatException err) {
-                return false;
-            }
-        }
-
-        @Override
-        default String obtenirNomType() {
-            return "nombre";
-        }
     }
 
     interface Iterable extends ASObjet<Object> {
