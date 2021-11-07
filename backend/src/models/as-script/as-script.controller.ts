@@ -34,7 +34,7 @@ export class AsScriptController {
 
   @Post('compile')
   async compile(@Body() compileDto: CompileDTO) {
-    return this.asScriptService.compile(compileDto);
+    return await this.asScriptService.compile(compileDto);
   }
 
   @Get('lintinfo')

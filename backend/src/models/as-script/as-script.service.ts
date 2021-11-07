@@ -2,9 +2,13 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { AxiosResponse } from 'axios';
 import { CompileDTO } from './dto/compile.dto';
 import axios from 'axios';
+import LevelIoTBackendExecutor from './LevelIoTBackendExecutor';
+import { IoTProjectService } from '../iot/IoTproject/IoTproject.service';
 
 @Injectable()
 export class AsScriptService {
+  constructor(private iotProjectService: IoTProjectService) {}
+
   async sendDataToAsServer(data: any) {
     let res: AxiosResponse;
     try {
@@ -30,7 +34,8 @@ export class AsScriptService {
 
   async compileBackend(data: any) {
     const res = await this.sendDataToAsServer(data);
-    console.log(res);
+    const executor = new LevelIoTBackendExecutor(this, this.iotProjectService, res.result);
+    executor.toggleExecution();
     return res;
   }
 

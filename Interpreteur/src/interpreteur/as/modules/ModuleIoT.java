@@ -11,7 +11,12 @@ public class ModuleIoT {
                 new ASObjet.Fonction("test",
                         new ASObjet.Fonction.Parametre[] {
                             new ASObjet.Fonction.Parametre(
-                                    ASObjet.TypeBuiltin.nombre.asType(),
+                                    ASObjet.TypeBuiltin.texte.asType(),
+                                    "projectId",
+                                    null
+                            ),
+                            new ASObjet.Fonction.Parametre(
+                                    ASObjet.TypeBuiltin.texte.asType(),
                                     "id",
                                     null
                             ),
@@ -23,9 +28,10 @@ public class ModuleIoT {
                         }, ASObjet.TypeBuiltin.nombre.asType()) {
                     @Override
                     public ASObjet<?> executer() {
-                        Nombre nombre = (Nombre) this.getValeurParam("id");
+                        Texte projectId = (Texte) this.getValeurParam("projectId");
+                        Texte id = (Texte) this.getValeurParam("id");
                         ASObjet<?> value = (ASObjet<?>) this.getValeurParam("value");
-                        executeurInstance.addData(new Data(Data.Id.UPDATE_COMPONENT).addParam(nombre) .addParam(value.toString()));
+                        executeurInstance.addData(new Data(Data.Id.UPDATE_COMPONENT).addParam(projectId).addParam(id).addParam(value.toString()));
                         return new Nul();
                     }
                 }

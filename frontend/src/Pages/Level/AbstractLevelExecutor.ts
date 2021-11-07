@@ -10,6 +10,7 @@ export class LevelExecutor {
 	public execution: boolean = false;
 	public onToggleExecution?: (exec: any) => void;
 	private idToken: string;
+	private backendCompiling = false;
 	private registeredActions: { [actionId: number]: typeAction } = {
 		0: {
 			label: 'Stop Execution',
@@ -37,7 +38,10 @@ export class LevelExecutor {
 
 	protected async sendDataToAsServer(data: CompileDTO) {
 		try {
-			return await api.as.compile(data);
+			return await api.as.compile({
+				...data,
+				backendCompiling: this.backendCompiling,
+			});
 		} catch {
 			this.cmd?.error(
 				"Une erreur inconnue est survenue. Vérifiez pour des erreurs dans votre code, sinon, les services d'alivescript sont hors-ligne.",
@@ -149,13 +153,15 @@ export class LevelExecutor {
 			next: async () => {
 				if (i >= 0) {
 					const action = actions[i];
-					const performedAction = this.registeredActions[action.id];
-					if (performedAction.type === 'GET') {
-						const data = await this.sendDataToAsServer({
-							idToken: this.idToken,
-							responseData: response,
-						});
-						return this.execute(data.result);
+					if (action.id in this.registeredActions) {
+						const performedAction = this.registeredActions[action.id];
+						if (performedAction.type === 'GET') {
+							const data = await this.sendDataToAsServer({
+								idToken: this.idToken,
+								responseData: response,
+							});
+							return this.execute(data.result);
+						}
 					}
 				}
 				i++;
@@ -199,6 +205,10 @@ export class LevelExecutor {
 
 		this.current_execution = this.perform_actions(formatedActions);
 		this.current_execution.next();
+	}
+
+	public setBackendCompiling(state: boolean) {
+		this.backendCompiling = state;
 	}
 
 	public wait(callback: () => void, duration: number) {

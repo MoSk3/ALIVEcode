@@ -96,7 +96,7 @@ const IoTProjectComponent = () => {
 					</Col>
 					<Col sm="9" id="project-body">
 						<Row className="project-top-row"></Row>
-						<IoTProjectBody project={project} />
+						<IoTProjectBody />
 					</Col>
 				</Row>
 			</FillContainer>
