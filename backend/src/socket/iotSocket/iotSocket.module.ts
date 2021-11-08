@@ -7,9 +7,10 @@ import { IoTProjectEntity } from '../../models/iot/IoTproject/entities/IoTprojec
 import { IoTRouteEntity } from '../../models/iot/IoTroute/entities/IoTroute.entity';
 import { IoTProjectService } from '../../models/iot/IoTproject/IoTproject.service';
 import { AsScriptEntity } from '../../models/as-script/entities/as-script.entity';
+import { AsScriptService } from '../../models/as-script/as-script.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([IoTObjectEntity, IoTProjectEntity, IoTRouteEntity, AsScriptEntity])],
-  providers: [IoTObjectService, IoTProjectService, IoTGateway],
+  providers: [IoTObjectService, IoTProjectService, IoTGateway, AsScriptService],
 })
 export class IoTModule {}

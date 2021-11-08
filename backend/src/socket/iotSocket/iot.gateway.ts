@@ -11,7 +11,7 @@ import {
   WsException,
 } from '@nestjs/websockets';
 import { Server, WebSocket } from 'ws';
-import { IoTSocketToObjectRequest, IoTSocketUpdateRequest } from './iotSocket.types';
+import { IoTSocketToObjectRequest, IoTSocketUpdateRequest, IoTSocketRouteRequest } from './iotSocket.types';
 import { IoTObjectService } from '../../models/iot/IoTobject/IoTobject.service';
 import { DTOInterceptor } from '../../utils/interceptors/dto.interceptor';
 import { IoTObjectEntity } from '../../models/iot/IoTobject/entities/IoTobject.entity';
@@ -112,5 +112,19 @@ export class IoTGateway implements OnGatewayDisconnect, OnGatewayConnection, OnG
     //if (!watcher.hasProjectRights(payload.projectId)) throw new WsException('Forbidden');
 
     watcher.sendToObject(payload);
+  }
+
+  @SubscribeMessage('send_route')
+  async send_route(@ConnectedSocket() socket: WebSocket, @MessageBody() payload: IoTSocketRouteRequest) {
+    if (!payload.routePath || !payload.data || !payload.projectId) throw new WsException('Bad payload');
+
+    const object = ObjectClient.getClientBySocket(socket);
+    if (!object) throw new WsException('Forbidden');
+
+    if (!object.hasProjectRights(payload.projectId)) throw new WsException('Forbidden');
+
+    const { route } = await this.iotProjectService.findOneWithRoute(payload.projectId, payload.routePath);
+
+    await this.iotProjectService.sendRoute(route, payload.data);
   }
 }

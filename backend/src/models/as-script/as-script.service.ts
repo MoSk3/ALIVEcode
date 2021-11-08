@@ -15,10 +15,8 @@ export class AsScriptService {
     private iotProjectService: IoTProjectService,
   ) {}
 
-  async sendDataToAsServer(data: any) {
-    data.context = {
-      test: 'yes',
-    };
+  async sendDataToAsServer(data: any, context?: any) {
+    data.context = context;
     let res: AxiosResponse;
     try {
       res = await axios({
@@ -41,8 +39,8 @@ export class AsScriptService {
     return await this.sendDataToAsServer(data);
   }
 
-  async compileBackend(data: any) {
-    const res = await this.sendDataToAsServer(data);
+  async compileBackend(data: any, context?: any) {
+    const res = await this.sendDataToAsServer(data, context);
     const executor = new LevelIoTBackendExecutor(this, this.iotProjectService, res.result);
     await executor.toggleExecution();
 
