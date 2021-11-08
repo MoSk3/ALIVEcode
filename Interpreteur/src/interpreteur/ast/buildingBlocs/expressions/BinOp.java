@@ -40,6 +40,7 @@ public record BinOp(Expression<?> gauche,
             if (gauche instanceof ASObjet.Liste lstG) {
                 ASObjet.Liste lst = lstG.sousSection(0, lstG.taille());
                 lst.ajouterElement(droite);
+                System.out.println(lst);
                 return lst;
             }
 
@@ -156,7 +157,7 @@ public record BinOp(Expression<?> gauche,
         PIPE((gauche, droite) -> {
             /* unir listes */
             if (gauche instanceof ASObjet.Liste lstG && droite instanceof ASObjet.Liste lstD) {
-                return new ASObjet.Liste(lstG).ajouterTout(lstD);
+                return new ASObjet.Liste(lstG.getValue().toArray(ASObjet[]::new)).ajouterTout(lstD);
             }
             throw new ASErreur.ErreurAliveScript("", "");
         }, "union"),
@@ -175,6 +176,8 @@ public record BinOp(Expression<?> gauche,
             ASObjet<?> d = droite.eval();
             try {
                 return this.eval.apply(g, d);
+            } catch (ASErreur.ErreurAliveScript erreurAliveScript) {
+                throw erreurAliveScript;
             } catch (Exception e) {
                 throw new ASErreur.ErreurType("L'op\u00E9ration '" + nom + "' n'est pas d\u00E9finie pour " +
                         "un \u00E9l\u00E9ment de type '" + g.obtenirNomType() + "' " +

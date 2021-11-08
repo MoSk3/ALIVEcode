@@ -170,6 +170,12 @@ public interface ASErreur {
         }
     }
 
+    class ErreurClefDupliquee extends ErreurAliveScript {
+        public ErreurClefDupliquee(String msg) {
+            super(msg, "ErreurClef");
+        }
+    }
+
     class ErreurIndex extends ErreurAliveScript {
         public ErreurIndex(String message) {
             super(message, "ErreurIndex");

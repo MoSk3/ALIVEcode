@@ -873,17 +873,16 @@ public interface ASObjet<T> {
 
         public Liste(ASObjet<?>... valeurs) {
             this.valeur = new ArrayList<>(Arrays.asList(valeurs));
-        }
-
-        public Liste(Liste liste) {
-            this.valeur = new ArrayList<>(liste.getValue());
+            aucuneClefDuplique();
         }
 
         public void ajouterElement(ASObjet<?> element) {
+            clefValideOrThrow(element);
             this.valeur.add(element);
         }
 
         public Liste ajouterTout(Liste elements) {
+            elements.getValue().forEach(this::clefValideOrThrow);
             this.valeur.addAll(elements.getValue());
             return this;
         }
@@ -892,6 +891,22 @@ public interface ASObjet<T> {
             return valeur.stream().allMatch(ASPaire.class::isInstance);
         }
 
+        public void clefValideOrThrow(ASObjet<?> nouvelElement) {
+            if (!(nouvelElement instanceof ASPaire nouvellePaire))
+                return;
+            if (valeur.stream().anyMatch(val -> val instanceof ASPaire paire && paire.clef().equals(nouvellePaire.clef()))) {
+                throw new ErreurClefDupliquee("La clef " + nouvellePaire.clef() + " existe d\u00E9j\u00e0 dans le dictionnaire ou la liste");
+            }
+        }
+
+        public void aucuneClefDuplique() {
+            var clefs = valeur.stream()
+                    .map(val -> val instanceof ASPaire paire ? paire.clef().getValue() : null)
+                    .filter(Objects::nonNull).toList();
+            if (clefs.stream().distinct().count() != clefs.size()) {
+                throw new ErreurClefDupliquee("Il y a au moins une clef dupliqu\u00E9e dans le dictionnaire ou la liste");
+            }
+        }
 
         public void retirerElement(int idx) {
             ASObjet<?> element = this.valeur.remove(idxRelatif(this.valeur, idx));
@@ -899,11 +914,13 @@ public interface ASObjet<T> {
 
         public Liste remplacer(int idx, ASObjet<?> valeur) {
             this.valeur.set(idxRelatif(this.valeur, idx), valeur);
+            aucuneClefDuplique();
             return this;
         }
 
         public Liste remplacer(ASObjet<?> valeur, ASObjet<?> remplacement) {
             this.valeur.replaceAll(v -> v.equals(valeur) ? remplacement : v);
+            aucuneClefDuplique();
             return this;
         }
 
@@ -911,11 +928,14 @@ public interface ASObjet<T> {
             debut = idxRelatif(valeur, debut);
             fin = idxRelatif(valeur, fin);
             this.valeur = this.sousSection(0, debut).ajouterTout(remplacement).ajouterTout(this.sousSection(fin, this.taille())).getValue();
+            aucuneClefDuplique();
             return this;
         }
 
         public ArrayList<?> map(Function<ASObjet<?>, ?> mappingFunction) {
-            return this.valeur.stream().map(mappingFunction).collect(Collectors.toCollection(ArrayList::new));
+            var result = this.valeur.stream().map(mappingFunction).collect(Collectors.toCollection(ArrayList::new));
+            aucuneClefDuplique();
+            return result;
         }
 
         public ASObjet<?> get(Texte texte) {
