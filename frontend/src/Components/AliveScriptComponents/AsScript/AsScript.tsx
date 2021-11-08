@@ -1,7 +1,7 @@
 import { AsScript as AsScriptModel } from "../../../Models/AsScript/as-script.entity";
 import LineInterface from '../../LevelComponents/LineInterface/LineInterface';
 import { Col, Row } from 'react-bootstrap';
-import { useState, useRef, MutableRefObject } from 'react';
+import { useState, useRef } from 'react';
 import api from '../../../Models/api';
 
 export const AsScript = ({ asScript }: { asScript: AsScriptModel }) => {

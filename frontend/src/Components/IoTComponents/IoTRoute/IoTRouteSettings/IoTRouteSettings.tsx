@@ -33,7 +33,7 @@ const IoTRouteSettings = ({ route }: IoTRouteSettingsProps) => {
 					variant="primary"
 					onClick={async () => {
 						const asScript = new AsScriptModel();
-						asScript.content = 'New Script';
+						asScript.content = '# New Script';
 						asScript.name = `Script for route ${route.name}`;
 						setScript(
 							await api.db.iot.projects.createScriptRoute(

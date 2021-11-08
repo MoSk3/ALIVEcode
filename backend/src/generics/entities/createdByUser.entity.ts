@@ -8,7 +8,6 @@ export abstract class CreatedByUser extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   @Exclude({ toClassOnly: true })
   @IsEmpty()
-  @IsUUID()
   id: string;
 
   @Column({ nullable: false })
