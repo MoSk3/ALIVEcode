@@ -4,10 +4,16 @@ import { CompileDTO } from './dto/compile.dto';
 import axios from 'axios';
 import LevelIoTBackendExecutor from './LevelIoTBackendExecutor';
 import { IoTProjectService } from '../iot/IoTproject/IoTproject.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { AsScriptEntity } from './entities/as-script.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class AsScriptService {
-  constructor(private iotProjectService: IoTProjectService) {}
+  constructor(
+    @InjectRepository(AsScriptEntity) private asScriptRepo: Repository<AsScriptEntity>,
+    private iotProjectService: IoTProjectService,
+  ) {}
 
   async sendDataToAsServer(data: any) {
     data.context = {
@@ -51,8 +57,14 @@ export class AsScriptService {
     return `This action returns all asScript`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} asScript`;
+  async findOne(id: string) {
+    const script = await this.asScriptRepo.findOne(id);
+    if (!script) throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+    return script;
+  }
+
+  async updateContent(script: AsScriptEntity, content: string) {
+    return await this.asScriptRepo.save({ ...script, content });
   }
 
   remove(id: number) {

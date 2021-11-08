@@ -19,6 +19,7 @@ import { QueryDTO } from '../../../backend/src/models/level/dto/query.dto';
 import { Activity, ActivityContent } from './Course/activity.entity';
 import { Maintenance } from './Maintenance/maintenance.entity';
 import { CompileDTO } from './ASModels';
+import { AsScript } from './AsScript/as-script.entity';
 
 type urlArgType<S extends string> = S extends `${infer _}:${infer A}/${infer B}`
 	? A | urlArgType<B>
@@ -223,6 +224,28 @@ const api = {
 				async updateLayout(id: string, layout: IoTProjectLayout) {
 					await axios.patch(`iot/projects/${id}/layout`, layout);
 				},
+				async createScriptRoute(
+					projectId: string,
+					routeId: string,
+					asScript: AsScript,
+				) {
+					return (
+						await axios.post(`iot/projects/${projectId}/as/create`, {
+							routeId,
+							script: asScript,
+						})
+					).data;
+				},
+			},
+		},
+		asScript: {
+			async create(asScript: AsScript) {
+				return (await axios.post(`as`, asScript)).data;
+			},
+			async updateContent(asScript: AsScript, newContent: string) {
+				return await axios.patch(`as/${asScript.id}/content`, {
+					content: newContent,
+				});
 			},
 		},
 	},

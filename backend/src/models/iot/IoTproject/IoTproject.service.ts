@@ -7,12 +7,15 @@ import { IoTRouteEntity } from '../IoTroute/entities/IoTroute.entity';
 import { IoTObjectEntity } from '../IoTobject/entities/IoTobject.entity';
 import { IoTSocketUpdateRequestWatcher, WatcherClient } from '../../../socket/iotSocket/iotSocket.types';
 import { validUUID } from '../../../utils/types/validation.types';
+import { IoTProjectAddScriptDTO } from './dto/addScript.dto';
+import { AsScriptEntity } from '../../as-script/entities/as-script.entity';
 
 @Injectable()
 export class IoTProjectService {
   constructor(
     @InjectRepository(IoTProjectEntity) private projectRepository: Repository<IoTProjectEntity>,
     @InjectRepository(IoTRouteEntity) private routeRepository: Repository<IoTRouteEntity>,
+    @InjectRepository(AsScriptEntity) private scriptRepo: Repository<AsScriptEntity>,
   ) {}
 
   async create(user: UserEntity, createIoTprojectDto: IoTProjectEntity) {
@@ -69,6 +72,22 @@ export class IoTProjectService {
     project.iotObjects.push(object);
     await this.projectRepository.save(project);
     return object;
+  }
+
+  async addScript(project: IoTProjectEntity, user: UserEntity, scriptDto: IoTProjectAddScriptDTO) {
+    const newScript = this.scriptRepo.create(scriptDto.script);
+    newScript.creator = user;
+    await this.scriptRepo.save(newScript);
+
+    project = await this.projectRepository.findOne(project.id, { relations: ['routes'] });
+
+    const route = project.routes.find(r => r.id === scriptDto.routeId);
+    if (!route) throw new HttpException('No route found', HttpStatus.NOT_FOUND);
+
+    route.asScript = newScript;
+
+    await this.routeRepository.save(route);
+    return newScript;
   }
 
   async updateComponent(project: IoTProjectEntity, componentId: string, value: any, sendUpdate = false): Promise<void> {

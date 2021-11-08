@@ -23,7 +23,7 @@ export class IoTRouteEntity {
   @ManyToOne(() => IoTProjectEntity, project => project.routes, { onDelete: 'CASCADE' })
   project: IoTProjectEntity;
 
-  @ManyToOne(() => AsScriptEntity)
+  @ManyToOne(() => AsScriptEntity, { eager: true })
   @JoinTable({ name: 'asScriptId' })
   asScript?: AsScriptEntity;
 

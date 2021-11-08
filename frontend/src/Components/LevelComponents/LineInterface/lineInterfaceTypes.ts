@@ -17,6 +17,7 @@ export type EditorTabModel = {
 
 export const StyledLineInterface = styled.div`
 	flex: 1 1 auto;
+	height: 100%;
 
 	.hidden-editor {
 		display: none;
