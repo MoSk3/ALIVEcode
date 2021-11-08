@@ -10,6 +10,9 @@ export class AsScriptService {
   constructor(private iotProjectService: IoTProjectService) {}
 
   async sendDataToAsServer(data: any) {
+    data.context = {
+      test: 'yes',
+    };
     let res: AxiosResponse;
     try {
       res = await axios({

@@ -1,7 +1,6 @@
 import { LevelExecutor } from "./AbstractLevelExecutor";
 import { AsScriptService } from './as-script.service';
 import { IoTProjectService } from '../iot/IoTproject/IoTproject.service';
-import { HttpException, HttpStatus } from '@nestjs/common';
 
 export default class LevelIoTBackendExecutor extends LevelExecutor {
   constructor(asScriptService: AsScriptService, iotProjectService: IoTProjectService, actions: any) {
