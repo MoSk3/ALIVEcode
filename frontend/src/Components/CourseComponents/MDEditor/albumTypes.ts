@@ -1,1 +1,6 @@
-export type albumOptionsType = {};
+export type albumOptionsType = {
+	underline?: boolean;
+};
+
+export type underlineOptions = {
+};

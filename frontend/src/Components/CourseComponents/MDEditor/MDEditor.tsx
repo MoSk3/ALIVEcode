@@ -9,6 +9,8 @@ import rehypeKatex from 'rehype-katex';
 import remarkBreaks from 'remark-breaks';
 
 import 'katex/dist/katex.min.css';
+import { remarkAlbum } from './remark-album';
+import { rehypeAlbum } from './rehype-album';
 
 const MDEditor = ({ onSave, defaultValue }: MDEditorProps) => {
 	const [isPreview, setIsPreview] = useState(false);
@@ -37,8 +39,14 @@ const MDEditor = ({ onSave, defaultValue }: MDEditorProps) => {
 					/>
 				) : (
 					<ReactMarkdown
-						remarkPlugins={[remarkGfm, remarkMath, remarkBreaks]}
-						rehypePlugins={[rehypeKatex]}
+						remarkPlugins={[
+							remarkAlbum.underline,
+							//remarkGfm,
+							//remarkMath,
+							//remarkBreaks,
+						]}
+						//rehypePlugins={[rehypeKatex]}
+						rehypePlugins={[rehypeAlbum]}
 					>
 						{content}
 					</ReactMarkdown>
