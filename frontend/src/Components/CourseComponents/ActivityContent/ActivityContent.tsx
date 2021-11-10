@@ -137,7 +137,6 @@ const ActivityContent = (props: ActivityContentProps) => {
 													<Level
 														key={`level-${a.level.id}`}
 														level={a.level}
-														type={a.level.getType()}
 														editMode={false}
 													/>
 												</div>

@@ -10,6 +10,7 @@ import { IoTObject } from '../../../../Models/Iot/IoTobject.entity';
 import Modal from '../../../UtilsComponents/Modal/Modal';
 import { IoTProjectContext } from '../../../../state/contexts/IoTProjectContext';
 import api from '../../../../Models/api';
+import { FORM_ACTION } from '../../../UtilsComponents/Form/formTypes';
 
 export const IoTProjectAccess = () => {
 	const [addObjectModalOpen, setAddObjectModalOpen] = useState(false);
@@ -86,7 +87,7 @@ export const IoTProjectAccess = () => {
 					onClose={() => setAddObjectModalOpen(false)}
 				>
 					<Form
-						action="POST"
+						action={FORM_ACTION.POST}
 						name="iot_project_object"
 						url={`iot/projects/${project.id}/objects`}
 						inputGroups={[

@@ -5,6 +5,7 @@ import {
 } from '../../../../Models/Iot/IoTobject.entity';
 import { plainToClass } from 'class-transformer';
 import Link from '../../../UtilsComponents/Link/Link';
+import { FORM_ACTION } from '../../../UtilsComponents/Form/formTypes';
 
 const IoTObjectSettings = ({ object }: { object: IoTObject }) => {
 	return (
@@ -13,7 +14,7 @@ const IoTObjectSettings = ({ object }: { object: IoTObject }) => {
 				onSubmit={res => {
 					object = plainToClass(IoTObject, res.data);
 				}}
-				action="PATCH"
+				action={FORM_ACTION.PATCH}
 				name="iot_project"
 				url={`iot/objects/${object.id}`}
 				inputGroups={[

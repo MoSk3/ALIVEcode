@@ -1,44 +1,48 @@
-import { useEffect, useContext } from 'react';
-import LineInterface from '../../../Components/LevelComponents/LineInterface/LineInterface';
-import { UserContext } from '../../../state/contexts/UserContext';
-import { Row, Col } from 'react-bootstrap';
-import Cmd from '../../../Components/LevelComponents/Cmd/Cmd';
-import useCmd from '../../../state/hooks/useCmd';
-import { LevelCode as LevelCodeModel } from '../../../Models/Level/levelCode.entity';
-import { LevelCodeProps, StyledCodeLevel } from './levelCodeTypes';
+
+import { useContext, useEffect } from 'react';
 import LoadingScreen from '../../../Components/UtilsComponents/LoadingScreen/LoadingScreen';
-import { LevelContext } from '../../../state/contexts/LevelContext';
-import LevelToolsBar from '../../../Components/LevelComponents/LevelToolsBar/LevelToolsBar';
+import { Col, Row } from 'react-bootstrap';
+import IoTProjectBody from '../../../Components/IoTComponents/IoTProject/IoTProjectBody/IotProjectBody';
+import { IoTProjectContext } from '../../../state/contexts/IoTProjectContext';
+import { StyledIoTLevel } from './levelIoTTypes';
+import FillContainer from '../../../Components/UtilsComponents/FillContainer/FillContainer';
 import { useForceUpdate } from '../../../state/hooks/useForceUpdate';
-import LevelCodeExecutor from './LevelCodeExecutor';
+import useCmd from '../../../state/hooks/useCmd';
+import { LevelContext } from '../../../state/contexts/LevelContext';
+import LevelCodeExecutor from '../LevelCode/LevelCodeExecutor';
+import { UserContext } from '../../../state/contexts/UserContext';
+import { LevelIoT as LevelIoTModel } from '../../../Models/Level/levelIoT.entity';
+import LevelToolsBar from '../../../Components/LevelComponents/LevelToolsBar/LevelToolsBar';
+import LineInterface from '../../../Components/LevelComponents/LineInterface/LineInterface';
+import Cmd from '../../../Components/LevelComponents/Cmd/Cmd';
 
 /**
- * Code level page. Contains all the components to display and make the code level functionnal.
+ * IoTProject. On this page are all the components essential in the functionning of an IoTProject.
+ * Such as the routes, the settings, creation/update forms, the body with all the IoTComponents etc.
  *
- * @param {LevelCodeModel} level code level object
- * @param {boolean} editMode if the level is in editMode or not
- * @param {LevelProgression} progression the level progression of the current user
- * @param {string} initialCode the initial code of the level
- * @param {(level: LevelCodeModel) => void} setLevel callback used to modify the level in the parent state
- * @param {(progression: LevelProgression) => void} setProgression callback used to modify the level progression in the parent state
+ * @param {string} id id of the project (as url prop)
  *
  * @author MoSk3
  */
-const LevelCode = ({ initialCode }: LevelCodeProps) => {
+const IoTLevel = ({ initialCode }: { initialCode: string }) => {
+	const { project } = useContext(IoTProjectContext);
 	const { user } = useContext(UserContext);
 	const {
 		level: levelUntyped,
 		executor: executorUntyped,
-		editMode,
 		progression,
+		editMode,
 		setProgression,
-		saveLevelTimed,
 		saveProgressionTimed,
 		askForUserInput,
+		saveLevelTimed,
 	} = useContext(LevelContext);
-	const level = levelUntyped as LevelCodeModel;
+
+	const level = levelUntyped as LevelIoTModel;
 	const executor =
 		executorUntyped as React.MutableRefObject<LevelCodeExecutor | null>;
+
+	console.log(level.id + '/' + progression?.id);
 
 	const forceUpdate = useForceUpdate();
 	const [cmdRef, cmd] = useCmd();
@@ -48,6 +52,7 @@ const LevelCode = ({ initialCode }: LevelCodeProps) => {
 		if (!editMode && progression) {
 			progression.data.code = content;
 			const updatedProgression = progression;
+			console.log(updatedProgression.data.code);
 			setProgression(updatedProgression);
 			saveProgressionTimed();
 		}
@@ -57,7 +62,7 @@ const LevelCode = ({ initialCode }: LevelCodeProps) => {
 		if (!level) return;
 		executor.current = new LevelCodeExecutor(level.name, askForUserInput);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [user, level.id]);
+	}, [user, level?.id]);
 
 	useEffect(() => {
 		if (!cmd) return forceUpdate();
@@ -65,11 +70,11 @@ const LevelCode = ({ initialCode }: LevelCodeProps) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [cmd, executor]);
 
-	if (!level) return <LoadingScreen></LoadingScreen>;
+	if (!level || !project) return <LoadingScreen></LoadingScreen>;
 
 	return (
-		<>
-			<StyledCodeLevel>
+		<StyledIoTLevel>
+			<FillContainer className="project-container" relative>
 				<Row className="h-100">
 					<Col className="left-col" md={6}>
 						<LevelToolsBar />
@@ -105,15 +110,18 @@ const LevelCode = ({ initialCode }: LevelCodeProps) => {
 							/>
 						)}
 					</Col>
-					<Col md={6} style={{ resize: 'both', padding: '0' }}>
-						<Row className="h-100">
+					<Col sm="6" className="right-col">
+						<Row style={{ height: '60vh' }}>
+							<IoTProjectBody noTopRow />
+						</Row>
+						<Row style={{ height: '40vh' }}>
 							<Cmd ref={cmdRef}></Cmd>
 						</Row>
 					</Col>
 				</Row>
-			</StyledCodeLevel>
-		</>
+			</FillContainer>
+		</StyledIoTLevel>
 	);
 };
 
-export default LevelCode;
+export default IoTLevel;

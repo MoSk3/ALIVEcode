@@ -1,4 +1,4 @@
-import { LevelProps, typeAskForUserInput } from './levelTypes';
+import { LevelProps, StyledLevel, typeAskForUserInput } from './levelTypes';
 import {
 	useEffect,
 	useState,
@@ -39,6 +39,9 @@ import FormModal from '../../Components/UtilsComponents/FormModal/FormModal';
 import Form from '../../Components/UtilsComponents/Form/Form';
 import { LevelExecutor } from './AbstractLevelExecutor';
 import { useForceUpdate } from '../../state/hooks/useForceUpdate';
+import { FORM_ACTION } from '../../Components/UtilsComponents/Form/formTypes';
+import { LevelIoT as LevelIoTModel } from '../../Models/Level/levelIoT.entity';
+import IoTProject from '../../Pages/IoT/IoTProject/IoTProject';
 
 /**
  * This component is used to load any type of Level with an id or passed as a prop.
@@ -51,7 +54,7 @@ import { useForceUpdate } from '../../state/hooks/useForceUpdate';
  *
  * @author MoSk3
  */
-const Level = ({ level: levelProp, ...props }: LevelProps) => {
+const Level = ({ level: levelProp, type, ...props }: LevelProps) => {
 	const { levelId } = useParams<{ levelId: string }>();
 	const { user } = useContext(UserContext);
 	const [level, setLevel] = useState<LevelModel | undefined>(() => levelProp);
@@ -119,7 +122,7 @@ const Level = ({ level: levelProp, ...props }: LevelProps) => {
 							id: currentLevel.id,
 							userId: user.id,
 						},
-						currentLevel,
+						{},
 					);
 				}
 				progression.data.code &&
@@ -152,6 +155,7 @@ const Level = ({ level: levelProp, ...props }: LevelProps) => {
 	}, [levelId, levelProp]);
 
 	const saveLevel = useCallback(async () => {
+		(level as any).project = undefined;
 		if (saveTimeout.current) clearTimeout(saveTimeout.current);
 		if (messageTimeout.current) clearTimeout(messageTimeout.current);
 		setSaving(true);
@@ -268,201 +272,149 @@ const Level = ({ level: levelProp, ...props }: LevelProps) => {
 	if (!level || !progression) return <LoadingScreen />;
 
 	return (
-		<LevelContext.Provider value={levelContextValues}>
-			{level instanceof LevelAliveModel ? (
-				<LevelAlive
-					initialCode={
-						initialProgressionCode || (level as LevelAliveModel).initialCode
-					}
-				></LevelAlive>
-			) : level instanceof LevelCodeModel ? (
-				<LevelCode
-					initialCode={
-						initialProgressionCode || (level as LevelCodeModel).initialCode
-					}
-				></LevelCode>
-			) : level instanceof LevelAIModel ? (
-				<LevelAI
-					initialCode={
-						initialProgressionCode || (level as LevelAIModel).initialCode
-					}
-				></LevelAI>
-			) : (
-				<LoadingScreen></LoadingScreen>
-			)}
-			<Modal
-				open={userInputModalOpen}
-				onClose={() => {
-					if (userInputCallback.current && userInputRef.current)
-						userInputCallback.current(`${userInputRef.current.value}`);
-					setUserInputModalOpen(false);
-					userInputRef.current.value = '';
-				}}
-				title={inputMsg.current}
-				hideCloseButton
-				submitText="Confirmer"
-				centered
-				onShow={() => userInputRef.current.focus()}
-				centeredText
-			>
-				<input
-					ref={userInputRef}
-					placeholder={`${t('input.defaultValue')}`}
-					type="text"
-					onKeyPress={e => {
-						if (e.key === 'Enter') {
-							e.preventDefault();
-							if (userInputCallback.current && userInputRef.current)
-								userInputCallback.current(
-									`${userInputRef.current?.value ?? ''}`,
-								);
-							userInputRef.current.value = '';
-							setUserInputModalOpen(false);
+		<StyledLevel editMode={editMode}>
+			<LevelContext.Provider value={levelContextValues}>
+				{level instanceof LevelAliveModel ? (
+					<LevelAlive
+						initialCode={
+							initialProgressionCode || (level as LevelAliveModel).initialCode
 						}
+					></LevelAlive>
+				) : level instanceof LevelCodeModel ? (
+					<LevelCode
+						initialCode={
+							initialProgressionCode || (level as LevelCodeModel).initialCode
+						}
+					></LevelCode>
+				) : level instanceof LevelAIModel ? (
+					<LevelAI
+						initialCode={
+							initialProgressionCode || (level as LevelAIModel).initialCode
+						}
+					></LevelAI>
+				) : level instanceof LevelIoTModel ? (
+					<IoTProject
+						initialCode={
+							initialProgressionCode || (level as LevelIoTModel).initialCode
+						}
+						level={level}
+						updateId={level.id + '/' + progression?.id}
+					></IoTProject>
+				) : (
+					<LoadingScreen></LoadingScreen>
+				)}
+				<Modal
+					open={userInputModalOpen}
+					onClose={() => {
+						if (userInputCallback.current && userInputRef.current)
+							userInputCallback.current(`${userInputRef.current.value}`);
+						setUserInputModalOpen(false);
+						userInputRef.current.value = '';
 					}}
-				/>
-			</Modal>
-			<Modal
-				title={t('msg.auth.account_required')}
-				open={accountModalOpen}
-				onClose={() => setAccountModalOpen(false)}
-			>
-				<Button
-					variant="primary"
-					to={routes.non_auth.signup.path}
-					className="mb-2"
+					title={inputMsg.current}
+					hideCloseButton
+					submitText="Confirmer"
+					centered
+					onShow={() => userInputRef.current.focus()}
+					centeredText
 				>
-					{t('msg.auth.signup')}
-				</Button>
-				<br />
-				or
-				<br />
-				<Button
-					variant="primary"
-					to={routes.non_auth.signin.path}
-					className="mt-2"
+					<input
+						ref={userInputRef}
+						placeholder={`${t('input.defaultValue')}`}
+						type="text"
+						onKeyPress={e => {
+							if (e.key === 'Enter') {
+								e.preventDefault();
+								if (userInputCallback.current && userInputRef.current)
+									userInputCallback.current(
+										`${userInputRef.current?.value ?? ''}`,
+									);
+								userInputRef.current.value = '';
+								setUserInputModalOpen(false);
+							}
+						}}
+					/>
+				</Modal>
+				<Modal
+					title={t('msg.auth.account_required')}
+					open={accountModalOpen}
+					onClose={() => setAccountModalOpen(false)}
 				>
-					{t('msg.auth.signin')}
-				</Button>
-			</Modal>
-			<FormModal
-				title={t('form.level.PATCH.title')}
-				onSubmit={res => {
-					if (!level) return;
-					const { name, description, access, difficulty }: LevelModel =
-						res.data;
-					level.name = name;
-					level.description = description;
-					level.access = access;
-					level.difficulty = difficulty;
-					setLevel(level);
-					forceUpdate();
-					setSettingsModalOpen(false);
-				}}
-				onClose={() => setSettingsModalOpen(false)}
-				open={settingsModalOpen}
-			>
-				<Form
-					action="PATCH"
-					name="level"
-					url={`levels/${level!.id}`}
-					inputGroups={[
-						{
-							name: 'name',
-							inputType: 'text',
-							required: true,
-							default: level?.name,
-							minLength: 3,
-							maxLength: 100,
-						},
-						{
-							name: 'description',
-							inputType: 'text',
-							default: level?.description,
-							maxLength: 500,
-						},
-						{
-							name: 'access',
-							required: true,
-							inputType: 'select',
-							selectOptions: LEVEL_ACCESS,
-							default: level?.access,
-						},
-						{
-							name: 'difficulty',
-							required: true,
-							inputType: 'select',
-							selectOptions: LEVEL_DIFFICULTY,
-							default: level?.difficulty,
-						},
-					]}
-				/>
-			</FormModal>
-			{showConfetti && <Confetti />}
-		</LevelContext.Provider>
+					<Button
+						variant="primary"
+						to={routes.non_auth.signup.path}
+						className="mb-2"
+					>
+						{t('msg.auth.signup')}
+					</Button>
+					<br />
+					or
+					<br />
+					<Button
+						variant="primary"
+						to={routes.non_auth.signin.path}
+						className="mt-2"
+					>
+						{t('msg.auth.signin')}
+					</Button>
+				</Modal>
+				<FormModal
+					title={t('form.level.PATCH.title')}
+					onSubmit={res => {
+						if (!level) return;
+						const { name, description, access, difficulty }: LevelModel =
+							res.data;
+						level.name = name;
+						level.description = description;
+						level.access = access;
+						level.difficulty = difficulty;
+						setLevel(level);
+						forceUpdate();
+						setSettingsModalOpen(false);
+					}}
+					onClose={() => setSettingsModalOpen(false)}
+					open={settingsModalOpen}
+				>
+					<Form
+						action={FORM_ACTION.PATCH}
+						name="level"
+						url={`levels/${level!.id}`}
+						inputGroups={[
+							{
+								name: 'name',
+								inputType: 'text',
+								required: true,
+								default: level?.name,
+								minLength: 3,
+								maxLength: 100,
+							},
+							{
+								name: 'description',
+								inputType: 'text',
+								default: level?.description,
+								maxLength: 500,
+							},
+							{
+								name: 'access',
+								required: true,
+								inputType: 'select',
+								selectOptions: LEVEL_ACCESS,
+								default: level?.access,
+							},
+							{
+								name: 'difficulty',
+								required: true,
+								inputType: 'select',
+								selectOptions: LEVEL_DIFFICULTY,
+								default: level?.difficulty,
+							},
+						]}
+					/>
+				</FormModal>
+				{showConfetti && <Confetti />}
+			</LevelContext.Provider>
+		</StyledLevel>
 	);
-	/*
-	if (level instanceof LevelAliveModel) {
-		return (
-			<LevelAlive
-				initialCode={
-					initialProgressionCode || (level as LevelAliveModel).initialCode
-				}
-				setLevel={setLevel}
-				level={level as LevelAliveModel}
-				progression={progression}
-				setProgression={setProgression}
-				editMode={
-					props.editMode &&
-					user != null &&
-					level.creator != null &&
-					level.creator.id === user.id
-				}
-			></LevelAlive>
-		);
-	}
-
-	if (level instanceof LevelCodeModel) {
-		return (
-			<LevelCode
-				initialCode={
-					initialProgressionCode || (level as LevelCodeModel).initialCode
-				}
-				setLevel={setLevel}
-				level={level as LevelCodeModel}
-				progression={progression}
-				setProgression={setProgression}
-				editMode={
-					props.editMode &&
-					user != null &&
-					level.creator != null &&
-					level.creator.id === user.id
-				}
-			></LevelCode>
-		);
-	}
-
-	if (level instanceof LevelAIModel)
-		return (
-			<LevelAI
-				initialCode={
-					initialProgressionCode || (level as LevelAIModel).initialCode
-				}
-				setLevel={setLevel}
-				level={level as LevelAIModel}
-				progression={progression}
-				setProgression={setProgression}
-				editMode={
-					props.editMode &&
-					user != null &&
-					level.creator != null &&
-					level.creator.id === user.id
-				}
-			></LevelAI>
-		);
-
-	return <LoadingScreen></LoadingScreen>;
-	*/
 };
 
 export default Level;

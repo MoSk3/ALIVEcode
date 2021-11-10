@@ -1,5 +1,6 @@
 import { IoTProject } from "../../../../Models/Iot/IoTproject.entity";
 import Form from '../../../UtilsComponents/Form/Form';
+import { FORM_ACTION } from '../../../UtilsComponents/Form/formTypes';
 
 export const IoTprojectAddRouteForm = ({
 	project,
@@ -10,7 +11,7 @@ export const IoTprojectAddRouteForm = ({
 }) => {
 	return (
 		<Form
-			action="POST"
+			action={FORM_ACTION.POST}
 			name="create_iot_route"
 			onSubmit={onSubmit}
 			url={`iot/projects/${project.id}/routes`}

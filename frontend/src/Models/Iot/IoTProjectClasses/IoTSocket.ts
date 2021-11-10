@@ -9,23 +9,29 @@ export type IoTSocketUpdateRequest = {
 
 export class IoTSocket {
 	private socket: WebSocket;
-	private iotProject: IoTProject;
+	private id: string;
+	private layout: IoTProjectLayout;
+	private name: string;
 	private iotComponentManager: IoTComponentManager;
 	private onRender: (layout: IoTProjectLayout) => void;
 
 	constructor(
-		iotProject: IoTProject,
+		id: string,
+		layout: IoTProjectLayout,
+		name: string,
 		onRender: (layout: IoTProjectLayout) => void,
 	) {
-		this.iotProject = iotProject;
+		this.id = id;
+		this.layout = layout;
+		this.name = name;
 		this.onRender = onRender;
 
 		this.iotComponentManager = new IoTComponentManager(
-			this.iotProject.layout,
+			this.layout,
 			this.onComponentUpdate,
 			(components: Array<IoTComponent>) => {
-				this.iotProject.layout.components = components;
-				this.onRender(this.iotProject.layout);
+				this.layout.components = components;
+				this.onRender(this.layout);
 			},
 			this,
 		);
@@ -63,8 +69,8 @@ export class IoTSocket {
 				JSON.stringify({
 					event: 'connect_watcher',
 					data: {
-						iotProjectId: this.iotProject.id,
-						iotProjectName: this.iotProject.name,
+						iotProjectId: this.id,
+						iotProjectName: this.name,
 					},
 				}),
 			);

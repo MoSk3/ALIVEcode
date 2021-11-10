@@ -132,6 +132,9 @@ export class LevelExecutor {
 			return;
 		}
 		if (process.env.REACT_APP_DEBUG) console.log(data);
+		if (data.status === 'failed') {
+			return this.cmd?.error('Internal Error', 0);
+		}
 		if (data.status === 'ongoing') {
 			this.idToken = data.idToken;
 		}
@@ -211,6 +214,7 @@ export class LevelExecutor {
 				Array.isArray(action[PARAMS])
 			);
 		};
+		console.log(actions);
 		const formatedActions = actions.map(action => {
 			if (!hasValidDataStructure(action)) {
 				this.interrupt();

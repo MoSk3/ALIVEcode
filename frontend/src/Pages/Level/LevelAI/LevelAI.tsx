@@ -207,7 +207,7 @@ const LevelAI = ({ initialCode }: LevelAIProps) => {
 
 	return (
 		<>
-			<StyledAliveLevel editMode={editMode}>
+			<StyledAliveLevel>
 				<Row className="h-100">
 					{/* Left Side of screen */}
 					<Col className="left-col" md={6}>

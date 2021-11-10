@@ -1,6 +1,7 @@
 import { LevelExecutor } from "./AbstractLevelExecutor";
 import { AsScriptService } from './as-script.service';
 import { IoTProjectService } from '../iot/IoTproject/IoTproject.service';
+import { IoTProjectEntity } from '../iot/IoTproject/entities/IoTproject.entity';
 
 export default class LevelIoTBackendExecutor extends LevelExecutor {
   constructor(asScriptService: AsScriptService, iotProjectService: IoTProjectService, actions: any) {
@@ -15,13 +16,12 @@ export default class LevelIoTBackendExecutor extends LevelExecutor {
           apply: async params => {
             if (params.length >= 3 && typeof params[0] === 'string' && typeof params[1] === 'string') {
               const [projectId, id, value] = params;
-              let iotProject;
               try {
-                iotProject = await iotProjectService.findOne(projectId);
-              } catch {
+                await iotProjectService.updateComponent(projectId, id, value, true);
+              } catch (err) {
+                console.log(err);
                 return this.throwError('InvalidProjectIdError', 'Invalid project id');
               }
-              await iotProjectService.updateComponent(iotProject, id, value, true);
             }
           },
         },

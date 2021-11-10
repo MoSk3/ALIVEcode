@@ -9,11 +9,12 @@ import Link from '../../../UtilsComponents/Link/Link';
 import DateTime from 'react-datetime';
 import moment from 'moment';
 import AlertConfirm from '../../../UtilsComponents/Alert/AlertConfirm/AlertConfirm';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useAlert } from 'react-alert';
 import { useTranslation } from 'react-i18next';
 import { IoTObject } from '../../../../Models/Iot/IoTobject.entity';
 import api from '../../../../Models/api';
+import { IoTProjectContext } from '../../../../state/contexts/IoTProjectContext';
 
 const IoTComponentEditor = ({
 	component,
@@ -23,6 +24,7 @@ const IoTComponentEditor = ({
 	const [iotObjects, setIoTObjects] = useState<IoTObject[]>();
 	const alert = useAlert();
 	const { t } = useTranslation();
+	const { canEdit } = useContext(IoTProjectContext);
 
 	useEffect(() => {
 		if (!(component instanceof IoTButton)) return;
@@ -54,6 +56,7 @@ const IoTComponentEditor = ({
 						value={component.value}
 						className="mb-2"
 						onChange={(e: any) => component.setValue(e.target.value)}
+						disabled={!canEdit}
 					/>
 					<Form.Label>Minimum</Form.Label>
 					<Form.Control
@@ -63,6 +66,7 @@ const IoTComponentEditor = ({
 						onChange={(e: any) =>
 							component.setRange(e.target.value, component.getMax())
 						}
+						disabled={!canEdit}
 					/>
 					<Form.Label>Maximum</Form.Label>
 					<Form.Control
@@ -72,6 +76,7 @@ const IoTComponentEditor = ({
 						onChange={(e: any) =>
 							component.setRange(component.getMin(), e.target.value)
 						}
+						disabled={!canEdit}
 					/>
 					<Form.Label>Is percentage</Form.Label>
 					<Form.Check
@@ -81,6 +86,7 @@ const IoTComponentEditor = ({
 						onChange={(e: any) => {
 							component.setIsPercentage(e.target.checked);
 						}}
+						disabled={!canEdit}
 					/>
 				</>
 			);
@@ -92,6 +98,7 @@ const IoTComponentEditor = ({
 						defaultValue={component.value}
 						className="mb-2"
 						onChange={(e: any) => component.setValue(e.target.value)}
+						disabled={!canEdit}
 					/>
 					<hr />
 					<h3>On Click</h3>
@@ -100,6 +107,7 @@ const IoTComponentEditor = ({
 						as="select"
 						className="mb-2"
 						onChange={(e: any) => component.setTargetId(e.target.value)}
+						disabled={!canEdit}
 					>
 						{iotObjects?.map(obj => (
 							<option value={obj.id}>{obj.name}</option>
@@ -111,6 +119,7 @@ const IoTComponentEditor = ({
 						type="number"
 						defaultValue={component.actionId}
 						onChange={(e: any) => component.setActionId(e.target.value)}
+						disabled={!canEdit}
 					/>
 					<Form.Label>Action Data</Form.Label>
 					<Form.Control
@@ -118,6 +127,7 @@ const IoTComponentEditor = ({
 						className="mb-2"
 						defaultValue={component.actionData}
 						onChange={(e: any) => component.setActionData(e.target.value)}
+						disabled={!canEdit}
 					/>
 				</>
 			);
@@ -129,10 +139,15 @@ const IoTComponentEditor = ({
 						<>
 							<br />
 							<div className="mb-5">
-								No Logs,{' '}
-								<Link onClick={() => component.addLog('New log')} dark>
-									add one?
-								</Link>
+								No Logs
+								{canEdit && (
+									<>
+										,{' '}
+										<Link onClick={() => component.addLog('New log')} dark>
+											add one?
+										</Link>
+									</>
+								)}
 							</div>
 						</>
 					)}
@@ -146,6 +161,7 @@ const IoTComponentEditor = ({
 									onChange={(e: any) =>
 										component.updateLog(log, { ...log, text: e.target.value })
 									}
+									disabled={!canEdit}
 								/>
 							</Col>
 							<Col>
@@ -174,6 +190,7 @@ const IoTComponentEditor = ({
 								className="mt-2"
 								onClick={() => component.clearLogs()}
 								variant="danger"
+								disabled={!canEdit}
 							>
 								Clear logs
 							</Button>
@@ -190,16 +207,22 @@ const IoTComponentEditor = ({
 				defaultValue={component.name}
 				className="mb-2"
 				onChange={(e: any) => component.setName(e.target.value)}
+				disabled={!canEdit}
 			/>
 			<Form.Label>Id</Form.Label>
 			<Form.Control
 				defaultValue={component.id}
 				className="mb-2"
 				onChange={(e: any) => component.setId(e.target.value)}
+				disabled={!canEdit}
 			/>
 			{renderComponentSpecificFields()}
 			<IoTGenericComponent component={component}></IoTGenericComponent>
-			<Button variant="danger" onClick={() => setOpenDeleteMenu(true)}>
+			<Button
+				disabled={!canEdit}
+				variant="danger"
+				onClick={() => setOpenDeleteMenu(true)}
+			>
 				Delete component
 			</Button>
 			<AlertConfirm

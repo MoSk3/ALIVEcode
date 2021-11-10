@@ -82,7 +82,7 @@ const LevelAlive = ({ initialCode }: LevelAliveProps) => {
 	return (
 		<>
 			{level ? (
-				<StyledAliveLevel editMode={editMode}>
+				<StyledAliveLevel>
 					<Row className="h-100">
 						<Col className="left-col" md={6}>
 							<LevelToolsBar />

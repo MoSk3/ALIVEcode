@@ -20,7 +20,7 @@ import { IoTObject } from '../../../Models/Iot/IoTobject.entity';
 import { useForceUpdate } from '../../../state/hooks/useForceUpdate';
 import { useParams } from 'react-router';
 import IoTProjectPage from '../IoTProjectPage/IoTProjectPage';
-import IoTProjectComponent from '../IoTProjectComponent/IoTProjectComponent';
+import IoTLevel from '../../Level/LevelIoT/LevelIoT';
 
 /**
  * IoTProject. On this page are all the components essential in the functionning of an IoTProject.
@@ -30,21 +30,24 @@ import IoTProjectComponent from '../IoTProjectComponent/IoTProjectComponent';
  *
  * @author MoSk3
  */
-const IoTProject = ({ id: idProps }: IoTProjectProps) => {
-	const [project, setProject] = useState<ProjectModel>();
+const IoTProject = ({ level, initialCode, updateId }: IoTProjectProps) => {
+	const [project, setProject] = useState<ProjectModel | undefined>(
+		level?.project,
+	);
 	const history = useHistory();
 	const alert = useAlert();
 	const { t } = useTranslation();
 	const { user } = useContext(UserContext);
-	const { id: idParam } = useParams<{ id: string | undefined }>();
+	const { id: paramId } = useParams<{ id: string | undefined }>();
 	const forceUpdate = useForceUpdate();
 
-	const canEdit = user?.id === project?.creator?.id;
+	const id = level?.id ?? paramId;
 
-	const id = idProps ?? idParam;
+	const isLevel = level ? true : false;
+	const canEdit = user?.id === project?.creator?.id && !isLevel;
 
 	useEffect(() => {
-		if (!id) return;
+		if (!id || level?.project) return;
 		const getProject = async () => {
 			try {
 				const project: ProjectModel = await api.db.iot.projects.get({
@@ -63,7 +66,6 @@ const IoTProject = ({ id: idProps }: IoTProjectProps) => {
 
 	const addRoute = useCallback(
 		(route: IotRoute) => {
-			console.log('WAD');
 			if (!canEdit || !project) return;
 			project.routes.push(route);
 			setProject(project);
@@ -110,6 +112,8 @@ const IoTProject = ({ id: idProps }: IoTProjectProps) => {
 		return {
 			project: project ?? null,
 			canEdit,
+			updateId: updateId ? updateId : project ? project.id : '',
+			isLevel,
 			addRoute,
 			addIoTObject,
 			loadIoTObjects,
@@ -118,6 +122,8 @@ const IoTProject = ({ id: idProps }: IoTProjectProps) => {
 	}, [
 		project,
 		canEdit,
+		updateId,
+		isLevel,
 		addRoute,
 		addIoTObject,
 		loadIoTObjects,
@@ -130,7 +136,11 @@ const IoTProject = ({ id: idProps }: IoTProjectProps) => {
 
 	return (
 		<IoTProjectContext.Provider value={providerValues}>
-			{idProps ? <IoTProjectComponent /> : <IoTProjectPage />}
+			{level ? (
+				<IoTLevel initialCode={initialCode ?? ''} />
+			) : (
+				<IoTProjectPage />
+			)}
 		</IoTProjectContext.Provider>
 	);
 };

@@ -10,6 +10,9 @@ import { validUUID } from '../../../utils/types/validation.types';
 import { IoTProjectAddScriptDTO } from './dto/addScript.dto';
 import { AsScriptEntity } from '../../as-script/entities/as-script.entity';
 import { AsScriptService } from '../../as-script/as-script.service';
+import { LevelService } from '../../level/level.service';
+import { IoTLayoutManager } from './IoTLayoutManager';
+import { LevelIoTProgressionData, LevelProgressionEntity } from '../../level/entities/levelProgression.entity';
 
 @Injectable()
 export class IoTProjectService {
@@ -17,6 +20,8 @@ export class IoTProjectService {
     @InjectRepository(IoTProjectEntity) private projectRepository: Repository<IoTProjectEntity>,
     @InjectRepository(IoTRouteEntity) private routeRepository: Repository<IoTRouteEntity>,
     @InjectRepository(AsScriptEntity) private scriptRepo: Repository<AsScriptEntity>,
+    @InjectRepository(LevelProgressionEntity) private progressionRepo: Repository<LevelProgressionEntity>,
+    private levelService: LevelService,
     @Inject(forwardRef(() => AsScriptService)) private asScriptService: AsScriptService,
   ) {}
 
@@ -107,13 +112,30 @@ export class IoTProjectService {
     await this.asScriptService.compileBackend({ lines: route.asScript.content }, data);
   }
 
-  async updateComponent(project: IoTProjectEntity, componentId: string, value: any, sendUpdate = false): Promise<void> {
-    const layoutManager = project.getLayoutManager();
-    layoutManager.updateComponent(componentId, value);
-    await this.projectRepository.save(project);
+  async updateComponent(id: string, componentId: string, value: any, sendUpdate = false): Promise<void> {
+    if (id.includes('/')) {
+      const split = id.split('/');
+      if (split.length < 2) throw new HttpException('Bad Id', HttpStatus.BAD_REQUEST);
+      let progression;
+      try {
+        progression = await this.levelService.getIoTProgressionById(split[0], split[1]);
+      } catch (err) {
+        console.log(err);
+      }
+      const layoutManager = new IoTLayoutManager((progression.data as LevelIoTProgressionData).layout);
+      layoutManager.updateComponent(componentId, value);
+      await this.progressionRepo.save(progression);
+
+      //progression.level
+    } else {
+      const project = await this.findOne(id);
+      const layoutManager = project.getLayoutManager();
+      layoutManager.updateComponent(componentId, value);
+      await this.projectRepository.save(project);
+    }
 
     if (sendUpdate) {
-      const watchers = WatcherClient.getClientsByProject(project.id);
+      const watchers = WatcherClient.getClientsByProject(id);
 
       const data: IoTSocketUpdateRequestWatcher = {
         id: componentId,

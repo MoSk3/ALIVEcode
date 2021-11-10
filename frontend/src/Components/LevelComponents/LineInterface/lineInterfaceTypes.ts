@@ -48,7 +48,7 @@ export const StyledLineInterface = styled.div`
 		${({ theme }: { theme: Theme }) =>
 			theme.name === 'light'
 				? 'background-color: #13498F;'
-				: 'background-color: var(--primary-color);'}
+				: 'background-color: rgba(var(--primary-color-rgb), 0.8);'}
 	}
 	.ace-cobalt .ace_cursor {
 		color: var(--foreground-color);

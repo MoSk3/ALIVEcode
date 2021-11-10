@@ -8,18 +8,18 @@ import { Classroom } from './Classroom/classroom.entity';
 import { Professor, Student, User } from './User/user.entity';
 import { IoTProject, IoTProjectLayout } from './Iot/IoTproject.entity';
 import { IotRoute } from './Iot/IoTroute.entity';
-import { Level } from './Level/level.entity';
+import { Level, LEVEL_TYPE } from './Level/level.entity';
 import { LevelAlive } from './Level/levelAlive.entity';
 import { LevelCode } from './Level/levelCode.entity';
 import { LevelProgression } from './Level/levelProgression';
-import { BrowsingQuery } from '../Components/MainComponents/BrowsingMenu/browsingMenuTypes';
 import { LevelAI } from './Level/levelAI.entity';
 import { IoTObject } from './Iot/IoTobject.entity';
 import { QueryDTO } from '../../../backend/src/models/level/dto/query.dto';
-import { Activity, ActivityContent } from './Course/activity.entity';
+import { Activity } from './Course/activity.entity';
 import { Maintenance } from './Maintenance/maintenance.entity';
 import { CompileDTO } from './ASModels';
 import { AsScript } from './AsScript/as-script.entity';
+import { LevelIoT } from './Level/levelIoT.entity';
 
 type urlArgType<S extends string> = S extends `${infer _}:${infer A}/${infer B}`
 	? A | urlArgType<B>
@@ -132,9 +132,13 @@ const api = {
 			getClassrooms: apiGet('users/:id/classrooms', Classroom, true),
 			getCourses: apiGet('users/:id/courses', Course, true),
 			getLevels: apiGet('users/:id/levels', Level, true, level => {
-				if (level.layout) return plainToClass(LevelAlive, level);
-				else if (level.testCases) return plainToClass(LevelCode, level);
-				return plainToClass(Level, level);
+				if (level.type === LEVEL_TYPE.ALIVE)
+					return plainToClass(LevelAlive, level);
+				if (level.type === LEVEL_TYPE.CODE)
+					return plainToClass(LevelCode, level);
+				if (level.type === LEVEL_TYPE.AI) return plainToClass(LevelAI, level);
+				if (level.type === LEVEL_TYPE.IOT) return plainToClass(LevelIoT, level);
+				return plainToClass(LevelCode, level);
 			}),
 			createProfessor: apiCreate('users/professors', Professor),
 			createStudent: apiCreate('users/students', Student),
@@ -201,14 +205,22 @@ const api = {
 				save: apiUpdate('levels/:id/progressions/:userId', LevelProgression),
 			},
 			get: apiGet('levels/:id', Level, false, level => {
-				if (level.layout) return plainToClass(LevelAlive, level);
-				else if (level.testCases) return plainToClass(LevelCode, level);
-				return plainToClass(LevelAI, level);
+				if (level.type === LEVEL_TYPE.ALIVE)
+					return plainToClass(LevelAlive, level);
+				if (level.type === LEVEL_TYPE.CODE)
+					return plainToClass(LevelCode, level);
+				if (level.type === LEVEL_TYPE.AI) return plainToClass(LevelAI, level);
+				if (level.type === LEVEL_TYPE.IOT) return plainToClass(LevelIoT, level);
+				return plainToClass(LevelCode, level);
 			}),
 			update: apiUpdate('levels/:id', Level, level => {
-				if (level.layout) return plainToClass(LevelAlive, level);
-				else if (level.testCases) return plainToClass(LevelCode, level);
-				return plainToClass(LevelAI, level);
+				if (level.type === LEVEL_TYPE.ALIVE)
+					return plainToClass(LevelAlive, level);
+				if (level.type === LEVEL_TYPE.CODE)
+					return plainToClass(LevelCode, level);
+				if (level.type === LEVEL_TYPE.AI) return plainToClass(LevelAI, level);
+				if (level.type === LEVEL_TYPE.IOT) return plainToClass(LevelIoT, level);
+				return plainToClass(LevelCode, level);
 			}),
 			async query(body: QueryDTO) {
 				return (await axios.post('levels/query', body)).data.map((d: any) =>

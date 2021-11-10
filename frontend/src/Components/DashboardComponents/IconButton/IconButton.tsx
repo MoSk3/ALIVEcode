@@ -39,6 +39,14 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
 				className="icon-button"
 				ref={ref}
 			>
+				{props.children && (
+					<a
+						href={to}
+						style={{ margin: '2px', marginRight: '5px', cursor: 'pointer' }}
+					>
+						{props.children}
+					</a>
+				)}
 				<FontAwesomeIcon fixedWidth {...other} />
 			</StyledButton>
 		);

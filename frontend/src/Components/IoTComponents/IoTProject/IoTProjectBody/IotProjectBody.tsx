@@ -8,7 +8,7 @@ import {
 	useContext,
 } from 'react';
 import { IoTSocket } from '../../../../Models/Iot/IoTProjectClasses/IoTSocket';
-import { classToPlain } from 'class-transformer';
+import { classToPlain, plainToClass } from 'class-transformer';
 import { IoTComponent } from '../../../../Models/Iot/IoTProjectClasses/IoTComponent';
 import { Row, Container } from 'react-bootstrap';
 import api from '../../../../Models/api';
@@ -22,8 +22,12 @@ import { useAlert } from 'react-alert';
 import { useTranslation } from 'react-i18next';
 import { IoTProjectContext } from '../../../../state/contexts/IoTProjectContext';
 import LoadingScreen from '../../../UtilsComponents/LoadingScreen/LoadingScreen';
+import { LevelContext } from '../../../../state/contexts/LevelContext';
+import { LevelIoTProgressionData } from '../../../../Models/Level/levelProgression';
+import IconButton from '../../../DashboardComponents/IconButton/IconButton';
+import { faClipboard } from '@fortawesome/free-solid-svg-icons';
 
-const IoTProjectBody = () => {
+const IoTProjectBody = ({ noTopRow }: { noTopRow?: boolean }) => {
 	const [components, setComponents] = useState<Array<IoTComponent>>([]);
 	const [lastSaved, setLastSaved] = useState<number>(Date.now() - 4000);
 	const [editingComponent, setEditingComponent] = useState<IoTComponent>();
@@ -31,7 +35,8 @@ const IoTProjectBody = () => {
 	const saveTimeout = useRef<any>(null);
 	const alert = useAlert();
 	const { t } = useTranslation();
-	const { project, canEdit } = useContext(IoTProjectContext);
+	const { project, canEdit, updateId, isLevel } = useContext(IoTProjectContext);
+	const { progression } = useContext(LevelContext);
 
 	const saveComponents = useCallback(
 		async (components: Array<IoTComponent>) => {
@@ -72,7 +77,14 @@ const IoTProjectBody = () => {
 	const socket = useMemo(
 		() => {
 			if (!project) return;
-			return new IoTSocket(project, onLayoutChange);
+			const layout = isLevel
+				? plainToClass(
+						IoTProjectLayout,
+						(progression?.data as LevelIoTProgressionData).layout,
+				  )
+				: project.layout;
+
+			return new IoTSocket(updateId, layout, project.name, onLayoutChange);
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[],
@@ -95,15 +107,26 @@ const IoTProjectBody = () => {
 
 	if (!socket || !project) return <LoadingScreen />;
 	return (
-		<StyledIoTProjectBody>
+		<StyledIoTProjectBody noTopRow={noTopRow}>
 			<Container fluid>
 				<Row className="w-100 mb-3" style={{ justifyContent: 'center' }}>
-					<Button
-						variant="secondary"
-						onClick={() => setOpenComponentCreator(!openComponentCreator)}
+					{canEdit && (
+						<Button
+							variant="secondary"
+							onClick={() => setOpenComponentCreator(!openComponentCreator)}
+						>
+							Add a component
+						</Button>
+					)}
+					<IconButton
+						onClick={() => {
+							navigator.clipboard.writeText(updateId);
+							alert.success('Copied');
+						}}
+						icon={faClipboard}
 					>
-						Add a component
-					</Button>
+						Copy Reference Id
+					</IconButton>
 				</Row>
 				{getComponentsMatrix().map((row, idx) => (
 					<Row className="w-100" key={idx}>

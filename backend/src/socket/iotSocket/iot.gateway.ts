@@ -97,7 +97,7 @@ export class IoTGateway implements OnGatewayDisconnect, OnGatewayConnection, OnG
     const project = await this.iotProjectService.findOne(payload.projectId);
     if (!project) throw new WsException('No project with id');
 
-    await this.iotProjectService.updateComponent(project, payload.id, payload.value);
+    await this.iotProjectService.updateComponent(project.id, payload.id, payload.value);
 
     object.sendUpdate(payload);
   }
