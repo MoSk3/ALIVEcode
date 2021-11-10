@@ -369,7 +369,7 @@ public class Executeur {
         } else {
             // Si le code est different ou que la compilation est forcee, compiler les lignes
             //System.out.println(Arrays.toString(PreCompiler.preCompile(lignes)));
-            lignes = PreCompiler.preCompile(lignes, "\nafficher '[ex\u00E9cution termin\u00e9e]'");
+            lignes = PreCompiler.preCompile(lignes);
             return compiler(lignes);
         }
     }

@@ -1,9 +1,12 @@
 import styled from 'styled-components';
 import FillContainer from '../../../Components/UtilsComponents/FillContainer/FillContainer';
+import { LevelIoT } from '../../../Models/Level/levelIoT.entity';
 
 export type IoTProjectTabs = 'settings' | 'routes' | 'access';
 export interface IoTProjectProps {
-	id?: string;
+	level?: LevelIoT;
+	initialCode?: string;
+	updateId?: string;
 }
 
 export const StyledIoTProject = styled(FillContainer)`

@@ -1,10 +1,10 @@
 import styled from 'styled-components';
+import FillContainer from '../../../Components/UtilsComponents/FillContainer/FillContainer';
 
 export type IoTProjectTabs = 'settings' | 'routes' | 'access';
 
-export const StyledIoTProjectComponent = styled.div`
+export const StyledIoTLevel = styled(FillContainer)`
 	height: 600px;
-	border: 2px solid var(--bg-shade-four-color);
 
 	.project-container {
 		overflow-y: hidden;

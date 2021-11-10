@@ -4,6 +4,8 @@ export enum CompileStatus {
 }
 
 export class CompileDTO {
+	backendCompiling?: boolean;
+
 	lines?: string;
 
 	status?: CompileStatus;

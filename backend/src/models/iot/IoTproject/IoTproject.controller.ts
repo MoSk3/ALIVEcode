@@ -21,6 +21,7 @@ import { hasRole } from '../../user/auth';
 import { AddObjectDTO } from './dto/addObject.dto';
 import { IoTProjectService } from './IoTproject.service';
 import { IoTObjectService } from '../IoTobject/IoTobject.service';
+import { IoTProjectAddScriptDTO } from './dto/addScript.dto';
 
 @Controller('iot/projects')
 @UseInterceptors(DTOInterceptor)
@@ -134,5 +135,20 @@ export class IoTProjectController {
 
     const object = await this.IoTObjectService.findOne(addObjectDTO.id);
     return await this.IoTProjectService.addObject(project, object);
+  }
+
+  @Post(':id/as/create')
+  @Auth()
+  async addAndCreateScript(
+    @User() user: UserEntity,
+    @Param('id') id: string,
+    @Body() scriptDTO: IoTProjectAddScriptDTO,
+  ) {
+    const project = await this.IoTProjectService.findOne(id);
+
+    if (project.creator.id !== id && !hasRole(user, Role.STAFF))
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+
+    return await this.IoTProjectService.addScript(project, user, scriptDTO);
   }
 }

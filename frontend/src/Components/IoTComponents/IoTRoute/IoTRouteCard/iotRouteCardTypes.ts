@@ -3,7 +3,6 @@ import styled from 'styled-components';
 
 export type IoTRouteCardProps = {
 	route: IotRoute;
-	key: string | number;
 };
 
 export const StyledRouteCard = styled.div`

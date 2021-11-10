@@ -5,7 +5,8 @@ import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/theme-cobalt';
 import './mode-alivescript';
 import EditorTab from '../../AliveScriptComponents/EditorTab/EditorTab';
-import { useState, useRef, memo } from 'react';
+import { useState, useRef, memo, useContext } from 'react';
+import { ThemeContext } from '../../../state/contexts/ThemeContext';
 
 /**
  * Line interface to write the code on
@@ -38,6 +39,7 @@ const LineInterface = memo(
 		});
 		/* Content for a single tab interface */
 		const [content, setContent] = useState<string>(initialContent ?? '');
+		const { theme } = useContext(ThemeContext);
 
 		const ref = useRef<AceEditor>(null);
 
@@ -56,7 +58,7 @@ const LineInterface = memo(
 		};
 
 		return (
-			<StyledLineInterface>
+			<StyledLineInterface theme={theme}>
 				{hasTabs && (
 					<div className="editors-tab w-100">
 						{tabs.map((t, idx) => (

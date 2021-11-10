@@ -20,7 +20,7 @@ public class PreCompiler {
     );
 
 
-    public static String[] preCompile(String[] lignes, String msgFin) {
+    public static String[] preCompile(String[] lignes) {
         StringBuilder lignesFinales = new StringBuilder();
 
         boolean multiligne = false;
@@ -70,9 +70,6 @@ public class PreCompiler {
             // adds the line to the final lines
             lignesFinales.append(ligne);
         }
-
-        // adds a line at the end
-        lignesFinales.append(msgFin);
 
         // split newlines of the final String to transform it into a String[]
         return Stream.of(lignesFinales.toString().split("\n"))

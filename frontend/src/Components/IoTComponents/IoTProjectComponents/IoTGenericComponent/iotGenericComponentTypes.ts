@@ -32,10 +32,9 @@ export const StyledIoTGenericComponent = styled(Col)`
 		padding: 10px;
 	}
 
-	.edit-component-btn {
+	.component-btn {
 		position: absolute;
 		top: 5px;
-		left: 5px;
 		background-color: var(--bg-shade-three-color);
 		padding: 8px;
 		border-radius: 5px;
@@ -44,8 +43,16 @@ export const StyledIoTGenericComponent = styled(Col)`
 		${({ ishovering }: any) => (ishovering ? 'opacity: 1;' : 'opacity: 0;')}
 	}
 
-	.edit-component-btn:hover {
+	.component-btn:hover {
 		background-color: var(--contrast-color);
+	}
+
+	.edit-component-btn {
+		left: 5px;
+	}
+
+	.copyid-component-btn {
+		left: 40px;
 	}
 
 	.component-name {

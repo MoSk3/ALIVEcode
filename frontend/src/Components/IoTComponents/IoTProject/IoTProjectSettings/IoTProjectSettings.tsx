@@ -5,6 +5,7 @@ import {
 	IOTPROJECT_ACCESS,
 	IOTPROJECT_INTERACT_RIGHTS,
 } from '../../../../Models/Iot/IoTproject.entity';
+import { FORM_ACTION } from '../../../UtilsComponents/Form/formTypes';
 
 export const IoTProjectSettings = () => {
 	const { project, canEdit, updateProjectData } = useContext(IoTProjectContext);
@@ -20,7 +21,7 @@ export const IoTProjectSettings = () => {
 					updateProjectData(name, desc, access, interactRights);
 				}}
 				disabled={!canEdit}
-				action="PATCH"
+				action={FORM_ACTION.PATCH}
 				name="iot_project"
 				url={`iot/projects/${project.id}`}
 				inputGroups={[

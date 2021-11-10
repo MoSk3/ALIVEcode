@@ -12,6 +12,12 @@ export enum IOTPROJECT_INTERACT_RIGHTS {
   PRIVATE = 'PR',
 }
 
+export enum IOT_COMPONENT_TYPE {
+  BUTTON,
+  PROGRESS_BAR,
+  LOGS,
+}
+
 export enum IOTPROJECT_ACCESS {
   PUBLIC = 'PU', // can be found via a search
   UNLISTED = 'UN', // must be shared via a url
@@ -22,6 +28,7 @@ export enum IOTPROJECT_ACCESS {
 type IoTComponent = {
   value: any;
   id: string;
+  type: IOT_COMPONENT_TYPE;
 };
 
 export class IoTProjectLayout {

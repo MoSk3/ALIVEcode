@@ -18,6 +18,12 @@ export type IoTSocketUpdateRequest = {
   projectId: string;
 };
 
+export type IoTSocketRouteRequest = {
+  routePath: string;
+  data: any;
+  projectId: string;
+};
+
 export type IoTSocketUpdateRequestWatcher = {
   id: string;
   value: any;

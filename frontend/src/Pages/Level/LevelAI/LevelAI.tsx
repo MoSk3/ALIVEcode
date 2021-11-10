@@ -1,5 +1,5 @@
 import { LevelAIProps, StyledAliveLevel } from './levelAITypes';
-import { useEffect, useState, useContext, useRef } from 'react';
+import { useEffect, useState, useContext, useRef, useMemo } from 'react';
 import LineInterface from '../../../Components/LevelComponents/LineInterface/LineInterface';
 import { UserContext } from '../../../state/contexts/UserContext';
 import { Row, Col } from 'react-bootstrap';
@@ -51,6 +51,25 @@ const LevelAI = ({ initialCode }: LevelAIProps) => {
 	const forceUpdate = useForceUpdate();
 	const [cmdRef, cmd] = useCmd();
 
+	executor.current = useMemo(
+		() =>
+			(executor.current = new LevelAIExecutor(
+				{
+					createAndShowReg,
+					showDataCloud,
+					resetGraph,
+					optimizeRegression,
+					evaluate: (x: number) => evaluate(x),
+					costMSE: () => costMSE(),
+					showRegression,
+				},
+				level.name,
+				askForUserInput,
+			)),
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[level?.id, user],
+	);
+
 	const lineInterfaceContentChanges = (content: any) => {
 		if (executor.current) executor.current.lineInterfaceContent = content;
 		if (!editMode && progression) {
@@ -62,28 +81,10 @@ const LevelAI = ({ initialCode }: LevelAIProps) => {
 	};
 
 	useEffect(() => {
-		if (!level) return;
-		executor.current = new LevelAIExecutor(
-			{
-				createAndShowReg,
-				showDataCloud,
-				resetGraph,
-				optimizeRegression,
-				evaluate: (x: number) => evaluate(x),
-				costMSE: () => costMSE(),
-				showRegression,
-			},
-			level.name,
-			askForUserInput,
-		);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [user, level.id]);
-
-	useEffect(() => {
 		if (!cmd) return forceUpdate();
 		if (executor.current) executor.current.cmd = cmd;
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [cmd, executor]);
+	}, [cmd]);
 
 	//Set the data for the level
 	const [data] = useState(dataAI);
@@ -207,7 +208,7 @@ const LevelAI = ({ initialCode }: LevelAIProps) => {
 
 	return (
 		<>
-			<StyledAliveLevel editMode={editMode}>
+			<StyledAliveLevel>
 				<Row className="h-100">
 					{/* Left Side of screen */}
 					<Col className="left-col" md={6}>

@@ -5,10 +5,11 @@ import IoTProgressBarComponent from '../IoTProgressBarComponent/IoTProgressBarCo
 import IoTLogsComponent from '../IoTLogsComponent/IoTLogsComponent';
 import { IoTLogs } from '../../../../Models/Iot/IoTProjectClasses/Components/IoTLogs';
 import { IoTProgressBar } from '../../../../Models/Iot/IoTProjectClasses/Components/IoTProgressBar';
-import { faWrench } from '@fortawesome/free-solid-svg-icons';
+import { faClipboard, faWrench } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
 import { IoTButton } from '../../../../Models/Iot/IoTProjectClasses/Components/IoTButton';
+import { useAlert } from 'react-alert';
 
 const IoTGenericComponent = ({
 	component,
@@ -17,6 +18,7 @@ const IoTGenericComponent = ({
 	setEditingComponent,
 }: IoTGenericComponentProps) => {
 	const [isHovering, setIsHovering] = useState(false);
+	const alert = useAlert();
 
 	const renderSpecificComponent = (): React.ReactNode => {
 		switch (component.type) {
@@ -45,11 +47,21 @@ const IoTGenericComponent = ({
 				{setEditingComponent && (
 					<FontAwesomeIcon
 						onClick={() => setEditingComponent(component)}
-						className="edit-component-btn"
+						className="component-btn edit-component-btn"
 						icon={faWrench}
 						size="2x"
 					/>
 				)}
+				<FontAwesomeIcon
+					onClick={() => {
+						if (!component.id) return alert.error('The component has no id');
+						navigator.clipboard.writeText(component.id);
+						alert.success('Copied');
+					}}
+					className="component-btn copyid-component-btn"
+					icon={faClipboard}
+					size="2x"
+				/>
 			</div>
 		</StyledIoTGenericComponent>
 	);

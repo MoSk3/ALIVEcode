@@ -89,7 +89,7 @@ const IoTProjectPage = () => {
 				</Col>
 				<Col sm="8" id="project-body">
 					<Row className="project-top-row"></Row>
-					<IoTProjectBody project={project} />
+					<IoTProjectBody />
 				</Col>
 			</Row>
 		</StyledIoTProject>

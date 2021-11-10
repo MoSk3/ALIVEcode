@@ -2,7 +2,12 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Form as BootForm, InputGroup } from 'react-bootstrap';
 import Button from '../Button/Button';
-import { FormProps, InputGroup as InputGroupModel, matches } from './formTypes';
+import {
+	FormProps,
+	FORM_ACTION,
+	InputGroup as InputGroupModel,
+	matches,
+} from './formTypes';
 import axios, { AxiosError } from 'axios';
 import { useAlert } from 'react-alert';
 import { prettyField } from '../../../Types/formatting';
@@ -84,13 +89,13 @@ const Form = (props: FormProps) => {
 		try {
 			let res;
 			switch (props.action) {
-				case 'POST':
+				case FORM_ACTION.POST:
 					res = await axios.post(props.url, formValues);
 					break;
-				case 'PATCH':
+				case FORM_ACTION.PATCH:
 					res = await axios.patch(props.url, formValues);
 					break;
-				case 'DELETE':
+				case FORM_ACTION.DELETE:
 					res = await axios.delete(props.url, formValues);
 					break;
 			}
@@ -146,9 +151,11 @@ const Form = (props: FormProps) => {
 				return (
 					<BootForm.Control
 						{...defaultInputOptions}
+						defaultValue={g.default ?? ''}
 						as="select"
 						{...register(g.name, registerOptions)}
 					>
+						<option value=""></option>
 						{Array.isArray(g.selectOptions)
 							? g.selectOptions?.map((opt: any, idx) => {
 									if ('display' in opt && 'value' in opt) {
@@ -246,7 +253,7 @@ const Form = (props: FormProps) => {
 				</BootForm.Group>
 			))}
 			<Button
-				variant={props.action === 'DELETE' ? 'danger' : 'primary'}
+				variant={props.action === FORM_ACTION.DELETE ? 'danger' : 'primary'}
 				type="submit"
 				disabled={props.disabled}
 			>

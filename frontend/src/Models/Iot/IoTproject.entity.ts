@@ -29,21 +29,11 @@ export enum IOTPROJECT_ACCESS {
 }
 
 export class IoTProjectLayout {
-	components: Array<IoTComponent>;
-}
-export class IoTProject extends CreatedByUser {
-	creator: User;
-
-	@Transform(({ value, type }) => {
-		if (
-			type !== TransformationType.PLAIN_TO_CLASS ||
-			!value ||
-			!value.components
-		) {
-			return value;
+	@Transform(({ value: components, type }) => {
+		if (type !== TransformationType.PLAIN_TO_CLASS || !components) {
+			return components;
 		}
-
-		value.components = value.components.map((comp: IoTComponent) => {
+		components = components.map((comp: IoTComponent) => {
 			if (comp.type === IOT_COMPONENT_TYPE.BUTTON)
 				return plainToClass(IoTButton, comp);
 			if (comp.type === IOT_COMPONENT_TYPE.PROGRESS_BAR)
@@ -54,11 +44,15 @@ export class IoTProject extends CreatedByUser {
 			return undefined;
 		});
 
-		value.components = value.components.filter(
-			(c: IoTComponent | undefined) => c != null,
-		);
-		return value;
+		components = components.filter((c: IoTComponent | undefined) => c != null);
+		return components;
 	})
+	components: Array<IoTComponent>;
+}
+export class IoTProject extends CreatedByUser {
+	creator: User;
+
+	@Type(() => IoTProjectLayout)
 	layout: IoTProjectLayout;
 
 	@Type(() => IoTObject)

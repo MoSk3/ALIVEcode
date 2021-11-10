@@ -1,4 +1,3 @@
-import { Type } from "class-transformer";
 import { IsNotEmpty, IsEmpty } from 'class-validator';
 import { Column, Entity, ManyToOne, ManyToMany } from 'typeorm';
 import { CreatedByUser } from '../../../../generics/entities/createdByUser.entity';

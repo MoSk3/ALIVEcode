@@ -1,5 +1,5 @@
 import { LevelAliveProps, StyledAliveLevel } from './levelAliveTypes';
-import { useEffect, useContext } from 'react';
+import { useEffect, useContext, useMemo } from 'react';
 import LineInterface from '../../../Components/LevelComponents/LineInterface/LineInterface';
 import { UserContext } from '../../../state/contexts/UserContext';
 import Simulation from '../../../Components/LevelComponents/Simulation/Simulation';
@@ -48,6 +48,18 @@ const LevelAlive = ({ initialCode }: LevelAliveProps) => {
 	const [cmdRef, cmd] = useCmd();
 	const alert = useAlert();
 
+	executor.current = useMemo(
+		() =>
+			(executor.current = new LevelAliveExecutor(
+				level.name,
+				editMode,
+				playSocket,
+				askForUserInput,
+			)),
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[level?.id, user],
+	);
+
 	const lineInterfaceContentChanges = (content: any) => {
 		if (executor.current) executor.current.lineInterfaceContent = content;
 		if (!editMode && progression) {
@@ -59,30 +71,17 @@ const LevelAlive = ({ initialCode }: LevelAliveProps) => {
 	};
 
 	useEffect(() => {
-		if (!level) return;
-		executor.current = new LevelAliveExecutor(
-			level.name,
-			editMode,
-			playSocket,
-			askForUserInput,
-		);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [user, level.id]);
-
-	console.log(cmd);
-
-	useEffect(() => {
 		if (!cmd) return forceUpdate();
 		if (executor.current) executor.current.cmd = cmd;
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [cmd, executor]);
+	}, [cmd]);
 
 	if (!level) return <LoadingScreen></LoadingScreen>;
 
 	return (
 		<>
 			{level ? (
-				<StyledAliveLevel editMode={editMode}>
+				<StyledAliveLevel>
 					<Row className="h-100">
 						<Col className="left-col" md={6}>
 							<LevelToolsBar />

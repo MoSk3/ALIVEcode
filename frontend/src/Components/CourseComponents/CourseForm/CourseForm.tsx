@@ -11,6 +11,7 @@ import {
 	COURSE_ACCESS,
 	Course,
 } from '../../../Models/Course/course.entity';
+import { FORM_ACTION } from '../../UtilsComponents/Form/formTypes';
 
 /**
  * Form that creates a new course in the db and navigates to it
@@ -36,7 +37,7 @@ const CourseForm = () => {
 				}}
 				name="course"
 				url="courses"
-				action="POST"
+				action={FORM_ACTION.POST}
 				alterFormValues={formValues => {
 					console.log(formValues);
 					if (!classroom) return { course: formValues };

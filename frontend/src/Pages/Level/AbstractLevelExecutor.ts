@@ -10,11 +10,31 @@ export class LevelExecutor {
 	public execution: boolean = false;
 	public onToggleExecution?: (exec: any) => void;
 	private idToken: string;
+	private backendCompiling = false;
 	private registeredActions: { [actionId: number]: typeAction } = {
 		0: {
 			label: 'Stop Execution',
 			type: 'NORMAL',
-			apply: () => {},
+			apply: () => {
+				if (this.cmd) {
+					this.cmd.print('[exécution terminée]');
+				}
+			},
+		},
+		400: {
+			label: 'Error',
+			type: 'NORMAL',
+			apply: params => {
+				if (
+					params.length >= 3 &&
+					typeof params[0] === 'string' &&
+					typeof params[1] === 'string' &&
+					typeof params[2] === 'number'
+				)
+					if (this.cmd) {
+						this.cmd.error(`${params[0]}: ${params[1]}`, params[2]);
+					}
+			},
 		},
 	};
 
@@ -37,7 +57,10 @@ export class LevelExecutor {
 
 	protected async sendDataToAsServer(data: CompileDTO) {
 		try {
-			return await api.as.compile(data);
+			return await api.as.compile({
+				...data,
+				backendCompiling: this.backendCompiling,
+			});
 		} catch {
 			this.cmd?.error(
 				"Une erreur inconnue est survenue. Vérifiez pour des erreurs dans votre code, sinon, les services d'alivescript sont hors-ligne.",
@@ -67,6 +90,7 @@ export class LevelExecutor {
 	}
 
 	public stop() {
+		console.log('STOP');
 		this._beforeStop && this._beforeStop();
 		this.execution && this.onToggleExecution && this.onToggleExecution(this);
 		// Clear all the timouts of the execution
@@ -108,6 +132,9 @@ export class LevelExecutor {
 			return;
 		}
 		if (process.env.REACT_APP_DEBUG) console.log(data);
+		if (data.status === 'failed') {
+			return this.cmd?.error('Internal Error', 0);
+		}
 		if (data.status === 'ongoing') {
 			this.idToken = data.idToken;
 		}
@@ -149,13 +176,15 @@ export class LevelExecutor {
 			next: async () => {
 				if (i >= 0) {
 					const action = actions[i];
-					const performedAction = this.registeredActions[action.id];
-					if (performedAction.type === 'GET') {
-						const data = await this.sendDataToAsServer({
-							idToken: this.idToken,
-							responseData: response,
-						});
-						return this.execute(data.result);
+					if (action.id in this.registeredActions) {
+						const performedAction = this.registeredActions[action.id];
+						if (performedAction.type === 'GET') {
+							const data = await this.sendDataToAsServer({
+								idToken: this.idToken,
+								responseData: response,
+							});
+							return this.execute(data.result);
+						}
 					}
 				}
 				i++;
@@ -185,6 +214,7 @@ export class LevelExecutor {
 				Array.isArray(action[PARAMS])
 			);
 		};
+		console.log(actions);
 		const formatedActions = actions.map(action => {
 			if (!hasValidDataStructure(action)) {
 				this.interrupt();
@@ -199,6 +229,10 @@ export class LevelExecutor {
 
 		this.current_execution = this.perform_actions(formatedActions);
 		this.current_execution.next();
+	}
+
+	public setBackendCompiling(state: boolean) {
+		this.backendCompiling = state;
 	}
 
 	public wait(callback: () => void, duration: number) {
