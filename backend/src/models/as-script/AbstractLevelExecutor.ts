@@ -121,7 +121,7 @@ export class LevelExecutor {
       const action = actions[index];
       const performedAction = this.registeredActions[action.id];
       if (!(action.id in this.registeredActions)) {
-        console.error(`The action id: ${action.id} is not in the registered actions`);
+        //console.error(`The action id: ${action.id} is not in the registered actions`);
         return await this.perform_next();
       }
       await performedAction.apply(action.params, action.dodo, response);

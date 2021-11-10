@@ -1,5 +1,5 @@
 
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useMemo } from 'react';
 import LoadingScreen from '../../../Components/UtilsComponents/LoadingScreen/LoadingScreen';
 import { Col, Row } from 'react-bootstrap';
 import IoTProjectBody from '../../../Components/IoTComponents/IoTProject/IoTProjectBody/IotProjectBody';
@@ -42,33 +42,32 @@ const IoTLevel = ({ initialCode }: { initialCode: string }) => {
 	const executor =
 		executorUntyped as React.MutableRefObject<LevelCodeExecutor | null>;
 
-	console.log(level.id + '/' + progression?.id);
-
 	const forceUpdate = useForceUpdate();
 	const [cmdRef, cmd] = useCmd();
 
+	executor.current = useMemo(
+		() =>
+			(executor.current = new LevelCodeExecutor(level.name, askForUserInput)),
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[level?.id, user],
+	);
+
 	const lineInterfaceContentChanges = (content: any) => {
+		console.log(executor.current);
 		if (executor.current) executor.current.lineInterfaceContent = content;
 		if (!editMode && progression) {
 			progression.data.code = content;
 			const updatedProgression = progression;
-			console.log(updatedProgression.data.code);
 			setProgression(updatedProgression);
 			saveProgressionTimed();
 		}
 	};
 
 	useEffect(() => {
-		if (!level) return;
-		executor.current = new LevelCodeExecutor(level.name, askForUserInput);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [user, level?.id]);
-
-	useEffect(() => {
 		if (!cmd) return forceUpdate();
 		if (executor.current) executor.current.cmd = cmd;
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [cmd, executor]);
+	}, [cmd]);
 
 	if (!level || !project) return <LoadingScreen></LoadingScreen>;
 

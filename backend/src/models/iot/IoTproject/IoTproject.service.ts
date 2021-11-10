@@ -109,6 +109,7 @@ export class IoTProjectService {
   }
 
   async sendRoute(route: IoTRouteEntity, data: any) {
+    console.log('SENDING ROUTE');
     await this.asScriptService.compileBackend({ lines: route.asScript.content }, data);
   }
 

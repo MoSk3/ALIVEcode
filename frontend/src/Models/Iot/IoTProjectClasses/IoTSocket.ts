@@ -1,4 +1,4 @@
-import { IoTProject, IoTProjectLayout } from '../IoTproject.entity';
+import { IoTProjectLayout } from '../IoTproject.entity';
 import { IoTComponentManager } from './IoTComponentManager';
 import { IoTComponent } from './IoTComponent';
 

@@ -1,4 +1,4 @@
-import { useEffect, useContext } from 'react';
+import { useEffect, useContext, useMemo } from 'react';
 import LineInterface from '../../../Components/LevelComponents/LineInterface/LineInterface';
 import { UserContext } from '../../../state/contexts/UserContext';
 import { Row, Col } from 'react-bootstrap';
@@ -43,6 +43,13 @@ const LevelCode = ({ initialCode }: LevelCodeProps) => {
 	const forceUpdate = useForceUpdate();
 	const [cmdRef, cmd] = useCmd();
 
+	executor.current = useMemo(
+		() =>
+			(executor.current = new LevelCodeExecutor(level.name, askForUserInput)),
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[level?.id, user],
+	);
+
 	const lineInterfaceContentChanges = (content: any) => {
 		if (executor.current) executor.current.lineInterfaceContent = content;
 		if (!editMode && progression) {
@@ -54,16 +61,10 @@ const LevelCode = ({ initialCode }: LevelCodeProps) => {
 	};
 
 	useEffect(() => {
-		if (!level) return;
-		executor.current = new LevelCodeExecutor(level.name, askForUserInput);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [user, level.id]);
-
-	useEffect(() => {
 		if (!cmd) return forceUpdate();
 		if (executor.current) executor.current.cmd = cmd;
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [cmd, executor]);
+	}, [cmd]);
 
 	if (!level) return <LoadingScreen></LoadingScreen>;
 

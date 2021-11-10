@@ -1,7 +1,6 @@
 import { LevelExecutor } from "./AbstractLevelExecutor";
 import { AsScriptService } from './as-script.service';
 import { IoTProjectService } from '../iot/IoTproject/IoTproject.service';
-import { IoTProjectEntity } from '../iot/IoTproject/entities/IoTproject.entity';
 
 export default class LevelIoTBackendExecutor extends LevelExecutor {
   constructor(asScriptService: AsScriptService, iotProjectService: IoTProjectService, actions: any) {
@@ -22,6 +21,18 @@ export default class LevelIoTBackendExecutor extends LevelExecutor {
                 console.log(err);
                 return this.throwError('InvalidProjectIdError', 'Invalid project id');
               }
+            }
+          },
+        },
+      },
+      {
+        actionId: 400,
+        action: {
+          label: 'erreur',
+          type: 'NORMAL',
+          apply: async params => {
+            if (params.length >= 3) {
+              console.log('Ligne#' + params[2] + ' | ' + params[0] + ': ' + params[1]);
             }
           },
         },
