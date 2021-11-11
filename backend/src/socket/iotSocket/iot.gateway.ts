@@ -22,6 +22,7 @@ import {
   ObjectClientConnectPayload,
   ObjectClient,
 } from './iotSocket.types';
+import { IOTPROJECT_INTERACT_RIGHTS } from '../../models/iot/IoTproject/entities/IoTproject.entity';
 
 @UseInterceptors(DTOInterceptor)
 @WebSocketGateway(8881)
@@ -93,10 +94,12 @@ export class IoTGateway implements OnGatewayDisconnect, OnGatewayConnection, OnG
     if (!object) throw new WsException('Forbidden');
 
     if (!payload.projectId.includes('/')) {
-      if (!object.hasProjectRights(payload.projectId)) throw new WsException('Forbidden');
-
       const project = await this.iotProjectService.findOne(payload.projectId);
       if (!project) throw new WsException('No project with id');
+
+      if (project.interactRights !== IOTPROJECT_INTERACT_RIGHTS.ANYONE && !object.hasProjectRights(project.id))
+        throw new WsException('Forbidden');
+
       await this.iotProjectService.updateComponent(project.id, payload.id, payload.value);
     } else {
       await this.iotProjectService.updateComponent(payload.projectId, payload.id, payload.value);
