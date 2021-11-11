@@ -128,7 +128,11 @@ export class IoTGateway implements OnGatewayDisconnect, OnGatewayConnection, OnG
     const object = ObjectClient.getClientBySocket(socket);
     if (!object) throw new WsException('Forbidden');
 
-    if (!object.hasProjectRights(payload.projectId)) throw new WsException('Forbidden');
+    const project = await this.iotProjectService.findOne(payload.projectId);
+    if (!project) throw new WsException('No project with id');
+
+    if (project.interactRights !== IOTPROJECT_INTERACT_RIGHTS.ANYONE && !object.hasProjectRights(payload.projectId))
+      throw new WsException('Forbidden');
 
     const { route } = await this.iotProjectService.findOneWithRoute(payload.projectId, payload.routePath);
 
