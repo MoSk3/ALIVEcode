@@ -183,10 +183,10 @@ const api = {
 		},
 		quiz: {
 			all:  apiGet('/quizzes', Quiz, true),
+			categories: {
+				all: apiGet('/categories-quiz', Category, true),
+			}
 		},
-		categories: {
-			all: apiGet('/categories-quiz', Category, true),
-		}
 	},
 };
 
