@@ -185,6 +185,7 @@ const api = {
 			all:  apiGet('/quizzes', Quiz, true),
 			categories: {
 				all: apiGet('/categories-quiz', Category, true),
+				one: apiGet('/categories-quiz/:id', Category, false),
 			}
 		},
 	},

@@ -1,9 +1,32 @@
-import { Button, Card, Col, Container, Form, Row, Table } from "react-bootstrap";
+import { plainToClass } from "class-transformer";
+import { useEffect, useState } from "react";
+import {
+	Button,
+	Card,
+	Col,
+	Container,
+	Form,
+	Row,
+	Table,
+} from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import CenteredContainer from '../../../Components/UtilsComponents/CenteredContainer/CenteredContainer';
+import api from '../../../Models/api';
+import { Category } from '../../../Models/Quiz/categories-quiz.entity';
 import { QuizCategoryProps } from './Category';
 
 const QuizCategory = (props: QuizCategoryProps) => {
+	const [category, setCategory] = useState<Category>();
+	useEffect(() => {
+		const getCategory = async () => {
+			const data = await api.db.quiz.categories.one({
+				id: props.match.params.id,
+			});
+			setCategory(plainToClass(Category, data));
+		};
+		getCategory();
+	}, [props.match.params.id]);
+
 	return (
 		<div>
 			<CenteredContainer
@@ -16,20 +39,14 @@ const QuizCategory = (props: QuizCategoryProps) => {
 						{/*
                             Hardcoded text will be replaced once backend is ready 
                          */}
-						<Card.Title>Pseudo Code </Card.Title>
-						<Card.Text>
-							Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ratione
-							maiores vel, minima nemo neque incidunt? Excepturi ducimus
-							accusantium est accusamus fugiat. Nulla atque iste impedit
-							tenetur, optio libero recusandae ex.
-						</Card.Text>
+						<Card.Title>{category?.name}</Card.Title>
 					</Card.Body>
 				</Card>
 				<Card>
 					<Card.Title>
 						<Container>
 							<Row>
-								<Col>15 Quiz</Col>
+								<Col>{category?.quizzes.length} Quiz</Col>
 								<Col></Col>
 								<Col>
 									<Button>Ajouter un Quiz TODO</Button>
@@ -47,7 +64,6 @@ const QuizCategory = (props: QuizCategoryProps) => {
 					<Table striped bordered hover>
 						<thead>
 							<tr>
-								<th>Validation</th>
 								<th>Nom</th>
 								<th> # de Questions</th>
 								<th>Auteur</th>
@@ -55,35 +71,17 @@ const QuizCategory = (props: QuizCategoryProps) => {
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
-								<td>Yes</td>
-								<td>Les fonctions</td>
-								<td>20</td>
-								<td>Bob</td>
-								<td>11-09-2021</td>
-								<td>
-									<Link
-										to="/quiz/:id/create-question"
-										className="btn btn-primary"
-									>
-										Add a Question
-									</Link>
-								</td>
-							</tr>
-							<tr>
-								<td>Yes</td>
-								<td>Les fonctions</td>
-								<td>20</td>
-								<td>Bob</td>
-								<td>11-09-2021</td>
-							</tr>
-							<tr>
-								<td>Yes</td>
-								<td>Les fonctions</td>
-								<td>20</td>
-								<td>Bob</td>
-								<td>11-09-2021</td>
-							</tr>
+							{category?.quizzes.map(quiz => {
+								return (
+									<tr>
+										<td>{quiz.name}</td>
+										<td>{quiz.questions.length}</td>
+										<td>TODO</td>
+										<td>TODO</td>
+										<td>TODO Ajouter question</td>
+									</tr>
+								);
+							})}
 						</tbody>
 					</Table>
 				</Card>

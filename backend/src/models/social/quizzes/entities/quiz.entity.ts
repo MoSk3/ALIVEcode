@@ -17,7 +17,7 @@ export class Quiz {
     name : string;
 
 
-    @ManyToOne(() => UserEntity, user => user.quiz, { eager: true })
+    @ManyToOne(() => UserEntity, user => user.quiz)
     @JoinColumn()
     user: UserEntity;
 
@@ -25,7 +25,7 @@ export class Quiz {
     @JoinColumn()
     reward : Reward;
 
-    @OneToMany(() => Question, question => question.quiz)
+    @OneToMany(() => Question, question => question.quiz, {eager: true})
     @JoinColumn()
     questions: Question[];
 
