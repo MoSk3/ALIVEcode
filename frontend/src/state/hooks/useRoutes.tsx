@@ -30,6 +30,8 @@ import { useHistory } from 'react-router';
 import ASDocs from '../../Components/AliveScriptComponents/ASDocs/ASDocs';
 import { MaintenanceError } from '../../Pages/Errors/MaintenanceError/MaintenanceError';
 import MaintenanceMenu from '../../Pages/SiteStatus/MaintenanceMenu/MaintenanceMenu';
+import ASBuiltinsDocs from '../../Components/AliveScriptComponents/ASDocs/ASBuiltinsDocs';
+import { LEVEL_TYPE } from '../../Models/Level/level.entity';
 import Forum from '../../Pages/Forum/Forum';
 import QuizHome from '../../Pages/Quiz/QuizHome/QuizHome';
 import QuizCategory from '../../Pages/Quiz/QuizCategory/QuizCategory';
@@ -37,6 +39,7 @@ import QuizCreate from '../../Pages/Quiz/QuizCreate/QuizCreate';
 import CategoriesForum from '../../Pages/Forum/CategoriesForum';
 import ASBuiltinsDocs from '../../Components/AliveScriptComponents/ASDocs/ASBuiltinsDocs';
 import { LEVEL_TYPE } from '../../Models/Level/level.entity';
+import Chat from '../../Pages/Chat/Chat';
 
 type component =
 	| React.ComponentType<RouteComponentProps<any>>
@@ -206,6 +209,11 @@ const useRoutes = () => {
 		quiz_create: {
 			path: '/quiz/create',
 			component: QuizCreate,
+		},
+		chat: {
+			path: '/chat',
+			exact: true,
+			component: Chat,
 		},
 	});
 

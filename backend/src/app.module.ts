@@ -28,6 +28,8 @@ import { compare } from 'bcryptjs';
 import { adminOptions } from './admin/admin.options';
 import { LoggerModule } from './admin/loger/loger.module';
 import { MyLogger } from './admin/loger/logger';
+import { CarModule } from './socket/carSocket/carSocket.module';
+import { IoTModule } from './socket/iotSocket/iotSocket.module';
 import { QuizzesModule } from './models/social/quizzes/quizzes.module';
 import { PostModule } from './models/social/post/post.module';
 import { MulterModule } from '@nestjs/platform-express';
@@ -38,6 +40,7 @@ import { Result } from './models/social/results/entities/result.entity';
 import { ResultsModule } from './models/social/results/results.module';
 import { CarModule } from './socket/carSocket/carSocket.module';
 import { IoTModule } from './socket/iotSocket/iotSocket.module';
+import { MessagesModule } from './models/social//messages/messages.module';
 
 adminjs.registerAdapter({ Database, Resource });
 
@@ -82,10 +85,12 @@ adminjs.registerAdapter({ Database, Resource });
     IoTModule,
     MaintenanceModule,
     AsScriptModule,
+    CarModule,
     QuizzesModule,
     PostModule,
     CategoriesSubjectsModule,
-    ResultsModule, 
+    ResultsModule,
+    MessagesModule, 
 
     CarModule,
   ],
