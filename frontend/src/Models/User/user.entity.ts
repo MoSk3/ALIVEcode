@@ -5,6 +5,11 @@ import { IoTObject } from '../Iot/IoTobject.entity';
 import { IoTProject } from '../Iot/IoTproject.entity';
 import { Level } from '../Level/level.entity';
 
+/**
+ * Frontend user model
+ *
+ * @author MoSk3
+ */
 export class User {
 	@Exclude({ toPlainOnly: true })
 	id: string;

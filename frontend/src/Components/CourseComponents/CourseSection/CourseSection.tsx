@@ -2,20 +2,40 @@ import { CourseSectionProps } from './courseSectionTypes';
 import { useState, useContext } from 'react';
 import { Collapse } from 'react-bootstrap';
 import { CourseContext } from '../../../state/contexts/CourseContext';
+import Link from '../../UtilsComponents/Link/Link';
+import { Activity } from '../../../Models/Course/activity.entity';
+import { plainToClass } from 'class-transformer';
+import LoadingScreen from '../../UtilsComponents/LoadingScreen/LoadingScreen';
+import { useTranslation } from 'react-i18next';
 
+/**
+ * Component that shows the section in the navigation and handles different actions like adding in an activity onto the section
+ *
+ * @param {Section} section
+ * @author MoSk3
+ */
 const CourseSection = ({ section }: CourseSectionProps) => {
 	const [open, setOpen] = useState(false);
-	const { loadActivity } = useContext(CourseContext);
+	const [loading, setLoading] = useState(false);
+	const { loadActivity, addActivity, course, canEdit } =
+		useContext(CourseContext);
+	const { t } = useTranslation();
 
-	const handleLoadActivity = () => {
-		console.log(loadActivity('a'));
+	const toggleOpenSection = async () => {
+		if (!course) return;
+		setOpen(!open);
+		if (!open) {
+			setLoading(true);
+			await section.getActivities(course.id);
+			setLoading(false);
+		}
 	};
 
 	return (
 		<div className="course-section">
 			<div
 				className="course-section-header"
-				onClick={() => setOpen(!open)}
+				onClick={toggleOpenSection}
 				aria-controls={`section-${section.name}`}
 				aria-expanded={open}
 			>
@@ -23,18 +43,57 @@ const CourseSection = ({ section }: CourseSectionProps) => {
 			</div>
 			<Collapse in={open} timeout={500}>
 				<div id={`section-${section.name}`} className="course-section-body">
-					{/*
+					{loading && open && <LoadingScreen size="3x" relative />}
 
-					{section.activities.map((a, idx) => (
-						<div
-							onClick={handleLoadActivity}
-							key={idx}
-							className="course-activity"
+					{canEdit &&
+					(!section.activities || section.activities?.length === 0) ? (
+						<Link
+							dark
+							onClick={() => {
+								addActivity(
+									section,
+									plainToClass(Activity, {
+										name: `Activity #${
+											section.activities ? section.activities.length + 1 : 1
+										}`,
+									}),
+								);
+							}}
 						>
-							{a.name}
-						</div>
-					))}
-						*/}
+							Add an activity
+						</Link>
+					) : (
+						<>
+							{section.activities?.map((a, idx) => (
+								<div
+									onClick={() => loadActivity(section, a)}
+									key={idx}
+									className="course-activity"
+								>
+									{a.name}
+								</div>
+							))}
+							{canEdit && (
+								<Link
+									dark
+									onClick={() => {
+										addActivity(
+											section,
+											plainToClass(Activity, {
+												name: t('course.activity.new_name', {
+													num: section.activities
+														? section.activities.length + 1
+														: 1,
+												}),
+											}),
+										);
+									}}
+								>
+									{t('course.activity.new')}
+								</Link>
+							)}
+						</>
+					)}
 				</div>
 			</Collapse>
 		</div>

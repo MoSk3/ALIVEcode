@@ -10,7 +10,6 @@ import { IoTObjectModule } from './models/iot/IoTobject/IoTobject.module';
 import { IoTProjectModule } from './models/iot/IoTproject/IoTproject.module';
 import { IoTRouteModule } from './models/iot/IoTroute/IoTroute.module';
 import { LevelModule } from './models/level/level.module';
-import { IoTGateway } from './socket/iotSocket/iot.gateway';
 import { MaintenanceModule } from './models/maintenance/maintenance.module';
 import { MaintenanceMiddleware } from './utils/middlewares/maintenance.middleware';
 import { MaintenanceEntity } from './models/maintenance/entities/maintenance.entity';
@@ -37,6 +36,8 @@ import { ServeStaticModule } from '@nestjs/serve-static/dist/serve-static.module
 import { join } from 'path';
 import { Result } from './models/social/results/entities/result.entity';
 import { ResultsModule } from './models/social/results/results.module';
+import { CarModule } from './socket/carSocket/carSocket.module';
+import { IoTModule } from './socket/iotSocket/iotSocket.module';
 
 adminjs.registerAdapter({ Database, Resource });
 
@@ -78,7 +79,7 @@ adminjs.registerAdapter({ Database, Resource });
     IoTObjectModule,
     IoTProjectModule,
     IoTRouteModule,
-    IoTGateway,
+    IoTModule,
     MaintenanceModule,
     AsScriptModule,
     QuizzesModule,
@@ -86,6 +87,7 @@ adminjs.registerAdapter({ Database, Resource });
     CategoriesSubjectsModule,
     ResultsModule, 
 
+    CarModule,
   ],
   controllers: [AppController],
   providers: [AppService, MaintenanceService, UserService],

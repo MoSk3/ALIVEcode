@@ -22,7 +22,13 @@
 			"maxLength": "Ce champs dépasse {{max}} caractères",
 			"minLength": "Ce champs devrait être d'au moins {{min}} caractères",
 			"match": {
-				"name": "Ce champs doit contenir uniquement des chiffres et des lettres"
+				"alphabetic": "Ce champs doit contenir uniquement des lettres",
+				"alphabetic_lower": "Ce champs doit contenir uniquement des lettres minuscules",
+				"alphabetic_upper": "Ce champs doit contenir uniquement des lettres majuscules",
+				"alphanumeric": "Ce champs doit contenir uniquement des lettres et des chiffres",
+				"alphanumeric_underscore": "Ce champs doit contenir uniquement des lettres, des chiffres et des tirets vers le bas _",
+				"numbers": "Ce champs doit contenir uniquement des chiffes",
+				"name": "Ce champs doit contenir uniquement des lettres et des chiffres"
 			}
 		},
 		"level": {
@@ -32,7 +38,18 @@
 		},
 		"title": {
 			"signin": "Connexion",
-			"signup": "Inscription"
+			"signup": "Inscription",
+			"create_classroom": "Création d'une classe",
+			"create_course": "Création d'un cours",
+			"create_level": "Création d'un niveau",
+			"create_iot_project": "Création d'un projet IoT",
+			"create_iot_object": "Création d'un objet IoT"
+		},
+		"join_classroom": {
+			"title": "Rejoindre une classe",
+			"submit": "Rejoindre",
+			"code": "Code de la classe",
+			"invalid_code": "Code non-valide"
 		},
 		"pwd": {
 			"label": "Mot de passe",
@@ -66,12 +83,22 @@
 			"required": "Votre niveau scholaire est requis"
 		}
 	},
+	"modal": {
+		"close": "Fermer",
+		"save": "Enregistrer les changements",
+		"confirm": "Confirmer",
+		"cancel": "Annuler"
+	},
 	"msg": {
 		"professor": "professeur",
 		"student": "étudiant",
+		"creator": "Créateur",
 		"understood": "C'est compris!",
 		"description": "description",
 		"deleted_user": "Ancien utilisateur",
+		"search": "Rechercher",
+		"creation_date": "Date de création",
+		"update_date": "Date de modification",
 		"time": {
 			"format": "{{dayName}}, {{day}} {{monthName}} {{year}} - {{hour}}:{{minute}}",
 			"day": {
@@ -135,10 +162,23 @@
 	},
 	"dashboard": {
 		"classrooms": {
+			"title": "Mes classes",
 			"empty": {
 				"student": "Tu ne fais parti d'aucune classe",
 				"professor": "Tu ne possède aucune classe"
 			}
+		},
+		"levels": {
+			"title": "Niveaux",
+			"my_levels": "Mes niveaux",
+			"create_level": "Créer un niveau",
+			"browse_levels": "Rechercher un niveau"
+		},
+		"quizzes": {
+			"title": "Quiz",
+			"my_quizzes": "Mes quiz",
+			"create_quiz": "Créer un quiz",
+			"browse_quizzes": "Rechercher un quiz"
 		}
 	},
 	"classroom": {
@@ -163,6 +203,21 @@
 		"code": {
 			"title": "Code de la classe",
 			"desc": "Donnez ce code aux élèves afin qu'ils puissent rejoindre la classe depuis le site!"
+		}
+	},
+	"course": {
+		"desc": "Cours de {{professor}}",
+		"subject": "Sujet",
+		"empty": "Ce course est vide.",
+		"section": {
+			"empty": "Cette section ne possède aucune activité",
+			"new": "Nouvelle section"
+		},
+		"activity": {
+			"empty": "Cette activité est vide.",
+			"no_activity": "Ouvre une activité pour commencer à apprendre.",
+			"new": "Ajouter une activité",
+			"new_name": "Activité #{{num}}"
 		}
 	},
 	"menu": {
@@ -225,6 +280,9 @@
 			"copyright_2": " 2021 Tous droits réservés par"
 		}
 	},
+	"input": {
+		"defaultValue": "Écrivez ici..."
+	},
 	"ai": {
 		"header": {
 			"title": "LE MONDE DE L'INTELLIGENCE ARTIFICIELLE AVEC ALIVESCRIPT",
@@ -257,6 +315,27 @@
 				"paragraph4": "Évidemment, les réseaux de neurones sont bien plus complexes que cela, et c’est pourquoi un cours à ce sujet sera bientôt disponible. Reste à l’affût!"
 			}
 		}
+	},
+	"simulation": {
+		"modal": {
+			"retry": "Réessayer?",
+			"continue": "Continuer",
+			"lose": "Meilleure chance la prochaine fois!",
+			"win": "La victoire t'appartient! 🎉",
+			"water": "La voiture est tombée dans l'eau",
+			"lava": "La voiture est tombée dans la lave",
+			"hole": "La voiture est tombée dans un trou",
+			"wall": "La voiture a foncée dans un mur",
+			"connect_car": {
+				"title": "Connecter un vrai ALIVEcar",
+				"label": "Identifiant du ALIVEcar",
+				"id": "123",
+				"button": "Se connecter avec le vrai ALIVEcar"
+			}
+		}
+	},
+	"cmd": {
+		"clear": "Effacer les lignes"
 	},
 	"user":{
 		"quiz": "Quiz : ",

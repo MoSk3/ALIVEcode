@@ -1,19 +1,19 @@
 package interpreteur.as.Objets;
 
 
+import interpreteur.as.erreurs.ASErreur;
+import interpreteur.as.erreurs.ASErreur.*;
+import interpreteur.ast.buildingBlocs.expressions.Type;
+import interpreteur.executeur.Coordonnee;
+import interpreteur.tokens.Token;
+
+import javax.lang.model.type.NullType;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import javax.lang.model.type.NullType;
-
-import interpreteur.as.erreurs.ASErreur;
 //import interpreteur.ast.buildingBlocs.expressions.Type;
-import interpreteur.ast.buildingBlocs.expressions.Type;
-import interpreteur.executeur.Coordonnee;
-import interpreteur.tokens.Token;
-import interpreteur.as.erreurs.ASErreur.*;
 
 
 /**
@@ -41,6 +41,7 @@ public interface ASObjet<T> {
         iterable(TypeBuiltin.texte, TypeBuiltin.liste),
         booleen,
         nulType,
+        rien,
         fonctionType;
 
         private final TypeBuiltin[] aliases;
@@ -67,24 +68,6 @@ public interface ASObjet<T> {
             return aliases == null ? super.toString() : ArraysUtils.join("|", aliases);
         }
         */
-    }
-
-    interface Nombre extends ASObjet<Number> {
-        static boolean estNumerique(String txt) {
-            try {
-                var estDecimal = txt.contains(".");
-                if (estDecimal) Double.parseDouble(txt);
-                else Integer.parseInt(txt);
-                return true;
-            } catch (NumberFormatException err) {
-                return false;
-            }
-        }
-
-        @Override
-        default String obtenirNomType() {
-            return "nombre";
-        }
     }
 
     interface Iterable extends ASObjet<Object> {
@@ -142,6 +125,10 @@ public interface ASObjet<T> {
             return true;
         }
 
+        /**
+         * applique le setter
+         * @param valeur
+         */
         public void changerValeur(ASObjet<?> valeur) {
             if (nouvelleValeurValide(valeur)) {
                 if (this.setter != null) {
@@ -150,6 +137,15 @@ public interface ASObjet<T> {
                     this.valeur = valeur;
                 }
             }
+        }
+
+        /**
+         * by pass the setter
+         * @param valeur
+         */
+        public void setValeur(ASObjet<?> valeur) {
+            if (nouvelleValeurValide(valeur))
+                this.valeur = valeur;
         }
 
         @Override
@@ -290,6 +286,7 @@ public interface ASObjet<T> {
         }
 
         public static void ajouterStructure(String nomStruct) {
+            if (nomStruct == null) return;
             structure += (structure.isBlank() ? "" : ".") + nomStruct;
         }
 

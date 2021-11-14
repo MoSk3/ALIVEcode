@@ -219,3 +219,5 @@ out/production
 out/META-INF
 */log/
 backend/uploads/
+
+node_modules
