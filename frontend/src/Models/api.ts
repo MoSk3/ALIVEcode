@@ -231,6 +231,7 @@ const api = {
 		iot: {
 			projects: {
 				get: apiGet('iot/projects/:id', IoTProject, false),
+				deleteRoute: apiDelete('iot/routes/projects/:projectId/:id'),
 				getRoutes: apiGet('iot/projects/:id/routes', IotRoute, true),
 				getObjects: apiGet('iot/projects/:id/objects', IoTObject, true),
 				async updateLayout(id: string, layout: IoTProjectLayout) {
