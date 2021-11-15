@@ -1,12 +1,5 @@
 import { IoTProjectProps } from './iotProjectTypes';
-import {
-	useEffect,
-	useState,
-	useContext,
-	useMemo,
-	useCallback,
-	useRef,
-} from 'react';
+import { useEffect, useContext, useMemo, useCallback, useRef } from 'react';
 import {
 	IoTProject as ProjectModel,
 	IOTPROJECT_ACCESS,
@@ -127,6 +120,17 @@ const IoTProject = ({ level, initialCode, updateId }: IoTProjectProps) => {
 		[project, forceUpdate],
 	);
 
+	const updateRoute = useCallback(
+		(route: IotRoute) => {
+			if (!project) return;
+			project.routes = project?.routes.map(r =>
+				r.id === route.id ? route : r,
+			);
+			forceUpdate();
+		},
+		[forceUpdate, project],
+	);
+
 	const updateScript = useCallback(
 		(route: IotRoute, asScript: AsScript) => {
 			const routeFound = project?.routes.find(r => r.id === route.id);
@@ -146,6 +150,7 @@ const IoTProject = ({ level, initialCode, updateId }: IoTProjectProps) => {
 			isLevel,
 			addRoute,
 			deleteRoute,
+			updateRoute,
 			addIoTObject,
 			loadIoTObjects,
 			updateProjectData,
@@ -158,6 +163,7 @@ const IoTProject = ({ level, initialCode, updateId }: IoTProjectProps) => {
 		isLevel,
 		addRoute,
 		deleteRoute,
+		updateRoute,
 		addIoTObject,
 		loadIoTObjects,
 		updateProjectData,

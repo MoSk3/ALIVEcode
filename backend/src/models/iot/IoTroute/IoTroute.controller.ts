@@ -62,7 +62,7 @@ export class IoTRouteController {
     if (project.creator.id !== user.id && !hasRole(user, Role.STAFF))
       throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
 
-    return await this.IoTRouteService.update(project.id, updateIoTobjectDto);
+    return await this.IoTRouteService.update(id, updateIoTobjectDto);
   }
 
   @Delete('projects/:projectId/:id')

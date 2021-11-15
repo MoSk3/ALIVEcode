@@ -1,4 +1,3 @@
-import { Form } from 'react-bootstrap';
 import { AsScript as AsScriptModel } from '../../../../Models/AsScript/as-script.entity';
 import AsScript from '../../../AliveScriptComponents/AsScript/AsScript';
 import Button from '../../../UtilsComponents/Button/Button';
@@ -7,23 +6,53 @@ import api from '../../../../Models/api';
 import { useContext } from 'react';
 import { IoTProjectContext } from '../../../../state/contexts/IoTProjectContext';
 import LoadingScreen from '../../../UtilsComponents/LoadingScreen/LoadingScreen';
+import Form from '../../../UtilsComponents/Form/Form';
+import { Form as BootForm } from 'react-bootstrap';
+import { FORM_ACTION } from '../../../UtilsComponents/Form/formTypes';
+import {
+	IOTPROJECT_ACCESS,
+	IOTPROJECT_INTERACT_RIGHTS,
+} from '../../../../Models/Iot/IoTproject.entity';
 
 const IoTRouteSettings = ({ route }: IoTRouteSettingsProps) => {
 	const { asScript: script } = route;
-	const { project, updateScript } = useContext(IoTProjectContext);
+	const { project, canEdit, updateScript, updateRoute } =
+		useContext(IoTProjectContext);
 
 	if (!project) return <LoadingScreen />;
 
 	return (
 		<div>
-			<Form.Label>Name</Form.Label>
-			<Form.Control defaultValue={route.name} className="mb-2" />
-			<Form.Label>Path</Form.Label>
-			<Form.Control defaultValue={route.path} className="mb-2" />
+			<Form
+				onSubmit={res => {
+					const { name, path } = res.data;
+					route.path = path;
+					route.name = name;
+					updateRoute(route);
+				}}
+				disabled={!canEdit}
+				action={FORM_ACTION.PATCH}
+				name="iot route"
+				url={`iot/routes/projects/${project.id}/${route.id}`}
+				inputGroups={[
+					{
+						name: 'name',
+						required: true,
+						default: route.name,
+						inputType: 'text',
+					},
+					{
+						name: 'path',
+						required: true,
+						default: route.path,
+						inputType: 'text',
+					},
+				]}
+			/>
 			<hr />
-			<Form.Label style={{ display: 'block' }} className="mt-2">
+			<BootForm.Label style={{ display: 'block' }} className="mt-2">
 				Execution Script
-			</Form.Label>
+			</BootForm.Label>
 			{script ? (
 				<AsScript
 					onSave={(asScript: AsScriptModel) => {
