@@ -13,7 +13,7 @@ export class IoTButton extends IoTComponent {
 	private actionId: number = 0;
 
 	@Expose()
-	private actionData: string = '';
+	private actionData: string = '{}';
 
 	public setTargetId(id: string) {
 		this.targetId = id;
