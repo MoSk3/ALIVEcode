@@ -4,15 +4,13 @@ import AsScript from '../../../AliveScriptComponents/AsScript/AsScript';
 import Button from '../../../UtilsComponents/Button/Button';
 import { IoTRouteSettingsProps } from './iotRouteSettingsTypes';
 import api from '../../../../Models/api';
-import { useState, useContext } from 'react';
+import { useContext } from 'react';
 import { IoTProjectContext } from '../../../../state/contexts/IoTProjectContext';
 import LoadingScreen from '../../../UtilsComponents/LoadingScreen/LoadingScreen';
 
 const IoTRouteSettings = ({ route }: IoTRouteSettingsProps) => {
-	const [script, setScript] = useState<AsScriptModel | undefined>(
-		route.asScript,
-	);
-	const { project } = useContext(IoTProjectContext);
+	const { asScript: script } = route;
+	const { project, updateScript } = useContext(IoTProjectContext);
 
 	if (!project) return <LoadingScreen />;
 
@@ -27,7 +25,12 @@ const IoTRouteSettings = ({ route }: IoTRouteSettingsProps) => {
 				Execution Script
 			</Form.Label>
 			{script ? (
-				<AsScript asScript={script}></AsScript>
+				<AsScript
+					onSave={(asScript: AsScriptModel) => {
+						updateScript(route, asScript);
+					}}
+					asScript={script}
+				></AsScript>
 			) : (
 				<Button
 					variant="primary"
@@ -35,13 +38,12 @@ const IoTRouteSettings = ({ route }: IoTRouteSettingsProps) => {
 						const asScript = new AsScriptModel();
 						asScript.content = '# New Script';
 						asScript.name = `Script for route ${route.name}`;
-						setScript(
-							await api.db.iot.projects.createScriptRoute(
-								project.id,
-								route.id,
-								asScript,
-							),
+						const script = await api.db.iot.projects.createScriptRoute(
+							project.id,
+							route.id,
+							asScript,
 						);
+						updateScript(route, script);
 					}}
 				>
 					New script

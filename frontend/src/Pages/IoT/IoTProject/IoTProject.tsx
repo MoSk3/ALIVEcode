@@ -21,6 +21,7 @@ import { useForceUpdate } from '../../../state/hooks/useForceUpdate';
 import { useParams } from 'react-router';
 import IoTProjectPage from '../IoTProjectPage/IoTProjectPage';
 import IoTLevel from '../../Level/LevelIoT/LevelIoT';
+import { AsScript } from '../../../Models/AsScript/as-script.entity';
 
 /**
  * IoTProject. On this page are all the components essential in the functionning of an IoTProject.
@@ -108,6 +109,17 @@ const IoTProject = ({ level, initialCode, updateId }: IoTProjectProps) => {
 		[project, forceUpdate],
 	);
 
+	const updateScript = useCallback(
+		(route: IotRoute, asScript: AsScript) => {
+			const routeFound = project?.routes.find(r => r.id === route.id);
+			if (routeFound) {
+				routeFound.asScript = asScript;
+				forceUpdate();
+			}
+		},
+		[forceUpdate, project?.routes],
+	);
+
 	const providerValues: IoTProjectContextValues = useMemo(() => {
 		return {
 			project: project ?? null,
@@ -118,6 +130,7 @@ const IoTProject = ({ level, initialCode, updateId }: IoTProjectProps) => {
 			addIoTObject,
 			loadIoTObjects,
 			updateProjectData,
+			updateScript,
 		};
 	}, [
 		project,
@@ -128,6 +141,7 @@ const IoTProject = ({ level, initialCode, updateId }: IoTProjectProps) => {
 		addIoTObject,
 		loadIoTObjects,
 		updateProjectData,
+		updateScript,
 	]);
 
 	if (!project) {
