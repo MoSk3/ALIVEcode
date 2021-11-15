@@ -99,7 +99,7 @@ export class IoTGateway implements OnGatewayDisconnect, OnGatewayConnection, OnG
 
       if (project.interactRights !== IOTPROJECT_INTERACT_RIGHTS.ANYONE && !object.hasProjectRights(project.id))
         throw new WsException('Forbidden');
-
+      
       await this.iotProjectService.updateComponent(project.id, payload.id, payload.value);
     } else {
       await this.iotProjectService.updateComponent(payload.projectId, payload.id, payload.value);
