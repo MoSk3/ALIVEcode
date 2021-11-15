@@ -3,6 +3,7 @@ import { StyledMDEditor, MDEditorProps } from './mdEditorTypes';
 import { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import Button from '../../UtilsComponents/Button/Button';
+
 import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
@@ -12,9 +13,16 @@ import 'katex/dist/katex.min.css';
 import { remarkAlbum } from './remark-album';
 import { rehypeAlbum } from './rehype-album';
 
+import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import alivescript from '../../ALBUMComponents/ASSyntax';
+
 const MDEditor = ({ onSave, defaultValue }: MDEditorProps) => {
 	const [isPreview, setIsPreview] = useState(false);
 	const [content, setContent] = useState(defaultValue ?? '');
+	useEffect(() => {
+		SyntaxHighlighter.registerLanguage('alivescript', alivescript);
+	}, []);
 
 	useEffect(() => {
 		defaultValue && setContent(defaultValue);
@@ -40,13 +48,34 @@ const MDEditor = ({ onSave, defaultValue }: MDEditorProps) => {
 				) : (
 					<ReactMarkdown
 						remarkPlugins={[
-							remarkAlbum.underline,
 							//remarkGfm,
 							//remarkMath,
 							//remarkBreaks,
+							remarkAlbum.asCodeBlock,
 						]}
-						//rehypePlugins={[rehypeKatex]}
-						rehypePlugins={[rehypeAlbum]}
+						rehypePlugins={[
+							rehypeAlbum.print,
+							//rehypeAlbum.underline,
+							//rehypeKatex,
+						]}
+						components={{
+							code({ node, inline, className, children, ...props }) {
+								const match = /language-(\w+)/.exec(className || '');
+								return !inline && match ? (
+									<SyntaxHighlighter
+										style={atomDark}
+										language={match[1]}
+										PreTag="div"
+									>
+										{String(children).replace(/\n$/, '')}
+									</SyntaxHighlighter>
+								) : (
+									<code className={className} {...props}>
+										{children}
+									</code>
+								);
+							},
+						}}
 					>
 						{content}
 					</ReactMarkdown>

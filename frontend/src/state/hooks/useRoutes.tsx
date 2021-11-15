@@ -31,6 +31,7 @@ import ASDocs from '../../Components/AliveScriptComponents/ASDocs/ASDocs';
 import { MaintenanceError } from '../../Pages/Errors/MaintenanceError/MaintenanceError';
 import MaintenanceMenu from '../../Pages/SiteStatus/MaintenanceMenu/MaintenanceMenu';
 import ASBuiltinsDocs from '../../Components/AliveScriptComponents/ASDocs/ASBuiltinsDocs';
+import MDEditor from '../../Components/CourseComponents/MDEditor/MDEditor';
 
 type component =
 	| React.ComponentType<RouteComponentProps<any>>
@@ -178,6 +179,11 @@ const useRoutes = () => {
 			exact: true,
 			maintenanceExempt: true,
 			component: MaintenanceMenu,
+		},
+		album: {
+			path: '/album-test',
+			exact: true,
+			component: MDEditor,
 		},
 	});
 
