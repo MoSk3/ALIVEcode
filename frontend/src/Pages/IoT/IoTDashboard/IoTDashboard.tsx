@@ -15,6 +15,7 @@ import { useTranslation } from 'react-i18next';
 import { UserContext } from '../../../state/contexts/UserContext';
 import IoTObjectLargeCard from '../../../Components/IoTComponents/IoTObject/IoTObjectLargeCard/IoTObjectLargeCard';
 import Card from '../../../Components/UtilsComponents/Cards/Card/Card';
+import { useForceUpdate } from '../../../state/hooks/useForceUpdate';
 
 const StyledDiv = styled(FillContainer)`
 	padding: 2vw;
@@ -34,6 +35,8 @@ const IoTDashboard = (props: iotDashboardProps) => {
 	const history = useHistory();
 	// TODO: ADD MODAL FORM GENERIC
 	const [openObjectCreate, setOpenObjectCreate] = useState(false);
+
+	const forceUpdate = useForceUpdate();
 
 	useEffect(() => {
 		const getProjects = async () => {
@@ -82,7 +85,16 @@ const IoTDashboard = (props: iotDashboardProps) => {
 				>
 					{objects && objects.length > 0 ? (
 						objects.map((obj, idx) => (
-							<IoTObjectLargeCard key={idx} object={obj} />
+							<IoTObjectLargeCard
+								onUpdate={(iotObject: IoTObject) => {
+									setObjects(
+										objects.map(o => (o.id === iotObject.id ? iotObject : o)),
+									);
+									//forceUpdate();
+								}}
+								key={idx}
+								object={obj}
+							/>
 						))
 					) : (
 						<div>Aucun objet connecté</div>

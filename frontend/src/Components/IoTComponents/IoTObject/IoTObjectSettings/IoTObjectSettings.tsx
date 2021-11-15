@@ -6,16 +6,21 @@ import {
 import { plainToClass } from 'class-transformer';
 import Link from '../../../UtilsComponents/Link/Link';
 import { FORM_ACTION } from '../../../UtilsComponents/Form/formTypes';
+import { IoTObjectSettingsProps } from './iotObjectSettingsTypes';
 
-const IoTObjectSettings = ({ object }: { object: IoTObject }) => {
+const IoTObjectSettings = ({ object, onUpdate }: IoTObjectSettingsProps) => {
 	return (
 		<>
 			<Form
 				onSubmit={res => {
-					object = plainToClass(IoTObject, res.data);
+					const { name, description, label } = res.data;
+					object.name = name;
+					object.description = description;
+					object.label = label;
+					onUpdate(object);
 				}}
 				action={FORM_ACTION.PATCH}
-				name="iot_project"
+				name="iot object"
 				url={`iot/objects/${object.id}`}
 				inputGroups={[
 					{
@@ -31,7 +36,7 @@ const IoTObjectSettings = ({ object }: { object: IoTObject }) => {
 						inputType: 'text',
 					},
 					{
-						name: 'interactRights',
+						name: 'label',
 						required: true,
 						default: object.label,
 						inputType: 'select',
