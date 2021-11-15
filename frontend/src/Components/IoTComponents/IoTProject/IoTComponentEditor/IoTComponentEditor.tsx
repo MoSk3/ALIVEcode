@@ -106,9 +106,11 @@ const IoTComponentEditor = ({
 					<Form.Control
 						as="select"
 						className="mb-2"
-						onChange={(e: any) => component.setTargetId(e.target.value)}
+						onChange={(e: any) => component.setTargetId(e.target.value || null)}
 						disabled={!canEdit}
+						value={component.getTargetId() || ''}
 					>
+						<option></option>
 						{iotObjects?.map(obj => (
 							<option value={obj.id}>{obj.name}</option>
 						))}
@@ -117,7 +119,7 @@ const IoTComponentEditor = ({
 					<Form.Control
 						className="mb-2"
 						type="number"
-						defaultValue={component.actionId}
+						defaultValue={component.getActionId()}
 						onChange={(e: any) => component.setActionId(e.target.value)}
 						disabled={!canEdit}
 					/>
@@ -125,7 +127,7 @@ const IoTComponentEditor = ({
 					<Form.Control
 						as="textarea"
 						className="mb-2"
-						defaultValue={component.actionData}
+						defaultValue={component.getActionData() || '{}'}
 						onChange={(e: any) => component.setActionData(e.target.value)}
 						disabled={!canEdit}
 					/>
