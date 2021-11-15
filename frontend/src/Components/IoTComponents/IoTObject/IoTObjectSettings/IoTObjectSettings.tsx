@@ -1,9 +1,5 @@
 import Form from "../../../UtilsComponents/Form/Form";
-import {
-	IoTObject,
-	IOTOBJECT_LABEL,
-} from '../../../../Models/Iot/IoTobject.entity';
-import { plainToClass } from 'class-transformer';
+import { IOTOBJECT_LABEL } from '../../../../Models/Iot/IoTobject.entity';
 import Link from '../../../UtilsComponents/Link/Link';
 import { FORM_ACTION } from '../../../UtilsComponents/Form/formTypes';
 import { IoTObjectSettingsProps } from './iotObjectSettingsTypes';

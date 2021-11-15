@@ -10,7 +10,7 @@ export default class LevelIoTBackendExecutor extends LevelExecutor {
       {
         actionId: 900,
         action: {
-          label: 'afficher',
+          label: 'update',
           type: 'NORMAL',
           apply: async params => {
             if (params.length >= 3 && typeof params[0] === 'string' && typeof params[1] === 'string') {

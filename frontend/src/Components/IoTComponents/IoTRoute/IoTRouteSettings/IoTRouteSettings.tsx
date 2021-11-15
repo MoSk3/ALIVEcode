@@ -9,10 +9,6 @@ import LoadingScreen from '../../../UtilsComponents/LoadingScreen/LoadingScreen'
 import Form from '../../../UtilsComponents/Form/Form';
 import { Form as BootForm } from 'react-bootstrap';
 import { FORM_ACTION } from '../../../UtilsComponents/Form/formTypes';
-import {
-	IOTPROJECT_ACCESS,
-	IOTPROJECT_INTERACT_RIGHTS,
-} from '../../../../Models/Iot/IoTproject.entity';
 
 const IoTRouteSettings = ({ route }: IoTRouteSettingsProps) => {
 	const { asScript: script } = route;

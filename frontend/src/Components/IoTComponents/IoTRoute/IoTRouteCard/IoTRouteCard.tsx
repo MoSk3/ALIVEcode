@@ -9,7 +9,6 @@ import {
 import AlertConfirm from '../../../UtilsComponents/Alert/AlertConfirm/AlertConfirm';
 import Modal from '../../../UtilsComponents/Modal/Modal';
 import IoTRouteSettings from '../IoTRouteSettings/IoTRouteSettings';
-import api from '../../../../Models/api';
 import { IoTProjectContext } from '../../../../state/contexts/IoTProjectContext';
 
 /**
