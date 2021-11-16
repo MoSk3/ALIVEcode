@@ -125,7 +125,7 @@ const IoTProjectBody = ({ noTopRow }: { noTopRow?: boolean }) => {
 						}}
 						icon={faClipboard}
 					>
-						Copy Reference Id
+						Copy Project Id
 					</IconButton>
 				</Row>
 				{getComponentsMatrix().map((row, idx) => (

@@ -9,6 +9,7 @@ import {
 	StyledIoTComponentCreator,
 	IoTComponentCreatorProps,
 } from './iotComponentCreatorTypes';
+import { createDefaultIoTLabel } from '../../../../Models/Iot/IoTProjectClasses/Components/IoTLabel';
 
 export const IoTComponentCreator = ({ onSelect }: IoTComponentCreatorProps) => {
 	const components = useMemo(
@@ -17,6 +18,7 @@ export const IoTComponentCreator = ({ onSelect }: IoTComponentCreatorProps) => {
 			createDefaultIoTButton(),
 			createDefaultIoTLogs(),
 			createDefaultIoTLed(),
+			createDefaultIoTLabel(),
 		],
 		[],
 	);

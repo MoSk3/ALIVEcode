@@ -19,6 +19,7 @@ import {
 	IoTLed,
 	LED_STATE,
 } from '../../../../Models/Iot/IoTProjectClasses/Components/IoTLed';
+import { IoTLabel } from '../../../../Models/Iot/IoTProjectClasses/Components/IoTLabel';
 
 const IoTComponentEditor = ({
 	component,
@@ -207,12 +208,34 @@ const IoTComponentEditor = ({
 		if (component instanceof IoTLed)
 			return (
 				<>
-					<Form.Label>Value</Form.Label>
-					<Form.Control
+					<Form.Label>LED on/off</Form.Label>
+					<Form.Check
 						type="checkbox"
 						defaultChecked={component.value === LED_STATE.ON}
 						className="mb-2"
 						onChange={(e: any) => component.setValue(e.target.checked)}
+						disabled={!canEdit}
+					/>
+				</>
+			);
+		if (component instanceof IoTLabel)
+			return (
+				<>
+					<Form.Label>Displayed Text</Form.Label>
+					<Form.Control
+						defaultValue={component.value}
+						className="mb-2"
+						onChange={(e: any) => component.setValue(e.target.value)}
+						disabled={!canEdit}
+					/>
+					<Form.Label>Font size</Form.Label>
+					<Form.Control
+						type="range"
+						min={10}
+						max={60}
+						value={component.getFontSize()}
+						className="mb-2"
+						onChange={(e: any) => component.setFontSize(e.target.value)}
 						disabled={!canEdit}
 					/>
 				</>

@@ -2,8 +2,8 @@ import { Exclude } from 'class-transformer';
 import { IoTComponent, IOT_COMPONENT_TYPE } from '../IoTComponent';
 
 export enum LED_STATE {
-	ON,
-	OFF,
+	ON = 'ON',
+	OFF = 'OFF',
 }
 
 @Exclude()
@@ -16,13 +16,15 @@ export class IoTLed extends IoTComponent {
 	}
 
 	update(data: any): void {
-		this.value = data;
+		if (typeof data !== 'boolean') return;
+		this.setValue(data);
+		this.getComponentManager()?.render();
 	}
 }
 
 export const createDefaultIoTLed = () => {
 	const progress = new IoTLed();
-	progress.value = LED_STATE.ON;
+	progress.value = LED_STATE.OFF;
 	progress.name = 'Default LED';
 	progress.id = '';
 

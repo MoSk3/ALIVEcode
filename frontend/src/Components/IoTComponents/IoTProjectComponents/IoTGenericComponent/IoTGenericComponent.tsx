@@ -12,6 +12,8 @@ import { IoTButton } from '../../../../Models/Iot/IoTProjectClasses/Components/I
 import { useAlert } from 'react-alert';
 import { IoTLed } from '../../../../Models/Iot/IoTProjectClasses/Components/IoTLed';
 import IoTLedComponent from '../IoTLedComponent/IoTLedComponent';
+import { IoTLabel } from '../../../../Models/Iot/IoTProjectClasses/Components/IoTLabel';
+import IoTLabelComponent from '../IoTLabelComponent/IoTLabelComponent';
 
 const IoTGenericComponent = ({
 	component,
@@ -34,6 +36,8 @@ const IoTGenericComponent = ({
 				return <IoTLogsComponent component={component as IoTLogs} />;
 			case IOT_COMPONENT_TYPE.LED:
 				return <IoTLedComponent component={component as IoTLed} />;
+			case IOT_COMPONENT_TYPE.LABEL:
+				return <IoTLabelComponent component={component as IoTLabel} />;
 		}
 	};
 
