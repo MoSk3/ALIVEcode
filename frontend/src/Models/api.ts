@@ -230,6 +230,7 @@ const api = {
 		},
 		iot: {
 			projects: {
+				delete: apiDelete('iot/projects/:id'),
 				get: apiGet('iot/projects/:id', IoTProject, false),
 				deleteRoute: apiDelete('iot/routes/projects/:projectId/:id'),
 				getRoutes: apiGet('iot/projects/:id/routes', IotRoute, true),
