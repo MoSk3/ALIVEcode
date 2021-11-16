@@ -1,8 +1,8 @@
-import { LevelExecutor } from "./AbstractLevelExecutor";
+import { BackendLevelExecutor } from "./BackendLevelExecutor";
 import { AsScriptService } from './as-script.service';
 import { IoTProjectService } from '../iot/IoTproject/IoTproject.service';
 
-export default class LevelIoTBackendExecutor extends LevelExecutor {
+export default class LevelIoTBackendExecutor extends BackendLevelExecutor {
   constructor(asScriptService: AsScriptService, iotProjectService: IoTProjectService, actions: any) {
     super(asScriptService, actions);
 
