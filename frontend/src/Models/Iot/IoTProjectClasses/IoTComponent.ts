@@ -5,6 +5,7 @@ export enum IOT_COMPONENT_TYPE {
 	BUTTON,
 	PROGRESS_BAR,
 	LOGS,
+	LED,
 }
 
 @Exclude()

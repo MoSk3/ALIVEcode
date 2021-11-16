@@ -15,6 +15,10 @@ import { useTranslation } from 'react-i18next';
 import { IoTObject } from '../../../../Models/Iot/IoTobject.entity';
 import api from '../../../../Models/api';
 import { IoTProjectContext } from '../../../../state/contexts/IoTProjectContext';
+import {
+	IoTLed,
+	LED_STATE,
+} from '../../../../Models/Iot/IoTProjectClasses/Components/IoTLed';
 
 const IoTComponentEditor = ({
 	component,
@@ -198,6 +202,19 @@ const IoTComponentEditor = ({
 							</Button>
 						</>
 					)}
+				</>
+			);
+		if (component instanceof IoTLed)
+			return (
+				<>
+					<Form.Label>Value</Form.Label>
+					<Form.Control
+						type="checkbox"
+						defaultChecked={component.value === LED_STATE.ON}
+						className="mb-2"
+						onChange={(e: any) => component.setValue(e.target.checked)}
+						disabled={!canEdit}
+					/>
 				</>
 			);
 	};

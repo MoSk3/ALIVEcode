@@ -4,6 +4,7 @@ import { createDefaultIoTProgressBar } from '../../../../Models/Iot/IoTProjectCl
 import { createDefaultIoTLogs } from '../../../../Models/Iot/IoTProjectClasses/Components/IoTLogs';
 import { createDefaultIoTButton } from '../../../../Models/Iot/IoTProjectClasses/Components/IoTButton';
 import IoTGenericComponent from '../../IoTProjectComponents/IoTGenericComponent/IoTGenericComponent';
+import { createDefaultIoTLed } from '../../../../Models/Iot/IoTProjectClasses/Components/IoTLed';
 import {
 	StyledIoTComponentCreator,
 	IoTComponentCreatorProps,
@@ -15,6 +16,7 @@ export const IoTComponentCreator = ({ onSelect }: IoTComponentCreatorProps) => {
 			createDefaultIoTProgressBar(),
 			createDefaultIoTButton(),
 			createDefaultIoTLogs(),
+			createDefaultIoTLed(),
 		],
 		[],
 	);
