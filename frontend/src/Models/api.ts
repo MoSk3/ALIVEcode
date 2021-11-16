@@ -251,6 +251,9 @@ const api = {
 					).data;
 				},
 			},
+			objects: {
+				delete: apiDelete('iot/objects/:id'),
+			},
 		},
 		asScript: {
 			async create(asScript: AsScript) {

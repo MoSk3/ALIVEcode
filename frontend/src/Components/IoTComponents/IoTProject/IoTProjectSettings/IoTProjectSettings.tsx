@@ -12,12 +12,14 @@ import AlertConfirm from '../../../UtilsComponents/Alert/AlertConfirm/AlertConfi
 import api from '../../../../Models/api';
 import useRoutes from '../../../../state/hooks/useRoutes';
 import { useAlert } from 'react-alert';
+import { useTranslation } from 'react-i18next';
 
 export const IoTProjectSettings = () => {
 	const { project, canEdit, updateProjectData } = useContext(IoTProjectContext);
 	const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
 	const { routes, goTo } = useRoutes();
 	const alert = useAlert();
+	const { t } = useTranslation();
 
 	if (!project) return <></>;
 
@@ -68,10 +70,10 @@ export const IoTProjectSettings = () => {
 				variant="danger"
 				icon={faTrash}
 			>
-				Delete
+				{t('form.submit.DELETE', { name: t('iot.project.name') })}
 			</Button>
 			<AlertConfirm
-				title="Delete IoT project"
+				title={t('form.submit.DELETE', { name: t('iot.project.name') })}
 				open={confirmDeleteOpen}
 				onClose={() => setConfirmDeleteOpen(false)}
 				onConfirm={async () => {
@@ -79,7 +81,7 @@ export const IoTProjectSettings = () => {
 					goTo(routes.auth.iot_dashboard.path);
 					alert.success('Iot Project Deleted');
 				}}
-			></AlertConfirm>
+			/>
 		</>
 	);
 };
