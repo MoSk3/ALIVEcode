@@ -16,6 +16,9 @@ export class Quiz {
     @IsNotEmpty()
     name : string;
 
+    @Column('text')
+    @IsNotEmpty()
+    description: string;
 
     @ManyToOne(() => UserEntity, user => user.quiz)
     @JoinColumn()

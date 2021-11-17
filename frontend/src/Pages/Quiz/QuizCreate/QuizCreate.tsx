@@ -26,7 +26,7 @@ const QuizCreate = (props: QuizCategoryProps) => {
 			>
 				<Card>
 					<Card.Body>
-						<h1>Quiz Creator</h1>
+						<h1>Create your Quiz!</h1>
 						<Form>
 							<Form.Group>
 								<Form.Label>Quiz Category</Form.Label>
