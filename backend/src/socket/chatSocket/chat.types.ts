@@ -60,3 +60,14 @@ export class WatcherClient extends Client {
   }
 
 }
+export class ObjectClient extends Client {
+  static objects: ObjectClient[] = [];
+  private id: string;
+
+
+  constructor(socket: WebSocket, id: string) {
+    super(socket);
+    this.id = id;
+
+  }
+}

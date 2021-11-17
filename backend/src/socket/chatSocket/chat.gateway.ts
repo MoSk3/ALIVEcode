@@ -18,6 +18,7 @@ import { Server, WebSocket } from 'ws';
 import { DTOInterceptor } from '../../utils/interceptors/dto.interceptor';
 import {
   MessageRequest,
+  ObjectClient,
   WatcherClient,
 } from './chat.types';
 
@@ -29,13 +30,15 @@ export class ChatGateway implements OnGatewayDisconnect, OnGatewayConnection, On
 
   @WebSocketServer()
   server: Server;
-
+  clients=[]
   afterInit() {
     this.logger.log(`Initialized`);
   }
 
-  handleConnection() {
+  handleConnection(client:any) {
     this.logger.log(`Client connected`);
+    this.clients.push(client)
+   
   }
 
   handleDisconnect(@ConnectedSocket() socket: WebSocket) {
@@ -65,14 +68,24 @@ export class ChatGateway implements OnGatewayDisconnect, OnGatewayConnection, On
     console.log(event)
     return {event: 'messageToClient', data: text}
   }
+
+  private broadcast(event:string, data: any):any {
+    
+    for (let c of this.clients) {
+      c.send(
+        JSON.stringify({
+          event,
+          data})
+      )}
+  }
   @SubscribeMessage('send_message')
-  onMessage(@ConnectedSocket()client:any ,@MessageBody() data:MessageRequest) :WsResponse<any> {
-    client.addEventListener('message', function (event) { 
-      console.log('Message from server ', event.data); 
-     
-       });
-       console.log(data.message)
-       return( {event: 'messageToClient', data });
+  onMessage(@ConnectedSocket()socket:WebSocket ,@MessageBody() data:MessageRequest)  {
+    
+    const client = new ObjectClient(socket, data.message_user);
+    client.register();
+      console.log(data)
+    return this.broadcast('messageToClient', data )
+
   }
   // onEvent(client: any, data: any): Observable<WsResponse<number>> {
   //   console.log(client)

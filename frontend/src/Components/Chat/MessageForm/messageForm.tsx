@@ -23,8 +23,10 @@ const MessageForm = () => {
 				const message = JSON.parse(e.data);
 				const incomingMessage = {
 					...message,
-					ownedByCurrentUser: message.senderId === socket.current.id,
+					ownedByCurrentUser:
+						message.data.message_user === user?.getDisplayName(),
 				};
+				console.log(incomingMessage);
 				setMessages((messages: any) => [...messages, incomingMessage]);
 			};
 		};
