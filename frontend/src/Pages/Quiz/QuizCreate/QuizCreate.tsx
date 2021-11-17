@@ -1,7 +1,6 @@
 import { plainToClass } from "class-transformer";
-import { data } from "jquery";
 import { useEffect, useState } from 'react';
-import { Button, Card, Col, Form, Row } from 'react-bootstrap';
+import { Button, Card, Form } from 'react-bootstrap';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import CenteredContainer from '../../../Components/UtilsComponents/CenteredContainer/CenteredContainer';
 import api from '../../../Models/api';
