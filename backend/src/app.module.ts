@@ -38,9 +38,8 @@ import { ServeStaticModule } from '@nestjs/serve-static/dist/serve-static.module
 import { join } from 'path';
 import { Result } from './models/social/results/entities/result.entity';
 import { ResultsModule } from './models/social/results/results.module';
-import { CarModule } from './socket/carSocket/carSocket.module';
-import { IoTModule } from './socket/iotSocket/iotSocket.module';
 import { MessagesModule } from './models/social//messages/messages.module';
+import { ChatModule } from './socket/chatSocket/chatSocket.module';
 
 adminjs.registerAdapter({ Database, Resource });
 
@@ -91,7 +90,7 @@ adminjs.registerAdapter({ Database, Resource });
     CategoriesSubjectsModule,
     ResultsModule,
     MessagesModule, 
-
+    ChatModule,
     CarModule,
   ],
   controllers: [AppController],

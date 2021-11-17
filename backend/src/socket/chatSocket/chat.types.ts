@@ -2,6 +2,12 @@ import { WsException } from '@nestjs/websockets';
 import { WebSocket } from 'ws';
 
 
+export type MessageRequest = {
+  message: string;
+  message_user: string;
+  time: any
+  
+};
 
 export class Client {
   static clients: Client[] = [];

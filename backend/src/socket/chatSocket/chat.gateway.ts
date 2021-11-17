@@ -9,17 +9,22 @@ import {
   WebSocketGateway,
   WebSocketServer,
   WsException,
+  WsResponse,
 } from '@nestjs/websockets';
+import { send } from 'process';
+import {from, Observable } from 'rxjs';
+import { map,  } from 'rxjs/operators';
 import { Server, WebSocket } from 'ws';
 import { DTOInterceptor } from '../../utils/interceptors/dto.interceptor';
 import {
+  MessageRequest,
   WatcherClient,
 } from './chat.types';
 
 @UseInterceptors(DTOInterceptor)
 @WebSocketGateway(8882)
 export class ChatGateway implements OnGatewayDisconnect, OnGatewayConnection, OnGatewayInit {
-  private logger: Logger = new Logger('IoTGateway');
+  private logger: Logger = new Logger('Chat');
 
 
   @WebSocketServer()
@@ -55,4 +60,32 @@ export class ChatGateway implements OnGatewayDisconnect, OnGatewayConnection, On
   //   client.leave(room);
   //   client.emit('leftRoom', room);
   // }
+  @SubscribeMessage('k')
+  handleMessage(client: WebSocket, text: string): WsResponse<string>{
+    console.log(event)
+    return {event: 'messageToClient', data: text}
+  }
+  @SubscribeMessage('send_message')
+  onMessage(@ConnectedSocket()client:any ,@MessageBody() data:MessageRequest) :WsResponse<any> {
+    client.addEventListener('message', function (event) { 
+      console.log('Message from server ', event.data); 
+     
+       });
+       console.log(data.message)
+       return( {event: 'messageToClient', data });
+  }
+  // onEvent(client: any, data: any): Observable<WsResponse<number>> {
+  //   console.log(client)
+  //   return from([1, 2, 3]).pipe(map(item => ({ event: 'events', data: item })));
+  //}
 }
+
+// @SubscribeMessage('send_message')
+// onmessage(socket: WebSocket, message: string,
+// ) {
+//   socket.addEventListener('message', function (event) { 
+//     console.log('Message from server ', event.data); 
+//   });
+
+// }
+// }
