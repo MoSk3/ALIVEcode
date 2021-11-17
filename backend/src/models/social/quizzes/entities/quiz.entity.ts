@@ -20,6 +20,7 @@ export class Quiz {
     @IsNotEmpty()
     description: string;
 
+    // TODO: change to @creator or smtg idk
     @ManyToOne(() => UserEntity, user => user.quiz)
     @JoinColumn()
     user: UserEntity;
