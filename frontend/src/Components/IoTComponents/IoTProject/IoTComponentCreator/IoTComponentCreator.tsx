@@ -4,10 +4,12 @@ import { createDefaultIoTProgressBar } from '../../../../Models/Iot/IoTProjectCl
 import { createDefaultIoTLogs } from '../../../../Models/Iot/IoTProjectClasses/Components/IoTLogs';
 import { createDefaultIoTButton } from '../../../../Models/Iot/IoTProjectClasses/Components/IoTButton';
 import IoTGenericComponent from '../../IoTProjectComponents/IoTGenericComponent/IoTGenericComponent';
+import { createDefaultIoTLed } from '../../../../Models/Iot/IoTProjectClasses/Components/IoTLed';
 import {
 	StyledIoTComponentCreator,
 	IoTComponentCreatorProps,
 } from './iotComponentCreatorTypes';
+import { createDefaultIoTLabel } from '../../../../Models/Iot/IoTProjectClasses/Components/IoTLabel';
 
 export const IoTComponentCreator = ({ onSelect }: IoTComponentCreatorProps) => {
 	const components = useMemo(
@@ -15,6 +17,8 @@ export const IoTComponentCreator = ({ onSelect }: IoTComponentCreatorProps) => {
 			createDefaultIoTProgressBar(),
 			createDefaultIoTButton(),
 			createDefaultIoTLogs(),
+			createDefaultIoTLed(),
+			createDefaultIoTLabel(),
 		],
 		[],
 	);
