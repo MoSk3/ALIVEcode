@@ -35,6 +35,7 @@ export class Quiz {
 
     @ManyToOne(() => CategoriesQuiz, category => category.id, { eager: true })
     @JoinColumn()
+    @IsNotEmpty()
     category: CategoriesQuiz;
 
 }
