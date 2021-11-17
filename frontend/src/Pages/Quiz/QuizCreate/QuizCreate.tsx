@@ -1,8 +1,22 @@
-import { Button, Card, Col, Form, Row } from "react-bootstrap";
+import { plainToClass } from "class-transformer";
+import { useEffect, useState } from "react";
+import { Button, Card, Col, Form, Row } from 'react-bootstrap';
 import CenteredContainer from '../../../Components/UtilsComponents/CenteredContainer/CenteredContainer';
+import api from '../../../Models/api';
+import { Category } from '../../../Models/Quiz/categories-quiz.entity';
 import { QuizCategoryProps } from '../QuizCategory/Category';
 
 const QuizCreate = (props: QuizCategoryProps) => {
+	const [categories, setCategories] = useState<Category[]>([]);
+
+	useEffect(() => {
+		const getCategories = async () => {
+			const data = await api.db.quiz.categories.all({});
+			setCategories(data.map((d: any) => plainToClass(Category, d)));
+		};
+		getCategories();
+	}, []);
+
 	return (
 		<div>
 			<CenteredContainer
@@ -17,9 +31,10 @@ const QuizCreate = (props: QuizCategoryProps) => {
 							<Form.Group>
 								<Form.Label>Quiz Category</Form.Label>
 								<Form.Control as="select" aria-label="">
-									<option value="1">One</option>
-									<option value="2">Two</option>
-									<option value="3">Three</option>
+									<option></option>
+									{categories.map(category => {
+										return <option value={category.id}>{category.name}</option>;
+									})}
 								</Form.Control>
 							</Form.Group>
 							<Form.Group>
@@ -28,7 +43,7 @@ const QuizCreate = (props: QuizCategoryProps) => {
 							</Form.Group>
 							<Form.Group>
 								<Form.Label>Quiz Description</Form.Label>
-								<Form.Control as="textarea" rows={3}></Form.Control>
+								<Form.Control as="textarea" rows={5}></Form.Control>
 							</Form.Group>
 							<Button variant="primary" type="submit">
 								Create
