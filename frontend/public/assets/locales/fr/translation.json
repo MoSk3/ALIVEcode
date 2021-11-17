@@ -316,6 +316,14 @@
 			}
 		}
 	},
+	"iot": {
+		"project": {
+			"name": "Projet IoT"
+		},
+		"object": {
+			"name": "Objet IoT"
+		}
+	},
 	"simulation": {
 		"modal": {
 			"retry": "Réessayer?",

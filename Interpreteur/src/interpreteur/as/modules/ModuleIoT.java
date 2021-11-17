@@ -65,6 +65,24 @@ public class ModuleIoT {
                         }
                         return new Nul();
                     }
+                },
+                new ASObjet.Fonction("getComponentValue",
+                        new ASObjet.Fonction.Parametre[] {
+                                new ASObjet.Fonction.Parametre(
+                                        ASObjet.TypeBuiltin.texte.asType(),
+                                        "projectId",
+                                        null
+                                ),
+                                new ASObjet.Fonction.Parametre(
+                                        ASObjet.TypeBuiltin.texte.asType(),
+                                        "id",
+                                        null
+                                )
+                        }, ASObjet.TypeBuiltin.nombre.asType()) {
+                    @Override
+                    public ASObjet<?> executer() {
+                        return new Nul();
+                    }
                 }
         });
     }
