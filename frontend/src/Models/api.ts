@@ -19,6 +19,7 @@ import { Maintenance } from './Maintenance/maintenance.entity';
 import { QueryDTO } from '../../../backend/src/models/level/dto/query.dto';
 import { Quiz } from './Quiz/quiz.entity';
 import { Category } from './Quiz/categories-quiz.entity';
+import { QuizForm } from './Quiz/quizForm.entity';
 
 type urlArgType<S extends string> = S extends `${infer _}:${infer A}/${infer B}`
 	? A | urlArgType<B>
@@ -182,7 +183,8 @@ const api = {
 			},
 		},
 		quiz: {
-			all:  apiGet('/quizzes', Quiz, true),
+			all: apiGet('/quizzes', Quiz, true),
+			create: apiCreate('/quizzes', QuizForm),
 			categories: {
 				all: apiGet('/categories-quiz', Category, true),
 				one: apiGet('/categories-quiz/:id', Category, false),

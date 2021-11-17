@@ -1,10 +1,7 @@
-import { Question } from "./question.entity";
-
-export class Quiz {
+export class QuizForm {
     id: number;
     name: string;
     description: string;
-    questions: [Question]
     category: {
         id: number;
         name: string;
