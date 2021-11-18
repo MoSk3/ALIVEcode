@@ -1,6 +1,7 @@
 {
 	"error": {
 		"sorry": "Désolé.",
+		"unknown": "Une erreur inconnue est survenue, veuillez réessayer.",
 		"back": "Retour en arrière",
 		"home": "Retour à la page d'accueil",
 		"logout": "Une erreur est survenue lors de la déconnexion, veuillez réesayer.",
@@ -54,18 +55,21 @@
 		"pwd": {
 			"label": "Mot de passe",
 			"placeholder": "*****",
-			"required": "Un mot de passe est requis"
+			"required": "Un mot de passe est requis",
+			"pattern": "Le mot de passe doit uniquement contenir des lettres, des chiffres et: !@#\\$&*~"
 		},
 		"email": {
 			"label": "Adresse courriel",
 			"placeholder": "MonAdresse@alivecode.ca",
 			"required": "Une adresse courriel est requise",
+			"taken": "Cette addresse courriel est déjà prise",
 			"info": "Nous ne partagerons pas votre adresse courriel"
 		},
 		"name": {
 			"label": "Nom",
 			"placeholder": "Enric",
-			"required": "Un pseudonyme est requis"
+			"required": "Un pseudonyme est requis",
+			"pattern": "Le pseudonyme doit contenir uniquement des lettres, des chiffres et des _"
 		},
 		"firstName": {
 			"label": "Prénom",
@@ -228,7 +232,8 @@
 		"level": {
 			"alive": "Niveau avec voiture ALIVE",
 			"code": "Niveau avec console",
-			"ai": "Niveau avec intelligence artificielle"
+			"ai": "Niveau avec intelligence artificielle",
+			"iot": "Niveau avec Internet des Objets"
 		}
 	},
 	"home": {
