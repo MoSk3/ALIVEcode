@@ -69,6 +69,7 @@
 			"label": "Name",
 			"placeholder": "Enric",
 			"required": "A username is required",
+			"taken": "This username is already taken",
 			"pattern": "The username should only be letters, numbers and underscores"
 		},
 		"firstName": {

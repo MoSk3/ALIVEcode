@@ -65,8 +65,13 @@ const SignUp = ({ userType }: SignUpProps) => {
 			if (!err.response) return alert.error(t('error.unknown'));
 			const statusCode = err.response?.status;
 
-			if (statusCode === HttpStatusCode.CONFLICT)
-				return setError('email', { type: 'taken' });
+			if (statusCode === HttpStatusCode.CONFLICT) {
+				if (err.response.data.message.includes('username'))
+					return setError('name', { type: 'taken' });
+				if (err.response.data.message.includes('email'))
+					return setError('email', { type: 'taken' });
+			}
+
 			return alert.error(
 				'Erreur : ' +
 					((err as AxiosError).response?.data.message ?? 'veuillez réessayer'),
@@ -172,6 +177,7 @@ const SignUp = ({ userType }: SignUpProps) => {
 									type="invalid"
 								>
 									{errors.name?.type === 'required' && t('form.name.required')}
+									{errors.name?.type === 'taken' && t('form.name.taken')}
 									{errors.name?.type === 'pattern' && t('form.name.pattern')}
 									{errors.name?.type === 'minLength' &&
 										t('form.error.minLength', { min: 3 })}

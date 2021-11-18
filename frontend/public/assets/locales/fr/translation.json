@@ -69,6 +69,7 @@
 			"label": "Nom",
 			"placeholder": "Enric",
 			"required": "Un pseudonyme est requis",
+			"taken": "Ce pseudonyme est déjà pris",
 			"pattern": "Le pseudonyme doit contenir uniquement des lettres, des chiffres et des _"
 		},
 		"firstName": {

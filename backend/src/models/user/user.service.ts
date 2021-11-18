@@ -33,14 +33,16 @@ export class UserService {
   ) {}
 
   async createStudent(createStudentDto: UserEntity) {
-    // TODO: random salt
     const hashedPassword = await hash(createStudentDto.password, 12);
     createStudentDto.password = hashedPassword;
 
     try {
       const student = await this.studentRepository.save(this.studentRepository.create(createStudentDto));
       return student;
-    } catch {
+    } catch (err) {
+      if ((err as any).detail.includes('Key (name)='))
+        throw new HttpException('This username is already in use', HttpStatus.CONFLICT);
+
       throw new HttpException('This email is already in use', HttpStatus.CONFLICT);
     }
   }
