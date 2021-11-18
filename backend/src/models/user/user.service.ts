@@ -87,7 +87,13 @@ export class UserService {
     const refreshToken = req.cookies.wif;
     if (!refreshToken) throw new HttpException('No credentials were provided', HttpStatus.UNAUTHORIZED);
 
-    const payload = verify(refreshToken, process.env.REFRESH_TOKEN_SECRET_KEY) as AuthPayload;
+    let payload: AuthPayload;
+
+    try {
+      payload = verify(refreshToken, process.env.REFRESH_TOKEN_SECRET_KEY) as AuthPayload;
+    } catch {
+      throw new HttpException('Invalid Credentials', HttpStatus.UNAUTHORIZED);
+    }
     if (!payload) throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
 
     const user = await this.findById(payload.id);

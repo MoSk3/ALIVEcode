@@ -31,6 +31,7 @@ import ASDocs from '../../Components/AliveScriptComponents/ASDocs/ASDocs';
 import { MaintenanceError } from '../../Pages/Errors/MaintenanceError/MaintenanceError';
 import MaintenanceMenu from '../../Pages/SiteStatus/MaintenanceMenu/MaintenanceMenu';
 import ASBuiltinsDocs from '../../Components/AliveScriptComponents/ASDocs/ASBuiltinsDocs';
+import { LEVEL_TYPE } from '../../Models/Level/level.entity';
 
 type component =
 	| React.ComponentType<RouteComponentProps<any>>
@@ -163,15 +164,15 @@ const useRoutes = () => {
 			exact: true,
 			path: '/iot',
 			component: IoTHome,
-			adminOnly: true,
+			//adminOnly: true,
 		},
 		level_alive: {
 			path: '/level/play/alive',
-			component: () => <Level type="ALIVE" editMode />,
+			component: () => <Level type={LEVEL_TYPE.ALIVE} editMode />,
 		},
 		level_code: {
 			path: '/level/play/code',
-			component: () => <Level type="code" editMode />,
+			component: () => <Level type={LEVEL_TYPE.CODE} editMode />,
 		},
 		maintenances: {
 			path: '/maintenances',
@@ -215,17 +216,17 @@ const useRoutes = () => {
 		iot_dashboard: {
 			path: '/iot/dashboard',
 			component: IoTDashboard,
-			adminOnly: true,
+			//adminOnly: true,
 		},
 		create_iot_project: {
 			path: '/iot/projects/create',
 			component: IoTProjectCreate,
-			adminOnly: true,
+			//adminOnly: true,
 		},
 		iot_project: {
 			path: '/iot/projects/:id',
 			component: IoTProject,
-			adminOnly: true,
+			//adminOnly: true,
 		},
 		level_list: {
 			path: '/level',
@@ -251,15 +252,19 @@ const useRoutes = () => {
 		},
 		level_create_alive: {
 			path: '/level/create/alive',
-			component: () => <LevelForm type="ALIVE" />,
+			component: () => <LevelForm type={LEVEL_TYPE.ALIVE} />,
 		},
 		level_create_code: {
 			path: '/level/create/code',
-			component: () => <LevelForm type="code" />,
+			component: () => <LevelForm type={LEVEL_TYPE.CODE} />,
 		},
 		level_create_ai: {
 			path: '/level/create/ai',
-			component: () => <LevelForm type="AI" />,
+			component: () => <LevelForm type={LEVEL_TYPE.AI} />,
+		},
+		level_create_iot: {
+			path: '/level/create/iot',
+			component: () => <LevelForm type={LEVEL_TYPE.IOT} />,
 		},
 	});
 

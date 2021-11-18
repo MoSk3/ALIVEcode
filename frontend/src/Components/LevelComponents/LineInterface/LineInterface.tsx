@@ -5,7 +5,8 @@ import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/theme-cobalt';
 import './mode-alivescript';
 import EditorTab from '../../AliveScriptComponents/EditorTab/EditorTab';
-import { useState, useRef, useEffect, memo } from 'react';
+import { useState, useRef, memo, useContext } from 'react';
+import { ThemeContext } from '../../../state/contexts/ThemeContext';
 
 /**
  * Line interface to write the code on
@@ -38,13 +39,9 @@ const LineInterface = memo(
 		});
 		/* Content for a single tab interface */
 		const [content, setContent] = useState<string>(initialContent ?? '');
+		const { theme } = useContext(ThemeContext);
 
 		const ref = useRef<AceEditor>(null);
-
-		useEffect(() => {
-			if (!ref.current || !initialContent) return;
-			ref.current.editor.setValue(initialContent);
-		}, [initialContent]);
 
 		const setOpenedTab = (idx: number) => {
 			const updatedTabs = tabs.map((t, i) => {
@@ -61,7 +58,7 @@ const LineInterface = memo(
 		};
 
 		return (
-			<StyledLineInterface>
+			<StyledLineInterface theme={theme}>
 				{hasTabs && (
 					<div className="editors-tab w-100">
 						{tabs.map((t, idx) => (
@@ -81,9 +78,6 @@ const LineInterface = memo(
 									}
 									defaultValue={t.defaultContent}
 									value={t.content}
-									enableSnippets
-									enableBasicAutocompletion
-									enableLiveAutocompletion
 									mode="alivescript"
 									theme="cobalt"
 									onLoad={() => {
@@ -115,9 +109,6 @@ const LineInterface = memo(
 					<AceEditor
 						ref={ref}
 						className="ace-editor relative w-100 h-100"
-						enableSnippets
-						enableBasicAutocompletion
-						enableLiveAutocompletion
 						mode="alivescript"
 						theme="cobalt"
 						defaultValue={initialContent}

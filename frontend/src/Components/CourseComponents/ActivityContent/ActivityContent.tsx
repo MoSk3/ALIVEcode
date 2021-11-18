@@ -51,6 +51,12 @@ const ActivityContent = (props: ActivityContentProps) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [activity?.content?.data]);
 
+	/*const projectId = useMemo(() => {
+		return Math.random() > 0.5
+			? '73f799b7-1019-4f8e-8205-872cf1fac1ff'
+			: '7ae63621-b0f9-4996-a742-6f9bdce715b4';
+	}, [activity?.id]);*/
+
 	return (
 		<StyledActivityContent navigationOpen={isNavigationOpen} theme={theme}>
 			<Button
@@ -110,6 +116,10 @@ const ActivityContent = (props: ActivityContentProps) => {
 								)}
 							</div>
 							<div>
+								{/*<IoTProject
+									key={`iotproject-${projectId}`}
+									id={projectId}
+								></IoTProject>*/}
 								{canEdit && editMode ? (
 									<MDEditor
 										onSave={saveActivityContent}
@@ -125,10 +135,10 @@ const ActivityContent = (props: ActivityContentProps) => {
 											activity.levels.map((a, idx) => (
 												<div key={idx} style={{ position: 'relative' }}>
 													<Level
+														key={`level-${a.level.id}`}
 														level={a.level}
-														type={a.level.getType()}
 														editMode={false}
-													></Level>
+													/>
 												</div>
 											))}
 									</>

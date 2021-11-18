@@ -1,19 +1,19 @@
 package interpreteur.as.Objets;
 
 
+import interpreteur.as.erreurs.ASErreur;
+import interpreteur.as.erreurs.ASErreur.*;
+import interpreteur.ast.buildingBlocs.expressions.Type;
+import interpreteur.executeur.Coordonnee;
+import interpreteur.tokens.Token;
+
+import javax.lang.model.type.NullType;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import javax.lang.model.type.NullType;
-
-import interpreteur.as.erreurs.ASErreur;
 //import interpreteur.ast.buildingBlocs.expressions.Type;
-import interpreteur.ast.buildingBlocs.expressions.Type;
-import interpreteur.executeur.Coordonnee;
-import interpreteur.tokens.Token;
-import interpreteur.as.erreurs.ASErreur.*;
 
 
 /**
@@ -144,7 +144,8 @@ public interface ASObjet<T> {
          * @param valeur
          */
         public void setValeur(ASObjet<?> valeur) {
-            this.valeur = valeur;
+            if (nouvelleValeurValide(valeur))
+                this.valeur = valeur;
         }
 
         @Override

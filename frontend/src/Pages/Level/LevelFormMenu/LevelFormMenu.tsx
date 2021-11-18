@@ -34,6 +34,11 @@ const LevelFormMenu = () => {
 					to={routes.auth.level_create_ai.path}
 					title={t('menu.level.ai')}
 				/>
+				<Card
+					img={Code}
+					to={routes.auth.level_create_iot.path}
+					title={t('menu.level.iot')}
+				/>
 			</Row>
 		</FillContainer>
 	);

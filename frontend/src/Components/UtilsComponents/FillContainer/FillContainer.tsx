@@ -62,7 +62,7 @@ const FillContainer = ({
 						const navbar = document.getElementById('navbar');
 						if (navbar)
 							styledContainerRef.current.style.height =
-								window.innerHeight - navbar.clientHeight + 'px';
+								window.innerHeight - navbar.clientHeight - 2 + 'px';
 					}
 				}
 			}

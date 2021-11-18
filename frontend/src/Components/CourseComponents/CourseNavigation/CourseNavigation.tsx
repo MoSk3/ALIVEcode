@@ -14,6 +14,7 @@ import Form from '../../UtilsComponents/Form/Form';
 import { Section } from '../../../Models/Course/section.entity';
 import { plainToClass } from 'class-transformer';
 import { useTranslation } from 'react-i18next';
+import { FORM_ACTION } from '../../UtilsComponents/Form/formTypes';
 
 /**
  * Navigation menu of a course containing all the sections and activities
@@ -82,7 +83,7 @@ const CourseNavigation = (props: CourseNavigationProps) => {
 				<Form
 					name="section"
 					url={`courses/${course.id}/sections`}
-					action="POST"
+					action={FORM_ACTION.POST}
 					inputGroups={[
 						{
 							name: 'name',
