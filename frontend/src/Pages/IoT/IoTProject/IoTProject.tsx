@@ -32,7 +32,7 @@ import { AsScript } from '../../../Models/AsScript/as-script.entity';
  * @author MoSk3
  */
 const IoTProject = ({ level, initialCode, updateId }: IoTProjectProps) => {
-	const projectRef = useRef<ProjectModel | null>(null);
+	const projectRef = useRef<ProjectModel | null>(level?.project ?? null);
 	const project = projectRef.current;
 
 	const history = useHistory();
