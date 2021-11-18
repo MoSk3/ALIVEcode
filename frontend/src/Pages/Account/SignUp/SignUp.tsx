@@ -73,8 +73,7 @@ const SignUp = ({ userType }: SignUpProps) => {
 			}
 
 			return alert.error(
-				'Erreur : ' +
-					((err as AxiosError).response?.data.message ?? 'veuillez réessayer'),
+				'Erreur : ' + (err.response.data.message ?? 'veuillez réessayer'),
 			);
 		}
 	};

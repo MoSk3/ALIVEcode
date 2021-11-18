@@ -2,14 +2,16 @@
 	"error": {
 		"sorry": "Désolé.",
 		"unknown": "Une erreur inconnue est survenue, veuillez réessayer.",
+		"custom": "Erreur: {{error}}.",
 		"back": "Retour en arrière",
 		"home": "Retour à la page d'accueil",
 		"logout": "Une erreur est survenue lors de la déconnexion, veuillez réesayer.",
-		"500": "Une erreur est survenue, veuillez réessayer",
+		"login": "Informations erronées, veuillez réessayer.",
+		"500": "Une erreur est survenue, veuillez réessayer.",
 		"page404": "Cette page n'existe pas.",
 		"maintenance": {
 			"ongoing": "Une maintenance est en cours du {{startDate}} et prend fin le {{finishDate}}, cette page n'a pas pu être affichée.",
-			"short": "La requête n'a pas pu être faite, le site est présentement en maintenance"
+			"short": "La requête n'a pas pu être faite, le site est présentement en maintenance."
 		}
 	},
 	"form": {

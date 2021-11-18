@@ -2,14 +2,16 @@
 	"error": {
 		"sorry": "Sorry.",
 		"unknown": "An unknow error occured, please try again.",
+		"custom": "Error: {{error}}.",
 		"back": "Go back",
 		"home": "Back to the main page",
 		"logout": "Something went wrong when logging out, please try again.",
-		"500": "Something went wrong, please try again",
+		"login": "Invalid credentials, please verify them again.",
+		"500": "Something went wrong, please try again.",
 		"page404": "This page does not exist.",
 		"maintenance": {
 			"ongoing": "The website is under maintenance since {{startDate}} and will finish at {{finishDate}}, this page could not be loaded.",
-			"short": "The request could not be made, the website is currently under maintenance"
+			"short": "The request could not be made, the website is currently under maintenance."
 		}
 	},
 	"form": {

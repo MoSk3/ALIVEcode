@@ -6,13 +6,14 @@ import { FormSignInValues, SignInProps } from './signInTypes';
 import { useHistory } from 'react-router';
 import { UserContext } from '../../../state/contexts/UserContext';
 import FormContainer from '../../../Components/UtilsComponents/FormContainer/FormContainer';
-import { Form } from 'react-bootstrap';
+import { Form, InputGroup } from 'react-bootstrap';
 import Button from '../../../Components/UtilsComponents/Button/Button';
 import Link from '../../../Components/UtilsComponents/Link/Link';
 import { useTranslation } from 'react-i18next';
 import { User } from '../../../Models/User/user.entity';
 import { setAccessToken } from '../../../Types/accessToken';
 import useRoutes from '../../../state/hooks/useRoutes';
+import HttpStatusCode from '../../../Types/http-errors';
 
 /** 
  * Signin page that allows the user to connect to its account
@@ -43,10 +44,16 @@ const SignIn = (props: SignInProps) => {
 			if(history.location.pathname === '/signin') history.push(routes.auth.dashboard.path);
 			return alert.success("Vous êtes connecté!");
 
-		} catch (err) {
-			if(process.env.debug)
-				return alert.error("Erreur : " + ((err as AxiosError).response?.data.message ?? "veuillez réessayer"));
-			return alert.error("Erreur inconnue, veuillez réessayer");
+		} catch (e) {
+			const err = e as AxiosError;
+			if (!err.response) return alert.error(t('error.unknown'));
+
+			const statusCode = err.response.status;
+			if(statusCode === HttpStatusCode.BAD_REQUEST) {
+				return alert.error(t('error.login'))
+			}
+
+			return alert.error(t('error.custom', { error: err.response.data.message }));
 		}
 	};
 
@@ -55,26 +62,43 @@ const SignIn = (props: SignInProps) => {
 			<Form onSubmit={handleSubmit(onSignIn)}>
 				<Form.Group controlId="formBasicEmail">
 					<Form.Label>{t('form.email.label')}</Form.Label>
+					<InputGroup hasValidation>
 					<Form.Control
 						type="email"
 						autoComplete="on"
 						placeholder={t('form.email.placeholder')}
+						isInvalid={errors.email}
 						{...register('email', { required: true })}
 					/>
-					{errors.email?.type === 'required' && t('form.email.required')}
+						<Form.Control.Feedback
+							style={{ wordWrap: 'break-word' }}
+							type="invalid"
+						>
+							{errors.email?.type === 'required' && t('form.email.required')}
+						</Form.Control.Feedback>
+					</InputGroup>
 				</Form.Group>
 
 				<Form.Group controlId="formBasicPassword">
 					<Form.Label>{t('form.pwd.label')}</Form.Label>
-					<Form.Control
-						type="password"
-						autoComplete="on"
-						placeholder={t('form.pwd.placeholder')}
-						{...register('password', { required: true, minLength: 6, maxLength: 32 })}
-					/>
-					{errors.password?.type === 'required' && t('form.pwd.required')}
-					{errors.password?.type === 'minLength' && t('form.error.minLength', { min: 6})}
-					{errors.password?.type === 'maxLength' && t('form.error.maxLength', { max: 32 })}
+					<InputGroup hasValidation>
+						<Form.Control
+							type="password"
+							autoComplete="on"
+							isInvalid={errors.password}
+							placeholder={t('form.pwd.placeholder')}
+							{...register('password', { required: true, minLength: 6, maxLength: 32, pattern: /^[A-Za-z0-9!@#\\$&*~]*$/,})}
+						/>
+						<Form.Control.Feedback
+							style={{ wordWrap: 'break-word' }}
+							type="invalid"
+						>
+							{errors.password?.type === 'required' && t('form.pwd.required')}
+							{errors.password?.type === 'pattern' && t('form.pwd.pattern')}
+							{errors.password?.type === 'minLength' && t('form.error.minLength', { min: 6})}
+							{errors.password?.type === 'maxLength' && t('form.error.maxLength', { max: 32 })}
+						</Form.Control.Feedback>
+					</InputGroup>
 				</Form.Group>
 				<Button variant="primary" type="submit">
 					{t('msg.auth.signin')}
