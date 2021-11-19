@@ -21,6 +21,7 @@ const QuizEdit = (props: QuizCategoryProps) => {
 	}
 
 	const [categories, setCategories] = useState<Category[]>([]);
+	const [quiz, setQuiz] = useState<Quiz>();
 
 	const { register, handleSubmit } = useForm<QuizForm>();
 	const onSubmit: SubmitHandler<Quiz> = data => updateQuiz(data);
@@ -29,8 +30,13 @@ const QuizEdit = (props: QuizCategoryProps) => {
 			const data = await api.db.quiz.categories.all({});
 			setCategories(data.map((d: any) => plainToClass(Category, d)));
 		};
+		const getQuiz = async () => {
+			const response = await api.db.quiz.one({ id: props.match.params.id });
+			setQuiz(plainToClass(Quiz, response));
+		};
 		getCategories();
-	}, []);
+		getQuiz();
+	}, [props.match.params.id]);
 
 	return (
 		<div>
@@ -68,6 +74,10 @@ const QuizEdit = (props: QuizCategoryProps) => {
 									{...register('description')}
 								></Form.Control>
 							</Form.Group>
+							{
+								// Questions will follow
+								console.log(quiz?.questions)
+							}
 							<Button variant="primary" type="submit">
 								Update!
 							</Button>

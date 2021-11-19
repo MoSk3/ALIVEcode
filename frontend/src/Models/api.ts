@@ -184,6 +184,7 @@ const api = {
 		},
 		quiz: {
 			all: apiGet('/quizzes', Quiz, true),
+			one: apiGet('/quizzes/:id', Quiz, false),
 			create: apiCreate('/quizzes', QuizForm),
 			update: apiUpdate('/quizzes/:id', QuizForm),
 			categories: {
