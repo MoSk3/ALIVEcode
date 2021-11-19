@@ -34,6 +34,7 @@ import Forum from '../../Pages/Forum/Forum';
 import QuizHome from '../../Pages/Quiz/QuizHome/QuizHome';
 import QuizCategory from '../../Pages/Quiz/QuizCategory/QuizCategory';
 import QuizCreate from '../../Pages/Quiz/QuizCreate/QuizCreate';
+import QuizEdit from '../../Pages/Quiz/QuizEdit/QuizEdit';
 
 type component =
 	| React.ComponentType<RouteComponentProps<any>>
@@ -195,6 +196,10 @@ const useRoutes = () => {
 		quiz_create: {
 			path: '/quiz/create',
 			component: QuizCreate,
+		},
+		quiz_edit: {
+			path: '/quiz/edit/:id',
+			component: QuizEdit,
 		},
 	});
 

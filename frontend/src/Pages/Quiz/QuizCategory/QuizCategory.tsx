@@ -49,14 +49,9 @@ const QuizCategory = (props: QuizCategoryProps) => {
 								<Col>{category?.quizzes.length} Quiz</Col>
 								<Col></Col>
 								<Col>
-									<Button>Ajouter un Quiz TODO</Button>
-								</Col>
-								<Col>
-									<Form>
-										<Form.Group>
-											<Form.Control type="text" placeholder="Search" />
-										</Form.Group>
-									</Form>
+									<Link to="/quiz/create">
+										<Button>Créer un Quiz</Button>
+									</Link>
 								</Col>
 							</Row>
 						</Container>
@@ -78,7 +73,11 @@ const QuizCategory = (props: QuizCategoryProps) => {
 										<td>{quiz.questions.length}</td>
 										<td>TODO</td>
 										<td>TODO</td>
-										<td>TODO Ajouter question</td>
+										<td>
+											<Link to={`/quiz/edit/${quiz.id}`}>
+												<Button>Edit Quiz</Button>
+											</Link>
+										</td>
 									</tr>
 								);
 							})}
