@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { Button, Form } from 'react-bootstrap';
+import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { User } from '../../../Models/User/user.entity';
 import { UserContext } from '../../../state/contexts/UserContext';
@@ -18,11 +18,12 @@ const MessageForm = () => {
 		socket.current = new WebSocket(process.env.REACT_APP_CHAT_URL);
 
 		socket.current.onopen = () => {
-			if (process.env.REACT_APP_DEBUG) console.log('Connected to Chat');
+			console.log('Connected to Chat');
 			socket.current.onmessage = (e: { data: string }) => {
+				console.log(e);
 				const message = JSON.parse(e.data);
 				const incomingMessage = {
-					...message,
+					...message.,
 					ownedByCurrentUser:
 						message.data.message_user === user?.getDisplayName(),
 				};
@@ -30,7 +31,7 @@ const MessageForm = () => {
 				setMessages((messages: any) => [...messages, incomingMessage]);
 			};
 		};
-
+		
 		return () => {
 			socket.current.close();
 		};
@@ -55,8 +56,16 @@ const MessageForm = () => {
 		);
 	};
 	return (
-		<>
-			<div className="messagelist">
+		<div className="col-md-7">
+			<div className="card-container-title"> CHAT</div>
+
+			<div
+				className="card-container-body"
+				style={{
+					overflow: 'auto',
+					height: '700px ',
+				}}
+			>
 				{messages.map((message: any, idx: any) => {
 					return (
 						<Messages
@@ -68,11 +77,18 @@ const MessageForm = () => {
 					);
 				})}
 			</div>
-			<Form onSubmit={handleSubmit(onSubmit)}>
-				<input placeholder="message" type="text" {...register('message')} />
-				<button type="submit">send</button>
-			</Form>
-		</>
+			<Container>
+				<Row>
+					<Form
+						onSubmit={handleSubmit(onSubmit)}
+						style={{ position: 'fixed', bottom: 150 }}
+					>
+						<input placeholder="message" type="text" {...register('message')} />
+						<button type="submit">send</button>
+					</Form>
+				</Row>
+			</Container>
+		</div>
 	);
 };
 export default MessageForm;

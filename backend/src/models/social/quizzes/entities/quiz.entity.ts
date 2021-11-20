@@ -19,7 +19,7 @@ export class Quiz {
     @ManyToOne(() => UserEntity, user => user.quiz)
     user: UserEntity;
 
-    @OneToOne(() => Reward)
+    @OneToOne(() => Reward, { eager: true })
     @JoinColumn()
     reward : Reward;
 

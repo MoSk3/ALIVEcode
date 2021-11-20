@@ -29,15 +29,18 @@ const StyledCenteredContainer = styled(CenteredContainer)`
 const AccountPage = () => {
 	const { t } = useTranslation();
 	const { user } = useContext(UserContext);
+	const moyenne = 60;
 	const color = (value: any) => {
-		if (value > 60) return 'gold';
+		if (value > moyenne) return 'gold';
 		else if (value > 30) return 'orange';
 		else return 'red';
 	};
 	//const [loading, setLoading] = useState(true);
 	const [resultQuizz, setResultQuizz] = useState<Result[]>([]);
-
+	const [resultCount, setCountQuizz] = useState<Result>();
+	let countSuccess: any[] = [];
 	const { register, handleSubmit } = useForm();
+
 	const onSubmit = async (image: { file: any }) => {
 		let fileData = new FormData();
 		fileData.append('image', image.file[0]);
@@ -54,24 +57,21 @@ const AccountPage = () => {
 			if (!user) return;
 			const resultQuizz = await api.db.results.getresultuser({});
 			setResultQuizz(resultQuizz);
+			const resultCount = await api.db.results.findandcount({
+				percentage: 60,
+			});
+			setCountQuizz(resultCount);
 		};
 		getProjects();
 	}, [user]);
 
+	resultQuizz.map(p => {
+		if (p.percentage > moyenne) {
+			countSuccess.push(p);
+		}
+	});
 	return (
 		<>
-			<CardContainer
-				asRow
-				height="200px"
-				className="iot-container"
-				title="My projects"
-			>
-				{resultQuizz && resultQuizz.length > 0 ? (
-					resultQuizz.map((p, idx) => <>{console.log(p, idx)}</>)
-				) : (
-					<div>Aucun projet</div>
-				)}
-			</CardContainer>
 			<StyledCenteredContainer>
 				<Row>
 					<div className="col-md-6">
@@ -103,8 +103,12 @@ const AccountPage = () => {
 					<div className="col-md-5  offset-md-1">
 						<CardContainer title="Avancement">
 							<Row>
-								<h3 className="text-left col-sm-5">{t('user.quiz')} 0/10</h3>
-								<h3 className="text-left col-sm-7">{t('user.reward')} 10/40</h3>
+								<h3 className="text-left col-sm-5">
+									{t('user.quiz')} {resultCount}/10
+								</h3>
+								<h3 className="text-left col-sm-7">
+									{t('user.reward')} {countSuccess.length}/40
+								</h3>
 								<h3 className="text-left col-sm-5">{t('user.status')} Noob</h3>
 								<h3 className="text-left col-sm-7">{t('user.rank')} #1</h3>
 								<h3 className="text-left col-sm-5">{t('user.posts')} 0</h3>
@@ -119,14 +123,14 @@ const AccountPage = () => {
 					<Row style={{ paddingTop: '20px' }}>
 						{resultQuizz.map((p, idx) => (
 							<>
-								<div className=" col-sm-2">
+								<div className=" col-sm-2" key={idx}>
 									<CircularProgressbar
+										key={'result' + idx}
 										value={p.percentage}
 										text={`${p.percentage}%`}
 										styles={buildStyles({ trailColor: color(p.percentage) })}
 									/>
-									<h3>IOT</h3>
-									{console.log(p, idx)}
+									<h3>{p.quiz.name}</h3>
 								</div>
 							</>
 						))}
@@ -136,24 +140,21 @@ const AccountPage = () => {
 			<StyledCenteredContainer>
 				<CardContainer title={t('user.rewardTitle')}>
 					<Row style={{ padding: '20px' }}>
-						<div style={{ paddingRight: '20px' }}>
-							<img height={100} src="https://i.imgur.com/xkH6wCg.png" alt="" />
-						</div>
-						<div style={{ paddingRight: '20px' }}>
-							<img height={100} src="https://i.imgur.com/xkH6wCg.png" alt="" />
-						</div>
-						<div style={{ paddingRight: '20px' }}>
-							<img height={100} src="https://i.imgur.com/xkH6wCg.png" alt="" />
-						</div>
-						<div style={{ paddingRight: '20px' }}>
-							<img height={100} src="https://i.imgur.com/xkH6wCg.png" alt="" />
-						</div>
-						<div style={{ paddingRight: '20px' }}>
-							<img height={100} src="https://i.imgur.com/xkH6wCg.png" alt="" />
-						</div>
-						<div>
-							<img height={100} src="https://i.imgur.com/xkH6wCg.png" alt="" />
-						</div>
+						{countSuccess.map((p, idx) => (
+							<>
+								<div className=" col-auto" key={'reward' + idx}>
+									<div style={{ paddingRight: '20px' }}>
+										<img
+											height={100}
+											width={100}
+											src={`http://localhost:8000/rewards/${p.quiz.reward.name}`}
+											alt={p.quiz.reward.name}
+										/>
+									</div>
+									<h3>{p.quiz.reward.name.split('.')[0]}</h3>
+								</div>
+							</>
+						))}
 					</Row>
 				</CardContainer>
 			</StyledCenteredContainer>

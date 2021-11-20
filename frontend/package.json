@@ -19,6 +19,7 @@
 		"axios": "^0.21.1",
 		"bootstrap": "^4.6.0",
 		"chart.js": "^3.5.1",
+		"chokidar": "^3.5.2",
 		"class-transformer": "^0.4.0",
 		"dotenv": "^10.0.0",
 		"i18next": "^20.3.5",

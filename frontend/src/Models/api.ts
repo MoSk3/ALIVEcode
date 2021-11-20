@@ -22,6 +22,7 @@ import { Result } from './Social/result.entity';
 import { CompileDTO } from './ASModels';
 import { AsScript } from './AsScript/as-script.entity';
 import { LevelIoT } from './Level/levelIoT.entity';
+import { Post } from './Social/post.entity';
 
 type urlArgType<S extends string> = S extends `${infer _}:${infer A}/${infer B}`
 	? A | urlArgType<B>
@@ -265,6 +266,15 @@ const api = {
 				});
 			},
 		},
+
+		posts:{
+			all: apiGet('posts', Post, true),
+			get: apiGet('posts/:id/', Post, false),
+			findandcount: apiCreate('posts/findandcount', Post),
+			create: apiCreate('posts', Post),
+			delete: apiDelete('posts/:id'),
+		
+		},
 		quiz:{
 			all: apiGet('quizzes', Quiz, true),
 			get: apiGet('quizzes/:id/', Quiz, false),
@@ -275,10 +285,10 @@ const api = {
 		results:{
 			all: apiGet('results', Result, true),
 			get: apiGet('results/:id/', Result, false),
+			findandcount: apiCreate('results/findandcount', Result),
 			create: apiCreate('results', Result),
 			delete: apiDelete('results/:id'),
 			getresultuser : apiGet('results/user', Result, true),
-
 		
 		}
 	},

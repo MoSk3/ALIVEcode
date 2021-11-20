@@ -4,15 +4,15 @@ import { Quiz } from "../../quizzes/entities/quiz.entity";
 
 @Entity()
 export class Result {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn('increment')
     id : number;
 
     @ManyToOne(() => UserEntity, user => user.result,  { eager: true})
     user: UserEntity;
 
-    @ManyToOne(() => Quiz, quiz => quiz.results)
+    @ManyToOne(() => Quiz, quiz => quiz.results,{ eager: true} )
     @JoinColumn()
-    quiz : Quiz[];
+    quiz : Quiz;
 
     @Column({type: 'int', default: 0})
     percentage : number;
