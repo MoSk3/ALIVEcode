@@ -1,158 +1,15 @@
 //#region Types
 
-
-/**
- * represent all the valid command names
- */
-type commandNames =
-	| 'showSettingsMenu'
-	| 'goToNextError'
-	| 'goToPreviousError'
-	| 'selectall'
-	| 'centerselection'
-	| 'gotoline'
-	| 'fold'
-	| 'unfold'
-	| 'toggleFoldWidget'
-	| 'toggleParentFoldWidget'
-	| 'foldall'
-	| 'foldAllComments'
-	| 'foldOther'
-	| 'unfoldall'
-	| 'findnext'
-	| 'findprevious'
-	| 'selectOrFindNext'
-	| 'selectOrFindPrevious'
-	| 'find'
-	| 'overwrite'
-	| 'selecttostart'
-	| 'gotostart'
-	| 'selectup'
-	| 'golineup'
-	| 'selecttoend'
-	| 'gotoend'
-	| 'selectdown'
-	| 'golinedown'
-	| 'selectwordleft'
-	| 'gotowordleft'
-	| 'selecttolinestart'
-	| 'gotolinestart'
-	| 'selectleft'
-	| 'gotoleft'
-	| 'selectwordright'
-	| 'gotowordright'
-	| 'selecttolineend'
-	| 'gotolineend'
-	| 'selectright'
-	| 'gotoright'
-	| 'selectpagedown'
-	| 'pagedown'
-	| 'gotopagedown'
-	| 'selectpageup'
-	| 'pageup'
-	| 'gotopageup'
-	| 'scrollup'
-	| 'scrolldown'
-	| 'selectlinestart'
-	| 'selectlineend'
-	| 'togglerecording'
-	| 'replaymacro'
-	| 'jumptomatching'
-	| 'selecttomatching'
-	| 'expandToMatching'
-	| 'passKeysToBrowser'
-	| 'copy'
-	| 'cut'
-	| 'paste'
-	| 'removeline'
-	| 'duplicateSelection'
-	| 'sortlines'
-	| 'togglecomment'
-	| 'toggleBlockComment'
-	| 'modifyNumberUp'
-	| 'modifyNumberDown'
-	| 'replace'
-	| 'undo'
-	| 'redo'
-	| 'copylinesup'
-	| 'movelinesup'
-	| 'copylinesdown'
-	| 'movelinesdown'
-	| 'del'
-	| 'backspace'
-	| 'cut_or_delete'
-	| 'removetolinestart'
-	| 'removetolineend'
-	| 'removetolinestarthard'
-	| 'removetolineendhard'
-	| 'removewordleft'
-	| 'removewordright'
-	| 'outdent'
-	| 'indent'
-	| 'blockoutdent'
-	| 'blockindent'
-	| 'insertstring'
-	| 'inserttext'
-	| 'splitline'
-	| 'transposeletters'
-	| 'touppercase'
-	| 'tolowercase'
-	| 'autoindent'
-	| 'expandtoline'
-	| 'joinlines'
-	| 'invertSelection'
-	| 'addLineAfter'
-	| 'addLineBefore'
-	| 'openCommandPallete'
-	| 'modeSelect'
-	| 'foldToLevel1'
-	| 'foldToLevel2'
-	| 'foldToLevel3'
-	| 'foldToLevel4'
-	| 'foldToLevel5'
-	| 'foldToLevel6'
-	| 'foldToLevel7'
-	| 'foldToLevel8'
-	| 'addCursorAbove'
-	| 'addCursorBelow'
-	| 'addCursorAboveSkipCurrent'
-	| 'addCursorBelowSkipCurrent'
-	| 'selectMoreBefore'
-	| 'selectMoreAfter'
-	| 'selectNextBefore'
-	| 'selectNextAfter'
-	| 'toggleSplitSelectionIntoLines'
-	| 'splitSelectionIntoLines'
-	| 'alignCursors'
-	| 'findAll'
-	| 'startAutocomplete'
-	| 'expandSnippet';
-
-/**
- * represent the possible arguments that a command can take
- */
-type command_args =
-	| number /* line */
-	| string /* str */
-	| { times: number; text?: string }; /* args */
-
-/**
- * represent a valid command
- */
-type command = {
-	command: commandNames;
-	args: command_args;
-};
-
-type SymbolPair = {
-	open: string;
-	close: string;
-};
-
-/**
- * represent the position of the cursor
- */
-type Position = { row: number; column: number };
+import { command, SymbolPair } from "./autocomplete/autocompleteTypes";
+import { setEditor } from './autocomplete/autocompleteUtils';
+import {
+	getPos,
+	getLine,
+	execCommands,
+	lineStartWith,
+	getLines,
+	editor,
+} from './autocomplete/autocompleteUtils';
 
 //#endregion types
 
@@ -264,7 +121,7 @@ function closeBlock(): command | undefined {
 			}
 		}
 	}
-	
+
 	execCommands(
 		{
 			command: 'insertstring',
@@ -276,7 +133,7 @@ function closeBlock(): command | undefined {
 }
 
 const setAutocomplete = (e: any) => {
-	editor = e;
+	setEditor(e);
 };
 
 function autocomplete(
@@ -310,49 +167,6 @@ function autocomplete(
 
 //#region utils
 
-function execCommands(...commands: command[]) {
-	for (const command of commands) {
-		editor.commands.exec(command.command, editor, command.args);
-	}
-}
-
-/**
- * @returns the current position of the cursor as an object of form
- * `{ row: number, column: number }`
- */
-function getPos(): Position {
-	return editor.getCursorPosition();
-}
-
-/**
- * get the line at the specified row
- * @param row the index of the line
- * @returns the line at the specified row or `undefined` if there is none
- */
-function getLine(row: number): string {
-	return editor.session.getLine(row);
-}
-
-/**
- * get the lines from one row to another row
- * @param start the first row included in the array
- * @param end the last row included in the array (default is the last row of the document)
- * @returns the array of lines between the start row and the end row
- */
-function getLines(start: number, end: number | null = null): string[] {
-	return editor.session.getLines(start, end || editor.session.getLength());
-}
-
-/**
- * check if the line startswith a specify string and ignores the indentation at the start of the line
- * @param line the line to be tested
- * @param start the string
- * @returns if the line starts with start
- */
-function lineStartWith(line: string, start: string): boolean {
-	return line.trimLeft().startsWith(start);
-}
-
 //#endregion
-let editor: any;
+
 export { autocomplete, setAutocomplete };
