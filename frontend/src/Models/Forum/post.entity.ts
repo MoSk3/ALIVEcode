@@ -1,13 +1,20 @@
 import { BackendUser } from "../../Types/userTypes";
 
 export class Post {
-    id: number;
-    
+
     title: string;
 
     created_at: string;
     
     content: string;
+
+    subject: {
+        id: number;
+    };
+
+    creator: {
+        id: string;
+    };
 
     user: BackendUser;
 

@@ -36,6 +36,7 @@ import QuizCategory from '../../Pages/Quiz/QuizCategory/QuizCategory';
 import QuizCreate from '../../Pages/Quiz/QuizCreate/QuizCreate';
 import CategoriesForum from '../../Pages/Forum/CategoriesForum';
 import SubjectList from '../../Pages/Forum/SubjectList';
+import FormQuestion from '../../Pages/Forum/formQuestion';
 
 type component =
 	| React.ComponentType<RouteComponentProps<any>>
@@ -180,17 +181,17 @@ const useRoutes = () => {
 			maintenanceExempt: true,
 			component: MaintenanceMenu,
 		},
-		forum: {
-			path: '/forum',
-			component: Forum,
-		},
 		categoriesForum: {
-			path: '/categoriesForum',
+			path: '/forum/categoriesForum',
 			component: CategoriesForum,
 		},
 		subjectList: {
-			path: '/subjectList/:id',
+			path: '/forum/subjectList/:id',
 			component: SubjectList,
+		},
+		forum: {
+			path: '/forum',
+			component: Forum,
 		},
 		quiz: {
 			path: '/quiz',
@@ -289,6 +290,10 @@ const useRoutes = () => {
 		level_create_ai: {
 			path: '/level/create/ai',
 			component: () => <LevelForm type="AI" />,
+		},
+		formQuestion: {
+			path: '/formQuestion/forum',
+			component: FormQuestion, 
 		},
 	});
 

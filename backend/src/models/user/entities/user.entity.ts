@@ -77,7 +77,7 @@ export class UserEntity extends BaseEntity {
   @OneToMany(() => LevelProgressionEntity, prog => prog.user)
   levelProgressions: LevelProgressionEntity[];
 
-  @OneToMany(() => Post_Table, post => post.user)
+  @OneToMany(() => Post_Table, post => post.creator)
   post: Post_Table[];
 
   @OneToMany(() => Quiz, quiz => quiz.user_id)

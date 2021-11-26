@@ -27,7 +27,7 @@ return (
             <CardContainer asRow title="Catégories">
 			{category.map((c) =>
             <SmallCard
-						to={"/subjectList/"+c.id}
+						to={"/forum/subjectList/"+c.id}
 						title={c.name}
 						//img={List}
 					/>

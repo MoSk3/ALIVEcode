@@ -186,7 +186,9 @@ const api = {
 				get: apiGet('categories-subjects', CategorySubject, true),
 				getById: apiGet('categories-subjects/:id', CategorySubject, false),
 			},
+			
 			getLastPost: apiGet('post/lastPost', Post, true),
+			createQuestion: apiCreate('post', Post),
 		},
 	},
 };

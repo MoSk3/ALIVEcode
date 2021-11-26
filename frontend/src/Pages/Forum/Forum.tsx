@@ -7,10 +7,15 @@ import { Post as PostModel } from '../../Models/Forum/post.entity';
 import { useEffect, useState } from 'react';
 import api from '../../Models/api';
 import { plainToClass } from 'class-transformer';
+import { Link, useHistory } from 'react-router-dom';
+import useRoutes from '../../state/hooks/useRoutes';
 
 
 
 const Forum = () => {
+	const history = useHistory();
+	const routes = useRoutes();
+
 	const [post, setPost] = useState<PostModel[]>([]);
 	
 	useEffect(() => {
@@ -99,7 +104,9 @@ const Forum = () => {
 				
 				<Col>
 					<Col>
-						<Button variant={'primary'} className="btn-lg mt-5">Créer un sujet</Button>
+						<Link to='/formQuestion/forum'>
+							<Button variant={'primary'} className="btn-lg mt-5" /*onClick={ () => history.push(routes.auth.formQuestion)}*/>Créer un sujet</Button>
+						</Link>
 						<CardContainer asRow title="Derniers sujets">
 							<div>
 							{post.map((p) => 
@@ -107,7 +114,7 @@ const Forum = () => {
 								<div className="card-content">
 									<div className="media">
 										<img className="rounded-circle mt-1 ml-1 mr-3" src="https://bulma.io/images/placeholders/64x64.png" alt=""/>
-										<Card.Title className="mt-1">{p.user.name}</Card.Title>
+										{p.user && <Card.Title className="mt-1">{p.user.name}</Card.Title>}
 									</div>
 								</div>
 								<Card.Text className="ml-2">
