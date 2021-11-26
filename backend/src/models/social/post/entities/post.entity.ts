@@ -1,11 +1,15 @@
-import { IsNotEmpty, IsOptional } from "class-validator";
+import { IsNotEmpty } from "class-validator";
 import { UserEntity } from "src/models/user/entities/user.entity";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Timestamp } from "typeorm";
 import { Subject } from "../../subjects/entities/subject.entity";
 
 @Entity()
 export class Post{
-    
+    @ManyToOne(() => UserEntity, user => user.post, { eager: true })
+    @JoinColumn()
+    @IsNotEmpty()
+    creator: UserEntity;
+
     @PrimaryGeneratedColumn()
     id : number;
     
@@ -25,11 +29,6 @@ export class Post{
     @JoinColumn()
     @IsNotEmpty()
     subject : Subject;
-
-    @ManyToOne(() => UserEntity, user => user.post, { eager: true })
-    @JoinColumn()
-    @IsNotEmpty()
-    creator: UserEntity;
 
 
 

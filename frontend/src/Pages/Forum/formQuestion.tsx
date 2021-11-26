@@ -3,21 +3,21 @@ import CenteredContainer from "../../Components/UtilsComponents/CenteredContaine
 import { Post } from "../../Models/Forum/post.entity";
 import Form from "react-bootstrap/esm/Form";
 import { Button } from "react-bootstrap";
-import { SetStateAction, useContext, useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import { plainToClass } from "class-transformer";
 import api from "../../Models/api";
 import { CategorySubject } from "../../Models/Forum/categorySubject.entity";
 import { Subject } from "../../Models/Forum/subjects.entity";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { UserContext } from "../../state/contexts/UserContext";
+import { formQuestionProps } from "./forumFormQuestionTypes";
 
 
 
-const FormQuestion = () => {
+const FormQuestion = (props: formQuestionProps) => {
     const [category, setCategory] = useState<CategorySubject[]>([]);
     const [subject, setSubject] = useState<Subject[]>([]);
     const [categoryForm, setCategoryForm] = useState('');
-    const { user } = useContext(UserContext);
+
     
     //get tous les champs du forum
     const { register, handleSubmit } = useForm<Post>();
@@ -31,10 +31,6 @@ const FormQuestion = () => {
 		getCategory();
 	}, [])
 
-    function handleChangeCategory(event: { target: { value: SetStateAction<string>; }; }) {
-        setCategoryForm(event.target.value);
-    }
-
     useEffect(() => {
         const getSubject = async () => {
             if (categoryForm !== '') {
@@ -46,13 +42,15 @@ const FormQuestion = () => {
         getSubject();
     }, [categoryForm])
 
+    function handleChangeCategory(event: { target: { value: SetStateAction<string>; }; }) {
+        setCategoryForm(event.target.value);
+    }
+
+   
     async function sendForm(data: Post) {
         const date = new Date();
         data.created_at = date.toString();
-        if (user) {
-            data.creator.id = user.id;
-        }
-            
+
         return await api.db.forum.createQuestion(data);
     }
     

@@ -11,8 +11,8 @@ export class PostService {
     @InjectRepository(Post) private postRepository: Repository<Post>,
   ) {}
 
-  async create(createPostDto: Post) {
-    const post = this.postRepository.save(this.postRepository.create({ ...createPostDto}));
+  async create(creator: UserEntity, createPostDto: Post) {
+    const post = this.postRepository.save(this.postRepository.create({ ...createPostDto, creator }));
     return await post;
 
   }

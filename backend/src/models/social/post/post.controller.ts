@@ -3,7 +3,8 @@ import { PostService } from './post.service';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { Auth } from 'src/utils/decorators/auth.decorator';
 import { Post as PostEntity } from './entities/post.entity';
-
+import { UserEntity } from 'src/models/user/entities/user.entity';
+import { User } from 'src/utils/decorators/user.decorator';
 
 
 @Controller('post')
@@ -12,9 +13,9 @@ export class PostController {
 
   @Post()
   @Auth()
-  async create(@Body() createPostDto: PostEntity) {
+  async create(@User() user: UserEntity, @Body() createPostDto: PostEntity) {
     console.log(createPostDto)
-    return await this.postService.create(createPostDto);
+    return await this.postService.create(user, createPostDto);
   }
 
   @Get()
