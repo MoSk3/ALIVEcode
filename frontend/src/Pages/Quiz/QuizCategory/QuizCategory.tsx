@@ -19,6 +19,15 @@ const QuizCategory = (props: QuizCategoryProps) => {
 		getCategory();
 	}, [props.match.params.id]);
 
+	async function handleDelete(id: any) {
+		const response = await api.db.quiz.delete({
+			id,
+		});
+		if (response.status === 200) {
+			window.location.reload();
+		}
+	}
+
 	return (
 		<div>
 			<CenteredContainer
@@ -67,8 +76,17 @@ const QuizCategory = (props: QuizCategoryProps) => {
 										<td>TODO</td>
 										<td>
 											<Link to={`/quiz/edit/${quiz.id}`}>
-												<Button>Edit Quiz</Button>
+												<Button>Edit</Button>
 											</Link>
+										</td>
+										<td>
+											<Button
+												onClick={() => {
+													handleDelete(quiz.id);
+												}}
+											>
+												Delete
+											</Button>
 										</td>
 									</tr>
 								);

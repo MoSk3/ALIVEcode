@@ -8,8 +8,11 @@ import { Category } from '../../../Models/Quiz/categories-quiz.entity';
 import { Quiz } from '../../../Models/Quiz/quiz.entity';
 import { QuizForm } from '../../../Models/Quiz/quizForm.entity';
 import { QuizCategoryProps } from '../QuizCategory/Category';
+import { useHistory } from 'react-router';
 
 const QuizEdit = (props: QuizCategoryProps) => {
+	const history = useHistory();
+
 	async function updateQuiz(data: QuizForm) {
 		const response = await api.db.quiz.update(
 			{
@@ -18,6 +21,7 @@ const QuizEdit = (props: QuizCategoryProps) => {
 			data,
 		);
 		console.log(response);
+		history.push(`/quiz/category/${data.category.id}`);
 	}
 
 	const [categories, setCategories] = useState<Category[]>([]);

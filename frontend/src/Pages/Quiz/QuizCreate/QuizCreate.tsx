@@ -8,11 +8,15 @@ import { Category } from '../../../Models/Quiz/categories-quiz.entity';
 import { Quiz } from '../../../Models/Quiz/quiz.entity';
 import { QuizForm } from '../../../Models/Quiz/quizForm.entity';
 import { QuizCategoryProps } from '../QuizCategory/Category';
+import { useHistory } from 'react-router';
 
 const QuizCreate = (props: QuizCategoryProps) => {
+	const history = useHistory();
+
 	async function postQuiz(data: QuizForm) {
 		const response = await api.db.quiz.create(data);
 		console.log(response);
+		history.push(`/quiz/category/${data.category.id}`);
 	}
 
 	const [categories, setCategories] = useState<Category[]>([]);
