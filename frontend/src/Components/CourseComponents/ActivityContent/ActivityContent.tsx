@@ -51,6 +51,8 @@ const ActivityContent = (props: ActivityContentProps) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [activity?.content?.data]);
 
+	const addContent = () => {};
+
 	/*const projectId = useMemo(() => {
 		return Math.random() > 0.5
 			? '73f799b7-1019-4f8e-8205-872cf1fac1ff'
@@ -121,10 +123,15 @@ const ActivityContent = (props: ActivityContentProps) => {
 									id={projectId}
 								></IoTProject>*/}
 								{canEdit && editMode ? (
-									<MDEditor
-										onSave={saveActivityContent}
-										defaultValue={defaultMDValue}
-									/>
+									<div style={{ display: 'grid' }}>
+										<MDEditor
+											onSave={saveActivityContent}
+											defaultValue={defaultMDValue}
+										/>
+										<Button variant="primary" onClick={addContent}>
+											Ajouter
+										</Button>
+									</div>
 								) : activity.content?.data ||
 								  (activity.levels && activity.levels.length > 0) ? (
 									<>
