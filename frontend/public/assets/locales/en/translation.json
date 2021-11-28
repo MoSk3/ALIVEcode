@@ -22,6 +22,12 @@
 			"maxLength": "This field exceeds {{max}} characters",
 			"minLength": "This field should be at least {{min}} characters",
 			"match": {
+				"alphabetic": "This field should only contains alphabetic characters",
+				"alphabetic_lower": "This field should only contains lowercase alphabetic characters",
+				"alphabetic_upper": "This field should only contains uppercase alphabetic characters",
+				"alphanumeric": "This field should only contains alphanumeric characters",
+				"alphanumeric_underscore": "This field should only contains alphanumeric characters and underscores _",
+				"numbers": "This field should only contains numbers",
 				"name": "This field should only contains alphanumeric characters"
 			}
 		},
@@ -201,7 +207,18 @@
 	},
 	"course": {
 		"desc": "Course of {{professor}}",
-		"subject": "Subject"
+		"subject": "Subject",
+		"empty": "This course is empty.",
+		"section": {
+			"empty": "This section has no activities.",
+			"new": "New section"
+		},
+		"activity": {
+			"empty": "This activity is empty.",
+			"no_activity": "Open an activity to get started.",
+			"new": "Add an activity",
+			"new_name": "Activity #{{num}}"
+		}
 	},
 	"menu": {
 		"signup": {
@@ -297,6 +314,14 @@
 				"point3": "Finally, it starts the whole process again until it obtains results that minimize the error as much as possible in order to be able to produce the best possible predictions!",
 				"paragraph4": "Obviously, neural networks are much more complex than that, and that's why a course on this will be available soon. Stay tuned!"
 			}
+		}
+	},
+	"iot": {
+		"project": {
+			"name": "IoT Project"
+		},
+		"object": {
+			"name": "IoT Object"
 		}
 	},
 	"simulation": {

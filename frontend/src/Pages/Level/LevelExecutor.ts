@@ -5,7 +5,7 @@ import { User } from '../../Models/User/user.entity';
 export abstract class LevelExecutor {
 	public cmd?: CMD;
 	public lineInterfaceContent: string = '';
-	public timeouts: Array<NodeJS.Timeout> = [];
+	private timeouts: Array<NodeJS.Timeout> = [];
 	public execution: boolean = false;
 	public onToggleExecution?: (exec: any) => void;
 	protected whenExecutionEnd: (result: any[]) => void;
@@ -16,7 +16,7 @@ export abstract class LevelExecutor {
 	protected async sendDataToAsServer(
 		data:
 			| { lines: string }
-			| { idToken: string; 'response-data': string[] }
+			| { idToken: string; responseData: string[] }
 			| { idToken: string; status: 'interrupted' },
 	) {
 		try {
@@ -78,7 +78,7 @@ export abstract class LevelExecutor {
 			this.whenExecutionEnd = async res => {
 				data = await this.sendDataToAsServer({
 					idToken: this.idToken,
-					'response-data': res,
+					responseData: res,
 				});
 				if (!data || !this.execution) {
 					this.interrupt();

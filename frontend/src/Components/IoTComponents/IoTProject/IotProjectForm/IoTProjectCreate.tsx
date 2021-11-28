@@ -9,6 +9,7 @@ import {
 	IOTPROJECT_ACCESS,
 	IOTPROJECT_INTERACT_RIGHTS,
 } from '../../../../Models/Iot/IoTproject.entity';
+import { FORM_ACTION } from '../../../UtilsComponents/Form/formTypes';
 
 /**
  * Form that creates in the database an IoTProject and navigates to it
@@ -31,7 +32,7 @@ const IoTProjectCreate = () => {
 				}}
 				name="iot_project"
 				url="iot/projects"
-				action="POST"
+				action={FORM_ACTION.POST}
 				inputGroups={[
 					{
 						name: 'name',

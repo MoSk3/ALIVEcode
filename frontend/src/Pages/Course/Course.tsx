@@ -19,6 +19,8 @@ import { plainToClass } from 'class-transformer';
 import { Activity } from '../../Models/Course/activity.entity';
 
 const StyledDiv = styled.div`
+	display: flex;
+	width: 100%;
 	.course-body {
 	}
 `;
@@ -34,6 +36,7 @@ const Course = (props: CourseProps) => {
 	const [course, setCourse] = useState<CourseModel>();
 	const [section, setSection] = useState<Section>();
 	const [activity, setActivity] = useState<Activity>();
+	const [isNavigationOpen, setIsNavigationOpen] = useState(true);
 
 	const { t } = useTranslation();
 	const alert = useAlert();
@@ -42,6 +45,7 @@ const Course = (props: CourseProps) => {
 	const saveActivity = async (activity: Activity) => {
 		if (!course || !activity || !section) return;
 		const { content, ...actWithoutContent } = activity;
+		(actWithoutContent as any).levels = undefined;
 
 		const updatedAct = await api.db.courses.updateActivity(
 			{
@@ -51,12 +55,16 @@ const Course = (props: CourseProps) => {
 			},
 			actWithoutContent,
 		);
-		setActivity(updatedAct);
+		activity.name = updatedAct.name;
+		activity.content = updatedAct.content;
+		setActivity(activity);
 	};
 
 	const saveActivityContent = async (data: string) => {
 		if (!course || !activity || !section) return;
 		const activityDTO = { ...activity, content: { data } };
+		(activityDTO as any).levels = undefined;
+
 		const updatedAct = await api.db.courses.updateActivity(
 			{
 				courseId: course.id,
@@ -65,7 +73,10 @@ const Course = (props: CourseProps) => {
 			},
 			activityDTO,
 		);
-		setActivity(updatedAct);
+
+		activity.name = updatedAct.name;
+		activity.content = updatedAct.content;
+		setActivity(activity);
 	};
 
 	const loadActivity = async (section: Section, activity: Activity) => {
@@ -104,11 +115,13 @@ const Course = (props: CourseProps) => {
 		section,
 		activity,
 		canEdit,
+		isNavigationOpen,
 		loadActivity,
 		addSection,
 		addActivity,
 		saveActivity,
 		saveActivityContent,
+		setIsNavigationOpen,
 	};
 
 	useEffect(() => {

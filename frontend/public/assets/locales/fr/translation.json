@@ -22,7 +22,13 @@
 			"maxLength": "Ce champs dépasse {{max}} caractères",
 			"minLength": "Ce champs devrait être d'au moins {{min}} caractères",
 			"match": {
-				"name": "Ce champs doit contenir uniquement des chiffres et des lettres"
+				"alphabetic": "Ce champs doit contenir uniquement des lettres",
+				"alphabetic_lower": "Ce champs doit contenir uniquement des lettres minuscules",
+				"alphabetic_upper": "Ce champs doit contenir uniquement des lettres majuscules",
+				"alphanumeric": "Ce champs doit contenir uniquement des lettres et des chiffres",
+				"alphanumeric_underscore": "Ce champs doit contenir uniquement des lettres, des chiffres et des tirets vers le bas _",
+				"numbers": "Ce champs doit contenir uniquement des chiffes",
+				"name": "Ce champs doit contenir uniquement des lettres et des chiffres"
 			}
 		},
 		"level": {
@@ -201,7 +207,18 @@
 	},
 	"course": {
 		"desc": "Cours de {{professor}}",
-		"subject": "Sujet"
+		"subject": "Sujet",
+		"empty": "Ce course est vide.",
+		"section": {
+			"empty": "Cette section ne possède aucune activité",
+			"new": "Nouvelle section"
+		},
+		"activity": {
+			"empty": "Cette activité est vide.",
+			"no_activity": "Ouvre une activité pour commencer à apprendre.",
+			"new": "Ajouter une activité",
+			"new_name": "Activité #{{num}}"
+		}
 	},
 	"menu": {
 		"signup": {
@@ -297,6 +314,14 @@
 				"point3": "Finalement, il recommence tout le processus jusqu’à obtenir des résultats qui minimisent le plus possible l’erreur afin de pouvoir produire les meilleures prédictions possibles!",
 				"paragraph4": "Évidemment, les réseaux de neurones sont bien plus complexes que cela, et c’est pourquoi un cours à ce sujet sera bientôt disponible. Reste à l’affût!"
 			}
+		}
+	},
+	"iot": {
+		"project": {
+			"name": "Projet IoT"
+		},
+		"object": {
+			"name": "Objet IoT"
 		}
 	},
 	"simulation": {
