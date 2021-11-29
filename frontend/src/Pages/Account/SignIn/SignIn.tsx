@@ -22,7 +22,7 @@ import HttpStatusCode from '../../../Types/http-errors';
  * 
 */
 const SignIn = (props: SignInProps) => {
-	const { register, handleSubmit, formState: { errors } } = useForm();
+	const { register, handleSubmit, setError, formState: { errors } } = useForm();
 	const { setUser } = useContext(UserContext);
 	const { t } = useTranslation();
 	const { routes } = useRoutes();
@@ -32,17 +32,17 @@ const SignIn = (props: SignInProps) => {
 	const onSignIn = async (formValues: FormSignInValues) => {
 		try {
 			const { accessToken } = (await axios.post('users/login/', formValues)).data;
-			if (!accessToken) throw new Error("Could not login");
+			if (!accessToken) return alert.error(t('error.unknown'))
 
 			setAccessToken(accessToken);
 
 			const user = await User.loadUser();
-			if(!user) return alert.error('Une erreur est survenue, veuillez réessayer');
+			if(!user) return alert.error(t('error.unknown'));
 
 			setUser(user);
 
 			if(history.location.pathname === '/signin') history.push(routes.auth.dashboard.path);
-			return alert.success("Vous êtes connecté!");
+			return alert.success(t('msg.auth.signin_success'));
 
 		} catch (e) {
 			const err = e as AxiosError;
@@ -50,7 +50,9 @@ const SignIn = (props: SignInProps) => {
 
 			const statusCode = err.response.status;
 			if(statusCode === HttpStatusCode.BAD_REQUEST) {
-				return alert.error(t('error.login'))
+				setError('email', { type: 'invalid' });
+				setError('password', { type: 'invalid' });
+				return alert.error(t('error.signin'))
 			}
 
 			return alert.error(t('error.custom', { error: err.response.data.message }));
@@ -75,6 +77,7 @@ const SignIn = (props: SignInProps) => {
 							type="invalid"
 						>
 							{errors.email?.type === 'required' && t('form.email.required')}
+							{errors.email?.type === 'invalid' && t('error.signin')}
 						</Form.Control.Feedback>
 					</InputGroup>
 				</Form.Group>
@@ -97,6 +100,7 @@ const SignIn = (props: SignInProps) => {
 							{errors.password?.type === 'pattern' && t('form.pwd.pattern')}
 							{errors.password?.type === 'minLength' && t('form.error.minLength', { min: 6})}
 							{errors.password?.type === 'maxLength' && t('form.error.maxLength', { max: 32 })}
+							{errors.password?.type === 'invalid' && t('error.signin')}
 						</Form.Control.Feedback>
 					</InputGroup>
 				</Form.Group>

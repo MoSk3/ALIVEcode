@@ -5,8 +5,9 @@
 		"custom": "Erreur: {{error}}.",
 		"back": "Retour en arrière",
 		"home": "Retour à la page d'accueil",
-		"logout": "Une erreur est survenue lors de la déconnexion, veuillez réesayer.",
-		"login": "Informations erronées, veuillez réessayer.",
+		"signout": "Une erreur est survenue lors de la déconnexion, veuillez réesayer.",
+		"signin": "Informations erronées, veuillez réessayer.",
+		"signin_first_time": "une erreur est survenue lors de votre connexion automatique à votre nouveau compte.",
 		"500": "Une erreur est survenue, veuillez réessayer.",
 		"page404": "Cette page n'existe pas.",
 		"maintenance": {
@@ -137,8 +138,10 @@
 		},
 		"auth": {
 			"signin": "Se connecter",
+			"signin_success": "Connexion réussie",
 			"signup": "S'inscrire",
-			"signup_professor": "Compte professor",
+			"signup_success": "Vous êtes connecté avec votre nouveau compte",
+			"signup_professor": "Compte professeur",
 			"signup_student": "Compte étudiant",
 			"signout": "Se déconnecter",
 			"already_registered": "Tu as déjà un compte?",

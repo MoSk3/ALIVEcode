@@ -6,7 +6,8 @@
 		"back": "Go back",
 		"home": "Back to the main page",
 		"logout": "Something went wrong when logging out, please try again.",
-		"login": "Invalid credentials, please verify them again.",
+		"signin": "Invalid credentials, please verify them again.",
+		"signin_first_time": "Something went wrong when automatically logging into your new account",
 		"500": "Something went wrong, please try again.",
 		"page404": "This page does not exist.",
 		"maintenance": {
@@ -137,7 +138,9 @@
 		},
 		"auth": {
 			"signin": "Connect",
+			"signin_success": "You are successfully logged in",
 			"signup": "Sign up",
+			"signup_success": "You are successfully logged into your new account",
 			"signup_professor": "Professor account",
 			"signup_student": "Student account",
 			"signout": "Sign out",

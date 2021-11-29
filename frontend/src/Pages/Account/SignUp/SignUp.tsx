@@ -13,6 +13,7 @@ import { useHistory } from 'react-router';
 import { setAccessToken } from '../../../Types/accessToken';
 import { useTranslation } from 'react-i18next';
 import HttpStatusCode from '../../../Types/http-errors';
+import useRoutes from '../../../state/hooks/useRoutes';
 
 /**
  * Signup page that allows the user to register a new account
@@ -29,6 +30,7 @@ const SignUp = ({ userType }: SignUpProps) => {
 		formState: { errors },
 	} = useForm();
 	const { t } = useTranslation();
+	const { routes } = useRoutes();
 	const alert = useAlert();
 	const history = useHistory();
 
@@ -53,13 +55,15 @@ const SignUp = ({ userType }: SignUpProps) => {
 			setAccessToken(accessToken);
 
 			const user = await User.loadUser();
-			if (!user)
-				return alert.error('Une erreur est survenue, veuillez réessayer');
+			if (!user) {
+				alert.error(t('error.signin_first_time'));
+				return history.push(routes.non_auth.signin.path);
+			}
 
 			setUser(user);
 
 			if (history.location.pathname === '/signin') history.push('/dashboard');
-			return alert.success('Vous êtes connecté avec votre nouveau compte!');
+			return alert.success(t('msg.auth.signup_success'));
 		} catch (e) {
 			const err = e as AxiosError;
 			if (!err.response) return alert.error(t('error.unknown'));
@@ -73,7 +77,7 @@ const SignUp = ({ userType }: SignUpProps) => {
 			}
 
 			return alert.error(
-				'Erreur : ' + (err.response.data.message ?? 'veuillez réessayer'),
+				t('error.custom', { error: err.response.data.message }),
 			);
 		}
 	};
