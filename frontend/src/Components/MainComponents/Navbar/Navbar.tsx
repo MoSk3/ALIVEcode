@@ -1,10 +1,9 @@
 import { useContext } from 'react';
-import { NavbarProps } from './NavbarTypes';
+import { NavbarProps, StyledNavbar } from './navbarTypes';
 import { UserContext } from '../../../state/contexts/UserContext';
 import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
 
-import './navbar.css';
 import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
 import Logo from '../../../assets/images/LogoALIVE.png';
 import i18next from 'i18next';
@@ -29,7 +28,7 @@ const ALIVENavbar = ({ handleLogout }: NavbarProps) => {
 	const history = useHistory();
 
 	return (
-		<Navbar id="navbar" expand="lg">
+		<StyledNavbar id="navbar" expand="lg">
 			<Navbar.Brand>
 				<Link to={routes.public.home.path}>
 					<img
@@ -62,12 +61,13 @@ const ALIVENavbar = ({ handleLogout }: NavbarProps) => {
 					>
 						{t('home.navbar.section.iot')}
 					</Nav.Link>
-					<Nav.Link
+					{/*<Nav.Link
 						className="nav-link"
 						onClick={() => history.push(routes.public.amc.path)}
 					>
 						{t('home.navbar.section.amc')}
 					</Nav.Link>
+					*/}
 					<Nav.Link
 						className="nav-link"
 						onClick={() => history.push(routes.public.about.path)}
@@ -202,7 +202,7 @@ const ALIVENavbar = ({ handleLogout }: NavbarProps) => {
 					</button>
 				</div>
 			</Navbar.Collapse>
-		</Navbar>
+		</StyledNavbar>
 	);
 };
 

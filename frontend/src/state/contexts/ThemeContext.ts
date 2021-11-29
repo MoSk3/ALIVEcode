@@ -35,10 +35,10 @@ export type Theme = {
 export const themes: { light: Theme; dark: Theme } = {
 	light: {
 		color: {
-			primary: '#0177bc',
+			primary: '#2E75FF',
 			primary_rgb: '1,119,188',
-			secondary: '#3F9CF3',
-			secondary_rgb: '63,156,243',
+			secondary: '#92B7FF',
+			secondary_rgb: '146,183,255',
 			third: '#04e6d3',
 			third_rgb: '0,186,198',
 			fourth: '#029FCA',
@@ -97,6 +97,11 @@ export const themes: { light: Theme; dark: Theme } = {
 		background: '#222222',
 		name: 'dark',
 	},
+};
+
+export const commonColors = {
+	almost_black: '#23272A',
+	dark_gray: '#616161',
 };
 /*
 

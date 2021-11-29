@@ -9,7 +9,12 @@ import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'react-datetime/css/react-datetime.css';
 import useRoutes from './state/hooks/useRoutes';
-import { ThemeContext, Theme, themes } from './state/contexts/ThemeContext';
+import {
+	ThemeContext,
+	Theme,
+	themes,
+	commonColors,
+} from './state/contexts/ThemeContext';
 import styled, { createGlobalStyle } from 'styled-components';
 import { loadThemeFromCookies, setCookie } from './Types/cookies';
 import { useAlert } from 'react-alert';
@@ -42,12 +47,20 @@ const GlobalStyle = createGlobalStyle`
 
 	${({ theme }: GlobalStyleProps) => {
 		const cssVars = [];
-		for (const [colorName, color] of Object.entries(theme.color)) {
+		for (const [colorName, color] of Object.entries({
+			...commonColors,
+			...theme.color,
+		})) {
 			const cssName = colorName.includes('rgb')
 				? `--${colorName.split('_')[0]}-color-rgb`
 				: `--${colorName.replaceAll('_', '-')}-color`;
 			cssVars.push(`${cssName}: ${color}`);
 		}
+
+		cssVars.push(`--navbar-font: 'Oxygen', sans-serif`);
+		cssVars.push(`--title-font: 'Roboto', sans-serif`);
+		cssVars.push(`--drop-shadow: 3px 3px 4px rgba(0, 0, 0, 0.25)`);
+
 		return ':root {' + cssVars.join(';') + '}';
 		/*
 		return `:root {
