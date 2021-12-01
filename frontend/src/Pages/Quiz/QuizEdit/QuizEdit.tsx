@@ -9,7 +9,7 @@ import { Quiz } from '../../../Models/Quiz/quiz.entity';
 import { QuizForm } from '../../../Models/Quiz/quizForm.entity';
 import { QuizCategoryProps } from '../QuizCategory/Category';
 import { useHistory } from 'react-router';
-import { Link } from 'react-router-dom';
+import { QuestionForm } from '../../../Models/Quiz/questionForm.entity';
 
 const QuizEdit = (props: QuizCategoryProps) => {
 	const history = useHistory();
@@ -25,11 +25,20 @@ const QuizEdit = (props: QuizCategoryProps) => {
 		history.push(`/quiz/category/${data.category.id}`);
 	}
 
+	async function createQuestion(data: QuestionForm) {
+		const response = await api.db.question.create(data);
+		console.log(response);
+	}
+
 	const [categories, setCategories] = useState<Category[]>([]);
 	const [quiz, setQuiz] = useState<Quiz>();
 
 	const { register, handleSubmit } = useForm<QuizForm>();
+	const { register: registerQuestion, handleSubmit: handleSubmitQuestion } =
+		useForm<QuestionForm>();
 	const onSubmit: SubmitHandler<Quiz> = data => updateQuiz(data);
+	const onSubmitNewQuestion: SubmitHandler<QuestionForm> = data =>
+		createQuestion(data);
 	useEffect(() => {
 		const getCategories = async () => {
 			const data = await api.db.quiz.categories.all({});
@@ -104,9 +113,17 @@ const QuizEdit = (props: QuizCategoryProps) => {
 								// Should now redirect to the quiz category page to show the quiz has been updated
 							}
 						</Form>
-						<Link to={`/quiz/edit/${quiz?.id}/new-question`}>
-							<Button>Ajouter une Question!</Button>
-						</Link>
+						<Form onSubmit={handleSubmit(onSubmitNewQuestion)}>
+							<Form.Group>
+								<Form.Label>Question: </Form.Label>
+								<Form.Control
+									as="textarea"
+									rows={5}
+									{...registerQuestion('question')}
+								></Form.Control>
+							</Form.Group>
+							<Button type="submit">Ajouter une Question!</Button>
+						</Form>
 					</Card.Body>
 				</Card>
 				{quiz?.questions.map(question => {
