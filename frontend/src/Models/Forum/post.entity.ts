@@ -1,12 +1,10 @@
-import { Exclude, Type } from "class-transformer";
-import { BackendUser } from "../../Types/userTypes";
 import { CreatedByUser } from "../Generics/createdByUser.entity";
-import { Student } from "../User/user.entity";
+import { User } from "../User/user.entity";
 
 export class Post extends CreatedByUser {
-    @Exclude({ toPlainOnly: true })
-	@Type(() => Student)
-    creator: Student;
+    creator: User;
+
+    id: string;
 
     title: string;
 

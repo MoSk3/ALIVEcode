@@ -7,16 +7,14 @@ import { Post as PostModel } from '../../Models/Forum/post.entity';
 import { useEffect, useState } from 'react';
 import api from '../../Models/api';
 import { plainToClass } from 'class-transformer';
-import { Link, useHistory } from 'react-router-dom';
-import useRoutes from '../../state/hooks/useRoutes';
+import { Link } from 'react-router-dom';
 
 
 
 const Forum = () => {
-	const history = useHistory();
-	const routes = useRoutes();
 
 	const [post, setPost] = useState<PostModel[]>([]);
+
 	
 	useEffect(() => {
 		const getPost = async () => {
@@ -105,24 +103,26 @@ const Forum = () => {
 				<Col>
 					<Col>
 						<Link to='/formQuestion/forum'>
-							<Button variant={'primary'} className="btn-lg mt-5" /*onClick={ () => history.push(routes.auth.formQuestion)}*/>Créer un sujet</Button>
+							<Button variant={'primary'} className="btn-lg mt-5">Créer un sujet</Button>
 						</Link>
 						<CardContainer asRow title="Derniers sujets">
 							<div>
 							{post.map((p) => 
+							<Link to={'/forum/post/'+ p.id}>
 							<Card className="ml-2 mr-2">
 								<div className="card-content">
 									<div className="media">
 										<img className="rounded-circle mt-1 ml-1 mr-3" src="https://bulma.io/images/placeholders/64x64.png" alt=""/>
-										{p.user && <Card.Title className="mt-1">{p.user.name}</Card.Title>}
+										{p.creator && <Card.Title className="mt-1">{p.creator.email}</Card.Title>}
 									</div>
 								</div>
 								<Card.Text className="ml-2">
 									{p.title}
 									<br/>
-									<Card.Text><small className="text-muted">111</small></Card.Text>
+									<Card.Text><small className="text-muted">{p.created_at}</small></Card.Text>
 								</Card.Text>
 							</Card>
+							</Link>
 							)}
 							</div>
 						</CardContainer>

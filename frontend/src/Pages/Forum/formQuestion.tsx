@@ -3,13 +3,15 @@ import CenteredContainer from "../../Components/UtilsComponents/CenteredContaine
 import { Post } from "../../Models/Forum/post.entity";
 import Form from "react-bootstrap/esm/Form";
 import { Button } from "react-bootstrap";
-import { SetStateAction, useEffect, useState } from "react";
+import { SetStateAction, useContext, useEffect, useState } from "react";
 import { plainToClass } from "class-transformer";
 import api from "../../Models/api";
 import { CategorySubject } from "../../Models/Forum/categorySubject.entity";
 import { Subject } from "../../Models/Forum/subjects.entity";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { formQuestionProps } from "./forumFormQuestionTypes";
+import { UserContext } from "../../state/contexts/UserContext";
+import { useHistory } from "react-router-dom";
 
 
 
@@ -17,10 +19,14 @@ const FormQuestion = (props: formQuestionProps) => {
     const [category, setCategory] = useState<CategorySubject[]>([]);
     const [subject, setSubject] = useState<Subject[]>([]);
     const [categoryForm, setCategoryForm] = useState('');
+    const { user } = useContext(UserContext);
+    const history = useHistory();
+
+
 
     
     //get tous les champs du forum
-    const { register, handleSubmit } = useForm<Post>();
+    const { register, handleSubmit } = useForm();
     const onSubmit: SubmitHandler<Post> = data => sendForm(data);
 
 	useEffect(() => {
@@ -49,9 +55,19 @@ const FormQuestion = (props: formQuestionProps) => {
    
     async function sendForm(data: Post) {
         const date = new Date();
-        data.created_at = date.toString();
+        let string = date.toString();
+        string = string.substring(0,24);
+        data.created_at = string;
+        
+        if (user) {
+            data.creator = user;
+        }
 
-        return await api.db.forum.createQuestion(data);
+        const response = await api.db.forum.createQuestion(data);
+        if (response) {
+            history.push('/forum');
+        }
+            
     }
     
     return (
@@ -101,7 +117,7 @@ const FormQuestion = (props: formQuestionProps) => {
                 </Form.Group>
             </Form>
             </CardContainer>
-        </CenteredContainer>
+                </CenteredContainer>
     </div>
     )
 };

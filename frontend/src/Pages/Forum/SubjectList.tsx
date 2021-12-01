@@ -8,6 +8,8 @@ import { CategorySubject } from "../../Models/Forum/categorySubject.entity";
 import { Subject } from "../../Models/Forum/subjects.entity";
 import NavBarSocial from "./NavBarSocial";
 import { SubjectProps } from "./subjectTypes";
+import { Link } from 'react-router-dom';
+
 
 const SubjectList = (props: SubjectProps) => {
     const [category, setCategory] = useState<CategorySubject>();
@@ -46,11 +48,13 @@ const SubjectList = (props: SubjectProps) => {
                 {s.posts.map((p) => 
                 <ListGroup.Item>
                 <Card>
+                    <Link to={'/forum/post/'+s.id}>
                     <Card.Title>{p.title}</Card.Title>
+                    </Link>
                     <Card.Body>
                         <Card.Text>{p.content}</Card.Text>
                     </Card.Body>
-                    <Card.Footer>{p.created_at +" "+ p.user.name}</Card.Footer>
+                    <Card.Footer>{p.created_at +" "+ p.creator.email}</Card.Footer>
                 </Card>
                 </ListGroup.Item>
                 )}

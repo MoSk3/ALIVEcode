@@ -189,6 +189,7 @@ const api = {
 			
 			getLastPost: apiGet('post/lastPost', Post, true),
 			createQuestion: apiCreate('post', Post),
+			getById: apiGet('post/:id', Post, false),
 		},
 	},
 };
