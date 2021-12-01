@@ -1,10 +1,9 @@
-import RoomList from '../../Components/Chat/RoomList/roomList'
 import MessageForm from '../../Components/Chat/MessageForm/messageForm';
-import RoomForm from '../../Components/Chat/RoomForm/roomForm';
 import styled from 'styled-components';
 import CenteredContainer from '../../Components/UtilsComponents/CenteredContainer/CenteredContainer';
-import CardContainer from '../../Components/UtilsComponents/CardContainer/CardContainer';
-import { Container, Row, Col } from 'react-bootstrap';
+
+import { Card } from 'react-bootstrap';
+import { useRef, useState } from 'react';
 const StyledCenteredContainer = styled(CenteredContainer)`
 	display: flex;
 	width: 100%;
@@ -16,12 +15,35 @@ const StyledCenteredContainer = styled(CenteredContainer)`
 
 const Chat = () => {
 	return (
-		<div className="Chat">
-			<StyledCenteredContainer className="chat">
-				<div className="text-left col-sm-3">nerrre</div>
-				<MessageForm />
-				<div className="col-sm-2">coucou</div>
-			</StyledCenteredContainer>
+		<div className="section">
+			<div
+				className="top"
+				style={{
+					backgroundColor: '#0177bc',
+					color: '#FFF',
+					textAlign: 'center',
+				}}
+			>
+				<h1>REACT CHAT APPLICATION</h1>
+				<h1>CHAT</h1>
+			</div>
+			<div className="Chat">
+				<StyledCenteredContainer className="chat">
+					<div className="text-left col-sm-3">
+						<Card style={{ height: '100%' }}>
+							<div className="list-group">
+								<div
+									className="list-group-item list-group-item-action
+                      "
+								>
+									topic 1
+								</div>
+							</div>
+						</Card>
+					</div>
+					<MessageForm />
+				</StyledCenteredContainer>
+			</div>
 		</div>
 	);
 };

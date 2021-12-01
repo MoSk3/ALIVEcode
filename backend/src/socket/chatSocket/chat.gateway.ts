@@ -16,6 +16,7 @@ import {from, Observable } from 'rxjs';
 import { map,  } from 'rxjs/operators';
 import { Server, WebSocket } from 'ws';
 import { DTOInterceptor } from '../../utils/interceptors/dto.interceptor';
+import { UserConnect } from './chat.types';
 import {
   MessageRequest,
   ObjectClient,
@@ -31,6 +32,7 @@ export class ChatGateway implements OnGatewayDisconnect, OnGatewayConnection, On
   @WebSocketServer()
   server: Server;
   clients=[]
+  users=[]
   afterInit() {
     this.logger.log(`Initialized`);
   }
@@ -38,36 +40,19 @@ export class ChatGateway implements OnGatewayDisconnect, OnGatewayConnection, On
   handleConnection(client:any) {
     this.logger.log(`Client connected`);
     this.clients.push(client)
+        //return this.broadcast('clientConnected', client )
+
    
   }
 
-  handleDisconnect(@ConnectedSocket() socket: WebSocket) {
+  handleDisconnect(@ConnectedSocket() socket: WebSocket){
     this.logger.log(`Client disconnected`);
     WatcherClient.clients = WatcherClient.watchers.filter(w => w.getSocket() !== socket);
   }
 
  
-  // @SubscribeMessage('chatToServer')
-  // handleMessage(client: WebSocket, message: { sender: string, room: string, message: string }) {
-  //   this.server.to(message.room).emit('chatToClient', message);
-  // }
 
-  // @SubscribeMessage('joinRoom')
-  // handleRoomJoin(client: WebSocket, room: string ) {
-  //   client.join(room);
-  //   client.emit('joinedRoom', room);
-  // }
-
-  // @SubscribeMessage('leaveRoom')
-  // handleRoomLeave(client: WebSocket, room: string ) {
-  //   client.leave(room);
-  //   client.emit('leftRoom', room);
-  // }
-  @SubscribeMessage('k')
-  handleMessage(client: WebSocket, text: string): WsResponse<string>{
-    console.log(event)
-    return {event: 'messageToClient', data: text}
-  }
+  
 
   private broadcast(event:string, data: any):any {
     
@@ -87,18 +72,16 @@ export class ChatGateway implements OnGatewayDisconnect, OnGatewayConnection, On
     return this.broadcast('messageToClient', data )
 
   }
-  // onEvent(client: any, data: any): Observable<WsResponse<number>> {
-  //   console.log(client)
-  //   return from([1, 2, 3]).pipe(map(item => ({ event: 'events', data: item })));
-  //}
+  @SubscribeMessage('user_connected')
+  onConnect(@ConnectedSocket()socket:WebSocket ,@MessageBody() data:UserConnect)  {
+    
+    const client = new ObjectClient(socket, data.name);
+    client.register();
+      this.users.push(data);
+         console.log(data)
+    return this.broadcast('user_connected', this.users )
+
+  }
+
 }
 
-// @SubscribeMessage('send_message')
-// onmessage(socket: WebSocket, message: string,
-// ) {
-//   socket.addEventListener('message', function (event) { 
-//     console.log('Message from server ', event.data); 
-//   });
-
-// }
-// }

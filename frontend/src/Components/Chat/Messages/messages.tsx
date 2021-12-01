@@ -1,5 +1,4 @@
 import { Container, Row } from 'react-bootstrap';
-import CardContainer from '../../UtilsComponents/CardContainer/CardContainer';
 
 const Messages = (props: { username: string; text: string; time: any }) => {
 	return (

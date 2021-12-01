@@ -8,6 +8,9 @@ export type MessageRequest = {
   time: any
   
 };
+export type UserConnect= {
+  name: string;
+}
 
 export class Client {
   static clients: Client[] = [];

@@ -1,7 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { Button, Col, Container, Form, Row } from 'react-bootstrap';
+import { Container, Card, Row } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
-import { User } from '../../../Models/User/user.entity';
 import { UserContext } from '../../../state/contexts/UserContext';
 import Messages from '../Messages/messages';
 
@@ -10,6 +9,7 @@ const MessageForm = () => {
 	const { register, handleSubmit } = useForm();
 	const socket: any = useRef();
 	const [messages, setMessages]: any = useState([]);
+	const [users, setUsers]: any = useState([]);
 
 	useEffect(() => {
 		if (!process.env.REACT_APP_CHAT_URL)
@@ -18,24 +18,42 @@ const MessageForm = () => {
 		socket.current = new WebSocket(process.env.REACT_APP_CHAT_URL);
 
 		socket.current.onopen = () => {
+			console.log(user);
 			console.log('Connected to Chat');
-			socket.current.onmessage = (e: { data: string }) => {
-				console.log(e);
-				const message = JSON.parse(e.data);
-				const incomingMessage = {
-					...message.,
-					ownedByCurrentUser:
-						message.data.message_user === user?.getDisplayName(),
-				};
-				console.log(incomingMessage);
-				setMessages((messages: any) => [...messages, incomingMessage]);
+			if (user) {
+				socket.current.send(
+					JSON.stringify({
+						event: 'user_connected',
+						data: {
+							name: user.getDisplayName(),
+						},
+					}),
+				);
+			}
+			socket.current.onmessage = (e: any) => {
+				console.log(e.data);
+				const data = JSON.parse(e.data);
+				if (data.event === 'messageToClient') {
+					const message = data;
+					const incomingMessage = {
+						...message,
+						ownedByCurrentUser:
+							message.data.message_user === user?.getDisplayName(),
+					};
+					console.log(incomingMessage);
+					setMessages((messages: any) => [...messages, incomingMessage]);
+				}
+				if (data.event === 'user_connected') {
+					console.log(data);
+					setUsers([...users, data]);
+				}
 			};
 		};
-		
+
 		return () => {
 			socket.current.close();
 		};
-	}, []);
+	}, [user]);
 
 	const onSubmit = (data: any) => {
 		const today = new Date();
@@ -56,39 +74,68 @@ const MessageForm = () => {
 		);
 	};
 	return (
-		<div className="col-md-7">
-			<div className="card-container-title"> CHAT</div>
-
-			<div
-				className="card-container-body"
-				style={{
-					overflow: 'auto',
-					height: '700px ',
-				}}
-			>
-				{messages.map((message: any, idx: any) => {
-					return (
-						<Messages
-							key={idx}
-							username={message.data.message_user}
-							text={message.data.message}
-							time={message.data.time}
-						/>
-					);
-				})}
-			</div>
-			<Container>
-				<Row>
-					<Form
-						onSubmit={handleSubmit(onSubmit)}
-						style={{ position: 'fixed', bottom: 150 }}
+		<>
+			<div className="col-md-7">
+				<Card>
+					<Container
+						className="card-container-body"
+						style={{
+							overflow: 'auto',
+							height: ' 530px',
+							borderRadius: 1,
+							overflowY: 'auto',
+						}}
 					>
-						<input placeholder="message" type="text" {...register('message')} />
-						<button type="submit">send</button>
-					</Form>
-				</Row>
-			</Container>
-		</div>
+						{messages.map((message: any, idx: any) => {
+							return (
+								<Messages
+									key={idx}
+									username={message.data.message_user}
+									text={message.data.message}
+									time={message.data.time}
+								/>
+							);
+						})}
+					</Container>
+					<Container>
+						<Row>
+							<div className="input-group mb-10">
+								<input
+									className="form-control"
+									placeholder="message"
+									type="text"
+									{...register('message')}
+								/>
+								<button
+									className="btn"
+									style={{ background: '#0177bc' }}
+									onClick={handleSubmit(onSubmit)}
+								>
+									Send Message
+								</button>
+							</div>
+						</Row>
+					</Container>
+				</Card>
+			</div>
+			<div className="col-sm-2">
+				<Card style={{ height: '100%' }}>
+					<div className="list-group">
+						{users.map((user: any, idx: any) => {
+							{
+								console.log('user' + user.name);
+							}
+
+							return (
+								<div className="list-group-item " key={idx}>
+									{user.name}
+								</div>
+							);
+						})}
+					</div>
+				</Card>
+			</div>
+		</>
 	);
 };
 export default MessageForm;
