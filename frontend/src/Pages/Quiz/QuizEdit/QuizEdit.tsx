@@ -1,6 +1,6 @@
 import { plainToClass } from "class-transformer";
 import { useState, useEffect } from "react";
-import { Card, Form, Button } from 'react-bootstrap';
+import { Card, Form, Button, Table } from 'react-bootstrap';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import CenteredContainer from '../../../Components/UtilsComponents/CenteredContainer/CenteredContainer';
 import api from '../../../Models/api';
@@ -9,6 +9,7 @@ import { Quiz } from '../../../Models/Quiz/quiz.entity';
 import { QuizForm } from '../../../Models/Quiz/quizForm.entity';
 import { QuizCategoryProps } from '../QuizCategory/Category';
 import { useHistory } from 'react-router';
+import { Link } from 'react-router-dom';
 
 const QuizEdit = (props: QuizCategoryProps) => {
 	const history = useHistory();
@@ -36,11 +37,22 @@ const QuizEdit = (props: QuizCategoryProps) => {
 		};
 		const getQuiz = async () => {
 			const response = await api.db.quiz.one({ id: props.match.params.id });
+			console.log(response);
 			setQuiz(plainToClass(Quiz, response));
 		};
 		getCategories();
 		getQuiz();
 	}, [props.match.params.id]);
+
+	async function handleDeleteQuestion(id: any) {
+		const response = await api.db.question.delete({
+			id,
+		});
+		console.log(response);
+		if (response.status === 200) {
+			window.location.reload();
+		}
+	}
 
 	return (
 		<div>
@@ -82,15 +94,55 @@ const QuizEdit = (props: QuizCategoryProps) => {
 								// Questions will follow
 								console.log(quiz?.questions)
 							}
+
 							<Button variant="primary" type="submit">
 								Update!
 							</Button>
+							<br />
+							<br />
 							{
 								// Should now redirect to the quiz category page to show the quiz has been updated
 							}
 						</Form>
+						<Link to={`/quiz/edit/${quiz?.id}/new-question`}>
+							<Button>Ajouter une Question!</Button>
+						</Link>
 					</Card.Body>
 				</Card>
+				{quiz?.questions.map(question => {
+					return (
+						<div>
+							<br />
+							<Card>
+								<Card.Body>
+									<p>{question.name}</p>
+									<br />
+									<Button
+										onClick={() => {
+											handleDeleteQuestion(question.id);
+										}}
+									>
+										Delete
+									</Button>
+									<Table>
+										<tbody>
+											{question.answers.map(answer => {
+												console.log(answer);
+												return (
+													<tr>
+														<td>{answer.value}</td>
+														<td>{String(answer.is_good)}</td>
+													</tr>
+												);
+											})}
+										</tbody>
+									</Table>
+								</Card.Body>
+							</Card>
+							<br />
+						</div>
+					);
+				})}
 			</CenteredContainer>
 		</div>
 	);

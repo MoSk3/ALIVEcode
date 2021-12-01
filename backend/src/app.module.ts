@@ -32,6 +32,7 @@ import { MyLogger } from './admin/loger/logger';
 import { QuizzesModule } from './models/social/quizzes/quizzes.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { CategoriesQuizModule } from './models/social/categories-quiz/categories-quiz.module';
+import { QuestionsModule } from './models/social/questions/questions.module';
 
 adminjs.registerAdapter({ Database, Resource });
 
@@ -75,6 +76,7 @@ adminjs.registerAdapter({ Database, Resource });
     AsScriptModule,
     QuizzesModule,
     CategoriesQuizModule,
+    QuestionsModule,
   ],
   controllers: [AppController],
   providers: [AppService, MaintenanceService, UserService],

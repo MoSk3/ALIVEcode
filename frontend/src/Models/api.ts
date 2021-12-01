@@ -193,6 +193,9 @@ const api = {
 				one: apiGet('/categories-quiz/:id', Category, false),
 			}
 		},
+		question: {
+			delete: apiDelete('/questions/:id'),
+		}
 	},
 };
 

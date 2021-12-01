@@ -16,12 +16,15 @@ export class QuizzesService {
   }
 
   async findAll() {
-    return await this.quizRepository.find({ relations: ['reward', 'questions'] });
+    const quizzes = await this.quizRepository.find({ relations: ['reward', 'questions'] });
+    console.log(quizzes);
+    return quizzes;
   }
 
   async findOne(id: number,) {
     if (!id) throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
     const quiz = await this.quizRepository.findOne(id, { relations: ['reward', 'questions'] });
+    console.log(quiz);
     if (!quiz) throw new HttpException('Quiz not found', HttpStatus.NOT_FOUND);
     return quiz;
   }

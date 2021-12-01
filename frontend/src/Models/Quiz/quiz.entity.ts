@@ -8,5 +8,5 @@ export class Quiz {
     category: {
         id: number;
         name: string;
-    }
+    };
 }

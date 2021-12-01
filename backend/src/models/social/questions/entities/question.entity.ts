@@ -14,6 +14,6 @@ export class Question {
     @JoinColumn()
     quiz : Quiz;
 
-    @OneToMany(() => Answer, answer => answer.question)
+    @OneToMany(() => Answer, answer => answer.question, {eager: true})
     answers : Answer[];
 }
