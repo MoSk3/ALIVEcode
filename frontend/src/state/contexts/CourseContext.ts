@@ -9,6 +9,7 @@ export type CourseContentValues = {
 	activity?: Activity;
 	isNavigationOpen: boolean;
 	canEdit: boolean;
+	setTitle: (newTitle: string) => void;
 	addSection: (section: Section) => void;
 	loadActivity: (section: Section, activity: Activity) => any;
 	addActivity: (section: Section, activity: Activity) => void;
@@ -20,6 +21,7 @@ export type CourseContentValues = {
 export const CourseContext = createContext<CourseContentValues>({
 	canEdit: false,
 	isNavigationOpen: true,
+	setTitle: (newTitle: string) => {},
 	loadActivity: (section: Section, activity: Activity) => {},
 	addSection: (section: Section) => {},
 	addActivity: (section: Section, activity: Activity) => {},

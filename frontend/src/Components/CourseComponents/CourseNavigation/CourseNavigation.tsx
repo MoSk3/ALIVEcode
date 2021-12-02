@@ -29,6 +29,7 @@ const CourseNavigation = (props: CourseNavigationProps) => {
 	const { t } = useTranslation();
 
 	const [openModalSection, setOpenModalSection] = useState(false);
+	const [editTitle, setEditTile] = useState(false);
 
 	if (!course) {
 		goTo(routes.auth.dashboard.path);
@@ -39,7 +40,23 @@ const CourseNavigation = (props: CourseNavigationProps) => {
 		<StyledCourseNavigation isNavigationOpen={isNavigationOpen} theme={theme}>
 			<CenteredContainer horizontally>
 				<div className="course-nav-header">
-					<div className="course-nav-title">{course?.name}</div>
+					{editTitle && canEdit ? (
+						<input
+							type="text"
+							autoFocus
+							onBlur={() => {
+								setEditTile(false);
+							}}
+							defaultValue={course?.name}
+						/>
+					) : (
+						<div
+							className="course-nav-title"
+							onClick={() => setEditTile(canEdit)}
+						>
+							{course?.name}
+						</div>
+					)}
 				</div>
 				<div className="course-nav-body">
 					{course.sections.length > 0 ? (

@@ -33,6 +33,7 @@ import MaintenanceMenu from '../../Pages/SiteStatus/MaintenanceMenu/MaintenanceM
 import ASBuiltinsDocs from '../../Components/AliveScriptComponents/ASDocs/ASBuiltinsDocs';
 import MDEditor from '../../Components/CourseComponents/MDEditor/MDEditor';
 import { LEVEL_TYPE } from '../../Models/Level/level.entity';
+import ActivityEditor from '../../Components/CourseComponents/MDEditor/ActivityEditor';
 
 type component =
 	| React.ComponentType<RouteComponentProps<any>>
@@ -184,7 +185,7 @@ const useRoutes = () => {
 		album: {
 			path: '/album-test',
 			exact: true,
-			component: MDEditor,
+			component: ActivityEditor,
 		},
 	});
 

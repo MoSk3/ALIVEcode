@@ -15,10 +15,16 @@ import {
 	faPencilAlt,
 } from '@fortawesome/free-solid-svg-icons';
 import MDEditor from '../MDEditor/MDEditor';
-import { Form } from 'react-bootstrap';
+import { Alert, Form } from 'react-bootstrap';
 import Button from '../../UtilsComponents/Button/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useTranslation } from 'react-i18next';
+import { layouts } from 'chart.js';
+import Card from '../../UtilsComponents/Cards/Card/Card';
+import LevelCard from '../../LevelComponents/LevelCard/LevelCard';
+import Modal from '../../UtilsComponents/Modal/Modal';
+import NewActivityContentModal from './NewActivityContentModal';
+import ActivityEditor from '../MDEditor/ActivityEditor';
 
 /**
  * Displays the content of the activity in the CourseContext
@@ -40,6 +46,8 @@ const ActivityContent = (props: ActivityContentProps) => {
 	const [name, setName] = useState<string>('');
 	const [editingName, setEditingName] = useState(false);
 	const [defaultMDValue, setDefaultMDValue] = useState<string>();
+	const [contentLayout, setContentLayout] = useState<any[]>([]);
+	const [newContentModalOpen, setNewContentModalOpen] = useState(false);
 
 	useEffect(() => {
 		activity && setName(activity.name);
@@ -51,7 +59,13 @@ const ActivityContent = (props: ActivityContentProps) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [activity?.content?.data]);
 
-	const addContent = () => {};
+	const addContent = (content: any) => {
+		setContentLayout(layout =>
+			contentLayout.concat(
+				<MDEditor onSave={saveActivityContent} defaultValue={defaultMDValue} />,
+			),
+		);
+	};
 
 	/*const projectId = useMemo(() => {
 		return Math.random() > 0.5
@@ -94,6 +108,7 @@ const ActivityContent = (props: ActivityContentProps) => {
 									<Form.Control
 										className="activity-header-title"
 										value={name}
+										autoFocus
 										onChange={e => setName(e.target.value)}
 										onBlur={() => {
 											activity.name = name;
@@ -122,22 +137,26 @@ const ActivityContent = (props: ActivityContentProps) => {
 									key={`iotproject-${projectId}`}
 									id={projectId}
 								></IoTProject>*/}
-								{canEdit && editMode ? (
-									<div style={{ display: 'grid' }}>
-										<MDEditor
-											onSave={saveActivityContent}
-											defaultValue={defaultMDValue}
-										/>
-										<Button variant="primary" onClick={addContent}>
-											Ajouter
-										</Button>
-									</div>
-								) : activity.content?.data ||
-								  (activity.levels && activity.levels.length > 0) ? (
+								{activity.content?.data || (canEdit && editMode) ? (
+									<ActivityEditor
+										isEditable={() => canEdit && editMode}
+										onSave={content => {
+											if (!activity.content) {
+												activity.content = { data: '{}' };
+											}
+											activity.content.data = JSON.stringify(content);
+											saveActivity(activity);
+										}}
+										defaultValue={
+											activity.content?.data &&
+											JSON.parse(activity.content.data)
+										}
+									/>
+								) : (
+									<p>{t('course.activity.empty')}</p>
+								)}
+								{activity.levels && activity.levels.length > 0 && (
 									<>
-										{activity.content && (
-											<ReactMarkdown>{activity.content.data}</ReactMarkdown>
-										)}
 										{activity.levels &&
 											activity.levels.map((a, idx) => (
 												<div key={idx} style={{ position: 'relative' }}>
@@ -149,8 +168,6 @@ const ActivityContent = (props: ActivityContentProps) => {
 												</div>
 											))}
 									</>
-								) : (
-									<p>{t('course.activity.empty')}</p>
 								)}
 							</div>
 						</>
@@ -164,6 +181,19 @@ const ActivityContent = (props: ActivityContentProps) => {
 						</CenteredContainer>
 					)}
 				</div>
+				{editMode && canEdit && (
+					<Modal
+						centered
+						title={'course.activity.new_content'}
+						open={newContentModalOpen}
+						onClose={() => setNewContentModalOpen(false)}
+						animation
+						hideCloseButton
+						hideFooter
+					>
+						<NewActivityContentModal />
+					</Modal>
+				)}
 			</div>
 		</StyledActivityContent>
 	);

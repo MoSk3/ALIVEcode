@@ -42,6 +42,10 @@ const Course = (props: CourseProps) => {
 	const alert = useAlert();
 	const history = useHistory();
 
+	const setTitle = (newTitle: string) => {
+		return;
+	};
+
 	const saveActivity = async (activity: Activity) => {
 		if (!course || !activity || !section) return;
 		const { content, ...actWithoutContent } = activity;
@@ -116,6 +120,7 @@ const Course = (props: CourseProps) => {
 		activity,
 		canEdit,
 		isNavigationOpen,
+		setTitle,
 		loadActivity,
 		addSection,
 		addActivity,
