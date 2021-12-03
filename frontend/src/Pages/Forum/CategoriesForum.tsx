@@ -25,11 +25,12 @@ return (
 				style={{ paddingLeft: '100px', paddingRight: '100px' }}
 			>
             <CardContainer asRow title="Catégories">
-			{category.map((c) =>
+			{category.map((c, idx) =>
             <SmallCard
 						to={"/forum/subjectList/"+c.id}
 						title={c.name}
 						//img={List}
+						key={idx}
 					/>
 			)}
             </CardContainer>

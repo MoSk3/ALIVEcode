@@ -37,24 +37,21 @@ const SubjectList = (props: SubjectProps) => {
         <NavBarSocial/>
         <CardContainer asRow title={"Liste des sujets de : "+ category?.name}>
         <Row>
-        {subject.map((s) =>
-        <div>
+        {subject.map((s, idx) =>
+        <div key={idx}>
             <Col>
-            <Card>
-                <Card.Header>
-                    <Card.Title>{s.name}</Card.Title>
+            <Card style={{ width: '25rem' }}>
+                <Card.Header className="bg-secondary">
+                    <Card.Title as="h5">{s.name}</Card.Title>
                 </Card.Header>
                 <ListGroup variant="flush">
-                {s.posts.map((p) => 
-                <ListGroup.Item>
+                {s.posts.map((p, idx) => 
+                <ListGroup.Item key={idx}>
                 <Card>
                     <Link to={'/forum/post/'+s.id}>
                     <Card.Title>{p.title}</Card.Title>
                     </Link>
-                    <Card.Body>
-                        <Card.Text>{p.content}</Card.Text>
-                    </Card.Body>
-                    <Card.Footer>{p.created_at +" "+ p.creator.email}</Card.Footer>
+                    <Card.Footer >{p.created_at +" "+ p.creator.email}</Card.Footer>
                 </Card>
                 </ListGroup.Item>
                 )}

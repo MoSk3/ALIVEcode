@@ -34,17 +34,20 @@ const Forum = () => {
 			<div>
 			<NavBarSocial/>
 			</div>
-			<div className="text-left ml-4">
-				Home
-			</div>
+			
 			<Row>
 				<Col className="col-8">
 					<CardContainer asRow title="Forum">
-							<div className="text-left ml-3">
+							<div className="text-left ml-3" style={{ height: '22rem' }}>
 							Règles<br/>
-							Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
+								- Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
+								<br/>
+								- Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
+								<br/>
+								- Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
 							</div>
 					</CardContainer>
+					{/*
 					<CardContainer asRow title="Iot">
 						<Row>
 							<Col className="border-right border-dark">
@@ -98,6 +101,7 @@ const Forum = () => {
 							</Row>
 						</div>
 					</CardContainer>
+					*/}
 				</Col>
 				
 				<Col>
@@ -107,13 +111,13 @@ const Forum = () => {
 						</Link>
 						<CardContainer asRow title="Derniers sujets">
 							<div>
-							{post.map((p) => 
-							<Link to={'/forum/post/'+ p.id}>
-							<Card className="ml-2 mr-2">
+							{post.map((p, idx) => 
+							<Link to={'/forum/post/'+ p.id} key={idx}>
+							<Card className="ml-2 mr-2 mt-2">
 								<div className="card-content">
 									<div className="media">
 										<img className="rounded-circle mt-1 ml-1 mr-3" src="https://bulma.io/images/placeholders/64x64.png" alt=""/>
-										{p.creator && <Card.Title className="mt-1">{p.creator.email}</Card.Title>}
+										{p.creator && <Card.Title className="mt-1 mr-1">{p.creator.email}</Card.Title>}
 									</div>
 								</div>
 								<Card.Text className="ml-2">

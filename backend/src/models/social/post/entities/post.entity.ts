@@ -1,6 +1,7 @@
 import { IsNotEmpty } from "class-validator";
 import { UserEntity } from "src/models/user/entities/user.entity";
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Timestamp } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, Timestamp } from "typeorm";
+import { CommentairesForum } from "../../commentaires-forum/entities/commentaires-forum.entity";
 import { Subject } from "../../subjects/entities/subject.entity";
 
 @Entity()
@@ -30,8 +31,8 @@ export class Post{
     @IsNotEmpty()
     subject : Subject;
 
-
-
+    @OneToMany(() => CommentairesForum, comment => comment.post, { eager: true })
+    comments: CommentairesForum[];
 
 }
 

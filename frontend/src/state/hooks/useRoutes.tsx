@@ -38,6 +38,7 @@ import CategoriesForum from '../../Pages/Forum/CategoriesForum';
 import SubjectList from '../../Pages/Forum/SubjectList';
 import FormQuestion from '../../Pages/Forum/formQuestion';
 import DetailsQuestion from '../../Pages/Forum/detailsQuestion';
+import SearchForum from '../../Pages/Forum/searchForum';
 
 type component =
 	| React.ComponentType<RouteComponentProps<any>>
@@ -193,6 +194,10 @@ const useRoutes = () => {
 		subjectList: {
 			path: '/forum/subjectList/:id',
 			component: SubjectList,
+		},
+		searchForum: {
+			path: '/forum/searchForum/:id',
+			component: SearchForum,
 		},
 		forum: {
 			path: '/forum',

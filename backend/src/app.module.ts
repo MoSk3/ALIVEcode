@@ -34,6 +34,7 @@ import { PostModule } from './models/social/post/post.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { CategoriesSubjectsModule } from './models/social/categories-subjects/categories-subjects.module';
 import { SubjectsModule } from './models/social/subjects/subjects.module';
+import { CommentairesForumModule } from './models/social/commentaires-forum/commentaires-forum.module';
 
 adminjs.registerAdapter({ Database, Resource });
 
@@ -79,6 +80,7 @@ adminjs.registerAdapter({ Database, Resource });
     PostModule,
     CategoriesSubjectsModule,
     SubjectsModule,
+    CommentairesForumModule,
 
   ],
   controllers: [AppController],

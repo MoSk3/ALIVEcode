@@ -186,10 +186,13 @@ const api = {
 				get: apiGet('categories-subjects', CategorySubject, true),
 				getById: apiGet('categories-subjects/:id', CategorySubject, false),
 			},
-			
+			commentaires: {
+				createComment: apiCreate('commentaires-forum', Comment),
+			},
 			getLastPost: apiGet('post/lastPost', Post, true),
 			createQuestion: apiCreate('post', Post),
 			getById: apiGet('post/:id', Post, false),
+			getPost: apiGet('post', Post, true),
 		},
 	},
 };
