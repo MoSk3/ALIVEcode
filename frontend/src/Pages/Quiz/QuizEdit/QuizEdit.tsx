@@ -28,9 +28,16 @@ const QuizEdit = (props: QuizCategoryProps) => {
 
 	async function createQuestion(data: QuestionForm) {
 		console.log('Create Question!');
-		console.log(data);
-		data.quiz.id = Number(props.match.params.id);
+		const quizObj = {
+			id: props.match.params.id,
+		};
+		data.quiz = quizObj;
 		const response = await api.db.question.create(data);
+	}
+
+	async function createAnswer(data: AnswerForm) {
+		console.log('New Answer!');
+		// TODO
 	}
 
 	const [categories, setCategories] = useState<Category[]>([]);
