@@ -35,6 +35,7 @@ import QuizHome from '../../Pages/Quiz/QuizHome/QuizHome';
 import QuizCategory from '../../Pages/Quiz/QuizCategory/QuizCategory';
 import QuizCreate from '../../Pages/Quiz/QuizCreate/QuizCreate';
 import QuizEdit from '../../Pages/Quiz/QuizEdit/QuizEdit';
+import QuizPlay from '../../Pages/Quiz/PlayQuiz/PlayQuiz';
 
 type component =
 	| React.ComponentType<RouteComponentProps<any>>
@@ -200,6 +201,10 @@ const useRoutes = () => {
 		quiz_edit: {
 			path: '/quiz/edit/:id',
 			component: QuizEdit,
+		},
+		quiz_play: {
+			path: '/quiz/play/:id',
+			component: QuizPlay,
 		},
 	});
 

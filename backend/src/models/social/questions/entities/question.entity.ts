@@ -17,6 +17,6 @@ export class Question {
     @IsNotEmpty()
     quiz : Quiz;
 
-    @OneToMany(() => Answer, answer => answer.question, {eager: true})
+    @OneToMany(() => Answer, answer => answer.question, {eager: true, onDelete: 'CASCADE'})
     answers : Answer[];
 }
