@@ -10,6 +10,7 @@ import { QuizForm } from '../../../Models/Quiz/quizForm.entity';
 import { QuizCategoryProps } from '../QuizCategory/Category';
 import { useHistory } from 'react-router';
 import { QuestionForm } from '../../../Models/Quiz/questionForm.entity';
+import { Answer } from '../../../Models/Quiz/answer.entity';
 
 const QuizEdit = (props: QuizCategoryProps) => {
 	const history = useHistory();
@@ -32,6 +33,8 @@ const QuizEdit = (props: QuizCategoryProps) => {
 
 	const [categories, setCategories] = useState<Category[]>([]);
 	const [quiz, setQuiz] = useState<Quiz>();
+
+	const [answers, setAnswers] = useState<Answer[]>([]);
 
 	const { register, handleSubmit } = useForm<QuizForm>();
 	const { register: registerQuestion, handleSubmit: handleSubmitQuestion } =
@@ -115,11 +118,28 @@ const QuizEdit = (props: QuizCategoryProps) => {
 						</Form>
 						<Form onSubmit={handleSubmit(onSubmitNewQuestion)}>
 							<Form.Group>
-								<Form.Label>Question: </Form.Label>
+								<Form.Label>Question</Form.Label>
 								<Form.Control
 									as="textarea"
-									rows={5}
-									{...registerQuestion('question')}
+									rows={3}
+									{...registerQuestion('name')}
+								></Form.Control>
+								<Form.Label>Answer 1: </Form.Label>
+								<Form.Control type="checkbox"></Form.Control>
+								<Form.Control as="textarea" rows={2}></Form.Control>
+								<Form.Label>Answer 2: </Form.Label>
+								<Form.Control type="checkbox"></Form.Control>
+								<Form.Control
+									as="textarea"
+									rows={2}
+									// Register TODO
+								></Form.Control>
+								<Form.Label>Answer 3: </Form.Label>
+								<Form.Control type="checkbox"></Form.Control>
+								<Form.Control
+									as="textarea"
+									rows={2}
+									// Register TODO
 								></Form.Control>
 							</Form.Group>
 							<Button type="submit">Ajouter une Question!</Button>
