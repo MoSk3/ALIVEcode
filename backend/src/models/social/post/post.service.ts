@@ -24,7 +24,7 @@ export class PostService {
   async getLastPost() {
     return await this.postRepository.find({ 
       order: { 
-        created_at: 'DESC', 
+        id: 'DESC', 
       },
       take: 2,
     });

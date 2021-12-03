@@ -113,7 +113,7 @@ const Forum = () => {
 							<div>
 							{post.map((p, idx) => 
 							<Link to={'/forum/post/'+ p.id} key={idx}>
-							<Card className="ml-2 mr-2 mt-2">
+							<Card className="ml-2 mr-2 mt-2" style={{ width: '22rem' }}>
 								<div className="card-content">
 									<div className="media">
 										<img className="rounded-circle mt-1 ml-1 mr-3" src="https://bulma.io/images/placeholders/64x64.png" alt=""/>

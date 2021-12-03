@@ -31,7 +31,8 @@ return (
 						title={c.name}
 						//img={List}
 						key={idx}
-					/>
+						style={{ width: '22rem', height: '10rem' }}
+					/>	
 			)}
             </CardContainer>
 
