@@ -1,8 +1,16 @@
-import { useContext, useEffect, useRef, useState } from "react";
-import { Container, Card, Row, Form } from 'react-bootstrap';
+import { SetStateAction, useContext, useEffect, useRef, useState } from "react";
+import {
+	Container,
+	Card,
+	Row,
+	Form,
+	Dropdown,
+	DropdownButton,
+} from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { UserContext } from '../../../state/contexts/UserContext';
 import Messages from '../Messages/messages';
+import Picker from 'emoji-picker-react';
 
 const MessageForm = ({ activeTopic }: any) => {
 	const { user } = useContext(UserContext);
@@ -10,6 +18,8 @@ const MessageForm = ({ activeTopic }: any) => {
 	const socket: any = useRef();
 	const [messages, setMessages]: any = useState([]);
 	const [users, setUsers]: any = useState([]);
+	const [input, setInput]: any = useState('');
+	const inputRef = useRef(null);
 
 	useEffect(() => {
 		if (!user) return;
@@ -52,7 +62,7 @@ const MessageForm = ({ activeTopic }: any) => {
 			console.log('disconnected');
 		};
 	}, [user]);
-	const onSubmit = (data: any) => {
+	const onSubmit = () => {
 		const today = new Date();
 		socket.current.send(
 			JSON.stringify({
@@ -61,7 +71,7 @@ const MessageForm = ({ activeTopic }: any) => {
 					active_topic: activeTopic,
 					message_user: user?.getDisplayName(),
 					image_user: user?.getDisplayImage(),
-					message: data.message,
+					message: input,
 					time:
 						today.getHours() +
 						':' +
@@ -71,7 +81,16 @@ const MessageForm = ({ activeTopic }: any) => {
 				},
 			}),
 		);
-		reset();
+		setInput('');
+	};
+	const onEmojiClick = (e: any, emojiObject: any) => {
+		const { selectionStart, selectionEnd }: any = inputRef.current;
+		// replace selected text with clicked emoji
+		const newVal: any =
+			input.slice(0, selectionStart) +
+			emojiObject.emoji +
+			input.slice(selectionEnd);
+		setInput(newVal);
 	};
 
 	return (
@@ -113,8 +132,20 @@ const MessageForm = ({ activeTopic }: any) => {
 									<input
 										className="form-control"
 										type="text"
-										{...register('message')}
+										ref={inputRef}
+										placeholder="Entrer votre message"
+										value={input}
+										onChange={e => setInput(e.target.value)}
 									/>
+									<DropdownButton
+										id="dropdown-button-drop-end"
+										drop="up"
+										variant="secondary"
+										title={` Drop end `}
+									>
+										<Picker onEmojiClick={onEmojiClick} />
+									</DropdownButton>
+
 									<button
 										className="btn"
 										style={{ background: '#0177bc' }}
