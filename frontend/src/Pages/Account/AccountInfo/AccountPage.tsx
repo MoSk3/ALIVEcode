@@ -10,12 +10,10 @@ import { Form, Row } from 'react-bootstrap';
 import styled from 'styled-components';
 import AboutCard from '../../../Components/UtilsComponents/Cards/AboutCard/AboutCard';
 import { useTranslation } from 'react-i18next';
-import GamepadAlive from '../../../Components/Gamepad/GamepadAlive';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { Result } from '../../../Models/Social/result.entity';
 import api from '../../../Models/api';
-import Messages from '../../../Components/Chat/Messages/messages';
 
 const StyledCenteredContainer = styled(CenteredContainer)`
 	padding: 0 10% 0 10%;
@@ -67,8 +65,9 @@ const AccountPage = () => {
 
 	resultQuizz.map(p => {
 		if (p.percentage > moyenne) {
-			countSuccess.push(p);
+			return countSuccess.push(p);
 		}
+		return '';
 	});
 	return (
 		<>

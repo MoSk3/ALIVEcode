@@ -23,6 +23,7 @@ import { CompileDTO } from './ASModels';
 import { AsScript } from './AsScript/as-script.entity';
 import { LevelIoT } from './Level/levelIoT.entity';
 import { Post } from './Social/post.entity';
+import {Topics} from './Social/topics.entity'
 
 type urlArgType<S extends string> = S extends `${infer _}:${infer A}/${infer B}`
 	? A | urlArgType<B>
@@ -273,6 +274,13 @@ const api = {
 			findandcount: apiCreate('posts/findandcount', Post),
 			create: apiCreate('posts', Post),
 			delete: apiDelete('posts/:id'),
+		
+		},
+		topics:{
+			all: apiGet('topics', Topics, true),
+			get: apiGet('topics/:id/', Topics, false),
+			create: apiCreate('topics', Topics),
+			delete: apiDelete('topics/:id'),
 		
 		},
 		quiz:{

@@ -17,7 +17,7 @@ import { Post as Post_Table } from "src/models/social/post/entities/post.entity"
 import { Quiz } from 'src/models/social/quizzes/entities/quiz.entity';
 import { Result } from 'src/models/social/results/entities/result.entity';
 import { AsScriptEntity } from 'src/models/as-script/entities/as-script.entity';
-import Message from 'src/models/social/messages/entities/message.entity';
+import Messages from 'src/models/social/messages/entities/messages.entity';
 
 @Entity()
 @TableInheritance({ column: { type: 'varchar', name: 'type' } })
@@ -87,8 +87,8 @@ export class UserEntity extends BaseEntity {
   @OneToMany(() => Result, result => result.user, { cascade: true })
   result: Result[];
 
-  @OneToMany(() => Message, message => message.creator, { cascade: true })
-  message: Message[];
+  @OneToMany(() => Messages, message => message.creator, { cascade: true })
+  message: Messages[];
   
   @Column({type:'varchar', default: ""})
   image : string;

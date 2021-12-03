@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import Message from 'src/models/social/messages/entities/message.entity';
+import Messages from 'src/models/social/messages/entities/messages.entity';
 import { ChatGateway } from './chat.gateway';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
-      Message
+      Messages
     ]),
   ],
   providers: [ChatGateway],

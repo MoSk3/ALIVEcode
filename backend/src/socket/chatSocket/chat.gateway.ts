@@ -42,7 +42,6 @@ export class ChatGateway implements OnGatewayDisconnect, OnGatewayConnection, On
     this.clients.push(client)
         //return this.broadcast('clientConnected', client )
 
-   
   }
 
   handleDisconnect(@ConnectedSocket() socket: WebSocket){
@@ -50,7 +49,20 @@ export class ChatGateway implements OnGatewayDisconnect, OnGatewayConnection, On
     WatcherClient.clients = WatcherClient.watchers.filter(w => w.getSocket() !== socket);
   }
 
- 
+  @SubscribeMessage('connect_watcher')
+  connect_watcher(@ConnectedSocket() socket: WebSocket) {
+    if (WatcherClient.isSocketAlreadyWatcher(socket)) throw new WsException('Already connected as a watcher');
+
+    const client = new WatcherClient(socket);
+    client.register();
+
+    this.logger.log(
+      `Watcher connected and listening `,
+    );
+
+    client.sendCustom('connect-success', 'Watcher connected');
+  }
+
 
   
 
@@ -74,11 +86,13 @@ export class ChatGateway implements OnGatewayDisconnect, OnGatewayConnection, On
   }
   @SubscribeMessage('user_connected')
   onConnect(@ConnectedSocket()socket:WebSocket ,@MessageBody() data:UserConnect)  {
-    
-    const client = new ObjectClient(socket, data.name);
-    client.register();
-      this.users.push(data);
-         console.log(data)
+
+    this.users.forEach((user, idx) => {
+      if (JSON.stringify(user) == JSON.stringify(data)){
+        this.users.splice(idx, 1)
+      }    });
+
+     this.users.push(data);
     return this.broadcast('user_connected', this.users )
 
   }

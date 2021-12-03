@@ -36,10 +36,10 @@ import { MulterModule } from '@nestjs/platform-express';
 import { CategoriesSubjectsModule } from './models/social/categories-subjects/categories-subjects.module';
 import { ServeStaticModule } from '@nestjs/serve-static/dist/serve-static.module';
 import { join } from 'path';
-import { Result } from './models/social/results/entities/result.entity';
 import { ResultsModule } from './models/social/results/results.module';
-import { MessagesModule } from './models/social//messages/messages.module';
+import { MessagesModule } from './models/social/messages/messages.module';
 import { ChatModule } from './socket/chatSocket/chatSocket.module';
+import { TopicsModule } from './models/social/topics/topics.module';
 
 adminjs.registerAdapter({ Database, Resource });
 
@@ -92,6 +92,7 @@ adminjs.registerAdapter({ Database, Resource });
     MessagesModule, 
     ChatModule,
     CarModule,
+    TopicsModule
   ],
   controllers: [AppController],
   providers: [AppService, MaintenanceService, UserService],
