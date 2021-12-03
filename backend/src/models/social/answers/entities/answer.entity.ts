@@ -12,7 +12,7 @@ export class Answer {
     @IsNotEmpty()
     value : string;
 
-    @ManyToOne(() => Question, question => question.answers)
+    @ManyToOne(() => Question, question => question.answers, {onDelete: 'CASCADE'})
     @JoinColumn()
     @IsNotEmpty()
     question : Question;

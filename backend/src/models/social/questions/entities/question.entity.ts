@@ -12,11 +12,11 @@ export class Question {
     @IsNotEmpty()
     name : string;
 
-    @ManyToOne(() => Quiz, quiz => quiz.questions)
+    @ManyToOne(() => Quiz, quiz => quiz.questions, {onDelete: 'CASCADE'})
     @JoinColumn()
     @IsNotEmpty()
     quiz : Quiz;
 
-    @OneToMany(() => Answer, answer => answer.question, {eager: true, onDelete: 'CASCADE'})
+    @OneToMany(() => Answer, answer => answer.question, {eager: true, cascade: true})
     answers : Answer[];
 }

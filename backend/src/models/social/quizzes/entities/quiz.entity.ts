@@ -29,7 +29,7 @@ export class Quiz {
     @JoinColumn()
     reward : Reward;
 
-    @OneToMany(() => Question, question => question.quiz, {eager: true, onDelete: 'CASCADE'})
+    @OneToMany(() => Question, question => question.quiz, {eager: true, cascade: true})
     @JoinColumn()
     questions: Question[];
 
