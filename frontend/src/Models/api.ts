@@ -21,6 +21,7 @@ import { Quiz } from './Quiz/quiz.entity';
 import { Category } from './Quiz/categories-quiz.entity';
 import { QuizForm } from './Quiz/quizForm.entity';
 import { QuestionForm } from './Quiz/questionForm.entity';
+import { Answer } from './Quiz/answer.entity';
 
 type urlArgType<S extends string> = S extends `${infer _}:${infer A}/${infer B}`
 	? A | urlArgType<B>
@@ -197,6 +198,9 @@ const api = {
 		question: {
 			delete: apiDelete('/questions/:id'),
 			create: apiCreate('/questions', QuestionForm),
+		},
+		answer: {
+			create: apiCreate('/answers', Answer),
 		}
 	},
 };

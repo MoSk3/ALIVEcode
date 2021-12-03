@@ -35,9 +35,10 @@ const QuizEdit = (props: QuizCategoryProps) => {
 		const response = await api.db.question.create(data);
 	}
 
-	async function createAnswer(data: AnswerForm) {
+	async function createAnswer(data: Answer) {
 		console.log('New Answer!');
-		// TODO
+		const response = await api.db.answer.create(data);
+		console.log(response);
 	}
 
 	const [categories, setCategories] = useState<Category[]>([]);
@@ -52,6 +53,7 @@ const QuizEdit = (props: QuizCategoryProps) => {
 	const onSubmit: SubmitHandler<Quiz> = data => updateQuiz(data);
 	const onSubmitNewQuestion: SubmitHandler<QuestionForm> = data =>
 		createQuestion(data);
+	const onSubmitNewAnswer: SubmitHandler<Answer> = data => createAnswer(data);
 	useEffect(() => {
 		const getCategories = async () => {
 			const data = await api.db.quiz.categories.all({});
@@ -137,7 +139,7 @@ const QuizEdit = (props: QuizCategoryProps) => {
 							</Form.Group>
 							<Button type="alternative">Ajouter une Question!</Button>
 						</Form>
-						<Form>
+						<Form onSubmit={handleSubmitAnswer(onSubmitNewAnswer)}>
 							<br />
 							<Form.Label>Réponse: </Form.Label>
 							<Form.Control
@@ -149,6 +151,19 @@ const QuizEdit = (props: QuizCategoryProps) => {
 								rows={2}
 								{...registerAnswer('value')}
 							></Form.Control>
+							<Form.Group>
+								<Form.Label>Question</Form.Label>
+								<Form.Control
+									as="select"
+									aria-label=""
+									{...registerAnswer('question.id')}
+								>
+									<option></option>
+									{quiz?.questions.map(question => {
+										return <option value={question.id}>{question.name}</option>;
+									})}
+								</Form.Control>
+							</Form.Group>
 							<Button type="submit">Ajouter une Réponse!</Button>
 						</Form>
 					</Card.Body>
