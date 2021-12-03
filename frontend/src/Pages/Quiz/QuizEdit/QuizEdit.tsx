@@ -27,18 +27,21 @@ const QuizEdit = (props: QuizCategoryProps) => {
 	}
 
 	async function createQuestion(data: QuestionForm) {
+		console.log('Create Question!');
+		console.log(data);
+		data.quiz.id = Number(props.match.params.id);
 		const response = await api.db.question.create(data);
-		console.log(response);
 	}
 
 	const [categories, setCategories] = useState<Category[]>([]);
 	const [quiz, setQuiz] = useState<Quiz>();
 
-	const [answers, setAnswers] = useState<Answer[]>([]);
-
 	const { register, handleSubmit } = useForm<QuizForm>();
 	const { register: registerQuestion, handleSubmit: handleSubmitQuestion } =
 		useForm<QuestionForm>();
+
+	const { register: registerAnswer, handleSubmit: handleSubmitAnswer } =
+		useForm<Answer>();
 	const onSubmit: SubmitHandler<Quiz> = data => updateQuiz(data);
 	const onSubmitNewQuestion: SubmitHandler<QuestionForm> = data =>
 		createQuestion(data);
@@ -116,7 +119,7 @@ const QuizEdit = (props: QuizCategoryProps) => {
 								// Should now redirect to the quiz category page to show the quiz has been updated
 							}
 						</Form>
-						<Form onSubmit={handleSubmit(onSubmitNewQuestion)}>
+						<Form onSubmit={handleSubmitQuestion(onSubmitNewQuestion)}>
 							<Form.Group>
 								<Form.Label>Question</Form.Label>
 								<Form.Control
@@ -124,25 +127,22 @@ const QuizEdit = (props: QuizCategoryProps) => {
 									rows={3}
 									{...registerQuestion('name')}
 								></Form.Control>
-								<Form.Label>Answer 1: </Form.Label>
-								<Form.Control type="checkbox"></Form.Control>
-								<Form.Control as="textarea" rows={2}></Form.Control>
-								<Form.Label>Answer 2: </Form.Label>
-								<Form.Control type="checkbox"></Form.Control>
-								<Form.Control
-									as="textarea"
-									rows={2}
-									// Register TODO
-								></Form.Control>
-								<Form.Label>Answer 3: </Form.Label>
-								<Form.Control type="checkbox"></Form.Control>
-								<Form.Control
-									as="textarea"
-									rows={2}
-									// Register TODO
-								></Form.Control>
 							</Form.Group>
-							<Button type="submit">Ajouter une Question!</Button>
+							<Button type="alternative">Ajouter une Question!</Button>
+						</Form>
+						<Form>
+							<br />
+							<Form.Label>Réponse: </Form.Label>
+							<Form.Control
+								type="checkbox"
+								{...registerAnswer('is_good')}
+							></Form.Control>
+							<Form.Control
+								as="textarea"
+								rows={2}
+								{...registerAnswer('value')}
+							></Form.Control>
+							<Button type="submit">Ajouter une Réponse!</Button>
 						</Form>
 					</Card.Body>
 				</Card>
