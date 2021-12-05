@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import { Form } from 'react-bootstrap';
+import { DropdownButton, Form, ListGroup } from 'react-bootstrap';
 import {
 	BaseEditor,
 	createEditor,
@@ -68,8 +68,11 @@ const ActivityEditor = ({
 						<BlockButton format="heading-one" icon="one" />
 						<BlockButton format="heading-two" icon="two" />
 						<BlockButton format="block-quote" icon="quote" />
-						<BlockButton format="numbered-list" icon="liste numérotée" />
-						<BlockButton format="bulleted-list" icon="liste point" />
+						<DropdownButton title="listes" variant={'secondary'}>
+							<BlockButton format="numbered-list" icon="liste numérotée" />
+							<br />
+							<BlockButton format="bulleted-list" icon="liste point" />
+						</DropdownButton>
 					</Toolbar>
 					<Editable
 						readOnly={isEditable && !isEditable()}
@@ -78,7 +81,11 @@ const ActivityEditor = ({
 						renderLeaf={renderLeaf}
 						spellCheck
 						autoFocus
-						onKeyDown={(event: any) => {
+						onKeyDown={event => {
+							if (event.key.toUpperCase() === 'S' && event.ctrlKey) {
+								event.preventDefault();
+								onSave && onSave(value);
+							}
 							for (const hotkey in HOTKEYS) {
 								if (isHotkey(hotkey, event)) {
 									event.preventDefault();

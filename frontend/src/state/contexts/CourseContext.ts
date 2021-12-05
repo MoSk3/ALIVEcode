@@ -11,6 +11,7 @@ export type CourseContentValues = {
 	canEdit: boolean;
 	setTitle: (newTitle: string) => void;
 	addSection: (section: Section) => void;
+	deleteSection: (section: Section) => void;
 	loadActivity: (section: Section, activity: Activity) => any;
 	addActivity: (section: Section, activity: Activity) => void;
 	saveActivity: (activity: Activity) => void;
@@ -24,6 +25,7 @@ export const CourseContext = createContext<CourseContentValues>({
 	setTitle: (newTitle: string) => {},
 	loadActivity: (section: Section, activity: Activity) => {},
 	addSection: (section: Section) => {},
+	deleteSection: (section: Section) => {},
 	addActivity: (section: Section, activity: Activity) => {},
 	saveActivity: (activity: Activity) => {},
 	saveActivityContent: (data: string) => {},

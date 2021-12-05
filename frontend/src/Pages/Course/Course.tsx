@@ -42,8 +42,17 @@ const Course = (props: CourseProps) => {
 	const alert = useAlert();
 	const history = useHistory();
 
-	const setTitle = (newTitle: string) => {
-		return;
+	const setTitle = async (newTitle: string) => {
+		if (!course) return;
+		const courseDTO = { ...course, name: newTitle, code: undefined };
+
+		const updatedCourse = await api.db.courses.update(
+			{ id: course.id },
+			courseDTO,
+		);
+		course.name = updatedCourse.name;
+
+		setCourse(course);
 	};
 
 	const saveActivity = async (activity: Activity) => {
@@ -96,6 +105,19 @@ const Course = (props: CourseProps) => {
 		setCourse(plainToClass(CourseModel, course));
 	};
 
+	const deleteSection = async (section: Section) => {
+		if (!course) return;
+
+		await api.db.courses.deleteSection({
+			courseId: course.id,
+			sectionId: section.id.toString(),
+		});
+		course.sections = course.sections.filter(
+			_section => _section.id !== section.id,
+		);
+		setCourse(plainToClass(CourseModel, course));
+	};
+
 	const addActivity = async (section: Section, newAct: Activity) => {
 		if (!course) return;
 		newAct = await api.db.courses.addActivity(course?.id, section.id, newAct);
@@ -124,6 +146,7 @@ const Course = (props: CourseProps) => {
 		loadActivity,
 		addSection,
 		addActivity,
+		deleteSection,
 		saveActivity,
 		saveActivityContent,
 		setIsNavigationOpen,

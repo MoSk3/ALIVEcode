@@ -83,6 +83,16 @@ export class CourseController {
     return await this.courseService.createSection(course.id, createSectionDTO);
   }
 
+  @Delete(':id/sections/:sectionId')
+  @Auth(Role.PROFESSOR, Role.STAFF)
+  async removeSection(@User() user: UserEntity, @Param('id') id: string, @Param('sectionId') sectionId: string) {
+    const course = await this.courseService.findOne(id);
+    if (course.creator.id !== user.id && !hasRole(user, Role.STAFF))
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+
+    return await this.courseService.removeSection(id, sectionId);
+  }
+
   @Get(':id/sections')
   @Auth()
   async getSections(@User() user: UserEntity, @Param('id') id: string) {
