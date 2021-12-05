@@ -49,6 +49,7 @@
 		"react-router-dom": "^5.2.0",
 		"react-scripts": "4.0.3",
 		"react-syntax-highlighter": "^15.4.5",
+		"reactjs-popup": "^2.0.5",
 		"reflect-metadata": "^0.1.13",
 		"refractor": "^4.2.2",
 		"rehype-highlight": "^5.0.0",

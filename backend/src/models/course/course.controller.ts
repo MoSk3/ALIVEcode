@@ -155,4 +155,19 @@ export class CourseController {
 
     return await this.courseService.updateActivity(id, sectionId, activityId, updateActivityDTO);
   }
+
+  @Delete(':id/sections/:sectionId/activities/:activityId')
+  @Auth()
+  async removeActivity(
+    @User() user: UserEntity,
+    @Param('id') id: string,
+    @Param('sectionId') sectionId: string,
+    @Param('activityId') activityId: string,
+  ) {
+    const course = await this.courseService.findOne(id);
+    if (course.creator.id !== user.id && !hasRole(user, Role.STAFF))
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+
+    return await this.courseService.removeActivity(id, sectionId, activityId);
+  }
 }

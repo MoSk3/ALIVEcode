@@ -67,6 +67,11 @@ export class CourseService {
     return await this.sectionRepository.remove(section);
   }
 
+  async removeActivity(courseId: string, sectionId: string, activityId: string) {
+    const activity = await this.findActivity(courseId, sectionId, activityId);
+    return await this.activityRepository.remove(activity);
+  }
+
   async findOneWithSections(courseId) {
     const course = await this.courseRepository.findOne(courseId, { relations: ['sections'] });
     if (!course) throw new HttpException('Course not found', HttpStatus.NOT_FOUND);

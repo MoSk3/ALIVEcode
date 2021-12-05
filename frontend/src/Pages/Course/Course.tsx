@@ -134,6 +134,26 @@ const Course = (props: CourseProps) => {
 		setCourse(plainToClass(CourseModel, course));
 	};
 
+	const deleteActivity = async (section: Section, _activity: Activity) => {
+		if (!(course && course.sections)) return;
+
+		await api.db.courses.deleteActivity({
+			courseId: course.id,
+			sectionId: section.id.toString(),
+			activityId: _activity.id.toString(),
+		});
+		const idx = course.sections.indexOf(section);
+
+		course.sections[idx].activities = (
+			await section.getActivities(course.id)
+		)?.filter(_activity_ => _activity_.id !== _activity.id);
+		if (_activity.id === activity?.id) {
+			setActivity(undefined);
+		}
+
+		setCourse(plainToClass(CourseModel, course));
+	};
+
 	const canEdit = course?.creator.id === user?.id;
 
 	const contextValue: CourseContentValues = {
@@ -146,6 +166,7 @@ const Course = (props: CourseProps) => {
 		loadActivity,
 		addSection,
 		addActivity,
+		deleteActivity,
 		deleteSection,
 		saveActivity,
 		saveActivityContent,

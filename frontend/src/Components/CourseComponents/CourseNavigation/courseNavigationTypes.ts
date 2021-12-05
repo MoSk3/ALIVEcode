@@ -94,6 +94,9 @@ export const StyledCourseNavigation = styled.div`
 			if (theme.name === themes.light.name) return 'var(--third-color)';
 			if (theme.name === themes.dark.name) return 'var(--secondary-color)';
 		}};
+		display: grid;
+		grid-template-columns: ${({ options }: { options: NavigationOptions }) =>
+			options.editMode ? '5fr 1fr;' : '1fr;'};
 	}
 
 	.course-section-body {
@@ -102,6 +105,6 @@ export const StyledCourseNavigation = styled.div`
 
 	.course-section-header:hover,
 	.course-activity:hover {
-		background-color: var(--contrast-color);
+		background-color: var(--third-color);
 	}
 `;
