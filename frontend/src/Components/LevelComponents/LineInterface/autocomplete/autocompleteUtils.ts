@@ -1,4 +1,4 @@
-import { command, Position } from "./autocompleteTypes";
+import { command, Position, snippetsType } from "./autocompleteTypes";
 import ace from 'ace-builds'
 
 export let editor: any;
@@ -6,18 +6,11 @@ export function setEditor(e: any) {
 	editor = e;
 }
 
-type snippetsType = { name: string; code: string };
-
 export const registerSnippets = (
 	editor: ace.Ace.Editor,
 	mode: string,
 	snippetText: string,
 ) => {
-	editor.setOptions({
-		enableBasicAutocompletion: true,
-		enableSnippets: true,
-	});
-
 	var snippetManager = ace.require('ace/snippets').snippetManager;
 	console.log(snippetManager);
 

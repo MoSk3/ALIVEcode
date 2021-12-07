@@ -3,7 +3,7 @@ import EditorTab from '../../AliveScriptComponents/EditorTab/EditorTab';
 import { useState, useRef, memo, useContext } from 'react';
 import { ThemeContext } from '../../../state/contexts/ThemeContext';
 
-import { addSnippets, Autocomplete, setAutocomplete } from './autocomplete';
+import { Autocomplete, setAutocomplete } from './autocomplete/autocomplete';
 import ace from 'ace-builds';
 import AceEditor from 'react-ace';
 import 'ace-builds/src-noconflict/theme-cobalt';
@@ -97,7 +97,6 @@ const LineInterface = memo(
 										const editor = ace.edit('1nt3rf4c3');
 										setAutocomplete(editor);
 										editor.keyBinding.addKeyboardHandler(new Autocomplete(), 0);
-										addSnippets(editor);
 									}}
 									onChange={content => {
 										onEditorChange(content, t);
@@ -111,6 +110,8 @@ const LineInterface = memo(
 										enableBasicAutocompletion: true,
 										enableSnippets: true,
 										enableLiveAutocompletion: true,
+										scrollPastEnd: true,
+										vScrollBarAlwaysVisible: true,
 									}}
 								/>
 							);
@@ -145,6 +146,11 @@ const LineInterface = memo(
 						fontSize="large"
 						name="1nt3rf4c3" //"UNIQUE_ID_OF_DIV"
 						editorProps={{ $blockScrolling: true }}
+						setOptions={{
+							enableBasicAutocompletion: true,
+							enableSnippets: true,
+							enableLiveAutocompletion: true,
+						}}
 					/>
 				)}
 			</StyledLineInterface>

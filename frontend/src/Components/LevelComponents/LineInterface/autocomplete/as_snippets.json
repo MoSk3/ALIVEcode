@@ -13,6 +13,14 @@
 	},
 	{
 		"name": "sisinon",
-		"code": "si $1 alors\n\t$2\nsinon\n\t$1\nfin si"
+		"code": "si $1 alors\n\t$2\nsinon\n\t$3\nfin si"
+	},
+	{
+		"name": "comment",
+		"code": "(:\n $1\n:)"
+	},
+	{
+		"name": "dcomment",
+		"code": "(-:\n - $1\n:-)"
 	}
 ]

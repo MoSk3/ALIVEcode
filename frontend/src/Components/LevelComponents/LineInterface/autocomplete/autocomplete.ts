@@ -1,11 +1,11 @@
 //#region Types
 
-import { command, SymbolPair } from "./autocomplete/autocompleteTypes";
+import { command, SymbolPair } from "./autocompleteTypes";
 import {
 	createSnippets,
 	registerSnippets,
 	setEditor,
-} from './autocomplete/autocompleteUtils';
+} from './autocompleteUtils';
 
 import {
 	getPos,
@@ -14,9 +14,10 @@ import {
 	lineStartWith,
 	getLines,
 	editor,
-} from './autocomplete/autocompleteUtils';
+} from './autocompleteUtils';
 
 import snippets from './as_snippets.json';
+import ace from 'ace-builds';
 
 //#endregion types
 
@@ -139,14 +140,6 @@ function closeBlock(): command | undefined {
 	return { command: 'insertstring', args: ' '.repeat(spaces + tabSize) };
 }
 
-const setAutocomplete = (e: any) => {
-	setEditor(e);
-};
-
-function addSnippets(editor: any) {
-	registerSnippets(editor, 'alivescript', createSnippets(snippets));
-}
-
 export class Autocomplete {
 	handleKeyboard(
 		data: any,
@@ -178,8 +171,13 @@ export class Autocomplete {
 	}
 }
 
-//#region utils
+function addSnippets(editor: ace.Ace.Editor) {
+	registerSnippets(editor, 'alivescript', createSnippets(snippets));
+}
 
-//#endregion
+const setAutocomplete = (e: ace.Ace.Editor) => {
+	setEditor(e);
+	addSnippets(e);
+};
 
 export { setAutocomplete, addSnippets };

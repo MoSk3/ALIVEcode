@@ -153,6 +153,8 @@ export type contexts =
 	| 'program'
 	| 'string';
 
+export type snippetsType = { name: string; code: string };
+
 /**
  * represent the position of the cursor
  */
