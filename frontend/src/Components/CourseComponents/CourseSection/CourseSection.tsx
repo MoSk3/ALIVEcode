@@ -16,6 +16,7 @@ import {
 	faTrash,
 } from '@fortawesome/free-solid-svg-icons';
 import { faDropbox } from '@fortawesome/free-brands-svg-icons';
+import { useHistory } from 'react-router';
 /**
  * Component that shows the section in the navigation and handles different actions like adding in an activity onto the section
  *
@@ -33,11 +34,14 @@ const CourseSection = ({ section, editMode }: CourseSectionProps) => {
 		canEdit,
 		deleteSection,
 		deleteActivity,
+		activity,
+		closeCurrentActivity,
 	} = useContext(CourseContext);
 	const { t } = useTranslation();
 	const [confirmSectionDelete, setConfirmSectionDelete] = useState(false);
 	const [confirmActivityDelete, setConfirmActivityDelete] = useState(false);
 	const currentActivity = useRef<Activity>();
+	const history = useHistory();
 
 	const toggleOpenSection = async () => {
 		if (!course) return;
@@ -97,11 +101,19 @@ const CourseSection = ({ section, editMode }: CourseSectionProps) => {
 						<>
 							{section.activities?.map((a, idx) => (
 								<div
-									onClick={() => loadActivity(section, a)}
+									onClick={() =>
+										a.id === activity?.id
+											? closeCurrentActivity()
+											: loadActivity(section, a)
+									}
 									key={idx}
 									className="course-activity"
 								>
-									{a.name}
+									{a.id === activity?.id ? (
+										<b style={{ color: 'var(--contrast-color)' }}>{a.name}</b>
+									) : (
+										a.name
+									)}
 									{canEdit && editMode && (
 										<TDOption color="black" size="1x">
 											<Option

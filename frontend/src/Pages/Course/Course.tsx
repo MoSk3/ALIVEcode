@@ -99,6 +99,10 @@ const Course = (props: CourseProps) => {
 		setSection(section);
 	};
 
+	const closeCurrentActivity = () => {
+		setActivity(undefined);
+	};
+
 	const addSection = (section: Section) => {
 		if (!course) return;
 		course.sections.push(section);
@@ -164,6 +168,7 @@ const Course = (props: CourseProps) => {
 		isNavigationOpen,
 		setTitle,
 		loadActivity,
+		closeCurrentActivity,
 		addSection,
 		addActivity,
 		deleteActivity,

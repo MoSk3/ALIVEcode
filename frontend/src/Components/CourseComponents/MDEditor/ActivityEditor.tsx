@@ -21,6 +21,7 @@ import {
 	StyledActivityEditor,
 } from './activityEditorTypes';
 import isHotkey from 'is-hotkey';
+import { useTranslation } from 'react-i18next';
 
 const LIST_TYPES = ['numbered-list', 'bulleted-list'];
 
@@ -49,6 +50,7 @@ const ActivityEditor = ({
 	);
 	const renderElement = useCallback(props => <Element {...props} />, []);
 	const renderLeaf = useCallback(props => <Leaf {...props} />, []);
+	const { t } = useTranslation();
 
 	console.log(defaultValue);
 
@@ -60,23 +62,25 @@ const ActivityEditor = ({
 					value={value}
 					onChange={value => setValue([...value])}
 				>
-					<Toolbar>
-						<MarkButton format="bold" icon="bold" />
-						<MarkButton format="italic" icon="italic" />
-						<MarkButton format="underline" icon="underlined" />
-						<MarkButton format="code" icon="code" />
-						<BlockButton format="heading-one" icon="one" />
-						<BlockButton format="heading-two" icon="two" />
-						<BlockButton format="block-quote" icon="quote" />
-						<DropdownButton title="listes" variant={'secondary'}>
-							<BlockButton format="numbered-list" icon="liste numérotée" />
-							<br />
-							<BlockButton format="bulleted-list" icon="liste point" />
-						</DropdownButton>
-					</Toolbar>
+					{isEditable && isEditable() && (
+						<Toolbar>
+							<MarkButton format="bold" icon="bold" />
+							<MarkButton format="italic" icon="italic" />
+							<MarkButton format="underline" icon="underlined" />
+							<MarkButton format="code" icon="code" />
+							<BlockButton format="heading-one" icon="one" />
+							<BlockButton format="heading-two" icon="two" />
+							<BlockButton format="block-quote" icon="quote" />
+							<DropdownButton title="listes" variant={'secondary'}>
+								<BlockButton format="numbered-list" icon="liste numérotée" />
+								<br />
+								<BlockButton format="bulleted-list" icon="liste point" />
+							</DropdownButton>
+						</Toolbar>
+					)}
 					<Editable
 						readOnly={isEditable && !isEditable()}
-						placeholder={'Start to write your activity content here'}
+						placeholder={t('course.activity.empty')}
 						renderElement={renderElement}
 						renderLeaf={renderLeaf}
 						spellCheck

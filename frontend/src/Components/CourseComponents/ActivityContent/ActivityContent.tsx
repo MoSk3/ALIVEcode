@@ -5,7 +5,6 @@ import {
 import { useContext, useState, useEffect } from 'react';
 import { CourseContext } from '../../../state/contexts/CourseContext';
 import { ThemeContext } from '../../../state/contexts/ThemeContext';
-import ReactMarkdown from 'react-markdown';
 import CenteredContainer from '../../UtilsComponents/CenteredContainer/CenteredContainer';
 import Level from '../../../Pages/Level/Level';
 import IconButton from '../../DashboardComponents/IconButton/IconButton';
@@ -15,16 +14,15 @@ import {
 	faPencilAlt,
 } from '@fortawesome/free-solid-svg-icons';
 import MDEditor from '../MDEditor/MDEditor';
-import { Alert, Form } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import Button from '../../UtilsComponents/Button/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useTranslation } from 'react-i18next';
-import { layouts } from 'chart.js';
-import Card from '../../UtilsComponents/Cards/Card/Card';
-import LevelCard from '../../LevelComponents/LevelCard/LevelCard';
 import Modal from '../../UtilsComponents/Modal/Modal';
 import NewActivityContentModal from './NewActivityContentModal';
 import ActivityEditor from '../MDEditor/ActivityEditor';
+import { plainToClass } from 'class-transformer';
+import { Activity } from '../../../Models/Course/activity.entity';
 
 /**
  * Displays the content of the activity in the CourseContext
@@ -137,24 +135,20 @@ const ActivityContent = (props: ActivityContentProps) => {
 									key={`iotproject-${projectId}`}
 									id={projectId}
 								></IoTProject>*/}
-								{activity.content?.data || (canEdit && editMode) ? (
-									<ActivityEditor
-										isEditable={() => canEdit && editMode}
-										onSave={content => {
-											if (!activity.content) {
-												activity.content = { data: '{}' };
-											}
-											activity.content.data = JSON.stringify(content);
-											saveActivity(activity);
-										}}
-										defaultValue={
-											activity.content?.data &&
-											JSON.parse(activity.content.data)
+								<ActivityEditor
+									isEditable={() => canEdit && editMode}
+									onSave={content => {
+										if (!activity.content) {
+											activity.content = { data: '{}' };
 										}
-									/>
-								) : (
-									<p>{t('course.activity.empty')}</p>
-								)}
+										activity.content.data = JSON.stringify(content);
+										saveActivity(plainToClass(Activity, activity));
+									}}
+									defaultValue={
+										activity.content?.data && JSON.parse(activity.content.data)
+									}
+								/>
+
 								{activity.levels && activity.levels.length > 0 && (
 									<>
 										{activity.levels &&

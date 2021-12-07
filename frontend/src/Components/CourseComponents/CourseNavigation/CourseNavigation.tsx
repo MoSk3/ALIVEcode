@@ -68,7 +68,10 @@ const CourseNavigation = (props: CourseNavigationProps) => {
 										defaultValue={courseTitle}
 									/>
 								) : (
-									<span onClick={() => editMode && setEditTitle(true)}>
+									<span
+										style={{ cursor: editMode ? 'pointer' : 'auto' }}
+										onClick={() => editMode && setEditTitle(true)}
+									>
 										{courseTitle}
 									</span>
 								)}
