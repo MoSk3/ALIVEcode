@@ -1,7 +1,12 @@
 //#region Types
 
 import { command, SymbolPair } from "./autocomplete/autocompleteTypes";
-import { setEditor } from './autocomplete/autocompleteUtils';
+import {
+	createSnippets,
+	registerSnippets,
+	setEditor,
+} from './autocomplete/autocompleteUtils';
+
 import {
 	getPos,
 	getLine,
@@ -10,6 +15,8 @@ import {
 	getLines,
 	editor,
 } from './autocomplete/autocompleteUtils';
+
+import snippets from './as_snippets.json';
 
 //#endregion types
 
@@ -136,31 +143,37 @@ const setAutocomplete = (e: any) => {
 	setEditor(e);
 };
 
-function autocomplete(
-	data: any,
-	hashId: number,
-	keyString: string,
-	keyCode: number,
-	e: unknown,
-) {
-	const pos = getPos();
-	const line = getLine(pos.row);
-	if (hashId === -1) {
-		const symbolPair: SymbolPair | undefined = Object.values(
-			patterns.symbolPairs,
-		).find(symbol => symbol.open === keyString || symbol.close === keyString);
+function addSnippets(editor: any) {
+	registerSnippets(editor, 'alivescript', createSnippets(snippets));
+}
 
-		if (symbolPair !== undefined) {
-			return closeSymbolPair(symbolPair, keyString);
-		}
+export class Autocomplete {
+	handleKeyboard(
+		data: any,
+		hashId: number,
+		keyString: string,
+		keyCode: number,
+		e: unknown,
+	) {
+		const pos = getPos();
+		const line = getLine(pos.row);
+		if (hashId === -1) {
+			const symbolPair: SymbolPair | undefined = Object.values(
+				patterns.symbolPairs,
+			).find(symbol => symbol.open === keyString || symbol.close === keyString);
 
-		// if the \n is pressed at the end of the line
-		if (
-			keyString === '\n' &&
-			line.trim() &&
-			pos.column >= line.trimRight().length
-		) {
-			return closeBlock();
+			if (symbolPair !== undefined) {
+				return closeSymbolPair(symbolPair, keyString);
+			}
+
+			// if the \n is pressed at the end of the line
+			if (
+				keyString === '\n' &&
+				line.trim() &&
+				pos.column >= line.trimRight().length
+			) {
+				return closeBlock();
+			}
 		}
 	}
 }
@@ -169,4 +182,4 @@ function autocomplete(
 
 //#endregion
 
-export { autocomplete, setAutocomplete };
+export { setAutocomplete, addSnippets };

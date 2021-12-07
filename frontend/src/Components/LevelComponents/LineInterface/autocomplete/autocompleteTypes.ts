@@ -146,6 +146,13 @@ export type SymbolPair = {
 	close: string;
 };
 
+export type contexts =
+	| 'comment'
+	| 'docComment'
+	| 'expression'
+	| 'program'
+	| 'string';
+
 /**
  * represent the position of the cursor
  */
