@@ -42,6 +42,19 @@ const Course = (props: CourseProps) => {
 	const alert = useAlert();
 	const history = useHistory();
 
+	const setTitle = async (newTitle: string) => {
+		if (!course) return;
+		const courseDTO = { ...course, name: newTitle, code: undefined };
+
+		const updatedCourse = await api.db.courses.update(
+			{ id: course.id },
+			courseDTO,
+		);
+		course.name = updatedCourse.name;
+
+		setCourse(course);
+	};
+
 	const saveActivity = async (activity: Activity) => {
 		if (!course || !activity || !section) return;
 		const { content, ...actWithoutContent } = activity;
@@ -86,9 +99,26 @@ const Course = (props: CourseProps) => {
 		setSection(section);
 	};
 
+	const closeCurrentActivity = () => {
+		setActivity(undefined);
+	};
+
 	const addSection = (section: Section) => {
 		if (!course) return;
 		course.sections.push(section);
+		setCourse(plainToClass(CourseModel, course));
+	};
+
+	const deleteSection = async (section: Section) => {
+		if (!course) return;
+
+		await api.db.courses.deleteSection({
+			courseId: course.id,
+			sectionId: section.id.toString(),
+		});
+		course.sections = course.sections.filter(
+			_section => _section.id !== section.id,
+		);
 		setCourse(plainToClass(CourseModel, course));
 	};
 
@@ -108,6 +138,26 @@ const Course = (props: CourseProps) => {
 		setCourse(plainToClass(CourseModel, course));
 	};
 
+	const deleteActivity = async (section: Section, _activity: Activity) => {
+		if (!(course && course.sections)) return;
+
+		await api.db.courses.deleteActivity({
+			courseId: course.id,
+			sectionId: section.id.toString(),
+			activityId: _activity.id.toString(),
+		});
+		const idx = course.sections.indexOf(section);
+
+		course.sections[idx].activities = (
+			await section.getActivities(course.id)
+		)?.filter(_activity_ => _activity_.id !== _activity.id);
+		if (_activity.id === activity?.id) {
+			setActivity(undefined);
+		}
+
+		setCourse(plainToClass(CourseModel, course));
+	};
+
 	const canEdit = course?.creator.id === user?.id;
 
 	const contextValue: CourseContentValues = {
@@ -116,9 +166,13 @@ const Course = (props: CourseProps) => {
 		activity,
 		canEdit,
 		isNavigationOpen,
+		setTitle,
 		loadActivity,
+		closeCurrentActivity,
 		addSection,
 		addActivity,
+		deleteActivity,
+		deleteSection,
 		saveActivity,
 		saveActivityContent,
 		setIsNavigationOpen,

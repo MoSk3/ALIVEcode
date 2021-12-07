@@ -208,7 +208,7 @@
 	"course": {
 		"desc": "Cours de {{professor}}",
 		"subject": "Sujet",
-		"empty": "Ce course est vide.",
+		"empty": "Ce cours est vide.",
 		"section": {
 			"empty": "Cette section ne possède aucune activité",
 			"new": "Nouvelle section"

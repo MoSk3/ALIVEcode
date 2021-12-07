@@ -1,13 +1,31 @@
+import { BaseEditor, Descendant } from 'slate';
+import { ReactEditor } from 'slate-react';
 import styled from 'styled-components';
 
-export type MDEditorProps = {
-	defaultValue?: string;
-	onSave?: (content: string) => void;
+export type CustomElement = { type: string; children: CustomText[] };
+
+export type CustomText = { text: string };
+declare module 'slate' {
+	interface CustomTypes {
+		Editor: BaseEditor & ReactEditor;
+		Element: CustomElement;
+		Text: CustomText;
+	}
+}
+
+export type ActivityEditorProps = {
+	defaultValue?: CustomElement[];
+	isEditable?: () => boolean;
+	onSave?: (content: Descendant[]) => void;
 };
 
-export const StyledMDEditor = styled.div`
+export const StyledActivityEditor = styled.div`
 	position: relative;
-	border: 1px solid var(--foreground-color);
+	${({ isEditable }: { isEditable: () => boolean }) =>
+		isEditable()
+			? `border: 1px dotted var(--foreground-color);
+	border-radius: 10px;`
+			: ``}
 	background-color: var(--background-color);
 
 	.editor-header {

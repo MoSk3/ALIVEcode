@@ -5,7 +5,6 @@ import {
 import { useContext, useState, useEffect } from 'react';
 import { CourseContext } from '../../../state/contexts/CourseContext';
 import { ThemeContext } from '../../../state/contexts/ThemeContext';
-import ReactMarkdown from 'react-markdown';
 import CenteredContainer from '../../UtilsComponents/CenteredContainer/CenteredContainer';
 import Level from '../../../Pages/Level/Level';
 import IconButton from '../../DashboardComponents/IconButton/IconButton';
@@ -19,6 +18,11 @@ import { Form } from 'react-bootstrap';
 import Button from '../../UtilsComponents/Button/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useTranslation } from 'react-i18next';
+import Modal from '../../UtilsComponents/Modal/Modal';
+import NewActivityContentModal from './NewActivityContentModal';
+import ActivityEditor from '../MDEditor/ActivityEditor';
+import { plainToClass } from 'class-transformer';
+import { Activity } from '../../../Models/Course/activity.entity';
 
 /**
  * Displays the content of the activity in the CourseContext
@@ -40,6 +44,8 @@ const ActivityContent = (props: ActivityContentProps) => {
 	const [name, setName] = useState<string>('');
 	const [editingName, setEditingName] = useState(false);
 	const [defaultMDValue, setDefaultMDValue] = useState<string>();
+	const [contentLayout, setContentLayout] = useState<any[]>([]);
+	const [newContentModalOpen, setNewContentModalOpen] = useState(false);
 
 	useEffect(() => {
 		activity && setName(activity.name);
@@ -50,6 +56,14 @@ const ActivityContent = (props: ActivityContentProps) => {
 		setDefaultMDValue(activity?.content?.data);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [activity?.content?.data]);
+
+	const addContent = (content: any) => {
+		setContentLayout(layout =>
+			contentLayout.concat(
+				<MDEditor onSave={saveActivityContent} defaultValue={defaultMDValue} />,
+			),
+		);
+	};
 
 	/*const projectId = useMemo(() => {
 		return Math.random() > 0.5
@@ -92,6 +106,7 @@ const ActivityContent = (props: ActivityContentProps) => {
 									<Form.Control
 										className="activity-header-title"
 										value={name}
+										autoFocus
 										onChange={e => setName(e.target.value)}
 										onBlur={() => {
 											activity.name = name;
@@ -120,17 +135,22 @@ const ActivityContent = (props: ActivityContentProps) => {
 									key={`iotproject-${projectId}`}
 									id={projectId}
 								></IoTProject>*/}
-								{canEdit && editMode ? (
-									<MDEditor
-										onSave={saveActivityContent}
-										defaultValue={defaultMDValue}
-									/>
-								) : activity.content?.data ||
-								  (activity.levels && activity.levels.length > 0) ? (
+								<ActivityEditor
+									isEditable={() => canEdit && editMode}
+									onSave={content => {
+										if (!activity.content) {
+											activity.content = { data: '{}' };
+										}
+										activity.content.data = JSON.stringify(content);
+										saveActivity(plainToClass(Activity, activity));
+									}}
+									defaultValue={
+										activity.content?.data && JSON.parse(activity.content.data)
+									}
+								/>
+
+								{activity.levels && activity.levels.length > 0 && (
 									<>
-										{activity.content && (
-											<ReactMarkdown>{activity.content.data}</ReactMarkdown>
-										)}
 										{activity.levels &&
 											activity.levels.map((a, idx) => (
 												<div key={idx} style={{ position: 'relative' }}>
@@ -142,8 +162,6 @@ const ActivityContent = (props: ActivityContentProps) => {
 												</div>
 											))}
 									</>
-								) : (
-									<p>{t('course.activity.empty')}</p>
 								)}
 							</div>
 						</>
@@ -157,6 +175,19 @@ const ActivityContent = (props: ActivityContentProps) => {
 						</CenteredContainer>
 					)}
 				</div>
+				{editMode && canEdit && (
+					<Modal
+						centered
+						title={'course.activity.new_content'}
+						open={newContentModalOpen}
+						onClose={() => setNewContentModalOpen(false)}
+						animation
+						hideCloseButton
+						hideFooter
+					>
+						<NewActivityContentModal />
+					</Modal>
+				)}
 			</div>
 		</StyledActivityContent>
 	);
