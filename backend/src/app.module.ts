@@ -69,9 +69,9 @@ adminjs.registerAdapter({ Database, Resource });
     }),
     MulterModule.register({
         dest: 'images/uploads',
-      }),
+      }), 
       ServeStaticModule.forRoot({
-        rootPath: join( 'images'),
+        rootPath: join(__dirname, '../../images'),
     }),
 
     UserModule,

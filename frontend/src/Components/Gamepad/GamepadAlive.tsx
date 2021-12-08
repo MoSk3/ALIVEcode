@@ -69,25 +69,39 @@ const GamepadAlive = () => {
 					<img src={controller} alt="" />
 
 					<button
-						className={'button btnStart ' + (isStartPressed && 'push')}
+						className={
+							'button buttonGamepad btnStart ' + (isStartPressed && 'push')
+						}
 						id="btnStart"
 					>
 						Start
 					</button>
 
-					<button className={'button btnA ' + (isAPressed && 'push')} id="btnA">
+					<button
+						className={'button buttonGamepad  btnA ' + (isAPressed && 'push')}
+						id="btnA"
+					>
 						A
 					</button>
 
-					<button className={'button btnB ' + (isBPressed && 'push')} id="btnB">
+					<button
+						className={'button buttonGamepad btnB ' + (isBPressed && 'push')}
+						id="btnB"
+					>
 						B
 					</button>
 
-					<button className={'button btnX ' + (isXPressed && 'push')} id="btnX">
+					<button
+						className={'button buttonGamepad btnX ' + (isXPressed && 'push')}
+						id="btnX"
+					>
 						X
 					</button>
 
-					<button className={'button btnY ' + (isYPressed && 'push')} id="btnY">
+					<button
+						className={'button btnY buttonGamepad' + (isYPressed && 'push')}
+						id="btnY"
+					>
 						Y
 					</button>
 				</StyledDiv>

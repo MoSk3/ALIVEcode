@@ -14,6 +14,7 @@ import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { Result } from '../../../Models/Social/result.entity';
 import api from '../../../Models/api';
+import { useHistory } from 'react-router';
 
 const StyledCenteredContainer = styled(CenteredContainer)`
 	padding: 0 10% 0 10%;
@@ -33,21 +34,21 @@ const AccountPage = () => {
 		else if (value > 30) return 'orange';
 		else return 'red';
 	};
-	//const [loading, setLoading] = useState(true);
 	const [resultQuizz, setResultQuizz] = useState<Result[]>([]);
 	const [resultCount, setCountQuizz] = useState<Result>();
 	let countSuccess: any[] = [];
 	const { register, handleSubmit } = useForm();
+	const history = useHistory();
 
 	const onSubmit = async (image: { file: any }) => {
 		let fileData = new FormData();
 		fileData.append('image', image.file[0]);
-		console.log(fileData);
 		await axios.post('users/upload', fileData, {
 			headers: {
 				'Content-Type': image.file[0].type,
 			},
 		});
+		window.location.reload();
 	};
 
 	useEffect(() => {
@@ -88,7 +89,10 @@ const AccountPage = () => {
 										</Row>
 										<Form onSubmit={handleSubmit(onSubmit)}>
 											<Form.Row>
-												<input type="file" {...register('file')} />
+												<input
+													type="file"
+													{...register('file', { required: true })}
+												/>
 											</Form.Row>
 											<Form.Row>
 												<button type="submit">upload</button>
@@ -102,29 +106,37 @@ const AccountPage = () => {
 					<div className="col-md-5  offset-md-1">
 						<CardContainer title="Avancement">
 							<Row>
-								<h3 className="text-left col-sm-5">
+								<h3 className="text-left col-sm-5" key="resulcount">
 									{t('user.quiz')} {resultCount}/10
 								</h3>
-								<h3 className="text-left col-sm-7">
+								<h3 className="text-left col-sm-7" key="userReward">
 									{t('user.reward')} {countSuccess.length}/40
 								</h3>
-								<h3 className="text-left col-sm-5">{t('user.status')} Noob</h3>
-								<h3 className="text-left col-sm-7">{t('user.rank')} #1</h3>
-								<h3 className="text-left col-sm-5">{t('user.posts')} 0</h3>
-								<h3 className="text-left col-sm-7">Autre</h3>
+								<h3 className="text-left col-sm-5" key="userStatus">
+									{t('user.status')} Noob
+								</h3>
+								<h3 className="text-left col-sm-7 " key="userRank">
+									{t('user.rank')} #1
+								</h3>
+								<h3 className="text-left col-sm-5" key="userPost">
+									{t('user.posts')} 0
+								</h3>
+								<h3 className="text-left col-sm-7" key="autre">
+									Autre
+								</h3>
 							</Row>
 						</CardContainer>
 					</div>
 				</Row>
 			</StyledCenteredContainer>
-			<StyledCenteredContainer>
-				<CardContainer title="Quiz">
+			<StyledCenteredContainer key="cont2">
+				<CardContainer key="cardQuizz" title="Quiz">
 					<Row style={{ paddingTop: '20px' }}>
 						{resultQuizz.map((p, idx) => (
 							<>
-								<div className=" col-sm-2" key={idx}>
+								<div className=" col-sm-2" key={`result + ${idx}`}>
 									<CircularProgressbar
-										key={'result' + idx}
+										key={'Progressbar' + idx}
 										value={p.percentage}
 										text={`${p.percentage}%`}
 										styles={buildStyles({ trailColor: color(p.percentage) })}
@@ -140,19 +152,17 @@ const AccountPage = () => {
 				<CardContainer title={t('user.rewardTitle')}>
 					<Row style={{ padding: '20px' }}>
 						{countSuccess.map((p, idx) => (
-							<>
-								<div className=" col-auto" key={'reward' + idx}>
-									<div style={{ paddingRight: '20px' }}>
-										<img
-											height={100}
-											width={100}
-											src={`http://localhost:8000/rewards/${p.quiz.reward.name}`}
-											alt={p.quiz.reward.name}
-										/>
-									</div>
-									<h3>{p.quiz.reward.name.split('.')[0]}</h3>
+							<div className=" col-auto" key={`reward', ${idx}`}>
+								<div style={{ paddingRight: '20px' }}>
+									<img
+										height={100}
+										width={100}
+										src={`http://localhost:8000/rewards/${p.quiz.reward.name}`}
+										alt={p.quiz.reward.name}
+									/>
 								</div>
-							</>
+								<h3>{p.quiz.reward.name.split('.')[0]}</h3>
+							</div>
 						))}
 					</Row>
 				</CardContainer>

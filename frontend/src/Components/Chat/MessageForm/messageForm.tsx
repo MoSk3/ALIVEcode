@@ -1,26 +1,20 @@
-import { SetStateAction, useContext, useEffect, useRef, useState } from "react";
-import {
-	Container,
-	Card,
-	Row,
-	Form,
-	Dropdown,
-	DropdownButton,
-} from 'react-bootstrap';
+import { useContext, useEffect, useRef, useState } from "react";
+import { Container, Card, Row, Form, DropdownButton } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { UserContext } from '../../../state/contexts/UserContext';
 import Messages from '../Messages/messages';
 import Picker from 'emoji-picker-react';
+import './messageForm.css';
 
 const MessageForm = ({ activeTopic }: any) => {
 	const { user } = useContext(UserContext);
-	const { register, handleSubmit, reset } = useForm();
+	const { handleSubmit } = useForm();
 	const socket: any = useRef();
 	const [messages, setMessages]: any = useState([]);
 	const [users, setUsers]: any = useState([]);
 	const [input, setInput]: any = useState('');
 	const inputRef = useRef(null);
-
+	const [showPicker, setShowPicker] = useState(false);
 	useEffect(() => {
 		if (!user) return;
 
@@ -58,7 +52,7 @@ const MessageForm = ({ activeTopic }: any) => {
 			}
 		};
 
-		socket.current.close = () => {
+		socket.current.disconnect = () => {
 			console.log('disconnected');
 		};
 	}, [user]);
@@ -83,14 +77,10 @@ const MessageForm = ({ activeTopic }: any) => {
 		);
 		setInput('');
 	};
-	const onEmojiClick = (e: any, emojiObject: any) => {
-		const { selectionStart, selectionEnd }: any = inputRef.current;
-		// replace selected text with clicked emoji
-		const newVal: any =
-			input.slice(0, selectionStart) +
-			emojiObject.emoji +
-			input.slice(selectionEnd);
-		setInput(newVal);
+
+	const onEmojiClick = (event: any, emojiObject: { emoji: any }) => {
+		setInput((prevInput: any) => prevInput + emojiObject.emoji);
+		setShowPicker(false);
 	};
 
 	return (
@@ -140,18 +130,26 @@ const MessageForm = ({ activeTopic }: any) => {
 									<DropdownButton
 										id="dropdown-button-drop-end"
 										drop="up"
-										variant="secondary"
-										title={` Drop end `}
+										variant="white"
+										title={
+											<img
+												className="emoji-icon"
+												src="https://icons.getbootstrap.com/assets/icons/emoji-smile.svg"
+												onClick={() => setShowPicker(val => !val)}
+											/>
+										}
 									>
-										<Picker onEmojiClick={onEmojiClick} />
+										<Picker
+											pickerStyle={{ width: '400px' }}
+											onEmojiClick={onEmojiClick}
+										/>
 									</DropdownButton>
-
 									<button
 										className="btn"
 										style={{ background: '#0177bc' }}
 										onClick={handleSubmit(onSubmit)}
 									>
-										Send Message
+										Send
 									</button>
 								</div>
 							</Row>
@@ -178,3 +176,32 @@ const MessageForm = ({ activeTopic }: any) => {
 	);
 };
 export default MessageForm;
+
+{
+	/* <input
+className="form-control"
+type="text"
+ref={inputRef}
+placeholder="Entrer votre message"
+value={input}
+onChange={e => setInput(e.target.value)}
+/>
+<img
+className="emoji-icon"
+src="https://icons.getbootstrap.com/assets/icons/emoji-smile.svg"
+onClick={() => setShowPicker(val => !val)}
+/>
+<button
+className="btn"
+style={{ background: '#0177bc' }}
+onClick={handleSubmit(onSubmit)}
+>
+Send
+</button>
+{showPicker && (
+<Picker
+	pickerStyle={{ width: '100%' }}
+	onEmojiClick={onEmojiClick}
+/>
+)} */
+}

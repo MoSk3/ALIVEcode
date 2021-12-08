@@ -208,11 +208,6 @@ const useRoutes = () => {
 			path: '/quiz/create',
 			component: QuizCreate,
 		},
-		chat: {
-			path: '/chat',
-			exact: true,
-			component: Chat,
-		},
 	});
 
 	const auth_routes = asAuthRoutes(SignIn, {
@@ -245,6 +240,11 @@ const useRoutes = () => {
 		account: {
 			path: '/account',
 			component: AccountPage,
+		},
+		chat: {
+			path: '/chat',
+			exact: true,
+			component: Chat,
 		},
 		iot_dashboard: {
 			path: '/iot/dashboard',
