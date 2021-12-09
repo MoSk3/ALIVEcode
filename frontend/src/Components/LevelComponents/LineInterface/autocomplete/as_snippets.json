@@ -1,26 +1,51 @@
 [
 	{
-		"name": "afficher-txt",
-		"code": "afficher '$1'"
-	},
-	{
-		"name": "fonction",
-		"code": "fonction $1($2)\n\t$3\nfin fonction"
-	},
-	{
-		"name": "si",
-		"code": "si $1 alors\n\t$2\nfin si"
-	},
-	{
-		"name": "sisinon",
-		"code": "si $1 alors\n\t$2\nsinon\n\t$3\nfin si"
-	},
-	{
-		"name": "comment",
+		"name": "$comment",
 		"code": "(:\n $1\n:)"
 	},
 	{
-		"name": "dcomment",
+		"name": "$dcomment",
 		"code": "(-:\n - $1\n:-)"
+	},
+	{
+		"name": "$afficher",
+		"code": "afficher $1"
+	},
+	{
+		"name": "$vlire",
+		"code": "var $1\nlire $1"
+	},
+	{
+		"name": "$vliren",
+		"code": "var $1\nlire ${2:nombre} dans $1"
+	},
+	{
+		"name": "$liren",
+		"code": "lire ${1:nombre} dans $2"
+	},
+	{
+		"name": "$fonction",
+		"code": "fonction $1($2)\n\t$3\nfin fonction"
+	},
+	{
+		"name": "$si",
+		"code": "si $1 alors\n\t$2\nfin si"
+	},
+	{
+		"name": "$sisinon",
+		"code": "si $1 alors\n\t$2\nsinon\n\t$3\nfin si"
+	},
+	{
+		"name": "$pourr",
+		"code": "pour const ${1:i} dans ${2:[${3:1}...${4:10}]}\n\t$5\nfin pour"
+	},
+	{
+		"name": "$pourv",
+		"description": "ceci est une description",
+		"code": "pour var ${1:i} dans ${2:[${3:1}...${4:10}]}\n\t$5\nfin pour"
+	},
+	{
+		"name": "$pourc",
+		"code": "pour const ${1:i} dans ${2:[${3:1}...${4:10}]}\n\t$5\nfin pour"
 	}
 ]

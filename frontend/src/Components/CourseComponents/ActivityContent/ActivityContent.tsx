@@ -23,6 +23,7 @@ import NewActivityContentModal from './NewActivityContentModal';
 import ActivityEditor from '../MDEditor/ActivityEditor';
 import { plainToClass } from 'class-transformer';
 import { Activity } from '../../../Models/Course/activity.entity';
+import ReactMarkdown from 'react-markdown';
 
 /**
  * Displays the content of the activity in the CourseContext
@@ -70,27 +71,8 @@ const ActivityContent = (props: ActivityContentProps) => {
 			? '73f799b7-1019-4f8e-8205-872cf1fac1ff'
 			: '7ae63621-b0f9-4996-a742-6f9bdce715b4';
 	}, [activity?.id]);*/
-
-	return (
-		<StyledActivityContent navigationOpen={isNavigationOpen} theme={theme}>
-			<Button
-				variant="secondary"
-				className="btn-toggle-nav"
-				onClick={() => {
-					setIsNavigationOpen(!isNavigationOpen);
-				}}
-			>
-				<FontAwesomeIcon
-					style={{ transition: '0.35s' }}
-					rotation={isNavigationOpen ? 180 : undefined}
-					icon={faAngleRight}
-					size="2x"
-				/>
-			</Button>
-			<div className="activity-content-padding">
-				<div className="activity-content-body">
-					{activity ? (
-						<>
+	/*
+	<>
 							<div
 								className="activity-header"
 								style={{ cursor: editMode ? 'pointer' : 'initial' }}
@@ -134,7 +116,7 @@ const ActivityContent = (props: ActivityContentProps) => {
 								{/*<IoTProject
 									key={`iotproject-${projectId}`}
 									id={projectId}
-								></IoTProject>*/}
+								></IoTProject>}
 								<ActivityEditor
 									isEditable={() => canEdit && editMode}
 									onSave={content => {
@@ -162,6 +144,98 @@ const ActivityContent = (props: ActivityContentProps) => {
 												</div>
 											))}
 									</>
+								)}
+							</div>
+						</>
+						*/
+
+	return (
+		<StyledActivityContent navigationOpen={isNavigationOpen} theme={theme}>
+			<Button
+				variant="secondary"
+				className="btn-toggle-nav"
+				onClick={() => {
+					setIsNavigationOpen(!isNavigationOpen);
+				}}
+			>
+				<FontAwesomeIcon
+					style={{ transition: '0.35s' }}
+					rotation={isNavigationOpen ? 180 : undefined}
+					icon={faAngleRight}
+					size="2x"
+				/>
+			</Button>
+			<div className="activity-content-padding">
+				<div className="activity-content-body">
+					{activity ? (
+						<>
+							<div
+								className="activity-header"
+								style={{ cursor: editMode ? 'pointer' : 'initial' }}
+							>
+								{!editingName ? (
+									<div
+										className="activity-header-title"
+										onClick={() => editMode && setEditingName(true)}
+									>
+										{activity.name}
+									</div>
+								) : (
+									<Form.Control
+										className="activity-header-title"
+										value={name}
+										onChange={e => setName(e.target.value)}
+										onBlur={() => {
+											activity.name = name;
+											saveActivity(activity);
+											setEditingName(false);
+										}}
+										onKeyDown={(e: any) => {
+											if (e.keyCode === 13) {
+												activity.name = name;
+												saveActivity(activity);
+												setEditingName(false);
+											}
+										}}
+									/>
+								)}
+								{canEdit && (
+									<IconButton
+										icon={editMode ? faCheckCircle : faPencilAlt}
+										onClick={() => setEditMode(!editMode)}
+										size="2x"
+									/>
+								)}
+							</div>
+							<div>
+								{/*<IoTProject
+								key={`iotproject-${projectId}`}
+								id={projectId}
+							></IoTProject>*/}
+								{canEdit && editMode ? (
+									<MDEditor
+										onSave={saveActivityContent}
+										defaultValue={defaultMDValue}
+									/>
+								) : activity.content?.data ||
+								  (activity.levels && activity.levels.length > 0) ? (
+									<>
+										{activity.content && (
+											<ReactMarkdown>{activity.content.data}</ReactMarkdown>
+										)}
+										{activity.levels &&
+											activity.levels.map((a, idx) => (
+												<div key={idx} style={{ position: 'relative' }}>
+													<Level
+														key={`level-${a.level.id}`}
+														level={a.level}
+														editMode={false}
+													/>
+												</div>
+											))}
+									</>
+								) : (
+									<p>{t('course.activity.empty')}</p>
 								)}
 							</div>
 						</>
