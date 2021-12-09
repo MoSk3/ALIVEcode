@@ -156,7 +156,12 @@ const api = {
 		},
 		courses: {
 			get: apiGet('courses/:id', Course, false),
+			update: apiUpdate('courses/:id', Course),
 			getSections: apiGet('courses/:id/sections', Section, true),
+			deleteSection: apiDelete('courses/:courseId/sections/:sectionId'),
+			deleteActivity: apiDelete(
+				'courses/:courseId/sections/:sectionId/activities/:activityId',
+			),
 			delete: apiDelete('courses/:id'),
 			async getActivities(courseId: string, sectionId: number) {
 				return (
