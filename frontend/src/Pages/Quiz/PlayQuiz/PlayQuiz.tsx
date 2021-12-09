@@ -6,6 +6,7 @@ import { QuizCategoryProps } from '../QuizCategory/Category';
 
 const PlayQuiz = (props: QuizCategoryProps) => {
 	const [quiz, setQuiz] = useState<Quiz>();
+	const [score, setScore] = useState(0);
 
 	useEffect(() => {
 		async function getQuiz() {
@@ -20,6 +21,7 @@ const PlayQuiz = (props: QuizCategoryProps) => {
 		<div className="container centered">
 			<h1>{quiz?.name}</h1>
 			<p>{quiz?.description}</p>
+			<p>Current score: {score}</p>
 
 			{
 				/* Generate all questions in cards form */
@@ -36,6 +38,7 @@ const PlayQuiz = (props: QuizCategoryProps) => {
 												function btnClick() {
 													if (Boolean(answer.is_good) === true) {
 														window.alert('Good Answer!');
+														setScore(score + 1);
 													} else {
 														window.alert('Wrong Answer!');
 													}

@@ -75,6 +75,11 @@ const QuizCategory = (props: QuizCategoryProps) => {
 										<td>TODO</td>
 										<td>TODO</td>
 										<td>
+											<Link to={`/quiz/play/${quiz.id}`}>
+												<Button>Play</Button>
+											</Link>
+										</td>
+										<td>
 											<Link to={`/quiz/edit/${quiz.id}`}>
 												<Button>Edit</Button>
 											</Link>
