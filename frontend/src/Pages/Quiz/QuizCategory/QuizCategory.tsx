@@ -62,8 +62,6 @@ const QuizCategory = (props: QuizCategoryProps) => {
 							<tr>
 								<th>Nom</th>
 								<th> # de Questions</th>
-								<th>Auteur</th>
-								<th>Date</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -72,8 +70,6 @@ const QuizCategory = (props: QuizCategoryProps) => {
 									<tr>
 										<td>{quiz.name}</td>
 										<td>{quiz.questions.length}</td>
-										<td>TODO</td>
-										<td>TODO</td>
 										<td>
 											<Link to={`/quiz/play/${quiz.id}`}>
 												<Button>Play</Button>
