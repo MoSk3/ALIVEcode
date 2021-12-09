@@ -219,3 +219,4 @@ out/production
 out/META-INF
 */log/
 node_modules
+package-lock.json
