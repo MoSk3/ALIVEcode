@@ -48,15 +48,14 @@ const MDEditor = ({ onSave, defaultValue }: MDEditorProps) => {
 				) : (
 					<ReactMarkdown
 						remarkPlugins={[
-							//remarkGfm,
-							//remarkMath,
+							remarkGfm,
+							remarkMath,
 							//remarkBreaks,
-							remarkAlbum.asCodeBlock,
+							//remarkAlbum.asCodeBlock,
 						]}
 						rehypePlugins={[
-							rehypeAlbum.print,
 							//rehypeAlbum.underline,
-							//rehypeKatex,
+							rehypeKatex,
 						]}
 						components={{
 							code({ node, inline, className, children, ...props }) {
