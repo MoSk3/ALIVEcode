@@ -38,8 +38,6 @@ const PlayQuiz = (props: QuizCategoryProps) => {
 												function btnClick() {
 													if (Boolean(answer.is_good) === true) {
 														setScore(score + 1);
-													} else {
-														window.alert('Wrong Answer!');
 													}
 												}
 												return (

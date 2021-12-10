@@ -33,12 +33,14 @@ const QuizEdit = (props: QuizCategoryProps) => {
 		};
 		data.quiz = quizObj;
 		const response = await api.db.question.create(data);
+		window.location.reload();
 	}
 
 	async function createAnswer(data: Answer) {
 		console.log('New Answer!');
 		const response = await api.db.answer.create(data);
 		console.log(response);
+		window.location.reload();
 	}
 
 	const [categories, setCategories] = useState<Category[]>([]);
