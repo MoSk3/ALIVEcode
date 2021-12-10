@@ -37,7 +37,6 @@ const PlayQuiz = (props: QuizCategoryProps) => {
 											question.answers.map(answer => {
 												function btnClick() {
 													if (Boolean(answer.is_good) === true) {
-														window.alert('Good Answer!');
 														setScore(score + 1);
 													} else {
 														window.alert('Wrong Answer!');
