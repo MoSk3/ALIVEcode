@@ -28,6 +28,8 @@ import MaintenanceBar from './Components/SiteStatusComponents/MaintenanceBar/Mai
 import { Maintenance } from './Models/Maintenance/maintenance.entity';
 import openPlaySocket from './Pages/Level/PlaySocket';
 import { PlaySocket } from './Pages/Level/PlaySocket';
+import FillContainer from './Components/UtilsComponents/FillContainer/FillContainer';
+import FillGrid from './Components/UtilsComponents/FillGrid/FillGrid';
 
 type GlobalStyleProps = {
 	theme: Theme;
@@ -222,8 +224,10 @@ const App = () => {
 					<Router>
 						<UserContext.Provider value={providerValue}>
 							<ALIVENavbar handleLogout={async () => await logout()} />
-							<StyledApp theme={theme} className="m-auto my-4">
-								<RouterSwitch />
+							<StyledApp theme={theme} className="h-100">
+								<FillGrid>
+									<RouterSwitch />
+								</FillGrid>
 							</StyledApp>
 							{maintenance && !maintenance.hidden && (
 								<MaintenanceBar

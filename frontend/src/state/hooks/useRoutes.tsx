@@ -32,6 +32,7 @@ import { MaintenanceError } from '../../Pages/Errors/MaintenanceError/Maintenanc
 import MaintenanceMenu from '../../Pages/SiteStatus/MaintenanceMenu/MaintenanceMenu';
 import ASBuiltinsDocs from '../../Components/AliveScriptComponents/ASDocs/ASBuiltinsDocs';
 import { LEVEL_TYPE } from '../../Models/Level/level.entity';
+import DashboardNew from '../../Pages/DashboardNew/DashboardNew';
 
 type component =
 	| React.ComponentType<RouteComponentProps<any>>

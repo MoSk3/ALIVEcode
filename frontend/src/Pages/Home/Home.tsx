@@ -3,7 +3,7 @@ import Footer from '../../Components/MainComponents/Footer/Footer';
 import VoitureAnimee from '../../assets/images/Voiture.gif';
 import TypeWriter from '../../Components/UtilsComponents/TypeWriter/TypeWriter';
 import { useTranslation } from 'react-i18next';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { ThemeContext } from '../../state/contexts/ThemeContext';
 
 /**
@@ -14,6 +14,17 @@ import { ThemeContext } from '../../state/contexts/ThemeContext';
 const Home = (props: HomeProps) => {
 	const { t } = useTranslation();
 	const { theme } = useContext(ThemeContext);
+
+	useEffect(() => {
+		const oldOverflow = document.body.style.overflowX;
+		console.log(oldOverflow);
+		document.body.style.overflowX = 'hidden';
+
+		return () => {
+			console.log(oldOverflow);
+			document.body.style.overflowX = oldOverflow || 'auto';
+		};
+	}, []);
 
 	return (
 		<StyledHome>
