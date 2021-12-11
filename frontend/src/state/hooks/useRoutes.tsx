@@ -186,7 +186,7 @@ const useRoutes = () => {
 	const auth_routes = asAuthRoutes(SignIn, {
 		dashboard: {
 			path: '/dashboard',
-			component: Dashboard,
+			component: DashboardNew,
 		},
 		create_classroom: {
 			accountType: Professor,

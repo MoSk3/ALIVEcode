@@ -28,7 +28,7 @@ const ALIVENavbar = ({ handleLogout }: NavbarProps) => {
 	const history = useHistory();
 
 	return (
-		<StyledNavbar id="navbar" expand="lg">
+		<StyledNavbar id="navbar" expand="lg" theme={theme}>
 			<Navbar.Brand>
 				<Link to={routes.public.home.path}>
 					<img

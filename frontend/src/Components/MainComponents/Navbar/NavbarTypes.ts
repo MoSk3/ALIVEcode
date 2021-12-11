@@ -1,5 +1,6 @@
 import { Navbar } from 'react-bootstrap';
 import styled from 'styled-components';
+import { Theme } from '../../../state/contexts/ThemeContext';
 export type NavbarProps = {
 	handleLogout: () => void;
 };
@@ -73,7 +74,10 @@ export const StyledNavbar = styled(Navbar)`
 
 	.nav-link {
 		margin-bottom: 0;
-		color: var(--dark-gray-color) !important;
+		${({ theme }: { theme: Theme }) =>
+			theme.name === 'light'
+				? 'color: var(--dark-gray-color) !important;'
+				: 'color: var(--foreground-color) !important;'}
 		font-size: 15px;
 		padding: 8px 10px 8px 10px !important;
 		font-style: normal;

@@ -11,6 +11,13 @@ import FormModal from '../../Components/UtilsComponents/FormModal/FormModal';
 import JoinClassroomForm from '../../Components/ClassroomComponents/JoinClassroomForm/JoinClassroomForm';
 import { useTranslation } from 'react-i18next';
 import LoadingScreen from '../../Components/UtilsComponents/LoadingScreen/LoadingScreen';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+	faBook,
+	faHistory,
+	faStar,
+	faPlus,
+} from '@fortawesome/free-solid-svg-icons';
 
 /**
  * Dashboard page that contains all the links to the different pages of the plaform
@@ -25,6 +32,8 @@ const DashboardNew = (props: DashboardNewProps) => {
 	const history = useHistory();
 	const { routes } = useRoutes();
 	const [formJoinClassOpen, setFormJoinClassOpen] = useState(false);
+	const [tabSelected, setTabSelected] = useState(0);
+	const [hoveringClassroom, setHoveringClassroom] = useState(false);
 
 	useEffect(() => {
 		if (!user) return;
@@ -41,10 +50,43 @@ const DashboardNew = (props: DashboardNewProps) => {
 	return (
 		<StyledDashboard>
 			<Row>
-				<Col className="sidebar no-float" lg={1} md={2} sm={3}>
-					yo
+				<Col className="sidebar no-float" md={2} sm={3}>
+					<div
+						className={
+							'sidebar-btn ' + (tabSelected === 0 ? 'sidebar-btn-selected' : '')
+						}
+						onClick={() => setTabSelected(0)}
+					>
+						<FontAwesomeIcon className="sidebar-icon" icon={faHistory} />
+						<label className="sidebar-btn-text">Formations Récentes</label>
+					</div>
+					<div
+						className={
+							'sidebar-btn ' + (tabSelected === 1 ? 'sidebar-btn-selected' : '')
+						}
+						onClick={() => setTabSelected(1)}
+					>
+						<FontAwesomeIcon className="sidebar-icon" icon={faStar} />
+						<label className="sidebar-btn-text">Sommaire</label>
+					</div>
+
+					<hr />
+
+					<div
+						className="sidebar-header"
+						onMouseEnter={() => setHoveringClassroom(true)}
+						onMouseLeave={() => setHoveringClassroom(false)}
+					>
+						<FontAwesomeIcon className="sidebar-icon" icon={faBook} />
+						<label className="sidebar-header-text">Classes</label>
+						{hoveringClassroom && (
+							<FontAwesomeIcon className="sidebar-icon-right" icon={faPlus} />
+						)}
+					</div>
+
+					<hr />
 				</Col>
-				<Col className="content no-float" lg={11} md={10} sm={9}>
+				<Col className="content no-float" md={10} sm={9}>
 					boo
 				</Col>
 			</Row>
