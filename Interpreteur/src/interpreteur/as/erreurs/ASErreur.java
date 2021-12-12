@@ -10,11 +10,6 @@ import interpreteur.executeur.Executeur;
  */
 public interface ASErreur {
 
-    enum Erreurs {
-        ErreurZeroExposantZero;
-
-    }
-
     class ErreurAliveScript extends RuntimeException {
         private final String nomErreur;
 
