@@ -26,11 +26,15 @@ const SwitchTabReducer = (
 ): { index: number; classroom?: ClassroomModel } => {
 	switch (action.type) {
 		case 'recents':
-			action.history.push(`/dashboard/recents`);
+			action.history.push({
+				pathname: `/dashboard/recents`,
+				search: action.query.toString(),
+			});
 			return { index: 0 };
 		case 'summary':
 			action.history.push({
 				pathname: `/dashboard/summary`,
+				search: action.query.toString(),
 			});
 			return { index: 1 };
 		case 'classrooms':
