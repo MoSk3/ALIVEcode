@@ -1,7 +1,9 @@
-import { RouteComponentProps } from 'react-router-dom';
+import { Classroom } from '../../Models/Classroom/classroom.entity';
 
 type RouteProps = {
   id: string;
 };
 
-export interface ClassroomProps extends RouteComponentProps<RouteProps> {};
+export interface ClassroomProps {
+  classroomProp?: Classroom;
+};

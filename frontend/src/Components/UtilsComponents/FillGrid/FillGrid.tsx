@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { useLayoutEffect, useRef } from 'react';
 import { FillGridProps } from './fillGridTypes';
 
 const StyledContainer = styled.div`

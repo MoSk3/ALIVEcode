@@ -1,16 +1,13 @@
-import { DashboardNewProps, StyledDashboard } from './dashboardNewTypes';
-import { useContext, useState, useEffect } from 'react';
+import { DashboardNewProps, StyledDashboard, SwitchTabActions } from './dashboardNewTypes';
+import { useContext, useState, useEffect, useReducer } from 'react';
 import { UserContext } from '../../state/contexts/UserContext';
 import { useHistory } from 'react-router-dom';
 import { Col, Row } from 'react-bootstrap';
-import { Classroom } from '../../Models/Classroom/classroom.entity';
-import { plainToClass } from 'class-transformer';
-import useRoutes from '../../state/hooks/useRoutes';
 import api from '../../Models/api';
 import FormModal from '../../Components/UtilsComponents/FormModal/FormModal';
 import JoinClassroomForm from '../../Components/ClassroomComponents/JoinClassroomForm/JoinClassroomForm';
 import { useTranslation } from 'react-i18next';
-import LoadingScreen from '../../Components/UtilsComponents/LoadingScreen/LoadingScreen';
+import { Classroom as ClassroomModel } from '../../Models/Classroom/classroom.entity';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
 	faBook,
@@ -18,6 +15,36 @@ import {
 	faStar,
 	faPlus,
 } from '@fortawesome/free-solid-svg-icons';
+import ClassroomSection from '../../Components/DashboardComponents/ClassroomSection/ClassroomSection';
+import Classroom from '../Classroom/Classroom';
+import { useLocation } from 'react-router';
+import { useQuery } from '../../state/hooks/useQuery';
+
+const SwitchTabReducer = (
+	state: { index: number; classroom?: ClassroomModel },
+	action: SwitchTabActions,
+): { index: number; classroom?: ClassroomModel } => {
+	console.log(action);
+	switch (action.type) {
+		case 'recents':
+			action.history.push(`/dashboard/recents`);
+			return { index: 0 };
+		case 'summary':
+			action.history.push(`/dashboard/summary`);
+			return { index: 1 };
+		case 'classrooms':
+			if (action.classroom) {
+				action.history.push(`/dashboard/classroom?id=${action.classroom.id}`);
+				return { index: 2, classroom: action.classroom };
+			}
+			return SwitchTabReducer(state, {
+				type: 'recents',
+				history: action.history,
+			});
+		default:
+			return { index: 0 };
+	}
+};
 
 /**
  * Dashboard page that contains all the links to the different pages of the plaform
@@ -27,13 +54,22 @@ import {
 const DashboardNew = (props: DashboardNewProps) => {
 	const { user } = useContext(UserContext);
 	const { t } = useTranslation();
-	const [loading, setLoading] = useState(true);
-	const [classrooms, setClassrooms] = useState<Classroom[]>([]);
-	const history = useHistory();
-	const { routes } = useRoutes();
+	const [classrooms, setClassrooms] = useState<ClassroomModel[]>([]);
 	const [formJoinClassOpen, setFormJoinClassOpen] = useState(false);
-	const [tabSelected, setTabSelected] = useState(0);
 	const [hoveringClassroom, setHoveringClassroom] = useState(false);
+	useState<ClassroomModel | null>(null);
+	const history = useHistory();
+	const query = useQuery();
+	const { pathname } = useLocation();
+	const [tabSelected, setTabSelected] = useReducer(SwitchTabReducer, {
+		index: 0,
+	});
+
+	useEffect(() => {
+		if (pathname.endsWith('summary'))
+			setTabSelected({ type: 'summary', history });
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	useEffect(() => {
 		if (!user) return;
@@ -41,30 +77,58 @@ const DashboardNew = (props: DashboardNewProps) => {
 			const data = await api.db.users.getClassrooms({
 				id: user.id,
 			});
-			setLoading(false);
-			setClassrooms(data.map((d: any) => plainToClass(Classroom, d)));
+			setClassrooms(data);
 		};
 		getClassrooms();
 	}, [user]);
 
+	useEffect(() => {
+		if (classrooms && tabSelected.index !== 2) {
+			const classroomId = query.get('id');
+			const classroom = classrooms.find(c => c.id === classroomId);
+			if (!classroom) return;
+			setTabSelected({ type: 'classrooms', classroom, history });
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [classrooms]);
+
+	const renderTabSelected = () => {
+		switch (tabSelected.index) {
+			case 0:
+				return 'Récent';
+			case 1:
+				return 'Sommaire';
+			case 2:
+				if (!tabSelected.classroom) return;
+				return (
+					<Classroom
+						key={tabSelected.classroom.id}
+						classroomProp={tabSelected.classroom}
+					/>
+				);
+		}
+	};
+
 	return (
 		<StyledDashboard>
-			<Row>
-				<Col className="sidebar no-float" md={2} sm={3}>
+			<Row className="dashboard-row" xs={1} md={2}>
+				<Col className="sidebar no-float" xs={12} md={2} sm={3}>
 					<div
 						className={
-							'sidebar-btn ' + (tabSelected === 0 ? 'sidebar-btn-selected' : '')
+							'sidebar-btn ' +
+							(tabSelected.index === 0 ? 'sidebar-selected' : '')
 						}
-						onClick={() => setTabSelected(0)}
+						onClick={() => setTabSelected({ type: 'recents', history })}
 					>
 						<FontAwesomeIcon className="sidebar-icon" icon={faHistory} />
 						<label className="sidebar-btn-text">Formations Récentes</label>
 					</div>
 					<div
 						className={
-							'sidebar-btn ' + (tabSelected === 1 ? 'sidebar-btn-selected' : '')
+							'sidebar-btn ' +
+							(tabSelected.index === 1 ? 'sidebar-selected' : '')
 						}
-						onClick={() => setTabSelected(1)}
+						onClick={() => setTabSelected({ type: 'summary', history })}
 					>
 						<FontAwesomeIcon className="sidebar-icon" icon={faStar} />
 						<label className="sidebar-btn-text">Sommaire</label>
@@ -85,9 +149,20 @@ const DashboardNew = (props: DashboardNewProps) => {
 					</div>
 
 					<hr />
+
+					{classrooms.map((classroom, idx) => (
+						<ClassroomSection
+							key={idx}
+							selected={tabSelected.classroom?.id === classroom.id}
+							onClick={() => {
+								setTabSelected({ type: 'classrooms', classroom, history });
+							}}
+							classroom={classroom}
+						></ClassroomSection>
+					))}
 				</Col>
-				<Col className="content no-float" md={10} sm={9}>
-					boo
+				<Col className="content no-float" xs={12} md={10} sm={9}>
+					{renderTabSelected()}
 				</Col>
 			</Row>
 			<FormModal

@@ -85,7 +85,7 @@ export const StyledNavbar = styled(Navbar)`
 		line-height: 23px;
 		letter-spacing: 0.03em;
 		text-align: left;
-		font-family: var(--navbar-font);
+		font-family: var(--oxygen-font);
 		transition: 0.2s;
 		font-weight: 400;
 	}

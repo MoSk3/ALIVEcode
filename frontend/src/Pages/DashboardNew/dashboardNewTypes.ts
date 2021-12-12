@@ -1,6 +1,13 @@
 import styled from 'styled-components';
-import { Container } from 'react-bootstrap';
+import { Classroom } from '../../Models/Classroom/classroom.entity';
+import { History } from 'history';
 export type DashboardNewProps = {};
+
+export type SwitchTabActions = {
+	type: 'recents' | 'summary' | 'classrooms';
+	classroom?: Classroom;
+	history: History;
+};
 
 export const StyledDashboard = styled.div`
 	display: table;
@@ -8,16 +15,21 @@ export const StyledDashboard = styled.div`
 	width: 100%;
 	box-sizing: border-box;
 	background-color: var(--background-color);
+	font-family: var(--oxygen-font);
 
-	.row {
+	.dashboard-row {
 		position: relative;
 		height: 100%;
 		display: table-row;
 	}
 
-	.row .no-float {
+	.dashboard-row .no-float {
 		display: table-cell;
-		float: none;
+		vertical-align: top;
+	}
+
+	.content {
+		padding: 0;
 	}
 
 	.sidebar {
@@ -32,7 +44,7 @@ export const StyledDashboard = styled.div`
 	.sidebar-btn {
 		color: var(--foreground-color);
 		font-weight: 400;
-		padding: 10px 10px 10px 10px;
+		padding: 10px 15px 10px 15px;
 		cursor: pointer;
 		transition: all 0.1s;
 	}
@@ -41,7 +53,7 @@ export const StyledDashboard = styled.div`
 		background-color: var(--bg-shade-one-color);
 	}
 
-	.sidebar-btn-selected {
+	.sidebar-selected {
 		background-color: var(--secondary-color) !important;
 	}
 
@@ -62,17 +74,55 @@ export const StyledDashboard = styled.div`
 	.sidebar-header {
 		color: var(--foreground-color);
 		font-weight: 400;
-		padding: 10px 10px 10px 10px;
-		margin-top: 10px;
+		padding: 10px 15px 5px 15px;
+		margin-top: 30px;
+	}
+
+	.sidebar-header .sidebar-icon {
+		font-size: 1.2em;
 	}
 
 	.sidebar-header-text {
-		font-size: 0.9em;
+		font-size: 1.2em;
 		height: 20px;
 	}
 
+	.sidebar-classroom {
+		color: var(--fg-shade-three-color);
+		font-weight: 400;
+		padding: 10px 15px 10px 15px;
+		cursor: pointer;
+	}
+
+	.sidebar-classroom .sidebar-icon {
+		font-size: 0.8em;
+	}
+
+	.sidebar-classroom-text {
+		font-size: 0.8em;
+		height: 20px;
+		cursor: pointer;
+	}
+
+	.sidebar-course {
+		font-weight: 400;
+		padding: 10px 10px 10px 30px;
+		cursor: pointer;
+	}
+
+	.sidebar-course .sidebar-icon {
+		font-size: 0.9em;
+	}
+
+	.sidebar-course-text {
+		font-size: 0.8em;
+		height: 20px;
+		cursor: pointer;
+	}
+
 	hr {
-		margin-top: 10px;
-		width: 85%;
+		margin-top: 0;
+		width: 90%;
+		border-color: var(--bg-shade-three-color) !important;
 	}
 `;

@@ -28,7 +28,6 @@ import MaintenanceBar from './Components/SiteStatusComponents/MaintenanceBar/Mai
 import { Maintenance } from './Models/Maintenance/maintenance.entity';
 import openPlaySocket from './Pages/Level/PlaySocket';
 import { PlaySocket } from './Pages/Level/PlaySocket';
-import FillContainer from './Components/UtilsComponents/FillContainer/FillContainer';
 import FillGrid from './Components/UtilsComponents/FillGrid/FillGrid';
 
 type GlobalStyleProps = {
@@ -59,7 +58,7 @@ const GlobalStyle = createGlobalStyle`
 			cssVars.push(`${cssName}: ${color}`);
 		}
 
-		cssVars.push(`--navbar-font: 'Oxygen', sans-serif`);
+		cssVars.push(`--oxygen-font: 'Oxygen', sans-serif`);
 		cssVars.push(`--title-font: 'Roboto', sans-serif`);
 		cssVars.push(`--drop-shadow: 3px 3px 4px rgba(0, 0, 0, 0.25)`);
 

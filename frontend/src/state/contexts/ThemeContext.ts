@@ -18,6 +18,10 @@ export type Theme = {
 		background: string;
 		background_rgb: string;
 		background_hover: string;
+		fg_shade_one: string;
+		fg_shade_two: string;
+		fg_shade_three: string;
+		fg_shade_four: string;
 		bg_shade_one: string;
 		bg_shade_two: string;
 		bg_shade_three: string;
@@ -57,6 +61,10 @@ export const themes: { light: Theme; dark: Theme } = {
 			bg_shade_four: '#bfbfbf',
 			foreground: 'black',
 			foreground_rgb: '0,0,0',
+			fg_shade_one: '#3D3D3D',
+			fg_shade_two: '#474747',
+			fg_shade_three: '#525252',
+			fg_shade_four: '#5C5C5C',
 			tableback: '#9ecbff',
 			databack: '#f2f2f2',
 			headerAIBack:
@@ -88,6 +96,10 @@ export const themes: { light: Theme; dark: Theme } = {
 			bg_shade_three: '#525252',
 			bg_shade_four: '#5C5C5C',
 			foreground: '#f0f6fc',
+			fg_shade_one: '#f5f5f5',
+			fg_shade_two: '#ebebeb',
+			fg_shade_three: '#d9d9d9',
+			fg_shade_four: '#bfbfbf',
 			foreground_rgb: '240,246,252',
 			tableback: '#25496f',
 			databack: '#b0b0b0',

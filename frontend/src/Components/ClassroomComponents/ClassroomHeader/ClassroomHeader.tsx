@@ -44,33 +44,37 @@ const ClassroomHeader = ({ classroom }: ClassroomHeaderProps) => {
 	return (
 		<StyledClassroomHeader>
 			<Row>
-				<Col lg id="classroom-title">
-					<h2>{classroom.name}</h2>
-					<h5>
+				<Col md={6} className="classroom-title">
+					<label className="classroom-title-name">{classroom.name}</label>
+					<label className="classroom-title-desc">
 						<Badge variant="primary">{prettyField(t('msg.professor'))}</Badge>{' '}
 						{classroom.creator.getDisplayName()}
-					</h5>
+					</label>
 				</Col>
-				{user instanceof Professor ? (
-					<Col lg id="classroom-buttons">
-						<div>
-							<Button onClick={() => setCodeModalOpen(true)} variant="primary">
-								{t('classroom.add_students')}
-							</Button>
-						</div>
-						<div>
-							<Button variant="danger">{t('classroom.delete')}</Button>
-						</div>
-					</Col>
-				) : (
-					<Col lg id="classroom-buttons">
+
+				<Col md={6} className="classroom-buttons">
+					{user instanceof Professor ? (
+						<>
+							<div>
+								<Button
+									onClick={() => setCodeModalOpen(true)}
+									variant="primary"
+								>
+									{t('classroom.add_students')}
+								</Button>
+							</div>
+							<div>
+								<Button variant="danger">{t('classroom.delete')}</Button>
+							</div>
+						</>
+					) : (
 						<div>
 							<Button onClick={leaveClassroom} variant="danger">
 								{t('classroom.leave')}
 							</Button>
 						</div>
-					</Col>
-				)}
+					)}{' '}
+				</Col>
 			</Row>
 
 			<Modal

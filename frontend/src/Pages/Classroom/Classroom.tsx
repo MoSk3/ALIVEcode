@@ -17,6 +17,8 @@ import useRoutes from '../../state/hooks/useRoutes';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useHistory } from 'react-router-dom';
 import CourseCard from '../../Components/CourseComponents/CourseCard/CourseCard';
+import { useParams } from 'react-router';
+import { useForceUpdate } from '../../state/hooks/useForceUpdate';
 
 const StyledDiv = styled.div`
 	.classroom-content {
@@ -32,23 +34,30 @@ const StyledDiv = styled.div`
  * @param id (as a url parameter)
  * @returns tsx element
  */
-const Classroom = (props: ClassroomProps) => {
+const Classroom = ({ classroomProp, ...props }: ClassroomProps) => {
 	const { t } = useTranslation();
 	const { user } = useContext(UserContext);
-	const [classroom, setClassroom] = useState<ClassroomModel>();
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	const [classroom, _] = useState<ClassroomModel | undefined>(
+		classroomProp ?? undefined,
+	);
+	const { id } = useParams<{ id: string }>();
 	const { goBack, routes } = useRoutes();
 	const history = useHistory();
 	const alert = useAlert();
+	const forceUpdate = useForceUpdate();
 
 	useEffect(() => {
 		const getClassroom = async () => {
 			try {
-				const classroom = await api.db.classrooms.get({
-					id: props.match.params.id,
-				});
+				const classroom =
+					classroomProp ??
+					(await api.db.classrooms.get({
+						id,
+					}));
 				await classroom.getStudents();
 				await classroom.getCourses();
-				setClassroom(classroom);
+				forceUpdate();
 			} catch (err) {
 				goBack();
 				return alert.error(t('error.not_found', { obj: t('msg.course') }));
@@ -56,7 +65,7 @@ const Classroom = (props: ClassroomProps) => {
 		};
 		getClassroom();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [props.match.params.id]);
+	}, [id, classroomProp]);
 
 	if (!classroom || !user) {
 		return <LoadingScreen />;
@@ -65,8 +74,7 @@ const Classroom = (props: ClassroomProps) => {
 	return (
 		<StyledDiv>
 			<ClassroomHeader classroom={classroom} />
-			<Container className="classroom-content">
-				{console.log(classroom)}
+			{/*<Container className="classroom-content">
 				<CardContainer
 					asRow
 					title={t('classroom.container.courses.title')}
@@ -126,7 +134,7 @@ const Classroom = (props: ClassroomProps) => {
 						</CardContainer>
 					</Col>
 				</Row>
-			</Container>
+							</Container>*/}
 		</StyledDiv>
 	);
 };
