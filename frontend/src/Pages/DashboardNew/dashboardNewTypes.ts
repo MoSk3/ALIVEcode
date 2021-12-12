@@ -7,6 +7,7 @@ export type SwitchTabActions = {
 	type: 'recents' | 'summary' | 'classrooms';
 	classroom?: Classroom;
 	history: History;
+	query: URLSearchParams;
 };
 
 export const StyledDashboard = styled.div`

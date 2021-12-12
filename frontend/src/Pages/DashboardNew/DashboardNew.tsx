@@ -24,22 +24,28 @@ const SwitchTabReducer = (
 	state: { index: number; classroom?: ClassroomModel },
 	action: SwitchTabActions,
 ): { index: number; classroom?: ClassroomModel } => {
-	console.log(action);
 	switch (action.type) {
 		case 'recents':
 			action.history.push(`/dashboard/recents`);
 			return { index: 0 };
 		case 'summary':
-			action.history.push(`/dashboard/summary`);
+			action.history.push({
+				pathname: `/dashboard/summary`,
+			});
 			return { index: 1 };
 		case 'classrooms':
 			if (action.classroom) {
-				action.history.push(`/dashboard/classroom?id=${action.classroom.id}`);
+				action.query.set('id', action.classroom.id);
+				action.history.push({
+					pathname: `/dashboard/classroom?id=${action.classroom.id}`,
+					search: action.query.toString(),
+				});
 				return { index: 2, classroom: action.classroom };
 			}
 			return SwitchTabReducer(state, {
 				type: 'recents',
 				history: action.history,
+				query: action.query,
 			});
 		default:
 			return { index: 0 };
@@ -67,7 +73,7 @@ const DashboardNew = (props: DashboardNewProps) => {
 
 	useEffect(() => {
 		if (pathname.endsWith('summary'))
-			setTabSelected({ type: 'summary', history });
+			setTabSelected({ type: 'summary', history, query });
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -87,7 +93,7 @@ const DashboardNew = (props: DashboardNewProps) => {
 			const classroomId = query.get('id');
 			const classroom = classrooms.find(c => c.id === classroomId);
 			if (!classroom) return;
-			setTabSelected({ type: 'classrooms', classroom, history });
+			setTabSelected({ type: 'classrooms', classroom, history, query });
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [classrooms]);
@@ -118,7 +124,7 @@ const DashboardNew = (props: DashboardNewProps) => {
 							'sidebar-btn ' +
 							(tabSelected.index === 0 ? 'sidebar-selected' : '')
 						}
-						onClick={() => setTabSelected({ type: 'recents', history })}
+						onClick={() => setTabSelected({ type: 'recents', history, query })}
 					>
 						<FontAwesomeIcon className="sidebar-icon" icon={faHistory} />
 						<label className="sidebar-btn-text">Formations Récentes</label>
@@ -128,7 +134,7 @@ const DashboardNew = (props: DashboardNewProps) => {
 							'sidebar-btn ' +
 							(tabSelected.index === 1 ? 'sidebar-selected' : '')
 						}
-						onClick={() => setTabSelected({ type: 'summary', history })}
+						onClick={() => setTabSelected({ type: 'summary', history, query })}
 					>
 						<FontAwesomeIcon className="sidebar-icon" icon={faStar} />
 						<label className="sidebar-btn-text">Sommaire</label>
@@ -155,7 +161,12 @@ const DashboardNew = (props: DashboardNewProps) => {
 							key={idx}
 							selected={tabSelected.classroom?.id === classroom.id}
 							onClick={() => {
-								setTabSelected({ type: 'classrooms', classroom, history });
+								setTabSelected({
+									type: 'classrooms',
+									classroom,
+									history,
+									query,
+								});
 							}}
 							classroom={classroom}
 						></ClassroomSection>

@@ -7,6 +7,10 @@ body, html, #root, .App {
   text-align: left;
 }
 
+.no-cursor {
+  cursor: default !important;
+}
+
 .row .no-float {
   display: table-cell;
   float: none;

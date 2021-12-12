@@ -13,6 +13,8 @@ import { useForceUpdate } from '../../../state/hooks/useForceUpdate';
 import CourseSection from '../CourseSection/CourseSection';
 import { CLASSROOM_SUBJECT } from '../../../Models/Classroom/classroom.entity';
 import { formatTooLong } from '../../../Types/formatting';
+import { useLocation, useHistory } from 'react-router';
+import { useQuery } from '../../../state/hooks/useQuery';
 
 const ClassroomSection = ({
 	classroom,
@@ -22,6 +24,24 @@ const ClassroomSection = ({
 	const [isHovering, setIsHovering] = useState(false);
 	const [isOpen, setIsOpen] = useState(false);
 	const forceUpdate = useForceUpdate();
+	const location = useLocation();
+	const history = useHistory();
+	const query = useQuery();
+
+	useEffect(() => {
+		setIsOpen(query.get('open')?.includes(classroom.id) ?? false);
+	}, [classroom.id, query]);
+
+	useEffect(() => {
+		if (isOpen && !classroom.courses) {
+			const loadCourses = async () => {
+				await classroom.getCourses();
+				forceUpdate();
+			};
+
+			loadCourses();
+		}
+	}, [classroom, forceUpdate, isOpen]);
 
 	let icon = faCode;
 	switch (classroom.subject) {
@@ -38,17 +58,6 @@ const ClassroomSection = ({
 			icon = faProjectDiagram;
 			break;
 	}
-
-	useEffect(() => {
-		if (isOpen && !classroom.courses) {
-			const loadCourses = async () => {
-				await classroom.getCourses();
-				forceUpdate();
-			};
-
-			loadCourses();
-		}
-	}, [classroom, forceUpdate, isOpen]);
 
 	return (
 		<>
@@ -68,6 +77,27 @@ const ClassroomSection = ({
 						onClick={e => {
 							e.stopPropagation();
 							setIsOpen(!isOpen);
+
+							// Update Search query
+							if (isOpen) {
+								const q = query.get('open');
+								if (q) {
+									const ids = q.split('_');
+									const newQuery = ids
+										.filter(id => id !== classroom.id)
+										.join('_');
+									if (newQuery.length <= 0) query.delete('open');
+									else query.set('open', newQuery);
+								}
+							} else {
+								if (query.has('open'))
+									query.set('open', query.get('open') + '_' + classroom.id);
+								else query.set('open', classroom.id);
+							}
+							history.push({
+								pathname: location.pathname,
+								search: query.toString(),
+							});
 						}}
 						icon={isOpen ? faAngleUp : faAngleDown}
 					/>
@@ -79,8 +109,10 @@ const ClassroomSection = ({
 						<CourseSection key={idx} course={course}></CourseSection>
 					))
 				) : (
-					<div className="sidebar-course sidebar-course-text">
-						<i>No Courses</i>
+					<div className="sidebar-course">
+						<label className="sidebar-course-text no-cursor">
+							<i>No Courses</i>
+						</label>
 					</div>
 				))}
 			<hr />
