@@ -42,7 +42,7 @@ public class ModuleBuiltins {
             new ASObjet.Variable("varListe", new ASObjet.Liste(), ASObjet.TypeBuiltin.liste.asType()).setGetter(getVarListe).setReadOnly(),
     };
 
-    static ASModule charger(Executeur executeurInstance) {
+    public static ASModule charger(Executeur executeurInstance) {
         ASObjet.Fonction[] fonctions = new ASObjet.Fonction[]{
 
                 new ASObjet.Fonction("afficher", new ASObjet.Fonction.Parametre[]{
