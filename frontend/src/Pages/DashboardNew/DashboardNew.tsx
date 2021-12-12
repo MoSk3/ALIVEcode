@@ -26,30 +26,15 @@ const SwitchTabReducer = (
 ): { index: number; classroom?: ClassroomModel } => {
 	switch (action.type) {
 		case 'recents':
-			action.history.push({
-				pathname: `/dashboard/recents`,
-				search: action.query.toString(),
-			});
 			return { index: 0 };
 		case 'summary':
-			action.history.push({
-				pathname: `/dashboard/summary`,
-				search: action.query.toString(),
-			});
 			return { index: 1 };
 		case 'classrooms':
 			if (action.classroom) {
-				action.query.set('id', action.classroom.id);
-				action.history.push({
-					pathname: `/dashboard/classroom?id=${action.classroom.id}`,
-					search: action.query.toString(),
-				});
 				return { index: 2, classroom: action.classroom };
 			}
 			return SwitchTabReducer(state, {
 				type: 'recents',
-				history: action.history,
-				query: action.query,
 			});
 		default:
 			return { index: 0 };
@@ -76,10 +61,15 @@ const DashboardNew = (props: DashboardNewProps) => {
 	});
 
 	useEffect(() => {
-		if (pathname.endsWith('summary'))
-			setTabSelected({ type: 'summary', history, query });
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+		if (pathname.endsWith('summary')) setTabSelected({ type: 'summary' });
+		if (pathname.endsWith('recents')) setTabSelected({ type: 'recents' });
+		if (pathname.includes('classroom')) {
+			const classroomId = query.get('id');
+			const classroom = classrooms.find(c => c.id === classroomId);
+			if (!classroom) return;
+			setTabSelected({ type: 'classrooms', classroom });
+		}
+	}, [classrooms, history, pathname, query]);
 
 	useEffect(() => {
 		if (!user) return;
@@ -92,15 +82,29 @@ const DashboardNew = (props: DashboardNewProps) => {
 		getClassrooms();
 	}, [user]);
 
-	useEffect(() => {
-		if (classrooms && tabSelected.index !== 2) {
-			const classroomId = query.get('id');
-			const classroom = classrooms.find(c => c.id === classroomId);
-			if (!classroom) return;
-			setTabSelected({ type: 'classrooms', classroom, history, query });
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [classrooms]);
+	const openRecents = () => {
+		query.delete('id');
+		history.push({
+			pathname: `/dashboard/recents`,
+			search: query.toString(),
+		});
+	};
+
+	const openSummary = () => {
+		query.delete('id');
+		history.push({
+			pathname: `/dashboard/summary`,
+			search: query.toString(),
+		});
+	};
+
+	const openClassroom = (classroom: ClassroomModel) => {
+		query.set('id', classroom.id);
+		history.push({
+			pathname: `/dashboard/classroom`,
+			search: query.toString(),
+		});
+	};
 
 	const renderTabSelected = () => {
 		switch (tabSelected.index) {
@@ -128,7 +132,7 @@ const DashboardNew = (props: DashboardNewProps) => {
 							'sidebar-btn ' +
 							(tabSelected.index === 0 ? 'sidebar-selected' : '')
 						}
-						onClick={() => setTabSelected({ type: 'recents', history, query })}
+						onClick={openRecents}
 					>
 						<FontAwesomeIcon className="sidebar-icon" icon={faHistory} />
 						<label className="sidebar-btn-text">Formations Récentes</label>
@@ -138,7 +142,7 @@ const DashboardNew = (props: DashboardNewProps) => {
 							'sidebar-btn ' +
 							(tabSelected.index === 1 ? 'sidebar-selected' : '')
 						}
-						onClick={() => setTabSelected({ type: 'summary', history, query })}
+						onClick={openSummary}
 					>
 						<FontAwesomeIcon className="sidebar-icon" icon={faStar} />
 						<label className="sidebar-btn-text">Sommaire</label>
@@ -164,14 +168,7 @@ const DashboardNew = (props: DashboardNewProps) => {
 						<ClassroomSection
 							key={idx}
 							selected={tabSelected.classroom?.id === classroom.id}
-							onClick={() => {
-								setTabSelected({
-									type: 'classrooms',
-									classroom,
-									history,
-									query,
-								});
-							}}
+							onClick={() => openClassroom(classroom)}
 							classroom={classroom}
 						></ClassroomSection>
 					))}

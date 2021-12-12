@@ -1,13 +1,10 @@
 import styled from 'styled-components';
 import { Classroom } from '../../Models/Classroom/classroom.entity';
-import { History } from 'history';
 export type DashboardNewProps = {};
 
 export type SwitchTabActions = {
 	type: 'recents' | 'summary' | 'classrooms';
 	classroom?: Classroom;
-	history: History;
-	query: URLSearchParams;
 };
 
 export const StyledDashboard = styled.div`
