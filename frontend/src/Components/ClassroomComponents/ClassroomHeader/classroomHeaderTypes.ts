@@ -1,15 +1,28 @@
 import { Classroom } from "../../../Models/Classroom/classroom.entity";
 import styled from 'styled-components';
+import FillContainer from '../../UtilsComponents/FillGrid/FillGrid';
+import { Container } from 'react-bootstrap';
 
 export type ClassroomHeaderProps = {
 	classroom: Classroom;
+	className?: string;
 };
 
-export const StyledClassroomHeader = styled.div`
+export const StyledClassroomHeader = styled(Container)`
 	color: white;
 	background-color: var(--primary-color);
 	width: 100%;
-	padding: 50px;
+	position: relative;
+	overflow-y: auto;
+	padding: 0;
+
+	.header-row {
+		padding: 50px 50px 0px 50px;
+	}
+
+	svg {
+		width: 100%;
+	}
 
 	span {
 		margin-top: 10px;
@@ -20,6 +33,7 @@ export const StyledClassroomHeader = styled.div`
 	.classroom-title-name {
 		font-size: 2.3em;
 		margin-bottom: 0;
+		display: block;
 	}
 
 	.classroom-title-desc {

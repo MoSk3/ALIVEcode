@@ -26,6 +26,10 @@ const StyledDiv = styled.div`
 		margin-top: 50px;
 		padding-bottom: 25px;
 	}
+
+	.classroom-header {
+		margin-bottom: 60px;
+	}
 `;
 
 /**
@@ -73,8 +77,8 @@ const Classroom = ({ classroomProp, ...props }: ClassroomProps) => {
 
 	return (
 		<StyledDiv>
-			<ClassroomHeader classroom={classroom} />
-			{/*<Container className="classroom-content">
+			<ClassroomHeader className="classroom-header" classroom={classroom} />
+			<Container className="classroom-content">
 				<CardContainer
 					asRow
 					title={t('classroom.container.courses.title')}
@@ -134,7 +138,7 @@ const Classroom = ({ classroomProp, ...props }: ClassroomProps) => {
 						</CardContainer>
 					</Col>
 				</Row>
-							</Container>*/}
+			</Container>
 		</StyledDiv>
 	);
 };

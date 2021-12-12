@@ -20,7 +20,7 @@ import { prettyField } from '../../../Types/formatting';
  *
  * @author MoSk3
  */
-const ClassroomHeader = ({ classroom }: ClassroomHeaderProps) => {
+const ClassroomHeader = ({ className, classroom }: ClassroomHeaderProps) => {
 	const { user } = useContext(UserContext);
 	const { routes } = useRoutes();
 	const { t } = useTranslation();
@@ -42,8 +42,8 @@ const ClassroomHeader = ({ classroom }: ClassroomHeaderProps) => {
 	};
 
 	return (
-		<StyledClassroomHeader>
-			<Row>
+		<StyledClassroomHeader className={className} fluid>
+			<Row className="header-row no-gutters">
 				<Col md={6} className="classroom-title">
 					<label className="classroom-title-name">{classroom.name}</label>
 					<label className="classroom-title-desc">
@@ -76,7 +76,21 @@ const ClassroomHeader = ({ classroom }: ClassroomHeaderProps) => {
 					)}{' '}
 				</Col>
 			</Row>
-
+			<svg
+				id="visual"
+				viewBox="0 0 960 200"
+				xmlns="http://www.w3.org/2000/svg"
+				xmlnsXlink="http://www.w3.org/1999/xlink"
+				version="1.1"
+			>
+				<rect x="0" y="0" width="960" height="200" fill="#ffffff"></rect>
+				<path
+					d="M0 172L40 165.2C80 158.3 160 144.7 240 138.2C320 131.7 400 132.3 480 143.7C560 155 640 177 720 186.7C800 196.3 880 193.7 920 192.3L960 191L960 0L920 0C880 0 800 0 720 0C640 0 560 0 480 0C400 0 320 0 240 0C160 0 80 0 40 0L0 0Z"
+					fill="#2E75FF"
+					stroke-linecap="round"
+					stroke-linejoin="miter"
+				></path>
+			</svg>
 			<Modal
 				title={t('classroom.code.title')}
 				open={codeModalOpen}
