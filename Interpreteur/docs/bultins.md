@@ -37,7 +37,7 @@
 
 -   #### map
 
-    -   génère une nouvelle liste où chaque élément est le résulat de l'application de la fonction passée en paramètre sur l'élément correspondant dans la liste initiale  
+    -   génère une nouvelle liste où chaque élément est le résulat de l'application de la fonctio passée en paramètre sur l'élément correspondant dans la liste initiale  
         ex: `map(typeDe, [1, "deux", vrai]) == [typeDe(1), typeDe("deux"), typeDe(vrai)]`
 
         @param `f`: [fonctionType][type_builtins]

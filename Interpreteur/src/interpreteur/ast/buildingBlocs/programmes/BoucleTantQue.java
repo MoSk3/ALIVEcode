@@ -1,6 +1,6 @@
 package interpreteur.ast.buildingBlocs.programmes;
 
-import interpreteur.as.Objets.Scope;
+import interpreteur.as.objets.Scope;
 import interpreteur.ast.buildingBlocs.Expression;
 import interpreteur.executeur.Coordonnee;
 import interpreteur.executeur.Executeur;

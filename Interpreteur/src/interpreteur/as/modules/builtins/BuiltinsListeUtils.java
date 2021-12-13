@@ -1,9 +1,10 @@
 package interpreteur.as.modules.builtins;
 
-import interpreteur.as.Objets.ASFonction;
+import interpreteur.as.objets.*;
+import interpreteur.as.objets.datatype.Iterable;
 import interpreteur.as.erreurs.ASErreur;
-import interpreteur.as.Objets.ASObjet;
 import interpreteur.as.modules.ASModule;
+import interpreteur.as.objets.datatype.*;
 import interpreteur.ast.buildingBlocs.expressions.Type;
 import interpreteur.executeur.Executeur;
 
@@ -11,7 +12,7 @@ import java.util.*;
 
 public class BuiltinsListeUtils {
 
-    public static ASObjet.Fonction[] fonctions = new ASObjet.Fonction[]{
+    public static FonctionModule[] fonctionModules = new FonctionModule[]{
             /*
              * sep:
              * 		@param t:
@@ -22,8 +23,8 @@ public class BuiltinsListeUtils {
              *
              * 		@return une liste où chaque élément est la lettre du string passé en paramètre
              */
-            new ASObjet.Fonction("liste", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.texte.asType(), "txt", null),
+            new FonctionModule("liste", new Parametre[]{
+                    new Parametre(TypeBuiltin.texte.asType(), "txt", null),
             }, new Type("liste")) {
                 @Override
                 public ASObjet<?> executer() {
@@ -42,8 +43,8 @@ public class BuiltinsListeUtils {
              *
              * 		@return un iterable où chaque élément est inversé
              */
-            new ASObjet.Fonction("inv", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.iterable.asType(), "iter", null),
+            new FonctionModule("inv", new Parametre[]{
+                    new Parametre(TypeBuiltin.iterable.asType(), "iter", null),
             }, new Type("iterable")) {
                 @Override
                 public ASObjet<?> executer() {
@@ -74,9 +75,9 @@ public class BuiltinsListeUtils {
              *
              * 		@return la liste formee suite a l'application de la fonction sur chaque element de la liste
              */
-            new ASObjet.Fonction("map", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(new Type("fonction"), "f", null),
-                    new ASObjet.Fonction.Parametre(new Type("liste"), "lst", null)
+            new FonctionModule("map", new Parametre[]{
+                    new Parametre(new Type("fonction"), "f", null),
+                    new Parametre(new Type("liste"), "lst", null)
             }, new Type("liste")) {
                 @Override
                 public ASObjet<?> executer() {
@@ -90,7 +91,7 @@ public class BuiltinsListeUtils {
                                 .toArray(ASObjet[]::new));
 
                     } else {
-                        nouvelleListe = new Liste(liste.getValue().stream().map(element -> ((ASObjet.Fonction) f)
+                        nouvelleListe = new Liste(liste.getValue().stream().map(element -> ((FonctionModule) f)
                                         .setParamPuisExecute(new ArrayList<>(List.of((ASObjet<?>) element))))
                                 .toArray(ASObjet[]::new));
                     }
@@ -112,9 +113,9 @@ public class BuiltinsListeUtils {
              *
              * 		@return la liste formee des elements de la liste initiale pour lesquels la fonction f a retourne vrai
              */
-            new ASObjet.Fonction("filtrer", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.fonctionType.asType(), "f", null),
-                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.liste.asType(), "lst", null)
+            new FonctionModule("filtrer", new Parametre[]{
+                    new Parametre(TypeBuiltin.fonctionType.asType(), "f", null),
+                    new Parametre(TypeBuiltin.liste.asType(), "lst", null)
             }, new Type("liste")) {
                 @Override
                 public ASObjet<?> executer() {
@@ -130,7 +131,7 @@ public class BuiltinsListeUtils {
                                 .toArray(ASObjet[]::new));
 
                     } else {
-                        nouvelleListe = new Liste(liste.getValue().stream().filter(element -> ((ASObjet.Fonction) f)
+                        nouvelleListe = new Liste(liste.getValue().stream().filter(element -> ((FonctionModule) f)
                                         .setParamPuisExecute(new ArrayList<>(List.of((ASObjet<?>) element)))
                                         .boolValue())
                                 .toArray(ASObjet[]::new));
@@ -153,9 +154,9 @@ public class BuiltinsListeUtils {
              *
              * 		@return le texte forme en joignant chaque elements de la liste initiale avec le separateur entre chaque element
              */
-            new ASObjet.Fonction("joindre", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.liste.asType(), "lst", null),
-                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.texte.asType(), "separateur", new ASObjet.Texte(""))
+            new FonctionModule("joindre", new Parametre[]{
+                    new Parametre(TypeBuiltin.liste.asType(), "lst", null),
+                    new Parametre(TypeBuiltin.texte.asType(), "separateur", new Texte(""))
             }, new Type("texte")) {
                 @Override
                 public ASObjet<?> executer() {
@@ -170,8 +171,8 @@ public class BuiltinsListeUtils {
                 }
             },
 
-            new ASObjet.Fonction("somme", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(new Type("liste"), "lst", null)
+            new FonctionModule("somme", new Parametre[]{
+                    new Parametre(new Type("liste"), "lst", null)
             }, new Type("nombre")) {
                 @Override
                 public ASObjet<?> executer() {
@@ -181,8 +182,8 @@ public class BuiltinsListeUtils {
                 }
             },
 
-            new ASObjet.Fonction("max", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(new Type("liste"), "lst", null)
+            new FonctionModule("max", new Parametre[]{
+                    new Parametre(new Type("liste"), "lst", null)
             }, new Type("nombre")) {
                 @Override
                 public ASObjet<?> executer() {
@@ -195,8 +196,8 @@ public class BuiltinsListeUtils {
                 }
             },
 
-            new ASObjet.Fonction("min", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(new Type("liste"), "lst", null)
+            new FonctionModule("min", new Parametre[]{
+                    new Parametre(new Type("liste"), "lst", null)
             }, new Type("nombre")) {
                 @Override
                 public ASObjet<?> executer() {
@@ -212,9 +213,9 @@ public class BuiltinsListeUtils {
             /*
              * Agit comme un addAll
              */
-            new ASObjet.Fonction("unir", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(new Type("liste"), "lst1", null),
-                    new ASObjet.Fonction.Parametre(new Type("liste"), "lst2", null)
+            new FonctionModule("unir", new Parametre[]{
+                    new Parametre(new Type("liste"), "lst1", null),
+                    new Parametre(new Type("liste"), "lst2", null)
             }, new Type("liste")) {
                 @Override
                 public ASObjet<?> executer() {
@@ -236,8 +237,8 @@ public class BuiltinsListeUtils {
              * 		@return -> si "choix" est de type liste: le nombre d'element dans la liste
              * 				-> si "choix" est de type texte: le nombre de caractere dans le texte
              */
-            new ASObjet.Fonction("tailleDe", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.iterable.asType(), "iter", null)
+            new FonctionModule("tailleDe", new Parametre[]{
+                    new Parametre(TypeBuiltin.iterable.asType(), "iter", null)
             }, new Type("entier")) {
                 @Override
                 public ASObjet<?> executer() {
@@ -246,9 +247,9 @@ public class BuiltinsListeUtils {
                 }
             },
 
-            new ASObjet.Fonction("indexDe", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.tout.asType(), "valeur", null),
-                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.iterable.asType(), "iter", null)
+            new FonctionModule("indexDe", new Parametre[]{
+                    new Parametre(TypeBuiltin.tout.asType(), "valeur", null),
+                    new Parametre(TypeBuiltin.iterable.asType(), "iter", null)
             }, new Type("entier")) {
                 @Override
                 public ASObjet<?> executer() {
@@ -263,13 +264,13 @@ public class BuiltinsListeUtils {
                         throw new ASErreur.ErreurType("La valeur doit \u00EAtre de type texte lorsque l'on recherche " +
                                 "l'index d'un \u00E9l\u00E9ment de type texte");
                     }
-                    return idx != -1 ? new Entier(idx) : new Nul();
+                    return idx != -1 ? new Entier(idx) : new ValeurNul();
                 }
             }
     };
 
 
-    public static List<ASObjet.Constante> constantes = Collections.emptyList();
+    public static List<Constante> constantes = Collections.emptyList();
 
 
     public ASModule charger(Executeur executeurInstance) {

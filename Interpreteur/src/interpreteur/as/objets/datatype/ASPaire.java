@@ -1,8 +1,10 @@
-package interpreteur.as.Objets;
+package interpreteur.as.objets.datatype;
+
+import interpreteur.as.objets.ASObjet;
 
 import java.util.Map;
 
-public record ASPaire(Texte clef, ASObjet<?> valeur) implements ASObjet<Map.Entry<ASObjet.Texte, ASObjet<?>>> {
+public record ASPaire(Texte clef, ASObjet<?> valeur) implements ASObjet<Map.Entry<Texte, ASObjet<?>>> {
 
     @Override
     public Map.Entry<Texte, ASObjet<?>> getValue() {

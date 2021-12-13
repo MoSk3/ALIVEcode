@@ -1,32 +1,35 @@
 package interpreteur.as.modules;
 
-import interpreteur.as.Objets.ASObjet;
-import interpreteur.as.Objets.Nombre;
+import interpreteur.as.objets.*;
 import interpreteur.as.erreurs.ASErreur;
+import interpreteur.as.objets.datatype.Booleen;
+import interpreteur.as.objets.datatype.Nombre;
+import interpreteur.as.objets.datatype.Texte;
+import interpreteur.as.objets.datatype.ValeurNul;
 import interpreteur.data_manager.Data;
 import interpreteur.executeur.Executeur;
 
 public class ModuleIoT {
     static ASModule charger(Executeur executeurInstance) {
-        return new ASModule(new ASObjet.Fonction[] {
-                new ASObjet.Fonction("update",
-                        new ASObjet.Fonction.Parametre[] {
-                            new ASObjet.Fonction.Parametre(
-                                    ASObjet.TypeBuiltin.texte.asType(),
+        return new ASModule(new FonctionModule[] {
+                new FonctionModule("update",
+                        new Parametre[] {
+                            new Parametre(
+                                    TypeBuiltin.texte.asType(),
                                     "projectId",
                                     null
                             ),
-                            new ASObjet.Fonction.Parametre(
-                                    ASObjet.TypeBuiltin.texte.asType(),
+                            new Parametre(
+                                    TypeBuiltin.texte.asType(),
                                     "id",
                                     null
                             ),
-                            new ASObjet.Fonction.Parametre(
-                                    ASObjet.TypeBuiltin.tout.asType(),
+                            new Parametre(
+                                    TypeBuiltin.tout.asType(),
                                     "value",
                                     null
                             )
-                        }, ASObjet.TypeBuiltin.nombre.asType()) {
+                        }, TypeBuiltin.nombre.asType()) {
                     @Override
                     public ASObjet<?> executer() {
                         Texte projectId = (Texte) this.getValeurParam("projectId");
@@ -34,21 +37,21 @@ public class ModuleIoT {
                         ASObjet<?> valueAs = (ASObjet<?>) this.getValeurParam("value");
 
                         executeurInstance.addData(new Data(Data.Id.UPDATE_COMPONENT).addParam(projectId).addParam(id).addParam(valueAs.getValue()));
-                        return new Nul();
+                        return new ValeurNul();
                     }
                 },
-                new ASObjet.Fonction("get",
-                        new ASObjet.Fonction.Parametre[] {
-                                new ASObjet.Fonction.Parametre(
-                                        ASObjet.TypeBuiltin.texte.asType(),
+                new FonctionModule("get",
+                        new Parametre[] {
+                                new Parametre(
+                                        TypeBuiltin.texte.asType(),
                                         "key",
-                                        new ASObjet.Nul()
+                                        new ValeurNul()
                                 )
-                        }, ASObjet.TypeBuiltin.nombre.asType()) {
+                        }, TypeBuiltin.nombre.asType()) {
                     @Override
                     public ASObjet<?> executer() {
                         ASObjet<?> uncastedKey = (ASObjet<?>) this.getValeurParam("key");
-                        if(uncastedKey instanceof Nul) {
+                        if(uncastedKey instanceof ValeurNul) {
                             return new Texte(executeurInstance.getContext().toString());
                         }
 
@@ -67,25 +70,25 @@ public class ModuleIoT {
                         if(obj instanceof Boolean) {
                             return new Booleen((Boolean) obj);
                         }
-                        return new Nul();
+                        return new ValeurNul();
                     }
                 },
-                new ASObjet.Fonction("getComponentValue",
-                        new ASObjet.Fonction.Parametre[] {
-                                new ASObjet.Fonction.Parametre(
-                                        ASObjet.TypeBuiltin.texte.asType(),
+                new FonctionModule("getComponentValue",
+                        new Parametre[] {
+                                new Parametre(
+                                        TypeBuiltin.texte.asType(),
                                         "projectId",
                                         null
                                 ),
-                                new ASObjet.Fonction.Parametre(
-                                        ASObjet.TypeBuiltin.texte.asType(),
+                                new Parametre(
+                                        TypeBuiltin.texte.asType(),
                                         "id",
                                         null
                                 )
-                        }, ASObjet.TypeBuiltin.nombre.asType()) {
+                        }, TypeBuiltin.nombre.asType()) {
                     @Override
                     public ASObjet<?> executer() {
-                        return new Nul();
+                        return new ValeurNul();
                     }
                 }
         });

@@ -1,4 +1,6 @@
-package interpreteur.as.Objets;
+package interpreteur.as.objets.managers;
+
+import interpreteur.as.objets.Scope;
 
 import java.util.Stack;
 

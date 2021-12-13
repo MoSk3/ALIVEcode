@@ -1,9 +1,10 @@
 package interpreteur.as.modules;
 
 
-import interpreteur.as.Objets.ASObjet;
-import interpreteur.as.Objets.Scope;
+import interpreteur.as.objets.*;
 import interpreteur.as.erreurs.ASErreur;
+import interpreteur.as.objets.datatype.Liste;
+import interpreteur.as.objets.datatype.Texte;
 import interpreteur.executeur.Executeur;
 
 import java.util.*;
@@ -35,11 +36,11 @@ public record ASModuleManager(Executeur executeurInstance) {
     public void utiliserModuleBuitlins() {
         var moduleBuiltins = getModuleBuiltins();
         moduleBuiltins.utiliser((String) null);
-        Scope.getCurrentScope().declarerVariable(new ASObjet.Constante("builtins", new ASObjet.Liste(moduleBuiltins
+        Scope.getCurrentScope().declarerVariable(new Constante("builtins", new Liste(moduleBuiltins
                 .getNomsConstantesEtFonctions()
                 .stream()
-                .map(ASObjet.Texte::new)
-                .toArray(ASObjet.Texte[]::new))));
+                .map(Texte::new)
+                .toArray(Texte[]::new))));
 
     }
 
@@ -56,12 +57,12 @@ public record ASModuleManager(Executeur executeurInstance) {
         ASModule module = getModule(nomModule);
 
         module.utiliser(nomModule);
-        Scope.getCurrentScope().declarerVariable(new ASObjet.Constante(nomModule, new ASObjet.Liste(module
+        Scope.getCurrentScope().declarerVariable(new Constante(nomModule, new Liste(module
                 .getNomsConstantesEtFonctions()
                 .stream()
                 .map(e -> nomModule + "." + e)
-                .map(ASObjet.Texte::new)
-                .toArray(ASObjet.Texte[]::new))));
+                .map(Texte::new)
+                .toArray(Texte[]::new))));
     }
 
     /**
@@ -87,10 +88,10 @@ public record ASModuleManager(Executeur executeurInstance) {
                     .replaceAll("\\[|]", ""));
 
         module.utiliser(nomsFctEtConstDemandees);
-        Scope.getCurrentScope().declarerVariable(new ASObjet.Constante(nomModule, new ASObjet.Liste(nomsFctEtConstDemandees
+        Scope.getCurrentScope().declarerVariable(new Constante(nomModule, new Liste(nomsFctEtConstDemandees
                 .stream()
-                .map(ASObjet.Texte::new)
-                .toArray(ASObjet.Texte[]::new))));
+                .map(Texte::new)
+                .toArray(Texte[]::new))));
     }
 
 

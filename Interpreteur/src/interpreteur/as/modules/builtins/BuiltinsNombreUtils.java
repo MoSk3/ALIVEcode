@@ -1,22 +1,24 @@
 package interpreteur.as.modules.builtins;
 
-import interpreteur.as.Objets.Nombre;
+import interpreteur.as.objets.*;
 import interpreteur.as.erreurs.ASErreur;
-import interpreteur.as.Objets.ASObjet;
 import interpreteur.as.modules.ASModule;
+import interpreteur.as.objets.datatype.Decimal;
+import interpreteur.as.objets.datatype.Entier;
+import interpreteur.as.objets.datatype.Nombre;
+import interpreteur.as.objets.datatype.Texte;
 import interpreteur.ast.buildingBlocs.expressions.Type;
 import interpreteur.executeur.Executeur;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 public class BuiltinsNombreUtils {
 
-    public static ASObjet.Fonction[] fonctions = new ASObjet.Fonction[]{
-            new ASObjet.Fonction("entier", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.texte.asType(), "txt", null),
-                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.entier.asType(), "base", new ASObjet.Entier(10))
+    public static FonctionModule[] fonctionModules = new FonctionModule[]{
+            new FonctionModule("entier", new Parametre[]{
+                    new Parametre(TypeBuiltin.texte.asType(), "txt", null),
+                    new Parametre(TypeBuiltin.entier.asType(), "base", new Entier(10))
             }, new Type("entier")) {
                 @Override
                 public Entier executer() {
@@ -30,8 +32,8 @@ public class BuiltinsNombreUtils {
                 }
             },
 
-            new ASObjet.Fonction("abs", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(new Type("nombre"), "x", null)
+            new FonctionModule("abs", new Parametre[]{
+                    new Parametre(new Type("nombre"), "x", null)
             }, new Type("nombre")) {
                 @Override
                 public ASObjet<?> executer() {
@@ -39,8 +41,8 @@ public class BuiltinsNombreUtils {
                 }
             },
 
-            new ASObjet.Fonction("decimal", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.texte.asType(), "txt", null)
+            new FonctionModule("decimal", new Parametre[]{
+                    new Parametre(TypeBuiltin.texte.asType(), "txt", null)
             }, new Type("decimal")) {
                 @Override
                 public Decimal executer() {
@@ -53,8 +55,8 @@ public class BuiltinsNombreUtils {
             },
 
 
-            new ASObjet.Fonction("nombre", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.texte.asType(), "txt", null)
+            new FonctionModule("nombre", new Parametre[]{
+                    new Parametre(TypeBuiltin.texte.asType(), "txt", null)
             }, new Type("decimal")) {
                 @Override
                 public Nombre executer() {
@@ -69,8 +71,8 @@ public class BuiltinsNombreUtils {
             },
 
 
-            new ASObjet.Fonction("bin", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(new Type("entier"), "nb", null)
+            new FonctionModule("bin", new Parametre[]{
+                    new Parametre(new Type("entier"), "nb", null)
             }, new Type("texte")) {
                 @Override
                 public Texte executer() {
@@ -78,7 +80,7 @@ public class BuiltinsNombreUtils {
                 }
             }
     };
-    public static List<ASObjet.Constante> constantes = Collections.emptyList();
+    public static List<Constante> constantes = Collections.emptyList();
 
     public ASModule charger(Executeur executeurInstance) {
         return null;

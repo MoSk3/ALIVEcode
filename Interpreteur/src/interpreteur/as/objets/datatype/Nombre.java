@@ -1,6 +1,7 @@
-package interpreteur.as.Objets;
+package interpreteur.as.objets.datatype;
 
 import interpreteur.as.erreurs.ASErreur;
+import interpreteur.as.objets.ASObjet;
 
 public interface Nombre extends ASObjet<Number> {
     static boolean estNumerique(String txt) {
@@ -19,11 +20,11 @@ public interface Nombre extends ASObjet<Number> {
         if (!Nombre.estNumerique(txt))
             throw new ASErreur.ErreurType("Impossible de convertir " + txt + " en nombre entier ou d\u00E9cimal.");
 
-        return txt.contains(".") ? new ASObjet.Decimal(Double.parseDouble(txt)) : new ASObjet.Entier(Integer.parseInt(txt));
+        return txt.contains(".") ? new Decimal(Double.parseDouble(txt)) : new Entier(Integer.parseInt(txt));
     }
 
     static Nombre cast(Number nb) {
-        return nb.doubleValue() != nb.intValue() ? new ASObjet.Decimal(nb) : new ASObjet.Entier(nb);
+        return nb.doubleValue() != nb.intValue() ? new Decimal(nb) : new Entier(nb);
     }
 
     static Number asNumber(ASObjet<?> nb) {

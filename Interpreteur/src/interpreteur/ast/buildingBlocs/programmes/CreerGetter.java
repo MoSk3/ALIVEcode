@@ -1,8 +1,8 @@
 package interpreteur.ast.buildingBlocs.programmes;
 
-import interpreteur.as.Objets.ASFonction;
-import interpreteur.as.Objets.ASObjet;
-import interpreteur.as.Objets.Scope;
+import interpreteur.as.objets.datatype.ASFonction;
+import interpreteur.as.objets.Scope;
+import interpreteur.as.objets.Variable;
 import interpreteur.ast.buildingBlocs.Programme;
 import interpreteur.ast.buildingBlocs.expressions.Type;
 import interpreteur.ast.buildingBlocs.expressions.Var;
@@ -31,7 +31,7 @@ public class CreerGetter extends Programme {
     }
 
     public void addGetter() {
-        ASObjet.Variable v = Scope.getCurrentScope().getVariable(var.getNom());
+        Variable v = Scope.getCurrentScope().getVariable(var.getNom());
 
         if (v == null) {
             Declarer.addWaitingGetter(this);

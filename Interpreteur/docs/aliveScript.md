@@ -205,7 +205,7 @@
 -   ##### Typage:
     -   variable ou paramètre: <code>_nom_: _type_</code>
     -   constante: <code>const _nom_: _type_</code>
-    -   retour d'une fonction: <code>fonction _nom_() -> _type_</code>
+    -   retour d'une fonctionModule: <code>fonctionModule _nom_() -> _type_</code>
 -   ##### Types builtins:
 
     -   `tout`
@@ -225,7 +225,7 @@
         -   `texte`: <code>"_texte_"</code> **OU** <code>'_texte_'</code>
         -   `liste`: <code>[*valeur1*, *valeur2*, *etc.*]</code>
 
-    -   `fonctionType` syntaxe: [fonction](#Fonction)
+    -   `fonctionType` syntaxe: [fonctionModule](#Fonction)
     -   `nulType` syntaxe: `nul`
     -   `rien` syntaxe: `rien`
 
@@ -306,12 +306,12 @@
 
 -   syntaxe:
     -   utiliser le module au complet: <code>utiliser _nomModule_</code>
-    -   utiliser seulement certaines fonctions/constantes du module: <code>utiliser _nomModule_ {_nomFonction1_, _nomConstante1_, _etc._}</code>
+    -   utiliser seulement certaines fonctionModules/constantes du module: <code>utiliser _nomModule_ {_nomFonction1_, _nomConstante1_, _etc._}</code>
 -   ##### Modules builtins:
 
     -   builtins (n'a pas besoin d'être `utiliser`, car il est utilisé par défaut):
 
-        -   fonctions:
+        -   fonctionModules:
 
             -   ~~info~~
 
@@ -349,7 +349,7 @@
             -   **AUCUNE**
 
     -   Math:
-        -   fonctions:
+        -   fonctionModules:
             -   sin(x: nombre) -> decimal
             -   cos(x: nombre) -> decimal
             -   tan(x: nombre) -> decimal

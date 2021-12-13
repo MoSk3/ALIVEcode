@@ -6,7 +6,7 @@
 
     -   opérateur ... pour ajouter un nombre x de paramètres (spread operator en js)
     -   ex:
-        ```python
+        ```
         fonction abc(param1, ...autres)
             afficher typeDe(autres) # liste
         fin fonction

@@ -1,7 +1,9 @@
 package interpreteur.as.modules;
 
-import interpreteur.as.Objets.ASObjet.*;
-import interpreteur.as.Objets.Scope;
+import interpreteur.as.objets.FonctionModule;
+import interpreteur.as.objets.managers.FonctionManager;
+import interpreteur.as.objets.Scope;
+import interpreteur.as.objets.Variable;
 import interpreteur.ast.buildingBlocs.expressions.Type;
 
 import java.util.ArrayList;
@@ -11,13 +13,13 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
-public record Module(String nomModule, Fonction[] fonctions,
+public record Module(String nomModule, FonctionModule[] fonctionModules,
                      Variable[] variables) {
 
     public void utiliser() {
         FonctionManager.ajouterStructure(nomModule);
-        for (Fonction fonction : fonctions) {
-            Scope.getCurrentScope().declarerVariable(new Variable(fonction.getNom(), fonction, new Type(fonction.obtenirNomType())));
+        for (FonctionModule fonctionModule : fonctionModules) {
+            Scope.getCurrentScope().declarerVariable(new Variable(fonctionModule.getNom(), fonctionModule, new Type(fonctionModule.obtenirNomType())));
         }
         for (Variable variable : variables) {
             Scope.getCurrentScope().declarerVariable(variable);
@@ -26,9 +28,9 @@ public record Module(String nomModule, Fonction[] fonctions,
     }
 
     public void utiliser(List<String> nomMethodes) {
-        for (Fonction fonction : fonctions) {
-            if (nomMethodes.contains(fonction.getNom()))
-                FonctionManager.ajouterFonction(fonction);
+        for (FonctionModule fonctionModule : fonctionModules) {
+            if (nomMethodes.contains(fonctionModule.getNom()))
+                FonctionManager.ajouterFonction(fonctionModule);
         }
         for (Variable variable : variables) {
             if (nomMethodes.contains(variable.obtenirNom())) {
@@ -40,8 +42,8 @@ public record Module(String nomModule, Fonction[] fonctions,
     /**
      * @return un array contenant toutes les fonctions du module
      */
-    public Fonction[] getFonctions() {
-        return fonctions;
+    public FonctionModule[] getFonctions() {
+        return fonctionModules;
     }
 
     /**
@@ -55,8 +57,8 @@ public record Module(String nomModule, Fonction[] fonctions,
      * @return la liste des noms des fonctions du module
      */
     public List<String> getNomsFonctions() {
-        if (fonctions.length == 0) return new ArrayList<>();
-        return Stream.of(fonctions).map(Fonction::getNom).collect(Collectors.toList());
+        if (fonctionModules.length == 0) return new ArrayList<>();
+        return Stream.of(fonctionModules).map(FonctionModule::getNom).collect(Collectors.toList());
     }
 
     /**
@@ -84,7 +86,7 @@ public record Module(String nomModule, Fonction[] fonctions,
     public String toString() {
         return "Module{\n" +
                 "nomModule='" + nomModule + "'\n" +
-                ", fonctions=" + Arrays.toString(fonctions) + "\n" +
+                ", fonctions=" + Arrays.toString(fonctionModules) + "\n" +
                 ", variables=" + Arrays.toString(variables) + "\n" +
                 '}';
     }

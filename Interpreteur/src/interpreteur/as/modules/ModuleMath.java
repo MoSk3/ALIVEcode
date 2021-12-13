@@ -1,15 +1,17 @@
 package interpreteur.as.modules;
 
-import interpreteur.as.Objets.ASObjet;
+import interpreteur.as.objets.*;
+import interpreteur.as.objets.datatype.Decimal;
+import interpreteur.as.objets.datatype.Entier;
 import interpreteur.ast.buildingBlocs.expressions.Type;
 import interpreteur.executeur.Executeur;
 
 
 public class ModuleMath {
     static ASModule charger(Executeur executeurInstance) {
-        return new ASModule(new ASObjet.Fonction[]{
-                new ASObjet.Fonction("rad", new ASObjet.Fonction.Parametre[]{
-                        new ASObjet.Fonction.Parametre(new Type("nombre"), "x", null)
+        return new ASModule(new FonctionModule[]{
+                new FonctionModule("rad", new Parametre[]{
+                        new Parametre(new Type("nombre"), "x", null)
                 }, new Type("decimal")) {
                     @Override
                     public ASObjet<?> executer() {
@@ -18,8 +20,8 @@ public class ModuleMath {
                     }
                 },
 
-                new ASObjet.Fonction("deg", new ASObjet.Fonction.Parametre[]{
-                        new ASObjet.Fonction.Parametre(new Type("nombre"), "x", null)
+                new FonctionModule("deg", new Parametre[]{
+                        new Parametre(new Type("nombre"), "x", null)
                 }, new Type("decimal")) {
                     @Override
                     public ASObjet<?> executer() {
@@ -28,8 +30,8 @@ public class ModuleMath {
                     }
                 },
 
-                new ASObjet.Fonction("sin", new ASObjet.Fonction.Parametre[]{
-                        new ASObjet.Fonction.Parametre(new Type("nombre"), "x", null)
+                new FonctionModule("sin", new Parametre[]{
+                        new Parametre(new Type("nombre"), "x", null)
                 }, new Type("decimal")) {
                     @Override
                     public ASObjet<?> executer() {
@@ -38,8 +40,8 @@ public class ModuleMath {
                     }
                 },
 
-                new ASObjet.Fonction("cos", new ASObjet.Fonction.Parametre[]{
-                        new ASObjet.Fonction.Parametre(new Type("nombre"), "x", null)
+                new FonctionModule("cos", new Parametre[]{
+                        new Parametre(new Type("nombre"), "x", null)
                 }, new Type("decimal")) {
                     @Override
                     public ASObjet<?> executer() {
@@ -48,8 +50,8 @@ public class ModuleMath {
                     }
                 },
 
-                new ASObjet.Fonction("tan", new ASObjet.Fonction.Parametre[]{
-                        new ASObjet.Fonction.Parametre(new Type("nombre"), "x", null)
+                new FonctionModule("tan", new Parametre[]{
+                        new Parametre(new Type("nombre"), "x", null)
                 }, new Type("decimal")) {
                     @Override
                     public ASObjet<?> executer() {
@@ -58,9 +60,9 @@ public class ModuleMath {
                     }
                 },
 
-                new ASObjet.Fonction("arrondir", new ASObjet.Fonction.Parametre[]{
-                        new ASObjet.Fonction.Parametre(new Type("nombre"), "n", null),
-                        new ASObjet.Fonction.Parametre(new Type("entier"), "nbSignificatifs", new ASObjet.Entier(0)),
+                new FonctionModule("arrondir", new Parametre[]{
+                        new Parametre(new Type("nombre"), "n", null),
+                        new Parametre(new Type("entier"), "nbSignificatifs", new Entier(0)),
                 }, new Type("nombre")) {
                     @Override
                     public ASObjet<?> executer() {
@@ -69,9 +71,9 @@ public class ModuleMath {
                         return new Decimal(Math.round(n * shift) / shift);
                     }
                 },
-        }, new ASObjet.Variable[]{
-                new ASObjet.Constante("PI", new ASObjet.Decimal(Math.PI)),
-                new ASObjet.Constante("E", new ASObjet.Decimal(Math.E))
+        }, new Variable[]{
+                new Constante("PI", new Decimal(Math.PI)),
+                new Constante("E", new Decimal(Math.E))
         });
     }
 }

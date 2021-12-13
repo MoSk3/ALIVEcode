@@ -5,7 +5,6 @@ public enum EnumModule {
     Ast(ModuleAst::charger),
     Math(ModuleMath::charger),
     Voiture(ModuleVoiture::charger),
-    Dict(ModuleDict::charger),
     Test(ModuleTest::charger),
     Ai(ModuleAI::charger),
     Iot(ModuleIoT::charger)

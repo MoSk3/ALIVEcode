@@ -1,53 +1,53 @@
 package interpreteur.as.modules.builtins;
 
+import interpreteur.as.objets.*;
 import interpreteur.as.erreurs.ASErreur;
-import interpreteur.as.Objets.ASObjet;
 import interpreteur.as.modules.ASModule;
+import interpreteur.as.objets.datatype.Booleen;
+import interpreteur.as.objets.datatype.Liste;
+import interpreteur.as.objets.datatype.Texte;
 import interpreteur.ast.buildingBlocs.expressions.Type;
 import interpreteur.executeur.Executeur;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Iterator;
-import java.util.List;
 
 public class BuiltinsTexteUtils {
-    public static ASObjet.Fonction[] fonctions = new ASObjet.Fonction[]{
+    public static FonctionModule[] fonctionModules = new FonctionModule[]{
 
-            new ASObjet.Fonction("texte", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.tout.asType(), "element", null)
-            }, ASObjet.TypeBuiltin.texte.asType()) {
+            new FonctionModule("texte", new Parametre[]{
+                    new Parametre(TypeBuiltin.tout.asType(), "element", null)
+            }, TypeBuiltin.texte.asType()) {
                 @Override
                 public Texte executer() {
                     return new Texte(this.getValeurParam("element").toString());
                 }
             },
 
-            new ASObjet.Fonction("maj", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.texte.asType(), "txt", null)
-            }, ASObjet.TypeBuiltin.texte.asType()) {
+            new FonctionModule("maj", new Parametre[]{
+                    new Parametre(TypeBuiltin.texte.asType(), "txt", null)
+            }, TypeBuiltin.texte.asType()) {
                 @Override
-                public ASObjet.Texte executer() {
+                public Texte executer() {
                     return new Texte(this.getParamsValeursDict().get("txt").getValue().toString().toUpperCase());
                 }
             },
 
-            new ASObjet.Fonction("minus", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.texte.asType(), "txt", null)
+            new FonctionModule("minus", new Parametre[]{
+                    new Parametre(TypeBuiltin.texte.asType(), "txt", null)
             }, new Type("texte")) {
                 @Override
-                public ASObjet.Texte executer() {
+                public Texte executer() {
                     return new Texte(this.getParamsValeursDict().get("txt").getValue().toString().toLowerCase());
                 }
             },
 
-            new ASObjet.Fonction("remplacer", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.texte.asType(), "txt", null),
-                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.texte.asType(), "sequence", null),
-                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.texte.asType(), "remplacement", null)
-            }, ASObjet.TypeBuiltin.texte.asType()) {
+            new FonctionModule("remplacer", new Parametre[]{
+                    new Parametre(TypeBuiltin.texte.asType(), "txt", null),
+                    new Parametre(TypeBuiltin.texte.asType(), "sequence", null),
+                    new Parametre(TypeBuiltin.texte.asType(), "remplacement", null)
+            }, TypeBuiltin.texte.asType()) {
                 @Override
-                public ASObjet.Texte executer() {
+                public Texte executer() {
                     String txt = this.getParamsValeursDict().get("txt").getValue().toString();
                     String pattern = this.getParamsValeursDict().get("sequence").getValue().toString();
                     String remplacement = this.getParamsValeursDict().get("remplacement").getValue().toString();
@@ -55,13 +55,13 @@ public class BuiltinsTexteUtils {
                 }
             },
 
-            new ASObjet.Fonction("remplacerRe", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.texte.asType(), "txt", null),
-                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.texte.asType(), "pattern", null),
-                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.texte.asType(), "remplacement", null)
-            }, ASObjet.TypeBuiltin.texte.asType()) {
+            new FonctionModule("remplacerRe", new Parametre[]{
+                    new Parametre(TypeBuiltin.texte.asType(), "txt", null),
+                    new Parametre(TypeBuiltin.texte.asType(), "pattern", null),
+                    new Parametre(TypeBuiltin.texte.asType(), "remplacement", null)
+            }, TypeBuiltin.texte.asType()) {
                 @Override
-                public ASObjet.Texte executer() {
+                public Texte executer() {
                     String txt = this.getParamsValeursDict().get("txt").getValue().toString();
                     String pattern = this.getParamsValeursDict().get("pattern").getValue().toString();
                     String remplacement = this.getParamsValeursDict().get("remplacement").getValue().toString();
@@ -69,23 +69,23 @@ public class BuiltinsTexteUtils {
                 }
             },
 
-            new ASObjet.Fonction("match", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.texte.asType(), "txt", null),
-                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.texte.asType(), "pattern", null)
-            }, ASObjet.TypeBuiltin.booleen.asType()) {
+            new FonctionModule("match", new Parametre[]{
+                    new Parametre(TypeBuiltin.texte.asType(), "txt", null),
+                    new Parametre(TypeBuiltin.texte.asType(), "pattern", null)
+            }, TypeBuiltin.booleen.asType()) {
                 @Override
-                public ASObjet.Booleen executer() {
+                public Booleen executer() {
                     String txt = this.getParamsValeursDict().get("txt").getValue().toString();
                     String pattern = this.getParamsValeursDict().get("pattern").getValue().toString();
                     return new Booleen(txt.matches(pattern));
                 }
             },
 
-            new ASObjet.Fonction("estNumerique", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.texte.asType(), "txt", null)
-            }, ASObjet.TypeBuiltin.booleen.asType()) {
+            new FonctionModule("estNumerique", new Parametre[]{
+                    new Parametre(TypeBuiltin.texte.asType(), "txt", null)
+            }, TypeBuiltin.booleen.asType()) {
                 @Override
-                public ASObjet.Booleen executer() {
+                public Booleen executer() {
                     try {
                         Integer.parseInt(this.getParamsValeursDict().get("txt").getValue().toString());
                         return new Booleen(true);
@@ -109,10 +109,10 @@ public class BuiltinsTexteUtils {
              *
              * 		@return un texte où les {} sont remplacés par les valeurs dans la liste
              */
-            new ASObjet.Fonction("format", new ASObjet.Fonction.Parametre[]{
-                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.texte.asType(), "txt", null),
-                    new ASObjet.Fonction.Parametre(ASObjet.TypeBuiltin.liste.asType(), "valeurs", null)
-            }, ASObjet.TypeBuiltin.texte.asType()) {
+            new FonctionModule("format", new Parametre[]{
+                    new Parametre(TypeBuiltin.texte.asType(), "txt", null),
+                    new Parametre(TypeBuiltin.liste.asType(), "valeurs", null)
+            }, TypeBuiltin.texte.asType()) {
                 @Override
                 public ASObjet<?> executer() {
                     String texte = ((Texte) this.getValeurParam("txt")).getValue();
@@ -135,7 +135,7 @@ public class BuiltinsTexteUtils {
     };
 
     public static ASModule charger(Executeur executeurInstance) {
-        return new ASModule(fonctions);
+        return new ASModule(fonctionModules);
     }
 }
 

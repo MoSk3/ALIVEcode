@@ -1,10 +1,9 @@
 package interpreteur.ast.buildingBlocs.expressions;
 
-import interpreteur.as.Objets.Scope;
+import interpreteur.as.objets.Scope;
 import interpreteur.as.erreurs.ASErreur;
-import interpreteur.as.Objets.ASObjet;
+import interpreteur.as.objets.ASObjet;
 import interpreteur.ast.buildingBlocs.Expression;
-import interpreteur.executeur.Executeur;
 
 import java.util.Objects;
 

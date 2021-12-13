@@ -1,8 +1,8 @@
 package interpreteur.ast.buildingBlocs.programmes;
 
-import interpreteur.as.Objets.ASObjet;
-import interpreteur.as.Objets.ASFonction;
-import interpreteur.as.Objets.Scope;
+import interpreteur.as.objets.*;
+import interpreteur.as.objets.datatype.ASFonction;
+import interpreteur.as.objets.managers.FonctionManager;
 import interpreteur.ast.buildingBlocs.Programme;
 import interpreteur.ast.buildingBlocs.expressions.Argument;
 import interpreteur.ast.buildingBlocs.expressions.Var;
@@ -28,14 +28,14 @@ public class CreerFonction extends Programme {
         this.args = Arrays.asList(args);
         this.typeRetour = typeRetour;
         // declare fonction
-        Scope.getCurrentScope().declarerVariable(new ASObjet.Variable(var.getNom(), null, new Type("fonctionType")));
+        Scope.getCurrentScope().declarerVariable(new Variable(var.getNom(), null, new Type("fonctionType")));
         this.scope = Scope.makeNewCurrentScope();
     }
 
     @Override
     public NullType execute() {
         Scope scope = new Scope(this.scope);
-        ASFonction fonction = new ASFonction(var.getNom(), this.args.stream().map(Argument::eval).toArray(ASObjet.Fonction.Parametre[]::new), this.typeRetour, executeurInstance);
+        ASFonction fonction = new ASFonction(var.getNom(), this.args.stream().map(Argument::eval).toArray(Parametre[]::new), this.typeRetour, executeurInstance);
 
         Scope.getCurrentScopeInstance().getVariable(fonction.getNom()).changerValeur(fonction);
         // declare fonction
@@ -43,8 +43,8 @@ public class CreerFonction extends Programme {
 
         // declare params
         for (Argument arg : this.args) {
-            ASObjet.Fonction.Parametre param = arg.eval();
-            scope.declarerVariable(new ASObjet.Variable(param.getNom(), param.getValeurParDefaut(), param.getType()));
+            Parametre param = arg.eval();
+            scope.declarerVariable(new Variable(param.getNom(), param.getValeurParDefaut(), param.getType()));
             //ASObjet.VariableManager.ajouterVariable(new ASObjet.Variable(param.getNom(), param.getValeurParDefaut(), param.getType()), scopeName);
         }
 
@@ -56,7 +56,7 @@ public class CreerFonction extends Programme {
 
     @Override
     public Coordonnee prochaineCoord(Coordonnee coord, List<Token> ligne) {
-        return new Coordonnee(executeurInstance.nouveauScope("fonc_" + ASObjet.FonctionManager.ajouterDansStructure(this.var.getNom())));
+        return new Coordonnee(executeurInstance.nouveauScope("fonc_" + FonctionManager.ajouterDansStructure(this.var.getNom())));
     }
 
     @Override

@@ -2,7 +2,7 @@
 
 
 ex:  
-```js
+```
 var a = 200
 fonction abc()
    afficher a

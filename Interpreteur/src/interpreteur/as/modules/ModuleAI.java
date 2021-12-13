@@ -1,13 +1,13 @@
 package interpreteur.as.modules;
 
-import interpreteur.as.Objets.ASObjet;
-import interpreteur.as.Objets.Nombre;
+import interpreteur.as.objets.*;
 import interpreteur.as.erreurs.ASErreur;
+import interpreteur.as.objets.datatype.Decimal;
+import interpreteur.as.objets.datatype.Liste;
+import interpreteur.as.objets.datatype.Nombre;
+import interpreteur.as.objets.datatype.ValeurNul;
 import interpreteur.data_manager.Data;
 import interpreteur.executeur.Executeur;
-
-import java.util.EmptyStackException;
-import java.util.stream.Stream;
 
 /**
  * Module containing all methods related to artificial intelligence.
@@ -233,19 +233,19 @@ public class ModuleAI {
     }
 
     static ASModule charger(Executeur executeurInstance) {
-        return new ASModule(new ASObjet.Fonction[]{
+        return new ASModule(new FonctionModule[]{
                 /*
                  Calculates the mean of a list of numbers.
                 */
-                new ASObjet.Fonction("moyenne",
-                        new ASObjet.Fonction.Parametre[]{
-                                new ASObjet.Fonction.Parametre(
-                                        ASObjet.TypeBuiltin.liste.asType(),
+                new FonctionModule("moyenne",
+                        new Parametre[]{
+                                new Parametre(
+                                        TypeBuiltin.liste.asType(),
                                         "lst",
                                         null
                                 )
                         },
-                        ASObjet.TypeBuiltin.nombre.asType()) {
+                        TypeBuiltin.nombre.asType()) {
                     @Override
                     public ASObjet<?> executer() {
                         Liste liste = (Liste) this.getValeurParam("lst");
@@ -257,13 +257,13 @@ public class ModuleAI {
                 /*
                   Calculates the standart deviation of a list of numbers.
                 */
-                new ASObjet.Fonction("ecartType", new ASObjet.Fonction.Parametre[]{
-                        new ASObjet.Fonction.Parametre(
-                                ASObjet.TypeBuiltin.liste.asType(),
+                new FonctionModule("ecartType", new Parametre[]{
+                        new Parametre(
+                                TypeBuiltin.liste.asType(),
                                 "lst",
                                 null
                         )
-                }, ASObjet.TypeBuiltin.nombre.asType()) {
+                }, TypeBuiltin.nombre.asType()) {
                     @Override
                     public ASObjet<?> executer() {
                         Liste liste = (Liste) this.getValeurParam("lst");
@@ -285,18 +285,18 @@ public class ModuleAI {
 
                   If both lists are not the same length, an error will be generated.
                 */
-                new ASObjet.Fonction("coefficientCorrelation", new ASObjet.Fonction.Parametre[]{
-                        new ASObjet.Fonction.Parametre(
-                                ASObjet.TypeBuiltin.liste.asType(),
+                new FonctionModule("coefficientCorrelation", new Parametre[]{
+                        new Parametre(
+                                TypeBuiltin.liste.asType(),
                                 "lst1",
                                 null
                         ),
-                        new ASObjet.Fonction.Parametre(
-                                ASObjet.TypeBuiltin.liste.asType(),
+                        new Parametre(
+                                TypeBuiltin.liste.asType(),
                                 "lst2",
                                 null
                         )
-                }, ASObjet.TypeBuiltin.nombre.asType()) {
+                }, TypeBuiltin.nombre.asType()) {
                     @Override
                     public ASObjet<?> executer() {
                         Liste lst1 = (Liste) this.getValeurParam("lst1");
@@ -320,18 +320,18 @@ public class ModuleAI {
 
                   If both lists are not the same length, an error will be generated.
                 */
-                new ASObjet.Fonction("coefficientDetermination", new ASObjet.Fonction.Parametre[]{
-                        new ASObjet.Fonction.Parametre(
-                                ASObjet.TypeBuiltin.liste.asType(),
+                new FonctionModule("coefficientDetermination", new Parametre[]{
+                        new Parametre(
+                                TypeBuiltin.liste.asType(),
                                 "lst1",
                                 null
                         ),
-                        new ASObjet.Fonction.Parametre(
-                                ASObjet.TypeBuiltin.liste.asType(),
+                        new Parametre(
+                                TypeBuiltin.liste.asType(),
                                 "lst2",
                                 null
                         )
-                }, ASObjet.TypeBuiltin.nombre.asType()) {
+                }, TypeBuiltin.nombre.asType()) {
                     @Override
                     public ASObjet<?> executer() {
                         Liste lst1 = (Liste) this.getValeurParam("lst1");
@@ -351,13 +351,13 @@ public class ModuleAI {
                 /*
                   Returns the values of the specified column. (ONLY TAKES THE SAME DATASET FOR NOW, WILL BE CHANGED)
                 */
-                new ASObjet.Fonction("valeursColonne", new ASObjet.Fonction.Parametre[]{
-                        new ASObjet.Fonction.Parametre(
-                                ASObjet.TypeBuiltin.texte.asType(),
+                new FonctionModule("valeursColonne", new Parametre[]{
+                        new Parametre(
+                                TypeBuiltin.texte.asType(),
                                 "col",
                                 null
                         )
-                }, ASObjet.TypeBuiltin.liste.asType()) {
+                }, TypeBuiltin.liste.asType()) {
                     @Override
                     public ASObjet<?> executer() {
                         String col = this.getValeurParam("col").getValue().toString();
@@ -384,27 +384,27 @@ public class ModuleAI {
                 /*
                     Shows the data on the graph as a scatter plot.
                  */
-                new ASObjet.Fonction("afficherNuage", new ASObjet.Fonction.Parametre[]{
-                }, ASObjet.TypeBuiltin.nulType.asType()) {
+                new FonctionModule("afficherNuage", new Parametre[]{
+                }, TypeBuiltin.nulType.asType()) {
                     @Override
                     public ASObjet<?> executer() {
                         executeurInstance.addData(new Data(Data.Id.AFFICHER_NUAGE));
-                        return new Nul();
+                        return new ValeurNul();
                     }
                 },
                 /*
                     Creates a new regression and shows it on the graph,
                  */
-                new ASObjet.Fonction("creerRegression", new ASObjet.Fonction.Parametre[]{
-                        new ASObjet.Fonction.Parametre(
-                                ASObjet.TypeBuiltin.nombre.asType(), "a", null),
-                        new ASObjet.Fonction.Parametre(
-                                ASObjet.TypeBuiltin.nombre.asType(), "b", null),
-                        new ASObjet.Fonction.Parametre(
-                                ASObjet.TypeBuiltin.nombre.asType(), "c", null),
-                        new ASObjet.Fonction.Parametre(
-                                ASObjet.TypeBuiltin.nombre.asType(), "d", null)
-                }, ASObjet.TypeBuiltin.nulType.asType()) {
+                new FonctionModule("creerRegression", new Parametre[]{
+                        new Parametre(
+                                TypeBuiltin.nombre.asType(), "a", null),
+                        new Parametre(
+                                TypeBuiltin.nombre.asType(), "b", null),
+                        new Parametre(
+                                TypeBuiltin.nombre.asType(), "c", null),
+                        new Parametre(
+                                TypeBuiltin.nombre.asType(), "d", null)
+                }, TypeBuiltin.nulType.asType()) {
                     @Override
                     public ASObjet<?> executer() {
                         double a = ((Number) this.getValeurParam("a").getValue()).doubleValue();
@@ -413,33 +413,33 @@ public class ModuleAI {
                         double d = ((Number) this.getValeurParam("d").getValue()).doubleValue();
                         executeurInstance.addData(new Data(Data.Id.CREER_REGRESSION)
                                 .addParam(a).addParam(b).addParam(c).addParam(d));
-                        return new Nul();
+                        return new ValeurNul();
                     }
                 },
                 /*
                     Applies an algorithm to optimize the regression with the data.
                  */
-                new ASObjet.Fonction("optimiserRegression", new ASObjet.Fonction.Parametre[]{
-                        new ASObjet.Fonction.Parametre(
-                                ASObjet.TypeBuiltin.nombre.asType(), "lr", null),
-                        new ASObjet.Fonction.Parametre(
-                                ASObjet.TypeBuiltin.nombre.asType(), "epoch", null)
-                }, ASObjet.TypeBuiltin.nulType.asType()) {
+                new FonctionModule("optimiserRegression", new Parametre[]{
+                        new Parametre(
+                                TypeBuiltin.nombre.asType(), "lr", null),
+                        new Parametre(
+                                TypeBuiltin.nombre.asType(), "epoch", null)
+                }, TypeBuiltin.nulType.asType()) {
                     @Override
                     public ASObjet<?> executer() {
                         double lr = ((Number) this.getValeurParam("lr").getValue()).doubleValue();
                         double epoch = ((Number) this.getValeurParam("epoch").getValue()).doubleValue();
                         executeurInstance.addData(new Data(Data.Id.OPTIMISER_REGRESSION).addParam(lr).addParam(epoch));
-                        return new Nul();
+                        return new ValeurNul();
                     }
                 },
                 /*
                     Evaluates the regression on the graph at a specific x value.
                  */
-                new ASObjet.Fonction("evaluer", new ASObjet.Fonction.Parametre[]{
-                        new ASObjet.Fonction.Parametre(
-                                ASObjet.TypeBuiltin.nombre.asType(), "x", null)
-                }, ASObjet.TypeBuiltin.nombre.asType()) {
+                new FonctionModule("evaluer", new Parametre[]{
+                        new Parametre(
+                                TypeBuiltin.nombre.asType(), "x", null)
+                }, TypeBuiltin.nombre.asType()) {
                     @Override
                     public ASObjet<?> executer() {
                         double x = ((Number) this.getValeurParam("x").getValue()).doubleValue();
@@ -449,15 +449,15 @@ public class ModuleAI {
                 /*
                     Evaluates the cost function for the regression on the screen.
                  */
-                new ASObjet.Fonction("fonctionCout", new ASObjet.Fonction.Parametre[]{
-                }, ASObjet.TypeBuiltin.nulType.asType()) {
+                new FonctionModule("fonctionCout", new Parametre[]{
+                }, TypeBuiltin.nulType.asType()) {
                     @Override
                     public ASObjet<?> executer() {
                         executeurInstance.addData(new Data(Data.Id.FONCTION_COUT));
-                        return new Nul();
+                        return new ValeurNul();
                     }
                 }
-        }, new ASObjet.Variable[]{});
+        }, new Variable[]{});
     }
 
     private static class NoDataException extends ASErreur.ErreurAliveScript {

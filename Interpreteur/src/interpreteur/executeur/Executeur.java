@@ -2,8 +2,8 @@ package interpreteur.executeur;
 
 import interpreteur.as.ASAst;
 import interpreteur.as.ASLexer;
-import interpreteur.as.Objets.ASObjet.FonctionManager;
-import interpreteur.as.Objets.Scope;
+import interpreteur.as.objets.managers.FonctionManager;
+import interpreteur.as.objets.Scope;
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.as.erreurs.ASErreur.*;
 import interpreteur.as.modules.ASModuleManager;

@@ -1,10 +1,10 @@
 package interpreteur.ast.buildingBlocs.expressions;
 
-import interpreteur.as.Objets.Scope;
+import interpreteur.as.objets.Scope;
+import interpreteur.as.objets.Variable;
 import interpreteur.as.erreurs.ASErreur;
-import interpreteur.as.Objets.ASObjet;
+import interpreteur.as.objets.ASObjet;
 import interpreteur.ast.buildingBlocs.Expression;
-import interpreteur.utils.ArraysUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -73,7 +73,7 @@ public class Type implements Expression<ASObjet<?>> {
 
     @Override
     public ASObjet<?> eval() {
-        ASObjet.Variable var;
+        Variable var;
         if ((var = Scope.getCurrentScopeInstance().getVariable(this.nom)) != null) {
             return var.getValeurApresGetter();
         }

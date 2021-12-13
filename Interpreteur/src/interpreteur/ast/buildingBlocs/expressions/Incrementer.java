@@ -1,7 +1,8 @@
 package interpreteur.ast.buildingBlocs.expressions;
 
+import interpreteur.as.objets.datatype.Entier;
 import interpreteur.as.erreurs.ASErreur;
-import interpreteur.as.Objets.ASObjet;
+import interpreteur.as.objets.ASObjet;
 import interpreteur.ast.buildingBlocs.Expression;
 import interpreteur.ast.buildingBlocs.programmes.Assigner;
 
@@ -16,10 +17,10 @@ public record Incrementer(Expression<?> expr,
     @Override
     public ASObjet<?> eval() {
         if (expr instanceof Var || expr instanceof CreerListe.SousSection.IndexSection) {
-            new Assigner(expr, new ValeurConstante(new ASObjet.Entier(signe)), BinOp.Operation.PLUS).execute();
+            new Assigner(expr, new ValeurConstante(new Entier(signe)), BinOp.Operation.PLUS).execute();
             return expr.eval();
         }
-        return new BinOp(expr, BinOp.Operation.PLUS, new ValeurConstante(new ASObjet.Entier(signe))).eval();
+        return new BinOp(expr, BinOp.Operation.PLUS, new ValeurConstante(new Entier(signe))).eval();
     }
 
     @Override

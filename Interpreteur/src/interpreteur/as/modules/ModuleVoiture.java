@@ -1,14 +1,14 @@
 package interpreteur.as.modules;
 
-import interpreteur.as.Objets.ASObjet;
+import interpreteur.as.objets.*;
 import interpreteur.as.erreurs.ASErreur;
+import interpreteur.as.objets.datatype.Decimal;
+import interpreteur.as.objets.datatype.Entier;
 import interpreteur.ast.buildingBlocs.expressions.Type;
 import interpreteur.data_manager.Data;
 import interpreteur.data_manager.DataVoiture;
 import interpreteur.executeur.Executeur;
 import org.json.JSONObject;
-
-import java.util.function.Function;
 
 public class ModuleVoiture {
 
@@ -23,44 +23,44 @@ public class ModuleVoiture {
     }
 
     static ASModule charger(Executeur executeurInstance) {
-        return new ASModule(new ASObjet.Fonction[]{
+        return new ASModule(new FonctionModule[]{
 
-                new ASObjet.Fonction("x", new Type("decimal")) {
+                new FonctionModule("x", new Type("decimal")) {
                     @Override
                     public ASObjet<?> executer() {
                         return new Decimal(((Number) getDataVoiture("x")).doubleValue());
                     }
                 },
 
-                new ASObjet.Fonction("y",  new Type("decimal")) {
+                new FonctionModule("y",  new Type("decimal")) {
                     @Override
                     public ASObjet<?> executer() {
                         return new Decimal(((Number) getDataVoiture("y")).doubleValue());
                     }
                 },
 
-                new ASObjet.Fonction("getDistAvant",  new Type("decimal")) {
+                new FonctionModule("getDistAvant",  new Type("decimal")) {
                     @Override
                     public ASObjet<?> executer() {
                         return new Decimal(((Number) getDataVoiture("dA")).doubleValue());
                     }
                 },
-                new ASObjet.Fonction("getDistGauche",  new Type("decimal")) {
+                new FonctionModule("getDistGauche",  new Type("decimal")) {
                     @Override
                     public ASObjet<?> executer() {
                         return new Decimal(((Number) getDataVoiture("dG")).doubleValue());
                     }
                 },
-                new ASObjet.Fonction("getDistDroite",  new Type("decimal")) {
+                new FonctionModule("getDistDroite",  new Type("decimal")) {
                     @Override
                     public ASObjet<?> executer() {
                         return new Decimal(((Number) getDataVoiture("dD")).doubleValue());
                     }
                 },
 
-                new ASObjet.Fonction("rouler", new ASObjet.Fonction.Parametre[]{
-                        new ASObjet.Fonction.Parametre(new Type("entier"), "vitesseGauche", null),
-                        new ASObjet.Fonction.Parametre(new Type("entier"), "vitesseDroite", null)
+                new FonctionModule("rouler", new Parametre[]{
+                        new Parametre(new Type("entier"), "vitesseGauche", null),
+                        new Parametre(new Type("entier"), "vitesseDroite", null)
                 },  new Type("nulType")) {
                     @Override
                     public ASObjet<?> executer() {
@@ -70,15 +70,15 @@ public class ModuleVoiture {
                     }
                 }
 
-        }, new ASObjet.Variable[]{
-                new ASObjet.Variable("vitesse", new ASObjet.Entier(10), new Type("tout"))
-                        .setGetter(() -> new ASObjet.Decimal(((Number) getDataVoiture("speed")).doubleValue()))
+        }, new Variable[]{
+                new Variable("vitesse", new Entier(10), new Type("tout"))
+                        .setGetter(() -> new Decimal(((Number) getDataVoiture("speed")).doubleValue()))
                         .setSetter((valeur) -> {
                             throw new ASErreur.StopSetInfo(new Data(Data.Id.SET_CAR_SPEED).addParam(valeur));
                         }
                 ),
-                new ASObjet.Variable("distAvant", new ASObjet.Entier(10), new Type("tout"))
-                        .setGetter(() -> new ASObjet.Decimal(((Number) getDataVoiture("dA")).doubleValue()))
+                new Variable("distAvant", new Entier(10), new Type("tout"))
+                        .setGetter(() -> new Decimal(((Number) getDataVoiture("dA")).doubleValue()))
                         .setReadOnly()
         });
     }

@@ -1,6 +1,7 @@
 package interpreteur.ast.buildingBlocs.expressions;
 
-import interpreteur.as.Objets.ASObjet;
+import interpreteur.as.objets.ASObjet;
+import interpreteur.as.objets.datatype.Booleen;
 import interpreteur.ast.buildingBlocs.Expression;
 
 import java.util.function.BiFunction;
@@ -39,7 +40,7 @@ public record BoolOp(Expression<?> gauche,
         }),
 
         PAS((gauche, droite) -> {
-            return new ASObjet.Booleen(!gauche.boolValue());
+            return new Booleen(!gauche.boolValue());
         });
 
         private final BiFunction<ASObjet<?>, ASObjet<?>, ASObjet<?>> eval;

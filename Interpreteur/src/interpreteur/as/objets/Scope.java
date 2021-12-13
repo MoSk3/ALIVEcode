@@ -1,6 +1,4 @@
-package interpreteur.as.Objets;
-
-import interpreteur.executeur.Executeur;
+package interpreteur.as.objets;
 
 import java.util.Stack;
 
@@ -11,7 +9,7 @@ public class Scope {
 
     // non static fields
     private ScopeInstance parent;
-    private final Stack<ASObjet.Variable> variablesDeclarees = new Stack<>();
+    private final Stack<Variable> variablesDeclarees = new Stack<>();
 
     public Scope() {
         this.parent = null;
@@ -89,13 +87,13 @@ public class Scope {
 
     //#region --------- not static stuff ---------
 
-    private Stack<ASObjet.Variable> cloneVariablesDeclarees() {
-        Stack<ASObjet.Variable> newVariableStack = new Stack<>();
+    private Stack<Variable> cloneVariablesDeclarees() {
+        Stack<Variable> newVariableStack = new Stack<>();
         variablesDeclarees.forEach(var -> newVariableStack.push(var.clone()));
         return newVariableStack;
     }
 
-    public Stack<ASObjet.Variable> getVariablesDeclarees() {
+    public Stack<Variable> getVariablesDeclarees() {
         return variablesDeclarees;
     }
 
@@ -116,11 +114,11 @@ public class Scope {
      *
      * @param variable la variable qui est déclarée
      */
-    public void declarerVariable(ASObjet.Variable variable) {
+    public void declarerVariable(Variable variable) {
         variablesDeclarees.push(variable);
     }
 
-    public ASObjet.Variable getVariable(String nom) {
+    public Variable getVariable(String nom) {
         return variablesDeclarees.stream()
                 .filter(var -> var.obtenirNom().equals(nom))
                 .findFirst()
@@ -141,9 +139,9 @@ public class Scope {
 
     public static class ScopeInstance {
         private final ScopeInstance parent;
-        private final Stack<ASObjet.Variable> variableStack;
+        private final Stack<Variable> variableStack;
 
-        private ScopeInstance(ScopeInstance parent, Stack<ASObjet.Variable> variableStack) {
+        private ScopeInstance(ScopeInstance parent, Stack<Variable> variableStack) {
             this.parent = parent;
             this.variableStack = variableStack;
         }
@@ -152,18 +150,18 @@ public class Scope {
             return parent;
         }
 
-        public Stack<ASObjet.Variable> getVariableStack() {
+        public Stack<Variable> getVariableStack() {
             return variableStack;
         }
 
-        public ASObjet.Variable getVariable(String nom) {
+        public Variable getVariable(String nom) {
             return variableStack.stream()
                     .filter(var -> var.obtenirNom().equals(nom))
                     .findFirst()
                     .orElse(parent == null ? null : parent.getVariable(nom));
         }
 
-        public ASObjet.Variable getVariable(ASObjet.Variable variable) {
+        public Variable getVariable(Variable variable) {
             return variableStack.stream()
                     .filter(var -> var.equals(variable))
                     .findFirst()

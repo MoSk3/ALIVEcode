@@ -1,11 +1,10 @@
 package interpreteur.ast.buildingBlocs.programmes;
 
-import interpreteur.as.Objets.Scope;
+import interpreteur.as.objets.*;
+import interpreteur.as.objets.datatype.Iterable;
 import interpreteur.as.erreurs.ASErreur;
-import interpreteur.as.Objets.ASObjet;
 import interpreteur.ast.buildingBlocs.Expression;
 import interpreteur.ast.buildingBlocs.expressions.Type;
-import interpreteur.ast.buildingBlocs.expressions.ValeurConstante;
 import interpreteur.ast.buildingBlocs.expressions.Var;
 import interpreteur.executeur.Coordonnee;
 import interpreteur.executeur.Executeur;
@@ -33,9 +32,9 @@ public class BouclePour extends Boucle {
     public BouclePour setDeclarerVar(boolean estConst, Type typeVar) {
         this.typeVar = typeVar == null ? this.typeVar : typeVar;
         if (estConst) {
-            scope.declarerVariable(new ASObjet.Constante(var.getNom(), null));
+            scope.declarerVariable(new Constante(var.getNom(), null));
         } else {
-            scope.declarerVariable(new ASObjet.Variable(var.getNom(), null, typeVar));
+            scope.declarerVariable(new Variable(var.getNom(), null, typeVar));
         }
         return this;
     }
@@ -49,17 +48,17 @@ public class BouclePour extends Boucle {
     @Override
     public NullType execute() {
         if (iteration == null) {
-            if (!(objItere.eval() instanceof ASObjet.Iterable)) {
+            if (!(objItere.eval() instanceof Iterable)) {
                 throw new ASErreur.ErreurType("Seuls les valeurs de type 'iterable' ('texte' et 'liste') sont accept\u00E0es dans les boucles pour");
             }
-            iteration = ((ASObjet.Iterable) objItere.eval()).iter();
+            iteration = ((Iterable) objItere.eval()).iter();
             Scope.pushCurrentScopeInstance(scope.makeScopeInstanceFromCurrentScope());
         }
 
         if (iteration.hasNext() && !sortir) {
             Scope.popCurrentScopeInstance();
             Scope.pushCurrentScopeInstance(scope.makeScopeInstanceFromCurrentScope());
-            ASObjet.Variable variable = Scope.getCurrentScopeInstance().getVariable(var.getNom());
+            Variable variable = Scope.getCurrentScopeInstance().getVariable(var.getNom());
             if (variable == null) {
                 throw new ASErreur.ErreurVariableInconnue("La variable " + var.getNom() + " n'a pas \u00E9t\u00E9 initialis\u00E9e." +
                         "\nAvez-vous oubli\u00E9 de mettre 'var' devant la d\u00E9claration de la variable?");

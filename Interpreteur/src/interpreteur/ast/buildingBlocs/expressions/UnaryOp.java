@@ -1,10 +1,11 @@
 package interpreteur.ast.buildingBlocs.expressions;
 
-import interpreteur.as.Objets.ASObjet;
-import interpreteur.as.Objets.Nombre;
+import interpreteur.as.objets.ASObjet;
+import interpreteur.as.objets.datatype.Decimal;
+import interpreteur.as.objets.datatype.Entier;
+import interpreteur.as.objets.datatype.Nombre;
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.ast.buildingBlocs.Expression;
-import interpreteur.ast.buildingBlocs.programmes.Assigner;
 
 import java.util.function.Function;
 
@@ -35,9 +36,9 @@ public record UnaryOp(Expression<?> expression,
         /**
          * Gere |x|
          */
-        ABSOLUE(expr -> expr instanceof ASObjet.Decimal decimal ?
-                new ASObjet.Decimal(Math.abs(decimal.getValue())) :
-                new ASObjet.Entier(Math.abs(((ASObjet.Entier) expr).getValue()))
+        ABSOLUE(expr -> expr instanceof Decimal decimal ?
+                new Decimal(Math.abs(decimal.getValue())) :
+                new Entier(Math.abs(((Entier) expr).getValue()))
         ),
 
         PLUS(expr -> {
@@ -57,16 +58,16 @@ public record UnaryOp(Expression<?> expression,
         }),
 
         NEGATION(expr -> {
-            if (expr instanceof ASObjet.Decimal decimal) {
-                return new ASObjet.Decimal(-decimal.getValue());
-            } else if (expr instanceof ASObjet.Entier entier) {
-                return new ASObjet.Entier(-entier.getValue());
+            if (expr instanceof Decimal decimal) {
+                return new Decimal(-decimal.getValue());
+            } else if (expr instanceof Entier entier) {
+                return new Entier(-entier.getValue());
             } else {
                 String nb = expr.getValue().toString();
                 try {
                     boolean estDecimal = nb.contains(".");
-                    if (estDecimal) return new ASObjet.Decimal(-Double.parseDouble(nb));
-                    else return new ASObjet.Entier(-Integer.parseInt(nb));
+                    if (estDecimal) return new Decimal(-Double.parseDouble(nb));
+                    else return new Entier(-Integer.parseInt(nb));
                 } catch (NumberFormatException ignored) {
                     throw new ASErreur.ErreurType("impossible de convertir '" + nb + "' en nombre decimal");
                 }
