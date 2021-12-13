@@ -1,10 +1,10 @@
-package interpreteur.as.modules;
+package interpreteur.as.modules.core;
 
 import interpreteur.executeur.Executeur;
 
 @FunctionalInterface
 public interface ModuleFactory {
 
-    ASModule charger(Executeur executeurInstance);
+    Module charger(Executeur executeurInstance);
 
 }

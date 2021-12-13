@@ -1,5 +1,6 @@
 package interpreteur.as.modules;
 
+import interpreteur.as.modules.core.Module;
 import interpreteur.as.objets.*;
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.as.modules.builtins.BuiltinsListeUtils;
@@ -40,7 +41,7 @@ public class ModuleBuiltins {
             new Variable("varListe", new Liste(), TypeBuiltin.liste.asType()).setGetter(getVarListe).setReadOnly(),
     };
 
-    public static ASModule charger(Executeur executeurInstance) {
+    public static Module charger(Executeur executeurInstance) {
         FonctionModule[] fonctionModules = new FonctionModule[]{
 
                 new FonctionModule("afficher", new Parametre[]{
@@ -191,7 +192,7 @@ public class ModuleBuiltins {
         fonctionsBuiltins.addAll(List.of(BuiltinsTexteUtils.fonctionModules));
         fonctionsBuiltins.addAll(List.of(BuiltinsNombreUtils.fonctionModules));
 
-        return new ASModule(fonctionsBuiltins.toArray(FonctionModule[]::new), variables);
+        return new Module(fonctionsBuiltins.toArray(FonctionModule[]::new), variables);
     }
 }
 

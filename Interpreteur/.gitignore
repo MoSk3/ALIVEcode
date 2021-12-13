@@ -1,5 +1,7 @@
 */node_modules
 */out/production
 */out/META-INF
+/out/
+/our/
 *.class
 */log/

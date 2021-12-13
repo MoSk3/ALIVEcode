@@ -1,11 +1,12 @@
 package interpreteur.as.modules;
 
+import interpreteur.as.modules.core.Module;
 import interpreteur.as.objets.*;
 import interpreteur.as.objets.datatype.Texte;
 import interpreteur.executeur.Executeur;
 
 public class ModuleTest {
-    public static ASModule charger(Executeur executeurInstance) {
+    public static Module charger(Executeur executeurInstance) {
         FonctionModule[] fonctionModules = new FonctionModule[]{
                 new FonctionModule("dummy", TypeBuiltin.tout.asType()) {
                     @Override
@@ -24,6 +25,6 @@ public class ModuleTest {
         };
 
 
-        return new ASModule(fonctionModules, variables);
+        return new Module(fonctionModules, variables);
     }
 }

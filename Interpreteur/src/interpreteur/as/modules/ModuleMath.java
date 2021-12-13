@@ -1,5 +1,6 @@
 package interpreteur.as.modules;
 
+import interpreteur.as.modules.core.Module;
 import interpreteur.as.objets.*;
 import interpreteur.as.objets.datatype.Decimal;
 import interpreteur.as.objets.datatype.Entier;
@@ -8,8 +9,8 @@ import interpreteur.executeur.Executeur;
 
 
 public class ModuleMath {
-    static ASModule charger(Executeur executeurInstance) {
-        return new ASModule(new FonctionModule[]{
+    static Module charger(Executeur executeurInstance) {
+        return new Module(new FonctionModule[]{
                 new FonctionModule("rad", new Parametre[]{
                         new Parametre(new Type("nombre"), "x", null)
                 }, new Type("decimal")) {

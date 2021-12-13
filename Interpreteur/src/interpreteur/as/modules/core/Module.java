@@ -1,4 +1,4 @@
-package interpreteur.as.modules;
+package interpreteur.as.modules.core;
 
 import interpreteur.as.objets.FonctionModule;
 import interpreteur.as.objets.managers.FonctionManager;
@@ -13,14 +13,14 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
-public final record ASModule(FonctionModule[] fonctionModules,
-                             Variable[] variables) {
+public final record Module(FonctionModule[] fonctionModules,
+                           Variable[] variables) {
 
-    public ASModule(FonctionModule[] fonctionModules) {
+    public Module(FonctionModule[] fonctionModules) {
         this(fonctionModules, new Variable[]{});
     }
 
-    public ASModule(Variable[] variables) {
+    public Module(Variable[] variables) {
         this(new FonctionModule[]{}, variables);
     }
 

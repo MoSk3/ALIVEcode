@@ -6,7 +6,7 @@ import interpreteur.as.objets.managers.FonctionManager;
 import interpreteur.as.objets.Scope;
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.as.erreurs.ASErreur.*;
-import interpreteur.as.modules.ASModuleManager;
+import interpreteur.as.modules.core.ASModuleManager;
 import interpreteur.ast.buildingBlocs.Programme;
 import interpreteur.ast.buildingBlocs.programmes.Declarer;
 import interpreteur.data_manager.Data;

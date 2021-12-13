@@ -3,7 +3,7 @@ package interpreteur.as.modules.builtins;
 import interpreteur.as.objets.*;
 import interpreteur.as.objets.datatype.Iterable;
 import interpreteur.as.erreurs.ASErreur;
-import interpreteur.as.modules.ASModule;
+import interpreteur.as.modules.core.Module;
 import interpreteur.as.objets.datatype.*;
 import interpreteur.ast.buildingBlocs.expressions.Type;
 import interpreteur.executeur.Executeur;
@@ -273,7 +273,7 @@ public class BuiltinsListeUtils {
     public static List<Constante> constantes = Collections.emptyList();
 
 
-    public ASModule charger(Executeur executeurInstance) {
+    public Module charger(Executeur executeurInstance) {
         return null;
     }
 }

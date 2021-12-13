@@ -1,5 +1,6 @@
 package interpreteur.as.modules;
 
+import interpreteur.as.modules.core.Module;
 import interpreteur.as.objets.ASObjet;
 import interpreteur.as.objets.FonctionModule;
 import interpreteur.as.objets.Parametre;
@@ -7,8 +8,8 @@ import interpreteur.ast.buildingBlocs.expressions.Type;
 import interpreteur.executeur.Executeur;
 
 public class ModuleAst {
-    static ASModule charger(Executeur executeurInstance) {
-        return new ASModule(new FonctionModule[]{
+    static Module charger(Executeur executeurInstance) {
+        return new Module(new FonctionModule[]{
             new FonctionModule("genererArbre", new Parametre[] {
                     new Parametre(new Type("texte"), "param", null)
             }, new Type("texte")) {

@@ -2,7 +2,7 @@ package interpreteur.as.modules.builtins;
 
 import interpreteur.as.objets.*;
 import interpreteur.as.erreurs.ASErreur;
-import interpreteur.as.modules.ASModule;
+import interpreteur.as.modules.core.Module;
 import interpreteur.as.objets.datatype.Booleen;
 import interpreteur.as.objets.datatype.Liste;
 import interpreteur.as.objets.datatype.Texte;
@@ -134,8 +134,8 @@ public class BuiltinsTexteUtils {
             }
     };
 
-    public static ASModule charger(Executeur executeurInstance) {
-        return new ASModule(fonctionModules);
+    public static Module charger(Executeur executeurInstance) {
+        return new Module(fonctionModules);
     }
 }
 

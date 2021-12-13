@@ -1,6 +1,7 @@
-package interpreteur.as.modules;
+package interpreteur.as.modules.core;
 
 
+import interpreteur.as.modules.EnumModule;
 import interpreteur.as.objets.*;
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.as.objets.datatype.Liste;
@@ -29,7 +30,7 @@ public record ASModuleManager(Executeur executeurInstance) {
         MODULE_FACTORY.put(nomModule, moduleFactory);
     }
 
-    public ASModule getModuleBuiltins() {
+    public Module getModuleBuiltins() {
         return MODULE_FACTORY.get(EnumModule.builtins).charger(executeurInstance);
     }
 
@@ -54,7 +55,7 @@ public record ASModuleManager(Executeur executeurInstance) {
         if (nomModule.equals("experimental")) {
             return;
         }
-        ASModule module = getModule(nomModule);
+        Module module = getModule(nomModule);
 
         module.utiliser(nomModule);
         Scope.getCurrentScope().declarerVariable(new Constante(nomModule, new Liste(module
@@ -75,7 +76,7 @@ public record ASModuleManager(Executeur executeurInstance) {
             return;
         }
 
-        ASModule module = getModule(nomModule);
+        Module module = getModule(nomModule);
 
         List<String> nomsFctEtConstDemandees = Arrays.asList(methodes);
 
@@ -95,7 +96,7 @@ public record ASModuleManager(Executeur executeurInstance) {
     }
 
 
-    public ASModule getModule(String nomModule) {
+    public Module getModule(String nomModule) {
         ModuleFactory module;
         try {
             module = MODULE_FACTORY.get(EnumModule.valueOf(nomModule));

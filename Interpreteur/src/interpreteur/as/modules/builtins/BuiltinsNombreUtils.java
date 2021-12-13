@@ -2,7 +2,7 @@ package interpreteur.as.modules.builtins;
 
 import interpreteur.as.objets.*;
 import interpreteur.as.erreurs.ASErreur;
-import interpreteur.as.modules.ASModule;
+import interpreteur.as.modules.core.Module;
 import interpreteur.as.objets.datatype.Decimal;
 import interpreteur.as.objets.datatype.Entier;
 import interpreteur.as.objets.datatype.Nombre;
@@ -82,7 +82,7 @@ public class BuiltinsNombreUtils {
     };
     public static List<Constante> constantes = Collections.emptyList();
 
-    public ASModule charger(Executeur executeurInstance) {
+    public Module charger(Executeur executeurInstance) {
         return null;
     }
 }

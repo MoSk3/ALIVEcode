@@ -1,5 +1,6 @@
 package interpreteur.as.modules;
 
+import interpreteur.as.modules.core.Module;
 import interpreteur.as.objets.*;
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.as.objets.datatype.Booleen;
@@ -10,8 +11,8 @@ import interpreteur.data_manager.Data;
 import interpreteur.executeur.Executeur;
 
 public class ModuleIoT {
-    static ASModule charger(Executeur executeurInstance) {
-        return new ASModule(new FonctionModule[] {
+    static Module charger(Executeur executeurInstance) {
+        return new Module(new FonctionModule[] {
                 new FonctionModule("update",
                         new Parametre[] {
                             new Parametre(

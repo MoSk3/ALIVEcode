@@ -1,5 +1,6 @@
 package interpreteur.as.modules;
 
+import interpreteur.as.modules.core.Module;
 import interpreteur.as.objets.*;
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.as.objets.datatype.Decimal;
@@ -232,8 +233,8 @@ public class ModuleAI {
         return ROUNDING_FACTOR;
     }
 
-    static ASModule charger(Executeur executeurInstance) {
-        return new ASModule(new FonctionModule[]{
+    static Module charger(Executeur executeurInstance) {
+        return new Module(new FonctionModule[]{
                 /*
                  Calculates the mean of a list of numbers.
                 */
