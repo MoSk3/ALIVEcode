@@ -1,6 +1,5 @@
 import { Classroom } from "../../../Models/Classroom/classroom.entity";
 import styled from 'styled-components';
-import FillContainer from '../../UtilsComponents/FillGrid/FillGrid';
 import { Container } from 'react-bootstrap';
 
 export type ClassroomHeaderProps = {

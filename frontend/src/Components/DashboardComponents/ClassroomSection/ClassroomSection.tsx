@@ -1,17 +1,9 @@
 import { ClassroomSectionProps } from './classroomSectionTypes';
 import { useState, useEffect } from 'react';
-import {
-	faAngleDown,
-	faAngleUp,
-	faCalculator,
-	faCode,
-	faFlask,
-	faProjectDiagram,
-} from '@fortawesome/free-solid-svg-icons';
+import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useForceUpdate } from '../../../state/hooks/useForceUpdate';
 import CourseSection from '../CourseSection/CourseSection';
-import { CLASSROOM_SUBJECT } from '../../../Models/Classroom/classroom.entity';
 import { formatTooLong } from '../../../Types/formatting';
 import { useLocation, useHistory } from 'react-router';
 import { useQuery } from '../../../state/hooks/useQuery';
@@ -43,22 +35,6 @@ const ClassroomSection = ({
 		}
 	}, [classroom, forceUpdate, isOpen]);
 
-	let icon = faCode;
-	switch (classroom.subject) {
-		case CLASSROOM_SUBJECT.INFORMATIC:
-			icon = faCode;
-			break;
-		case CLASSROOM_SUBJECT.SCIENCE:
-			icon = faFlask;
-			break;
-		case CLASSROOM_SUBJECT.MATH:
-			icon = faCalculator;
-			break;
-		case CLASSROOM_SUBJECT.AI:
-			icon = faProjectDiagram;
-			break;
-	}
-
 	return (
 		<>
 			<div
@@ -67,7 +43,10 @@ const ClassroomSection = ({
 				onMouseLeave={() => setIsHovering(false)}
 				onClick={onClick}
 			>
-				<FontAwesomeIcon className="sidebar-icon" icon={icon} />
+				<FontAwesomeIcon
+					className="sidebar-icon"
+					icon={classroom.getSubjectIcon()}
+				/>
 				<label className="sidebar-classroom-text">
 					{formatTooLong(classroom.name, 25)}
 				</label>

@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { useAlert } from 'react-alert';
 import Modal from '../../UtilsComponents/Modal/Modal';
 import { prettyField } from '../../../Types/formatting';
+import { ThemeContext } from '../../../state/contexts/ThemeContext';
 
 /**
  * Classroom header that displays the className, the professor and
@@ -24,6 +25,7 @@ const ClassroomHeader = ({ className, classroom }: ClassroomHeaderProps) => {
 	const { user } = useContext(UserContext);
 	const { routes } = useRoutes();
 	const { t } = useTranslation();
+	const { theme } = useContext(ThemeContext);
 	const history = useHistory();
 	const alert = useAlert();
 	const [codeModalOpen, setCodeModalOpen] = useState(false);
@@ -83,10 +85,16 @@ const ClassroomHeader = ({ className, classroom }: ClassroomHeaderProps) => {
 				xmlnsXlink="http://www.w3.org/1999/xlink"
 				version="1.1"
 			>
-				<rect x="0" y="0" width="960" height="200" fill="#ffffff"></rect>
+				<rect
+					x="0"
+					y="0"
+					width="960"
+					height="200"
+					fill={theme.color.background}
+				></rect>
 				<path
 					d="M0 172L40 165.2C80 158.3 160 144.7 240 138.2C320 131.7 400 132.3 480 143.7C560 155 640 177 720 186.7C800 196.3 880 193.7 920 192.3L960 191L960 0L920 0C880 0 800 0 720 0C640 0 560 0 480 0C400 0 320 0 240 0C160 0 80 0 40 0L0 0Z"
-					fill="#2E75FF"
+					fill={theme.color.primary}
 					stroke-linecap="round"
 					stroke-linejoin="miter"
 				></path>

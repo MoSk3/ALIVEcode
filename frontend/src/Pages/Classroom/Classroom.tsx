@@ -41,8 +41,7 @@ const StyledDiv = styled.div`
 const Classroom = ({ classroomProp, ...props }: ClassroomProps) => {
 	const { t } = useTranslation();
 	const { user } = useContext(UserContext);
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	const [classroom, _] = useState<ClassroomModel | undefined>(
+	const [classroom, setClassroom] = useState<ClassroomModel | undefined>(
 		classroomProp ?? undefined,
 	);
 	const { id } = useParams<{ id: string }>();
@@ -61,6 +60,7 @@ const Classroom = ({ classroomProp, ...props }: ClassroomProps) => {
 					}));
 				await classroom.getStudents();
 				await classroom.getCourses();
+				setClassroom(classroom);
 				forceUpdate();
 			} catch (err) {
 				goBack();

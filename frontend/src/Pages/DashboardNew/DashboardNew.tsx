@@ -1,5 +1,5 @@
 import { DashboardNewProps, StyledDashboard, SwitchTabActions } from './dashboardNewTypes';
-import { useContext, useState, useEffect, useReducer } from 'react';
+import { useContext, useState, useEffect, useReducer, useMemo } from 'react';
 import { UserContext } from '../../state/contexts/UserContext';
 import { useHistory } from 'react-router-dom';
 import { Col, Row } from 'react-bootstrap';
@@ -19,6 +19,12 @@ import ClassroomSection from '../../Components/DashboardComponents/ClassroomSect
 import Classroom from '../Classroom/Classroom';
 import { useLocation } from 'react-router';
 import { useQuery } from '../../state/hooks/useQuery';
+import DashboardRecents from '../../Components/DashboardComponents/DashboardRecents/DashboardRecents';
+import {
+	DashboardContext,
+	DashboardContextValues,
+} from '../../state/contexts/DashboardContext';
+import { Course } from '../../Models/Course/course.entity';
 
 const SwitchTabReducer = (
 	state: { index: number; classroom?: ClassroomModel },
@@ -59,6 +65,7 @@ const DashboardNew = (props: DashboardNewProps) => {
 	const [tabSelected, setTabSelected] = useReducer(SwitchTabReducer, {
 		index: 0,
 	});
+	const [courses, setCourses] = useState<Course[]>();
 
 	useEffect(() => {
 		if (pathname.endsWith('summary')) setTabSelected({ type: 'summary' });
@@ -109,7 +116,7 @@ const DashboardNew = (props: DashboardNewProps) => {
 	const renderTabSelected = () => {
 		switch (tabSelected.index) {
 			case 0:
-				return 'Récent';
+				return <DashboardRecents></DashboardRecents>;
 			case 1:
 				return 'Sommaire';
 			case 2:
@@ -123,60 +130,84 @@ const DashboardNew = (props: DashboardNewProps) => {
 		}
 	};
 
+	const loadCourses = async () => {
+		if (!user) return;
+		const courses = await api.db.users.getCourses({ id: user.id });
+		setCourses(courses);
+	};
+
+	const ctx: DashboardContextValues = useMemo(() => {
+		return {
+			getCourses: () => {
+				console.log(courses);
+				if (!courses) {
+					loadCourses();
+					return [];
+				}
+				return courses;
+			},
+			getClassrooms: () => {
+				return classrooms;
+			},
+		};
+	}, [classrooms, courses]);
+
 	return (
 		<StyledDashboard>
-			<Row className="dashboard-row" xs={1} md={2}>
-				<Col className="sidebar no-float" xs={12} md={2} sm={3}>
-					<div
-						className={
-							'sidebar-btn ' +
-							(tabSelected.index === 0 ? 'sidebar-selected' : '')
-						}
-						onClick={openRecents}
-					>
-						<FontAwesomeIcon className="sidebar-icon" icon={faHistory} />
-						<label className="sidebar-btn-text">Formations Récentes</label>
-					</div>
-					<div
-						className={
-							'sidebar-btn ' +
-							(tabSelected.index === 1 ? 'sidebar-selected' : '')
-						}
-						onClick={openSummary}
-					>
-						<FontAwesomeIcon className="sidebar-icon" icon={faStar} />
-						<label className="sidebar-btn-text">Sommaire</label>
-					</div>
+			<DashboardContext.Provider value={ctx}>
+				<Row className="dashboard-row" xs={1} md={2}>
+					<Col className="sidebar no-float" xs={12} md={2} sm={3}>
+						<div
+							className={
+								'sidebar-btn ' +
+								(tabSelected.index === 0 ? 'sidebar-selected' : '')
+							}
+							onClick={openRecents}
+						>
+							<FontAwesomeIcon className="sidebar-icon" icon={faHistory} />
+							<label className="sidebar-btn-text">Formations Récentes</label>
+						</div>
+						<div
+							className={
+								'sidebar-btn ' +
+								(tabSelected.index === 1 ? 'sidebar-selected' : '')
+							}
+							onClick={openSummary}
+						>
+							<FontAwesomeIcon className="sidebar-icon" icon={faStar} />
+							<label className="sidebar-btn-text">Sommaire</label>
+						</div>
 
-					<hr />
+						<hr />
 
-					<div
-						className="sidebar-header"
-						onMouseEnter={() => setHoveringClassroom(true)}
-						onMouseLeave={() => setHoveringClassroom(false)}
-					>
-						<FontAwesomeIcon className="sidebar-icon" icon={faBook} />
-						<label className="sidebar-header-text">Classes</label>
-						{hoveringClassroom && (
-							<FontAwesomeIcon className="sidebar-icon-right" icon={faPlus} />
-						)}
-					</div>
+						<div
+							className="sidebar-header"
+							onMouseEnter={() => setHoveringClassroom(true)}
+							onMouseLeave={() => setHoveringClassroom(false)}
+						>
+							<FontAwesomeIcon className="sidebar-icon" icon={faBook} />
+							<label className="sidebar-header-text">Classes</label>
+							{hoveringClassroom && (
+								<FontAwesomeIcon className="sidebar-icon-right" icon={faPlus} />
+							)}
+						</div>
 
-					<hr />
+						<hr />
 
-					{classrooms.map((classroom, idx) => (
-						<ClassroomSection
-							key={idx}
-							selected={tabSelected.classroom?.id === classroom.id}
-							onClick={() => openClassroom(classroom)}
-							classroom={classroom}
-						></ClassroomSection>
-					))}
-				</Col>
-				<Col className="content no-float" xs={12} md={10} sm={9}>
-					{renderTabSelected()}
-				</Col>
-			</Row>
+						{classrooms.map((classroom, idx) => (
+							<ClassroomSection
+								key={idx}
+								selected={tabSelected.classroom?.id === classroom.id}
+								onClick={() => openClassroom(classroom)}
+								classroom={classroom}
+							></ClassroomSection>
+						))}
+					</Col>
+					<Col className="content no-float" xs={12} md={10} sm={9}>
+						{renderTabSelected()}
+					</Col>
+				</Row>
+			</DashboardContext.Provider>
 			<FormModal
 				title={t('form.join_classroom.title')}
 				open={formJoinClassOpen}
