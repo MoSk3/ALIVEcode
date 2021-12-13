@@ -1,6 +1,6 @@
 package interpreteur.ast.buildingBlocs.expressions;
 
-import interpreteur.as.objets.ASObjet;
+import interpreteur.as.lang.ASObjet;
 import interpreteur.ast.buildingBlocs.Expression;
 
 public record Ternary(Expression<?> test,

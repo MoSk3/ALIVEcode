@@ -1,9 +1,9 @@
 package interpreteur.as.modules;
 
 import interpreteur.as.modules.core.Module;
-import interpreteur.as.objets.ASObjet;
-import interpreteur.as.objets.FonctionModule;
-import interpreteur.as.objets.Parametre;
+import interpreteur.as.lang.ASObjet;
+import interpreteur.as.lang.FonctionModule;
+import interpreteur.as.lang.Parametre;
 import interpreteur.ast.buildingBlocs.expressions.Type;
 import interpreteur.executeur.Executeur;
 

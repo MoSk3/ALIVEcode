@@ -1,11 +1,11 @@
 package interpreteur.ast.buildingBlocs.expressions;
 
-import interpreteur.as.objets.*;
-import interpreteur.as.objets.datatype.Iterable;
+import interpreteur.as.lang.*;
+import interpreteur.as.lang.datatype.Iterable;
 import interpreteur.as.erreurs.ASErreur;
-import interpreteur.as.objets.datatype.ASPaire;
-import interpreteur.as.objets.datatype.Liste;
-import interpreteur.as.objets.datatype.Texte;
+import interpreteur.as.lang.datatype.ASPaire;
+import interpreteur.as.lang.datatype.Liste;
+import interpreteur.as.lang.datatype.Texte;
 import interpreteur.ast.buildingBlocs.Expression;
 
 import java.util.ArrayList;

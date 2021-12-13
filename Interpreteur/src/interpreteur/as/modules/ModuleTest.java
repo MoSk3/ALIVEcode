@@ -1,8 +1,8 @@
 package interpreteur.as.modules;
 
 import interpreteur.as.modules.core.Module;
-import interpreteur.as.objets.*;
-import interpreteur.as.objets.datatype.Texte;
+import interpreteur.as.lang.*;
+import interpreteur.as.lang.datatype.Texte;
 import interpreteur.executeur.Executeur;
 
 public class ModuleTest {

@@ -1,12 +1,12 @@
 package interpreteur.as.modules;
 
 import interpreteur.as.modules.core.Module;
-import interpreteur.as.objets.*;
+import interpreteur.as.lang.*;
 import interpreteur.as.erreurs.ASErreur;
-import interpreteur.as.objets.datatype.Booleen;
-import interpreteur.as.objets.datatype.Nombre;
-import interpreteur.as.objets.datatype.Texte;
-import interpreteur.as.objets.datatype.ValeurNul;
+import interpreteur.as.lang.datatype.Booleen;
+import interpreteur.as.lang.datatype.Nombre;
+import interpreteur.as.lang.datatype.Texte;
+import interpreteur.as.lang.datatype.ValeurNul;
 import interpreteur.data_manager.Data;
 import interpreteur.executeur.Executeur;
 

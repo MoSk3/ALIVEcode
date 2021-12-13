@@ -1,7 +1,7 @@
 package interpreteur.ast.buildingBlocs.programmes;
 
-import interpreteur.as.objets.*;
-import interpreteur.as.objets.datatype.Iterable;
+import interpreteur.as.lang.*;
+import interpreteur.as.lang.datatype.Iterable;
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.ast.buildingBlocs.Expression;
 import interpreteur.ast.buildingBlocs.expressions.Type;

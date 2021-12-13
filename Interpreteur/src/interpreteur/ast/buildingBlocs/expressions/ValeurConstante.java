@@ -1,7 +1,7 @@
 package interpreteur.ast.buildingBlocs.expressions;
 
-import interpreteur.as.objets.ASObjet;
-import interpreteur.as.objets.datatype.Texte;
+import interpreteur.as.lang.ASObjet;
+import interpreteur.as.lang.datatype.Texte;
 import interpreteur.ast.buildingBlocs.Expression;
 
 public record ValeurConstante(ASObjet<?> val) implements Expression<ASObjet<?>> {

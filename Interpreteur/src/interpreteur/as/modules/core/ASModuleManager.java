@@ -2,10 +2,10 @@ package interpreteur.as.modules.core;
 
 
 import interpreteur.as.modules.EnumModule;
-import interpreteur.as.objets.*;
+import interpreteur.as.lang.*;
 import interpreteur.as.erreurs.ASErreur;
-import interpreteur.as.objets.datatype.Liste;
-import interpreteur.as.objets.datatype.Texte;
+import interpreteur.as.lang.datatype.Liste;
+import interpreteur.as.lang.datatype.Texte;
 import interpreteur.executeur.Executeur;
 
 import java.util.*;

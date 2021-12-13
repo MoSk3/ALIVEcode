@@ -1,11 +1,11 @@
 package interpreteur.ast.buildingBlocs.expressions;
 
-import interpreteur.as.objets.*;
+import interpreteur.as.lang.*;
 import interpreteur.as.erreurs.ASErreur;
-import interpreteur.as.objets.datatype.Decimal;
-import interpreteur.as.objets.datatype.Entier;
-import interpreteur.as.objets.datatype.Liste;
-import interpreteur.as.objets.datatype.Texte;
+import interpreteur.as.lang.datatype.Decimal;
+import interpreteur.as.lang.datatype.Entier;
+import interpreteur.as.lang.datatype.Liste;
+import interpreteur.as.lang.datatype.Texte;
 import interpreteur.ast.buildingBlocs.Expression;
 
 import java.util.function.BiFunction;

@@ -2,8 +2,8 @@ package interpreteur.executeur;
 
 import interpreteur.as.ASAst;
 import interpreteur.as.ASLexer;
-import interpreteur.as.objets.managers.FonctionManager;
-import interpreteur.as.objets.Scope;
+import interpreteur.as.lang.managers.FonctionManager;
+import interpreteur.as.lang.Scope;
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.as.erreurs.ASErreur.*;
 import interpreteur.as.modules.core.ASModuleManager;
@@ -139,11 +139,9 @@ public class Executeur {
 
 
         String[] lines = """
-                var a = {
-                "salut": "hey!",
-                "bonjour": 122
-                }
-                afficher a
+                var maVariable = 10
+                si maVariable == 10 alors
+                fin si
                 """.split("\n");
 
 
@@ -151,15 +149,16 @@ public class Executeur {
         executeur.debug = true;
         Object a;
         if (!(a = executeur.compiler(lines, true)).equals("[]")) System.out.println(a);
-        // executeur.printCompileDict();
+        executeur.printCompileDict();
         System.out.println(executeur.executerMain(false));
 
+        /* execution 2
         Executeur executeur2 = new Executeur();
         executeur2.debug = true;
         Object a2;
         if (!(a2 = executeur2.compiler(lines, true)).equals("[]")) System.out.println(a2);
         // executeur.printCompileDict();
-        System.out.println(executeur2.executerMain(false));
+        System.out.println(executeur2.executerMain(false));*/
     }
 
     // methode utilisee a chaque fois qu'une info doit etre afficher par le langage

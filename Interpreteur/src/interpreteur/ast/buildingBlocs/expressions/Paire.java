@@ -1,7 +1,7 @@
 package interpreteur.ast.buildingBlocs.expressions;
 
-import interpreteur.as.objets.datatype.ASPaire;
-import interpreteur.as.objets.datatype.Texte;
+import interpreteur.as.lang.datatype.ASPaire;
+import interpreteur.as.lang.datatype.Texte;
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.ast.buildingBlocs.Expression;
 

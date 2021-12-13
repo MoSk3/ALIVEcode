@@ -1,10 +1,10 @@
 package interpreteur.as.modules;
 
 import interpreteur.as.modules.core.Module;
-import interpreteur.as.objets.*;
+import interpreteur.as.lang.*;
 import interpreteur.as.erreurs.ASErreur;
-import interpreteur.as.objets.datatype.Decimal;
-import interpreteur.as.objets.datatype.Entier;
+import interpreteur.as.lang.datatype.Decimal;
+import interpreteur.as.lang.datatype.Entier;
 import interpreteur.ast.buildingBlocs.expressions.Type;
 import interpreteur.data_manager.Data;
 import interpreteur.data_manager.DataVoiture;

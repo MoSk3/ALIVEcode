@@ -1,8 +1,8 @@
 package interpreteur.ast.buildingBlocs.expressions;
 
-import interpreteur.as.objets.datatype.Entier;
+import interpreteur.as.lang.datatype.Entier;
 import interpreteur.as.erreurs.ASErreur;
-import interpreteur.as.objets.ASObjet;
+import interpreteur.as.lang.ASObjet;
 import interpreteur.ast.buildingBlocs.Expression;
 import interpreteur.ast.buildingBlocs.programmes.Assigner;
 

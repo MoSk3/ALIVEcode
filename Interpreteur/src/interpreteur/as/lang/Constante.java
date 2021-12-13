@@ -1,4 +1,4 @@
-package interpreteur.as.objets;
+package interpreteur.as.lang;
 
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.ast.buildingBlocs.expressions.Type;
@@ -14,7 +14,7 @@ public class Constante extends Variable {
 
     @Override
     public Variable clone() {
-        return new interpreteur.as.objets.Constante(obtenirNom(), this.getValeur());
+        return new interpreteur.as.lang.Constante(obtenirNom(), this.getValeur());
     }
 
     @Override

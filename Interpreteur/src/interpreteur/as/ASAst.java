@@ -4,7 +4,7 @@ import interpreteur.as.erreurs.ASErreur.ErreurAssignement;
 import interpreteur.as.erreurs.ASErreur.ErreurInputOutput;
 import interpreteur.as.erreurs.ASErreur.ErreurSyntaxe;
 import interpreteur.as.erreurs.ASErreur.ErreurType;
-import interpreteur.as.objets.datatype.*;
+import interpreteur.as.lang.datatype.*;
 import interpreteur.ast.Ast;
 import interpreteur.ast.buildingBlocs.Expression;
 import interpreteur.ast.buildingBlocs.Programme;

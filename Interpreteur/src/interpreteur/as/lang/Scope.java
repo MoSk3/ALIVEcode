@@ -1,4 +1,4 @@
-package interpreteur.as.objets;
+package interpreteur.as.lang;
 
 import java.util.Stack;
 

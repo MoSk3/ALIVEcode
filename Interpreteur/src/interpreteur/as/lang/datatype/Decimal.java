@@ -1,4 +1,4 @@
-package interpreteur.as.objets.datatype;
+package interpreteur.as.lang.datatype;
 
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.tokens.Token;

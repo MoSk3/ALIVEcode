@@ -1,7 +1,7 @@
-package interpreteur.as.objets.datatype;
+package interpreteur.as.lang.datatype;
 
 import interpreteur.as.erreurs.ASErreur;
-import interpreteur.as.objets.ASObjet;
+import interpreteur.as.lang.ASObjet;
 
 public interface Nombre extends ASObjet<Number> {
     static boolean estNumerique(String txt) {

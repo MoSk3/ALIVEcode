@@ -1,7 +1,7 @@
 package interpreteur.ast.buildingBlocs.programmes;
 
-import interpreteur.as.objets.Scope;
-import interpreteur.as.objets.datatype.ValeurNul;
+import interpreteur.as.lang.Scope;
+import interpreteur.as.lang.datatype.ValeurNul;
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.ast.buildingBlocs.Programme;
 import interpreteur.executeur.Coordonnee;

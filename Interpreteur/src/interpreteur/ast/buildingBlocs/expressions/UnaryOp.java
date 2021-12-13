@@ -1,9 +1,9 @@
 package interpreteur.ast.buildingBlocs.expressions;
 
-import interpreteur.as.objets.ASObjet;
-import interpreteur.as.objets.datatype.Decimal;
-import interpreteur.as.objets.datatype.Entier;
-import interpreteur.as.objets.datatype.Nombre;
+import interpreteur.as.lang.ASObjet;
+import interpreteur.as.lang.datatype.Decimal;
+import interpreteur.as.lang.datatype.Entier;
+import interpreteur.as.lang.datatype.Nombre;
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.ast.buildingBlocs.Expression;
 

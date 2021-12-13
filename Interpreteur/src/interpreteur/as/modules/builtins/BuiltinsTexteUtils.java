@@ -1,11 +1,11 @@
 package interpreteur.as.modules.builtins;
 
-import interpreteur.as.objets.*;
+import interpreteur.as.lang.*;
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.as.modules.core.Module;
-import interpreteur.as.objets.datatype.Booleen;
-import interpreteur.as.objets.datatype.Liste;
-import interpreteur.as.objets.datatype.Texte;
+import interpreteur.as.lang.datatype.Booleen;
+import interpreteur.as.lang.datatype.Liste;
+import interpreteur.as.lang.datatype.Texte;
 import interpreteur.ast.buildingBlocs.expressions.Type;
 import interpreteur.executeur.Executeur;
 

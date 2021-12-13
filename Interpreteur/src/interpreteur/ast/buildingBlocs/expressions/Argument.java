@@ -1,8 +1,8 @@
 package interpreteur.ast.buildingBlocs.expressions;
 
 import interpreteur.as.erreurs.ASErreur;
-import interpreteur.as.objets.ASObjet;
-import interpreteur.as.objets.Parametre;
+import interpreteur.as.lang.ASObjet;
+import interpreteur.as.lang.Parametre;
 import interpreteur.ast.buildingBlocs.Expression;
 
 public class Argument implements Expression<Parametre> {

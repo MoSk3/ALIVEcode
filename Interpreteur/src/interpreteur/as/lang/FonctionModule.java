@@ -1,4 +1,4 @@
-package interpreteur.as.objets;
+package interpreteur.as.lang;
 
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.ast.buildingBlocs.expressions.Type;

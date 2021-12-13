@@ -1,7 +1,7 @@
-package interpreteur.as.objets.datatype;
+package interpreteur.as.lang.datatype;
 
 import interpreteur.as.erreurs.ASErreur;
-import interpreteur.as.objets.ASObjet;
+import interpreteur.as.lang.ASObjet;
 
 import java.util.Iterator;
 import java.util.List;

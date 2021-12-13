@@ -1,8 +1,8 @@
 package interpreteur.ast.buildingBlocs.programmes;
 
-import interpreteur.as.objets.*;
-import interpreteur.as.objets.datatype.ASFonction;
-import interpreteur.as.objets.managers.FonctionManager;
+import interpreteur.as.lang.*;
+import interpreteur.as.lang.datatype.ASFonction;
+import interpreteur.as.lang.managers.FonctionManager;
 import interpreteur.ast.buildingBlocs.Programme;
 import interpreteur.ast.buildingBlocs.expressions.Argument;
 import interpreteur.ast.buildingBlocs.expressions.Var;

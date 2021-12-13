@@ -1,9 +1,9 @@
 package interpreteur.as.modules.core;
 
-import interpreteur.as.objets.FonctionModule;
-import interpreteur.as.objets.managers.FonctionManager;
-import interpreteur.as.objets.Scope;
-import interpreteur.as.objets.Variable;
+import interpreteur.as.lang.FonctionModule;
+import interpreteur.as.lang.managers.FonctionManager;
+import interpreteur.as.lang.Scope;
+import interpreteur.as.lang.Variable;
 import interpreteur.ast.buildingBlocs.expressions.Type;
 
 import java.util.ArrayList;

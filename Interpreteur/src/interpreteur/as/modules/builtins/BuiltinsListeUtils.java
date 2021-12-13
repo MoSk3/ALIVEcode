@@ -1,10 +1,10 @@
 package interpreteur.as.modules.builtins;
 
-import interpreteur.as.objets.*;
-import interpreteur.as.objets.datatype.Iterable;
+import interpreteur.as.lang.*;
+import interpreteur.as.lang.datatype.Iterable;
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.as.modules.core.Module;
-import interpreteur.as.objets.datatype.*;
+import interpreteur.as.lang.datatype.*;
 import interpreteur.ast.buildingBlocs.expressions.Type;
 import interpreteur.executeur.Executeur;
 

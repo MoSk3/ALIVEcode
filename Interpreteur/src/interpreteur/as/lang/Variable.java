@@ -1,7 +1,7 @@
-package interpreteur.as.objets;
+package interpreteur.as.lang;
 
 import interpreteur.as.erreurs.ASErreur;
-import interpreteur.as.objets.managers.FonctionManager;
+import interpreteur.as.lang.managers.FonctionManager;
 import interpreteur.ast.buildingBlocs.expressions.Type;
 
 import java.util.function.Function;
@@ -20,7 +20,7 @@ public class Variable implements ASObjet<Object> {
     public Variable(String nom, ASObjet<?> valeur, Type type) {
         this.type = type == null ? new Type("tout") : type;
         this.nom = FonctionManager.ajouterDansStructure(nom);
-        this.valeur = valeur instanceof interpreteur.as.objets.Variable var ? var.getValeurApresGetter() : valeur;
+        this.valeur = valeur instanceof interpreteur.as.lang.Variable var ? var.getValeurApresGetter() : valeur;
     }
 
     private boolean nouvelleValeurValide(ASObjet<?> nouvelleValeur) {
@@ -52,8 +52,8 @@ public class Variable implements ASObjet<Object> {
     }
 
     @Override
-    public interpreteur.as.objets.Variable clone() {
-        return new interpreteur.as.objets.Variable(nom, this.valeur, this.type).setGetter(this.getter).setSetter(this.setter);
+    public interpreteur.as.lang.Variable clone() {
+        return new interpreteur.as.lang.Variable(nom, this.valeur, this.type).setGetter(this.getter).setSetter(this.setter);
     }
 
     public String obtenirNom() {
@@ -68,17 +68,17 @@ public class Variable implements ASObjet<Object> {
         return this.valeur == null;
     }
 
-    public interpreteur.as.objets.Variable setGetter(Supplier<ASObjet<?>> getter) {
+    public interpreteur.as.lang.Variable setGetter(Supplier<ASObjet<?>> getter) {
         this.getter = getter;
         return this;
     }
 
-    public interpreteur.as.objets.Variable setSetter(Function<ASObjet<?>, ASObjet<?>> setter) {
+    public interpreteur.as.lang.Variable setSetter(Function<ASObjet<?>, ASObjet<?>> setter) {
         this.setter = setter;
         return this;
     }
 
-    public interpreteur.as.objets.Variable setReadOnly() {
+    public interpreteur.as.lang.Variable setReadOnly() {
         this.setter = (valeur) -> {
             throw new ASErreur.ErreurAssignement("Cette variable est en lecture seule: elle ne peut pas \u00EAtre modifi\u00E9e");
         };

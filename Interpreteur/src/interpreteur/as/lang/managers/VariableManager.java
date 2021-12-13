@@ -1,6 +1,6 @@
-package interpreteur.as.objets.managers;
+package interpreteur.as.lang.managers;
 
-import interpreteur.as.objets.Variable;
+import interpreteur.as.lang.Variable;
 
 import java.util.Stack;
 

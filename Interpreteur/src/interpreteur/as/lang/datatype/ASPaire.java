@@ -1,6 +1,6 @@
-package interpreteur.as.objets.datatype;
+package interpreteur.as.lang.datatype;
 
-import interpreteur.as.objets.ASObjet;
+import interpreteur.as.lang.ASObjet;
 
 import java.util.Map;
 

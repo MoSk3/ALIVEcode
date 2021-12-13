@@ -1,10 +1,10 @@
 package interpreteur.ast.buildingBlocs.programmes;
 
-import interpreteur.as.objets.FonctionModule;
-import interpreteur.as.objets.datatype.ASFonction;
-import interpreteur.as.objets.datatype.Texte;
+import interpreteur.as.lang.FonctionModule;
+import interpreteur.as.lang.datatype.ASFonction;
+import interpreteur.as.lang.datatype.Texte;
 import interpreteur.as.erreurs.ASErreur;
-import interpreteur.as.objets.ASObjet;
+import interpreteur.as.lang.ASObjet;
 import interpreteur.ast.buildingBlocs.Expression;
 import interpreteur.ast.buildingBlocs.Programme;
 import interpreteur.ast.buildingBlocs.expressions.ValeurConstante;

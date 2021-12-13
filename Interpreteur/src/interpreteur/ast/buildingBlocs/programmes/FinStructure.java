@@ -1,6 +1,6 @@
 package interpreteur.ast.buildingBlocs.programmes;
 
-import interpreteur.as.objets.managers.FonctionManager;
+import interpreteur.as.lang.managers.FonctionManager;
 import interpreteur.ast.buildingBlocs.Programme;
 
 public class FinStructure extends Programme {

@@ -1,9 +1,9 @@
-package interpreteur.as.objets.datatype;
+package interpreteur.as.lang.datatype;
 
 import interpreteur.as.erreurs.ASErreur;
-import interpreteur.as.objets.ASObjet;
-import interpreteur.as.objets.Parametre;
-import interpreteur.as.objets.Scope;
+import interpreteur.as.lang.ASObjet;
+import interpreteur.as.lang.Parametre;
+import interpreteur.as.lang.Scope;
 import interpreteur.ast.buildingBlocs.expressions.Type;
 import interpreteur.ast.buildingBlocs.programmes.Boucle;
 import interpreteur.executeur.Coordonnee;

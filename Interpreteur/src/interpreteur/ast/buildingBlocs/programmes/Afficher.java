@@ -1,7 +1,7 @@
 package interpreteur.ast.buildingBlocs.programmes;
 
-import interpreteur.as.objets.ASObjet;
-import interpreteur.as.objets.datatype.ValeurNul;
+import interpreteur.as.lang.ASObjet;
+import interpreteur.as.lang.datatype.ValeurNul;
 import interpreteur.ast.buildingBlocs.Expression;
 import interpreteur.ast.buildingBlocs.Programme;
 import interpreteur.ast.buildingBlocs.expressions.CreerListe;
