@@ -1,1 +1,3 @@
-export type MessageFormProp  = {}
+export type MessageFormProp  = {
+    activeTopic:string
+}

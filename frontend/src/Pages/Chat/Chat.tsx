@@ -14,7 +14,7 @@ const StyledCenteredContainer = styled(CenteredContainer)`
 `;
 
 const Chat = () => {
-	const [activeTopic, setActiveTopic] = useState('');
+	const [activeTopic, setActiveTopic] = useState<string>('');
 	return (
 		<div className="section">
 			<div

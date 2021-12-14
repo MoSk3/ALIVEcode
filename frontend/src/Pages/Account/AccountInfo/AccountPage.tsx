@@ -14,7 +14,6 @@ import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { Result } from '../../../Models/Social/result.entity';
 import api from '../../../Models/api';
-import { useHistory } from 'react-router';
 
 const StyledCenteredContainer = styled(CenteredContainer)`
 	padding: 0 10% 0 10%;
@@ -38,7 +37,6 @@ const AccountPage = () => {
 	const [resultCount, setCountQuizz] = useState<Result>();
 	let countSuccess: any[] = [];
 	const { register, handleSubmit } = useForm();
-	const history = useHistory();
 
 	const onSubmit = async (image: { file: any }) => {
 		let fileData = new FormData();

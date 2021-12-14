@@ -1,2 +1,4 @@
-export type RoomListProp  = {}
+export type RoomListProp  = {
+    setActiveTopic : (activeTopic:string) =>void
+}
 

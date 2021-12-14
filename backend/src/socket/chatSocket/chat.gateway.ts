@@ -9,11 +9,7 @@ import {
   WebSocketGateway,
   WebSocketServer,
   WsException,
-  WsResponse,
 } from '@nestjs/websockets';
-import { send } from 'process';
-import {from, Observable } from 'rxjs';
-import { map,  } from 'rxjs/operators';
 import { Server, WebSocket } from 'ws';
 import { DTOInterceptor } from '../../utils/interceptors/dto.interceptor';
 import { UserConnect } from './chat.types';

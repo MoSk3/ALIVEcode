@@ -1,14 +1,15 @@
-import { useContext, useEffect, useState } from "react";
-import { Card, Dropdown, DropdownButton, Row } from 'react-bootstrap';
+import {RoomListProp} from './roomlistType' 
+import { useContext, useEffect, useState } from 'react';
+import { Card, Row } from 'react-bootstrap';
 import './roomlist.css';
 import { UserContext } from '../../../state/contexts/UserContext';
 import api from '../../../Models/api';
 import { Topics } from '../../../Models/Social/topics.entity';
 import Jihene from '../../../assets/images/creators/Jihene.jpg';
 
-const RoomList = ({ setActiveTopic }: any) => {
+const RoomList = ({ setActiveTopic }: RoomListProp) => {
 	const [topics, setTopics] = useState<Topics[]>([]);
-	const [active, setActive] = useState(0);
+	const [active, setActive] = useState<Number>(0);
 	const { user } = useContext(UserContext);
 
 	useEffect(() => {
@@ -44,12 +45,11 @@ const RoomList = ({ setActiveTopic }: any) => {
 				</Row>{' '}
 				{topics.map((topic, idx) => {
 					return (
-						<div className="list-group">
+						<div className="list-group" key={idx}>
 							<div
 								className={`list-group-item list-group-item-action ${
 									topic.id === active ? 'active' : ''
 								}`}
-								key={idx}
 								onClick={() => {
 									setActiveTopic(topic.name);
 									setActive(topic.id);

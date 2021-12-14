@@ -1,24 +1,16 @@
+import {MessagesProp} from './messagesType'
 import { Container, Row } from 'react-bootstrap';
 import Jihene from '../../../assets/images/creators/Jihene.jpg';
 
-const Messages = (props: {
-	username: string;
-	text: string;
-	time: any;
-	image: any;
-}) => {
+const Messages = ({ username, text, time, image }: MessagesProp) => {
 	return (
 		<Container style={{ paddingTop: '5px' }}>
 			<Row>
 				<img
 					className="message-image rounded-circle"
 					style={{ width: '45px', maxHeight: '45px' }}
-					alt={props.image}
-					src={
-						props.image
-							? `http://localhost:8000/uploads/${props.image}`
-							: Jihene
-					}
+					alt={image}
+					src={image ? `http://localhost:8000/uploads/${image}` : Jihene}
 				/>
 				<div>
 					<div
@@ -29,17 +21,17 @@ const Messages = (props: {
 							fontSize: '18px',
 						}}
 					>
-						{props.username}{' '}
+						{username}{' '}
 					</div>
 					<div className="message-text" style={{ paddingLeft: '10px' }}>
-						{props.text}
+						{text}
 					</div>
 				</div>
 				<div
 					className="message-time"
 					style={{ fontSize: '12px', paddingLeft: '10px', paddingTop: '5px' }}
 				>
-					{props.time}
+					{time}
 				</div>
 			</Row>
 		</Container>

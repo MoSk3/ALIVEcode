@@ -1,20 +1,22 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import {MessageFormProp} from './messageFormType'
+import { useContext, useEffect, useRef, useState } from 'react';
 import { Container, Card, Row, Form, DropdownButton } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { UserContext } from '../../../state/contexts/UserContext';
 import Messages from '../Messages/messages';
-import Picker from 'emoji-picker-react';
+import Picker, { IEmojiData } from 'emoji-picker-react';
 import './messageForm.css';
-
-const MessageForm = ({ activeTopic }: any) => {
+type Users = {
+	name: string;
+};
+const MessageForm = ({ activeTopic }: MessageFormProp) => {
 	const { user } = useContext(UserContext);
 	const { handleSubmit } = useForm();
-	const socket: any = useRef();
-	const [messages, setMessages]: any = useState([]);
-	const [users, setUsers]: any = useState([]);
-	const [input, setInput]: any = useState('');
-	const inputRef = useRef(null);
-	const [showPicker, setShowPicker] = useState(false);
+	const socket = useRef<WebSocket>();
+	const [messages, setMessages] = useState<string[]>([]);
+	const [users, setUsers] = useState<Users[]>([]);
+	const [input, setInput] = useState<string>('');
+	const inputRef = useRef<HTMLInputElement>(null);
 	useEffect(() => {
 		if (!user) return;
 
@@ -25,18 +27,18 @@ const MessageForm = ({ activeTopic }: any) => {
 
 		socket.current.onopen = () => {
 			console.log('Connected to Chat');
-
-			socket.current.send(
-				JSON.stringify({
-					event: 'user_connected',
-					data: {
-						name: user.getDisplayName(),
-					},
-				}),
-			);
+			if (socket.current)
+				socket.current.send(
+					JSON.stringify({
+						event: 'user_connected',
+						data: {
+							name: user.getDisplayName(),
+						},
+					}),
+				);
 		};
 
-		socket.current.onmessage = (e: any) => {
+		socket.current.onmessage = (e: MessageEvent) => {
 			const data = JSON.parse(e.data);
 			if (data.event === 'messageToClient') {
 				const message = data;
@@ -45,42 +47,42 @@ const MessageForm = ({ activeTopic }: any) => {
 					ownedByCurrentUser:
 						message.data.message_user === user.getDisplayName(),
 				};
-				setMessages((messages: any) => [...messages, incomingMessage]);
+				setMessages(messages => [...messages, incomingMessage]);
 			}
 			if (data.event === 'user_connected') {
 				setUsers(data.data);
 			}
 		};
 
-		socket.current.disconnect = () => {
+		socket.current.onclose = () => {
 			console.log('disconnected');
 		};
-	}, [user]);
+	}, [user, socket]);
 	const onSubmit = () => {
 		const today = new Date();
-		socket.current.send(
-			JSON.stringify({
-				event: 'send_message',
-				data: {
-					active_topic: activeTopic,
-					message_user: user?.getDisplayName(),
-					image_user: user?.getDisplayImage(),
-					message: input,
-					time:
-						today.getHours() +
-						':' +
-						today.getMinutes() +
-						':' +
-						('0' + (today.getSeconds() + 1)).slice(-2),
-				},
-			}),
-		);
+		if (socket.current)
+			socket.current.send(
+				JSON.stringify({
+					event: 'send_message',
+					data: {
+						active_topic: activeTopic,
+						message_user: user?.getDisplayName(),
+						image_user: user?.getDisplayImage(),
+						message: input,
+						time:
+							today.getHours() +
+							':' +
+							today.getMinutes() +
+							':' +
+							('0' + (today.getSeconds() + 1)).slice(-2),
+					},
+				}),
+			);
 		setInput('');
 	};
 
-	const onEmojiClick = (event: any, emojiObject: { emoji: any }) => {
-		setInput((prevInput: any) => prevInput + emojiObject.emoji);
-		setShowPicker(false);
+	const onEmojiClick = (event: Event, emojiObject: IEmojiData) => {
+		setInput((prevInput: string) => prevInput + emojiObject.emoji);
 	};
 
 	return (
@@ -96,7 +98,7 @@ const MessageForm = ({ activeTopic }: any) => {
 							overflowY: 'auto',
 						}}
 					>
-						{messages.map((message: any, idx: any) => {
+						{messages.map((message: any, idx) => {
 							console.log(message);
 							return (
 								activeTopic === message.data.active_topic && (
@@ -134,14 +136,14 @@ const MessageForm = ({ activeTopic }: any) => {
 										title={
 											<img
 												className="emoji-icon"
+												alt="emoji-icon"
 												src="https://icons.getbootstrap.com/assets/icons/emoji-smile.svg"
-												onClick={() => setShowPicker(val => !val)}
 											/>
 										}
 									>
 										<Picker
 											pickerStyle={{ width: '400px' }}
-											onEmojiClick={onEmojiClick}
+											onEmojiClick={() => onEmojiClick}
 										/>
 									</DropdownButton>
 									<button
@@ -160,7 +162,7 @@ const MessageForm = ({ activeTopic }: any) => {
 			<div className="col-sm-2">
 				<Card style={{ height: '100%' }}>
 					<div className="list-group">
-						{users.map((userConnected: any, idx: any) => {
+						{users.map((userConnected: any, idx) => {
 							return (
 								<div className="list-group-item " key={idx}>
 									{userConnected.name !== `${user?.getDisplayName()}`
@@ -177,31 +179,3 @@ const MessageForm = ({ activeTopic }: any) => {
 };
 export default MessageForm;
 
-{
-	/* <input
-className="form-control"
-type="text"
-ref={inputRef}
-placeholder="Entrer votre message"
-value={input}
-onChange={e => setInput(e.target.value)}
-/>
-<img
-className="emoji-icon"
-src="https://icons.getbootstrap.com/assets/icons/emoji-smile.svg"
-onClick={() => setShowPicker(val => !val)}
-/>
-<button
-className="btn"
-style={{ background: '#0177bc' }}
-onClick={handleSubmit(onSubmit)}
->
-Send
-</button>
-{showPicker && (
-<Picker
-	pickerStyle={{ width: '100%' }}
-	onEmojiClick={onEmojiClick}
-/>
-)} */
-}
