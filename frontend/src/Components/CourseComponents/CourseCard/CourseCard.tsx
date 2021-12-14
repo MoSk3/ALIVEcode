@@ -1,5 +1,4 @@
 import { CourseCardProps, StyledCourseCard } from './courseCardTypes';
-import { useTranslation } from 'react-i18next';
 import useRoutes from '../../../state/hooks/useRoutes';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { formatTooLong } from '../../../Types/formatting';
@@ -12,7 +11,6 @@ import { formatTooLong } from '../../../Types/formatting';
  * @author MoSk3
  */
 const CourseCard = ({ course }: CourseCardProps) => {
-	const { t } = useTranslation();
 	const { routes, goTo } = useRoutes();
 
 	return (

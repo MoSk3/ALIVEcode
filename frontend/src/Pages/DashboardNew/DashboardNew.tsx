@@ -1,5 +1,12 @@
 import { DashboardNewProps, StyledDashboard, SwitchTabActions } from './dashboardNewTypes';
-import { useContext, useState, useEffect, useReducer, useMemo } from 'react';
+import {
+	useContext,
+	useState,
+	useEffect,
+	useReducer,
+	useMemo,
+	useCallback,
+} from 'react';
 import { UserContext } from '../../state/contexts/UserContext';
 import { useHistory } from 'react-router-dom';
 import { Col, Row } from 'react-bootstrap';
@@ -68,15 +75,17 @@ const DashboardNew = (props: DashboardNewProps) => {
 	const [courses, setCourses] = useState<Course[]>();
 
 	useEffect(() => {
-		if (pathname.endsWith('summary')) setTabSelected({ type: 'summary' });
-		if (pathname.endsWith('recents')) setTabSelected({ type: 'recents' });
-		if (pathname.includes('classroom')) {
+		if (pathname.endsWith('recents') && tabSelected.index !== 0)
+			setTabSelected({ type: 'recents' });
+		else if (pathname.endsWith('summary') && tabSelected.index !== 1)
+			setTabSelected({ type: 'summary' });
+		else if (pathname.includes('classroom') && tabSelected.index !== 2) {
 			const classroomId = query.get('id');
 			const classroom = classrooms.find(c => c.id === classroomId);
 			if (!classroom) return;
 			setTabSelected({ type: 'classrooms', classroom });
 		}
-	}, [classrooms, history, pathname, query]);
+	}, [classrooms, history, pathname, query, tabSelected.index]);
 
 	useEffect(() => {
 		if (!user) return;
@@ -130,16 +139,15 @@ const DashboardNew = (props: DashboardNewProps) => {
 		}
 	};
 
-	const loadCourses = async () => {
+	const loadCourses = useCallback(async () => {
 		if (!user) return;
-		const courses = await api.db.users.getCourses({ id: user.id });
+		const courses = await api.db.users.getRecentCourses({ id: user.id });
 		setCourses(courses);
-	};
+	}, [user]);
 
 	const ctx: DashboardContextValues = useMemo(() => {
 		return {
 			getCourses: () => {
-				console.log(courses);
 				if (!courses) {
 					loadCourses();
 					return [];
@@ -150,7 +158,7 @@ const DashboardNew = (props: DashboardNewProps) => {
 				return classrooms;
 			},
 		};
-	}, [classrooms, courses]);
+	}, [classrooms, courses, loadCourses]);
 
 	return (
 		<StyledDashboard>
