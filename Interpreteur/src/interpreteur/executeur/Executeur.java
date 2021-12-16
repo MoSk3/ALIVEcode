@@ -2,8 +2,8 @@ package interpreteur.executeur;
 
 import interpreteur.as.ASAst;
 import interpreteur.as.ASLexer;
-import interpreteur.as.lang.managers.FonctionManager;
-import interpreteur.as.lang.Scope;
+import interpreteur.as.lang.managers.ASFonctionManager;
+import interpreteur.as.lang.ASScope;
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.as.erreurs.ASErreur.*;
 import interpreteur.as.modules.core.ASModuleManager;
@@ -492,8 +492,8 @@ public class Executeur {
             if (!coordRunTime.getBlocActuel().equals("main")) {
                 throw new ErreurFermeture(coordRunTime.getBlocActuel());
             }
-            if (!FonctionManager.obtenirStructure().isBlank()) {
-                throw new ErreurFermeture(FonctionManager.obtenirStructure());
+            if (!ASFonctionManager.obtenirStructure().isBlank()) {
+                throw new ErreurFermeture(ASFonctionManager.obtenirStructure());
             }
         } catch (ErreurAliveScript err) {
             canExecute = false;
@@ -609,7 +609,7 @@ public class Executeur {
 
         if (!resume) {
             // créer scopeInstance globale
-            Scope.pushCurrentScopeInstance(Scope.getCurrentScope().makeScopeInstance(null));
+            ASScope.pushCurrentScopeInstance(ASScope.getCurrentScope().makeScopeInstance(null));
             resultat = executerScope("main", null, null);
         } else resultat = resumeExecution();
 
@@ -642,14 +642,14 @@ public class Executeur {
      * reset tout a neuf pour la prochaine execution
      */
     private void reset() {
-        Scope.resetAllScope();
+        ASScope.resetAllScope();
         // créer le scope global
-        Scope.makeNewCurrentScope();
+        ASScope.makeNewCurrentScope();
 
         // supprime les variables, fonctions et iterateurs de la memoire
         datas.clear();
 
-        FonctionManager.reset();
+        ASFonctionManager.reset();
 
         asModuleManager.utiliserModuleBuitlins();
         //for (ASObjet.Fonction fonction : asModuleManager.getModuleBuiltins().getFonctions())

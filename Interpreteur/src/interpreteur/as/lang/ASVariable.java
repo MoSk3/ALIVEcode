@@ -1,15 +1,14 @@
 package interpreteur.as.lang;
 
 import interpreteur.as.erreurs.ASErreur;
-import interpreteur.as.lang.managers.FonctionManager;
-import interpreteur.ast.buildingBlocs.expressions.Type;
+import interpreteur.as.lang.managers.ASFonctionManager;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class ASVariable implements ASObjet<Object> {
     private final String nom;
-    private final Type type;
+    private final ASType type;
     private ASObjet<?> valeur;
     private boolean readOnly = false;
 
@@ -17,9 +16,9 @@ public class ASVariable implements ASObjet<Object> {
     private Function<ASObjet<?>, ASObjet<?>> setter = null;
 
 
-    public ASVariable(String nom, ASObjet<?> valeur, Type type) {
-        this.type = type == null ? new Type("tout") : type;
-        this.nom = FonctionManager.ajouterDansStructure(nom);
+    public ASVariable(String nom, ASObjet<?> valeur, ASType type) {
+        this.type = type == null ? new ASType("tout") : type;
+        this.nom = ASFonctionManager.ajouterDansStructure(nom);
         this.valeur = valeur instanceof ASVariable var ? var.getValeurApresGetter() : valeur;
     }
 
@@ -60,7 +59,7 @@ public class ASVariable implements ASObjet<Object> {
         return this.nom;
     }
 
-    public Type getType() {
+    public ASType getType() {
         return type;
     }
 

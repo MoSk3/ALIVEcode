@@ -3,14 +3,15 @@ package interpreteur.ast.buildingBlocs.expressions;
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.as.lang.ASObjet;
 import interpreteur.as.lang.ASParametre;
+import interpreteur.as.lang.ASType;
 import interpreteur.ast.buildingBlocs.Expression;
 
 public class Argument implements Expression<ASParametre> {
     private final Var var;
     private final ASObjet<?> valeurParDefaut;
-    private final Type type;
+    private final ASType type;
 
-    public Argument(Var var, Expression<?> valeurParDefaut, Type type) {
+    public Argument(Var var, Expression<?> valeurParDefaut, ASType type) {
         this.var = var;
         this.type = type;
         try {

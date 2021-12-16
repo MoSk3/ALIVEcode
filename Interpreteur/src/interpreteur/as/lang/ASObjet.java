@@ -1,7 +1,7 @@
 package interpreteur.as.lang;
 
 
-//import interpreteur.ast.buildingBlocs.expressions.Type;
+//import interpreteur.as.lang.Type;
 
 
 /**

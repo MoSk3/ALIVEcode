@@ -2,9 +2,9 @@ package interpreteur.ast.buildingBlocs.programmes;
 
 import interpreteur.as.lang.*;
 import interpreteur.as.lang.datatype.ASFonction;
-import interpreteur.as.lang.managers.FonctionManager;
+import interpreteur.as.lang.managers.ASFonctionManager;
 import interpreteur.ast.buildingBlocs.Programme;
-import interpreteur.ast.buildingBlocs.expressions.Type;
+import interpreteur.as.lang.ASType;
 import interpreteur.ast.buildingBlocs.expressions.Var;
 import interpreteur.executeur.Coordonnee;
 import interpreteur.executeur.Executeur;
@@ -17,16 +17,16 @@ import java.util.List;
 public class CreerSetter extends Programme {
     private final Var var;
     private final Var nomArg;
-    private final Type type;
-    private final Scope scope;
+    private final ASType type;
+    private final ASScope scope;
 
-    public CreerSetter(Var var, Var nomArg, Type type, Executeur executeurInstance) {
+    public CreerSetter(Var var, Var nomArg, ASType type, Executeur executeurInstance) {
         super(executeurInstance);
         this.var = var;
         this.nomArg = nomArg;
         this.type = type;
         this.addSetter();
-        this.scope = Scope.makeNewCurrentScope();
+        this.scope = ASScope.makeNewCurrentScope();
     }
 
     public Var getVar() {
@@ -34,7 +34,7 @@ public class CreerSetter extends Programme {
     }
 
     public void addSetter() {
-        ASVariable v =  Scope.getCurrentScope().getVariable(var.getNom());
+        ASVariable v =  ASScope.getCurrentScope().getVariable(var.getNom());
 
         if (v == null) {
             Declarer.addWaitingSetter(this);
@@ -42,8 +42,8 @@ public class CreerSetter extends Programme {
         }
 
         v.setSetter((valeur) -> {
-            Scope scope = new Scope(this.scope);
-            scope.setParent(Scope.getCurrentScopeInstance());
+            ASScope scope = new ASScope(this.scope);
+            scope.setParent(ASScope.getCurrentScopeInstance());
 
             ASFonction set = new ASFonction(this.var.getNom(), new ASParametre[]{
                     new ASParametre(this.type, this.nomArg.getNom(), null)
@@ -66,6 +66,6 @@ public class CreerSetter extends Programme {
     @Override
     public Coordonnee prochaineCoord(Coordonnee coord, List<Token> ligne) {
         return new Coordonnee(executeurInstance.nouveauScope("set_" +
-                (FonctionManager.obtenirStructure().isBlank() ? "" : FonctionManager.obtenirStructure() + ".") + ligne.get(1).obtenirValeur()));
+                (ASFonctionManager.obtenirStructure().isBlank() ? "" : ASFonctionManager.obtenirStructure() + ".") + ligne.get(1).obtenirValeur()));
     }
 }

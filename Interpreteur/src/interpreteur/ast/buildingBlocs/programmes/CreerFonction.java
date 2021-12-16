@@ -2,11 +2,11 @@ package interpreteur.ast.buildingBlocs.programmes;
 
 import interpreteur.as.lang.*;
 import interpreteur.as.lang.datatype.ASFonction;
-import interpreteur.as.lang.managers.FonctionManager;
+import interpreteur.as.lang.managers.ASFonctionManager;
 import interpreteur.ast.buildingBlocs.Programme;
 import interpreteur.ast.buildingBlocs.expressions.Argument;
 import interpreteur.ast.buildingBlocs.expressions.Var;
-import interpreteur.ast.buildingBlocs.expressions.Type;
+import interpreteur.as.lang.ASType;
 import interpreteur.executeur.Coordonnee;
 import interpreteur.executeur.Executeur;
 import interpreteur.tokens.Token;
@@ -17,27 +17,27 @@ import java.util.List;
 
 
 public class CreerFonction extends Programme {
-    private final Scope scope;
+    private final ASScope scope;
     private final Var var;
     private final List<Argument> args;
-    private final Type typeRetour;
+    private final ASType typeRetour;
 
-    public CreerFonction(Var var, Argument[] args, Type typeRetour, Executeur executeurInstance) {
+    public CreerFonction(Var var, Argument[] args, ASType typeRetour, Executeur executeurInstance) {
         super(executeurInstance);
         this.var = var;
         this.args = Arrays.asList(args);
         this.typeRetour = typeRetour;
         // declare fonction
-        Scope.getCurrentScope().declarerVariable(new ASVariable(var.getNom(), null, new Type("fonctionType")));
-        this.scope = Scope.makeNewCurrentScope();
+        ASScope.getCurrentScope().declarerVariable(new ASVariable(var.getNom(), null, new ASType("fonctionType")));
+        this.scope = ASScope.makeNewCurrentScope();
     }
 
     @Override
     public NullType execute() {
-        Scope scope = new Scope(this.scope);
+        ASScope scope = new ASScope(this.scope);
         ASFonction fonction = new ASFonction(var.getNom(), this.args.stream().map(Argument::eval).toArray(ASParametre[]::new), this.typeRetour, executeurInstance);
 
-        Scope.getCurrentScopeInstance().getVariable(fonction.getNom()).changerValeur(fonction);
+        ASScope.getCurrentScopeInstance().getVariable(fonction.getNom()).changerValeur(fonction);
         // declare fonction
         // Scope.getCurrentScope().declarerVariable(new ASObjet.Variable(fonction.getNom(), fonction, new Type(fonction.obtenirNomType())));
 
@@ -49,14 +49,14 @@ public class CreerFonction extends Programme {
         }
 
         fonction.setScope(scope);
-        scope.setParent(Scope.getCurrentScopeInstance());
+        scope.setParent(ASScope.getCurrentScopeInstance());
 
         return null;
     }
 
     @Override
     public Coordonnee prochaineCoord(Coordonnee coord, List<Token> ligne) {
-        return new Coordonnee(executeurInstance.nouveauScope("fonc_" + FonctionManager.ajouterDansStructure(this.var.getNom())));
+        return new Coordonnee(executeurInstance.nouveauScope("fonc_" + ASFonctionManager.ajouterDansStructure(this.var.getNom())));
     }
 
     @Override

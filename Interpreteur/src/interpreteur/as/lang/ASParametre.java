@@ -1,11 +1,9 @@
 package interpreteur.as.lang;
 
-import interpreteur.ast.buildingBlocs.expressions.Type;
-
 /**
  * Classe responsable de definir les proprietes des parametres des fonctions
  */
-public record ASParametre(Type type, String nom,
+public record ASParametre(ASType type, String nom,
                           ASObjet<?> valeurParDefaut) implements ASObjet<Object> {
     /**
      * @param type            <li>
@@ -29,17 +27,21 @@ public record ASParametre(Type type, String nom,
      *                        Mettre <b>null</b> pour rendre ce parametre obligatoire lors de l'appel de la fonction
      *                        </li>
      */
-    public ASParametre(Type type, String nom, ASObjet<?> valeurParDefaut) {
+    public ASParametre(ASType type, String nom, ASObjet<?> valeurParDefaut) {
         this.nom = nom;
         this.type = type == null ? ASTypeBuiltin.tout.asType() : type;
         this.valeurParDefaut = valeurParDefaut;
+    }
+
+    public ASParametre(ASTypeBuiltin type, String nom, ASObjet<?> valeurParDefaut) {
+        this(type.asType(), nom, valeurParDefaut);
     }
 
     public String getNom() {
         return nom;
     }
 
-    public Type getType() {
+    public ASType getType() {
         return type;
     }
 

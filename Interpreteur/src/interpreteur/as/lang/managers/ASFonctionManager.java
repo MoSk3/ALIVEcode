@@ -1,18 +1,18 @@
 package interpreteur.as.lang.managers;
 
 import interpreteur.as.lang.ASFonctionModule;
-import interpreteur.as.lang.Scope;
+import interpreteur.as.lang.ASScope;
 import interpreteur.as.lang.ASVariable;
-import interpreteur.ast.buildingBlocs.expressions.Type;
+import interpreteur.as.lang.ASType;
 
-public class FonctionManager {
+public class ASFonctionManager {
 
     private static String structure = "";
 
     // met la fonction dans le dictionnaire de fonction et cree enregistre la fonction dans une Variable
     // pour que le code puisse la retrouver plus tard
     public static void ajouterFonction(ASFonctionModule fonctionModule) {
-        Scope.getCurrentScope().declarerVariable(new ASVariable(fonctionModule.getNom(), fonctionModule, new Type(fonctionModule.obtenirNomType())));
+        ASScope.getCurrentScope().declarerVariable(new ASVariable(fonctionModule.getNom(), fonctionModule, new ASType(fonctionModule.obtenirNomType())));
         //VariableManager.ajouterConstante(new Constante(fonction.getNom(), fonction));
         //fonction.nom = ajouterDansStructure(fonction.getNom());
     }

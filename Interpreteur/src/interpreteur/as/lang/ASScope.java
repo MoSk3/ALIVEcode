@@ -2,25 +2,25 @@ package interpreteur.as.lang;
 
 import java.util.Stack;
 
-public class Scope {
+public class ASScope {
     // static fields
-    private final static Stack<Scope> scopeStack = new Stack<>();
+    private final static Stack<ASScope> scopeStack = new Stack<>();
     private final static Stack<ScopeInstance> scopeInstanceStack = new Stack<>();
 
     // non static fields
     private ScopeInstance parent;
     private final Stack<ASVariable> variablesDeclarees = new Stack<>();
 
-    public Scope() {
+    public ASScope() {
         this.parent = null;
     }
 
-    public Scope(Scope fromScope) {
+    public ASScope(ASScope fromScope) {
         this.parent = null;
         this.variablesDeclarees.addAll(fromScope.cloneVariablesDeclarees());
     }
 
-    public Scope(ScopeInstance parent) {
+    public ASScope(ScopeInstance parent) {
         this.parent = parent;
     }
 
@@ -35,21 +35,21 @@ public class Scope {
      *
      * @return the new scope
      */
-    public static Scope makeNewCurrentScope() {
-        Scope scope = new Scope();
+    public static ASScope makeNewCurrentScope() {
+        ASScope scope = new ASScope();
         updateCurrentScope(scope);
         return scope;
     }
 
-    public static Stack<Scope> getScopeStack() {
+    public static Stack<ASScope> getScopeStack() {
         return scopeStack;
     }
 
-    public static Scope getCurrentScope() {
+    public static ASScope getCurrentScope() {
         return scopeStack.peek();
     }
 
-    public static void updateCurrentScope(Scope scope) {
+    public static void updateCurrentScope(ASScope scope) {
         scopeStack.push(scope);
     }
 

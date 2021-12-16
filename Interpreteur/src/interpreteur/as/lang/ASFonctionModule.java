@@ -1,7 +1,6 @@
 package interpreteur.as.lang;
 
 import interpreteur.as.erreurs.ASErreur;
-import interpreteur.ast.buildingBlocs.expressions.Type;
 import interpreteur.executeur.Coordonnee;
 
 import java.util.ArrayList;
@@ -9,41 +8,18 @@ import java.util.Arrays;
 import java.util.Hashtable;
 
 public abstract class ASFonctionModule implements ASObjet<Object> {
-    private final Type typeRetour;
+    private final ASType typeRetour;
     private final ASParametre[] parametres; //String[] de forme {nomDuParam�tre, typeDuParam�tre (ou null s'il n'en poss�de pas)}
     private final String nom;
     private final Coordonnee coordReprise = null;
     private Hashtable<String, ASObjet<?>> parametres_appel = new Hashtable<>();  // Object[][] de forme {{nom_param, valeur}, {nom_param2, valeur2}}
     private String scopeName;
 
-    /**
-     * @param nom        <li>
-     *                   Nom de la fonction
-     *                   </li>
-     * @param typeRetour <li>
-     *                   Nom du type de retour de la fonction (ex: <i>entier</i>, <i>texte</i>, <i>liste</i>, ect.)
-     *                   </li>
-     *                   <li>
-     *                   le type du retour peut avoir plusieurs types
-     *                   -> separer chaque type par un <b>|</b> (les espaces sont ignores)
-     *                   <br> (ex: <i>texte | liste</i>, <i>entier | decimal</i>)
-     *                   </li>
-     *                   <li>
-     *                   Mettre <b>null</b> si le type du retour n'a pas de type forcee
-     *                   </li>
-     */
-    public ASFonctionModule(String nom, Type typeRetour) {
-        this.nom = nom;
-        this.scopeName = "fonc_";
-        this.typeRetour = typeRetour;
-        this.parametres = new ASParametre[0];
-    }
 
     /**
      * @param nom        <li>
      *                   Nom de la fonction
      *                   </li>
-     * @param parametres
      * @param typeRetour <li>
      *                   Nom du type de retour de la fonction (ex: <i>entier</i>, <i>texte</i>, <i>liste</i>, ect.)
      *                   </li>
@@ -54,20 +30,48 @@ public abstract class ASFonctionModule implements ASObjet<Object> {
      *                   </li>
      *                   <li>
      *                   Mettre <b>null</b> si le type du retour n'a pas de type forcee
-     *                   </li>
+     * @param parametres
      */
-    public ASFonctionModule(String nom, ASParametre[] parametres, Type typeRetour) {
+    public ASFonctionModule(String nom, ASType typeRetour, ASParametre[] parametres) {
         this.nom = nom;
         this.scopeName = "fonc_";
         this.parametres = parametres;
         this.typeRetour = typeRetour;
     }
 
+    /**
+     * @param nom        <li>
+     *                   Nom de la fonction
+     *                   </li>
+     * @param typeRetour <li>
+     *                   Nom du type de retour de la fonction (ex: <i>entier</i>, <i>texte</i>, <i>liste</i>, ect.)
+     *                   </li>
+     *                   <li>
+     *                   le type du retour peut avoir plusieurs types
+     *                   -> separer chaque type par un <b>|</b> (les espaces sont ignores)
+     *                   <br> (ex: <i>texte | liste</i>, <i>entier | decimal</i>)
+     *                   </li>
+     *                   <li>
+     *                   Mettre <b>null</b> si le type du retour n'a pas de type forcee
+     *                   </li>
+     */
+    public ASFonctionModule(String nom, ASType typeRetour) {
+        this(nom, typeRetour, new ASParametre[0]);
+    }
+
+    public ASFonctionModule(String nom, ASTypeBuiltin typeRetour, ASParametre[] parametres) {
+        this(nom, typeRetour.asType(), parametres);
+    }
+
+    public ASFonctionModule(String nom, ASTypeBuiltin typeRetour) {
+        this(nom, typeRetour.asType());
+    }
+
     public String getNom() {
         return nom;
     }
 
-    public Type getTypeRetour() {
+    public ASType getTypeRetour() {
         return this.typeRetour;
     }
 

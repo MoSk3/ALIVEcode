@@ -1,19 +1,18 @@
 package interpreteur.as.modules;
 
-import interpreteur.as.modules.core.ASModule;
 import interpreteur.as.lang.*;
 import interpreteur.as.lang.datatype.ASDecimal;
 import interpreteur.as.lang.datatype.ASEntier;
-import interpreteur.ast.buildingBlocs.expressions.Type;
+import interpreteur.as.modules.core.ASModule;
 import interpreteur.executeur.Executeur;
 
 
 public class ModuleMath {
     static ASModule charger(Executeur executeurInstance) {
         return new ASModule(new ASFonctionModule[]{
-                new ASFonctionModule("rad", new ASParametre[]{
-                        new ASParametre(new Type("nombre"), "x", null)
-                }, new Type("decimal")) {
+                new ASFonctionModule("rad", ASTypeBuiltin.decimal, new ASParametre[]{
+                        new ASParametre(ASTypeBuiltin.nombre, "x", null)
+                }) {
                     @Override
                     public ASObjet<?> executer() {
                         double angle = ((Number) this.getValeurParam("x").getValue()).doubleValue();
@@ -21,9 +20,9 @@ public class ModuleMath {
                     }
                 },
 
-                new ASFonctionModule("deg", new ASParametre[]{
-                        new ASParametre(new Type("nombre"), "x", null)
-                }, new Type("decimal")) {
+                new ASFonctionModule("deg", ASTypeBuiltin.decimal, new ASParametre[]{
+                        new ASParametre(ASTypeBuiltin.nombre, "x", null)
+                }) {
                     @Override
                     public ASObjet<?> executer() {
                         double angle = ((Number) this.getValeurParam("x").getValue()).doubleValue();
@@ -31,9 +30,9 @@ public class ModuleMath {
                     }
                 },
 
-                new ASFonctionModule("sin", new ASParametre[]{
-                        new ASParametre(new Type("nombre"), "x", null)
-                }, new Type("decimal")) {
+                new ASFonctionModule("sin", ASTypeBuiltin.decimal, new ASParametre[]{
+                        new ASParametre(ASTypeBuiltin.nombre, "x", null)
+                }) {
                     @Override
                     public ASObjet<?> executer() {
                         double angle = ((Number) this.getValeurParam("x").getValue()).doubleValue();
@@ -41,9 +40,9 @@ public class ModuleMath {
                     }
                 },
 
-                new ASFonctionModule("cos", new ASParametre[]{
-                        new ASParametre(new Type("nombre"), "x", null)
-                }, new Type("decimal")) {
+                new ASFonctionModule("cos", ASTypeBuiltin.decimal, new ASParametre[]{
+                        new ASParametre(ASTypeBuiltin.nombre, "x", null)
+                }) {
                     @Override
                     public ASObjet<?> executer() {
                         double angle = ((Number) this.getValeurParam("x").getValue()).doubleValue();
@@ -51,9 +50,9 @@ public class ModuleMath {
                     }
                 },
 
-                new ASFonctionModule("tan", new ASParametre[]{
-                        new ASParametre(new Type("nombre"), "x", null)
-                }, new Type("decimal")) {
+                new ASFonctionModule("tan", ASTypeBuiltin.decimal, new ASParametre[]{
+                        new ASParametre(ASTypeBuiltin.nombre, "x", null)
+                }) {
                     @Override
                     public ASObjet<?> executer() {
                         double angle = ((Number) this.getValeurParam("x").getValue()).doubleValue();
@@ -61,10 +60,10 @@ public class ModuleMath {
                     }
                 },
 
-                new ASFonctionModule("arrondir", new ASParametre[]{
-                        new ASParametre(new Type("nombre"), "n", null),
-                        new ASParametre(new Type("entier"), "nbSignificatifs", new ASEntier(0)),
-                }, new Type("nombre")) {
+                new ASFonctionModule("arrondir", ASTypeBuiltin.nombre, new ASParametre[]{
+                        new ASParametre(ASTypeBuiltin.nombre, "n", null),
+                        new ASParametre(ASTypeBuiltin.entier, "nbSignificatifs", new ASEntier(0)),
+                }) {
                     @Override
                     public ASObjet<?> executer() {
                         double n = ((Number) this.getValeurParam("n").getValue()).doubleValue();

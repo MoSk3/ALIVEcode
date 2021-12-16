@@ -1,6 +1,6 @@
 package interpreteur.ast.buildingBlocs.programmes;
 
-import interpreteur.as.lang.managers.FonctionManager;
+import interpreteur.as.lang.managers.ASFonctionManager;
 import interpreteur.ast.buildingBlocs.Programme;
 
 public class CreerStructure extends Programme {
@@ -8,7 +8,7 @@ public class CreerStructure extends Programme {
 
     public CreerStructure(String nom) {
         this.nom = nom;
-        FonctionManager.ajouterStructure(nom);
+        ASFonctionManager.ajouterStructure(nom);
     }
 
     public String getNom() {

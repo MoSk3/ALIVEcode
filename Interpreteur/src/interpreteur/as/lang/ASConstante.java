@@ -1,7 +1,6 @@
 package interpreteur.as.lang;
 
 import interpreteur.as.erreurs.ASErreur;
-import interpreteur.ast.buildingBlocs.expressions.Type;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -9,7 +8,7 @@ import java.util.function.Supplier;
 public class ASConstante extends ASVariable {
 
     public ASConstante(String nom, ASObjet<?> valeur) {
-        super(nom, valeur, new Type("tout"));
+        super(nom, valeur, new ASType("tout"));
     }
 
     @Override

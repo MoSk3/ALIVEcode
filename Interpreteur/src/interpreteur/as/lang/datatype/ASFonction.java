@@ -3,8 +3,8 @@ package interpreteur.as.lang.datatype;
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.as.lang.ASObjet;
 import interpreteur.as.lang.ASParametre;
-import interpreteur.as.lang.Scope;
-import interpreteur.ast.buildingBlocs.expressions.Type;
+import interpreteur.as.lang.ASScope;
+import interpreteur.as.lang.ASType;
 import interpreteur.ast.buildingBlocs.programmes.Boucle;
 import interpreteur.executeur.Coordonnee;
 import interpreteur.executeur.Executeur;
@@ -15,10 +15,10 @@ import java.util.function.Function;
 
 public class ASFonction implements ASObjet<Object> {
 
-    private final Type typeRetour;
+    private final ASType typeRetour;
     private final ASParametre[] parametres;
     private final String nom;
-    private Scope scope;
+    private ASScope scope;
     private String coordBlocName;
     private final Executeur executeurInstance;
 
@@ -38,7 +38,7 @@ public class ASFonction implements ASObjet<Object> {
      *                   Mettre <b>null</b> si le type du retour n'a pas de type forcee
      *                   </li>
      */
-    public ASFonction(String nom, Type typeRetour, Executeur executeurInstance) {
+    public ASFonction(String nom, ASType typeRetour, Executeur executeurInstance) {
         this.nom = nom;
         this.coordBlocName = "fonc_";
         this.typeRetour = typeRetour;
@@ -63,7 +63,7 @@ public class ASFonction implements ASObjet<Object> {
      *                   Mettre <b>null</b> si le type du retour n'a pas de type forcee
      *                   </li>
      */
-    public ASFonction(String nom, ASParametre[] parametres, Type typeRetour, Executeur executeurInstance) {
+    public ASFonction(String nom, ASParametre[] parametres, ASType typeRetour, Executeur executeurInstance) {
         this.nom = nom;
         this.coordBlocName = "fonc_";
         this.parametres = parametres;
@@ -75,7 +75,7 @@ public class ASFonction implements ASObjet<Object> {
         return nom;
     }
 
-    public Type getTypeRetour() {
+    public ASType getTypeRetour() {
         return this.typeRetour;
     }
 
@@ -83,11 +83,11 @@ public class ASFonction implements ASObjet<Object> {
         return this.parametres;
     }
 
-    public Scope getScope() {
+    public ASScope getScope() {
         return scope;
     }
 
-    public void setScope(Scope scope) {
+    public void setScope(ASScope scope) {
         this.scope = scope;
     }
 
@@ -173,7 +173,7 @@ public class ASFonction implements ASObjet<Object> {
 
     public static class FonctionInstance implements ASObjet<Object> {
         private final ASFonction fonction;
-        private final Scope.ScopeInstance scopeInstance;
+        private final ASScope.ScopeInstance scopeInstance;
         private Coordonnee coordReprise = null;
 
         public FonctionInstance(ASFonction fonction) {
@@ -206,7 +206,7 @@ public class ASFonction implements ASObjet<Object> {
                 //    });
                 //}
             }
-            Scope.pushCurrentScopeInstance(scopeInstance);
+            ASScope.pushCurrentScopeInstance(scopeInstance);
 
             Object valeur;
             ASObjet<?> asValeur;
@@ -228,7 +228,7 @@ public class ASFonction implements ASObjet<Object> {
             Boucle.sortirScope(fonction.executeurInstance.obtenirCoordRunTime().toString());
 
             fonction.executeurInstance.setCoordRunTime(ancienneCoord.toString());
-            Scope.popCurrentScopeInstance();
+            ASScope.popCurrentScopeInstance();
 
             //System.out.println(this.typeRetour);
             //System.out.println(valeur);

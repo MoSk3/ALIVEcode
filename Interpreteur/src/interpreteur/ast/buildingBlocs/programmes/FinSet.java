@@ -1,6 +1,6 @@
 package interpreteur.ast.buildingBlocs.programmes;
 
-import interpreteur.as.lang.Scope;
+import interpreteur.as.lang.ASScope;
 import interpreteur.as.lang.datatype.ASNul;
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.ast.buildingBlocs.Programme;
@@ -14,7 +14,7 @@ public class FinSet extends Programme {
 
     public FinSet(Executeur executeurInstance) {
         super(executeurInstance);
-        Scope.popCurrentScope();
+        ASScope.popCurrentScope();
     }
 
     @Override

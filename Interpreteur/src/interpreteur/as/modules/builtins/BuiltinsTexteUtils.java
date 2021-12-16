@@ -6,7 +6,7 @@ import interpreteur.as.modules.core.ASModule;
 import interpreteur.as.lang.datatype.ASBooleen;
 import interpreteur.as.lang.datatype.ASListe;
 import interpreteur.as.lang.datatype.ASTexte;
-import interpreteur.ast.buildingBlocs.expressions.Type;
+import interpreteur.as.lang.ASType;
 import interpreteur.executeur.Executeur;
 
 import java.util.Iterator;
@@ -14,38 +14,38 @@ import java.util.Iterator;
 public class BuiltinsTexteUtils {
     public static ASFonctionModule[] fonctionModules = new ASFonctionModule[]{
 
-            new ASFonctionModule("texte", new ASParametre[]{
+            new ASFonctionModule("texte", ASTypeBuiltin.texte.asType(), new ASParametre[]{
                     new ASParametre(ASTypeBuiltin.tout.asType(), "element", null)
-            }, ASTypeBuiltin.texte.asType()) {
+            }) {
                 @Override
                 public ASTexte executer() {
                     return new ASTexte(this.getValeurParam("element").toString());
                 }
             },
 
-            new ASFonctionModule("maj", new ASParametre[]{
+            new ASFonctionModule("maj", ASTypeBuiltin.texte.asType(), new ASParametre[]{
                     new ASParametre(ASTypeBuiltin.texte.asType(), "txt", null)
-            }, ASTypeBuiltin.texte.asType()) {
+            }) {
                 @Override
                 public ASTexte executer() {
                     return new ASTexte(this.getParamsValeursDict().get("txt").getValue().toString().toUpperCase());
                 }
             },
 
-            new ASFonctionModule("minus", new ASParametre[]{
+            new ASFonctionModule("minus", new ASType("texte"), new ASParametre[]{
                     new ASParametre(ASTypeBuiltin.texte.asType(), "txt", null)
-            }, new Type("texte")) {
+            }) {
                 @Override
                 public ASTexte executer() {
                     return new ASTexte(this.getParamsValeursDict().get("txt").getValue().toString().toLowerCase());
                 }
             },
 
-            new ASFonctionModule("remplacer", new ASParametre[]{
+            new ASFonctionModule("remplacer", ASTypeBuiltin.texte.asType(), new ASParametre[]{
                     new ASParametre(ASTypeBuiltin.texte.asType(), "txt", null),
                     new ASParametre(ASTypeBuiltin.texte.asType(), "sequence", null),
                     new ASParametre(ASTypeBuiltin.texte.asType(), "remplacement", null)
-            }, ASTypeBuiltin.texte.asType()) {
+            }) {
                 @Override
                 public ASTexte executer() {
                     String txt = this.getParamsValeursDict().get("txt").getValue().toString();
@@ -55,11 +55,11 @@ public class BuiltinsTexteUtils {
                 }
             },
 
-            new ASFonctionModule("remplacerRe", new ASParametre[]{
+            new ASFonctionModule("remplacerRe", ASTypeBuiltin.texte.asType(), new ASParametre[]{
                     new ASParametre(ASTypeBuiltin.texte.asType(), "txt", null),
                     new ASParametre(ASTypeBuiltin.texte.asType(), "pattern", null),
                     new ASParametre(ASTypeBuiltin.texte.asType(), "remplacement", null)
-            }, ASTypeBuiltin.texte.asType()) {
+            }) {
                 @Override
                 public ASTexte executer() {
                     String txt = this.getParamsValeursDict().get("txt").getValue().toString();
@@ -69,10 +69,10 @@ public class BuiltinsTexteUtils {
                 }
             },
 
-            new ASFonctionModule("match", new ASParametre[]{
+            new ASFonctionModule("match", ASTypeBuiltin.booleen.asType(), new ASParametre[]{
                     new ASParametre(ASTypeBuiltin.texte.asType(), "txt", null),
                     new ASParametre(ASTypeBuiltin.texte.asType(), "pattern", null)
-            }, ASTypeBuiltin.booleen.asType()) {
+            }) {
                 @Override
                 public ASBooleen executer() {
                     String txt = this.getParamsValeursDict().get("txt").getValue().toString();
@@ -81,9 +81,9 @@ public class BuiltinsTexteUtils {
                 }
             },
 
-            new ASFonctionModule("estNumerique", new ASParametre[]{
+            new ASFonctionModule("estNumerique", ASTypeBuiltin.booleen.asType(), new ASParametre[]{
                     new ASParametre(ASTypeBuiltin.texte.asType(), "txt", null)
-            }, ASTypeBuiltin.booleen.asType()) {
+            }) {
                 @Override
                 public ASBooleen executer() {
                     try {
@@ -109,10 +109,10 @@ public class BuiltinsTexteUtils {
              *
              * 		@return un texte où les {} sont remplacés par les valeurs dans la liste
              */
-            new ASFonctionModule("format", new ASParametre[]{
+            new ASFonctionModule("format", ASTypeBuiltin.texte.asType(), new ASParametre[]{
                     new ASParametre(ASTypeBuiltin.texte.asType(), "txt", null),
                     new ASParametre(ASTypeBuiltin.liste.asType(), "valeurs", null)
-            }, ASTypeBuiltin.texte.asType()) {
+            }) {
                 @Override
                 public ASObjet<?> executer() {
                     String texte = ((ASTexte) this.getValeurParam("txt")).getValue();

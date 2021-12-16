@@ -2,7 +2,7 @@ package interpreteur.ast.buildingBlocs.programmes;
 
 import interpreteur.as.lang.ASObjet;
 import interpreteur.as.lang.datatype.ASListe;
-import interpreteur.as.lang.Scope;
+import interpreteur.as.lang.ASScope;
 import interpreteur.as.lang.ASVariable;
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.ast.buildingBlocs.Expression;
@@ -38,7 +38,7 @@ public class Assigner extends Programme {
     @Override
     public Object execute() {
         //ASObjet.Variable variable = ASObjet.VariableManager.obtenirVariable(var.getNom());
-        ASVariable variable = Scope.getCurrentScopeInstance().getVariable(var.getNom());
+        ASVariable variable = ASScope.getCurrentScopeInstance().getVariable(var.getNom());
 
         ASObjet<?> valeur = this.valeur.eval();
         if (variable == null) {

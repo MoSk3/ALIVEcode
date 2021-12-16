@@ -14,7 +14,7 @@ public class ModuleIoT {
     static ASModule charger(Executeur executeurInstance) {
         return new ASModule(new ASFonctionModule[] {
                 new ASFonctionModule("update",
-                        new ASParametre[] {
+                        ASTypeBuiltin.nombre.asType(), new ASParametre[] {
                             new ASParametre(
                                     ASTypeBuiltin.texte.asType(),
                                     "projectId",
@@ -30,7 +30,7 @@ public class ModuleIoT {
                                     "value",
                                     null
                             )
-                        }, ASTypeBuiltin.nombre.asType()) {
+                        }) {
                     @Override
                     public ASObjet<?> executer() {
                         ASTexte projectId = (ASTexte) this.getValeurParam("projectId");
@@ -42,13 +42,13 @@ public class ModuleIoT {
                     }
                 },
                 new ASFonctionModule("get",
-                        new ASParametre[] {
+                        ASTypeBuiltin.nombre.asType(), new ASParametre[] {
                                 new ASParametre(
                                         ASTypeBuiltin.texte.asType(),
                                         "key",
                                         new ASNul()
                                 )
-                        }, ASTypeBuiltin.nombre.asType()) {
+                        }) {
                     @Override
                     public ASObjet<?> executer() {
                         ASObjet<?> uncastedKey = (ASObjet<?>) this.getValeurParam("key");
@@ -75,7 +75,7 @@ public class ModuleIoT {
                     }
                 },
                 new ASFonctionModule("getComponentValue",
-                        new ASParametre[] {
+                        ASTypeBuiltin.nombre.asType(), new ASParametre[] {
                                 new ASParametre(
                                         ASTypeBuiltin.texte.asType(),
                                         "projectId",
@@ -86,7 +86,7 @@ public class ModuleIoT {
                                         "id",
                                         null
                                 )
-                        }, ASTypeBuiltin.nombre.asType()) {
+                        }) {
                     @Override
                     public ASObjet<?> executer() {
                         return new ASNul();

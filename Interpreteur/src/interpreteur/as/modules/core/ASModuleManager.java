@@ -37,7 +37,7 @@ public record ASModuleManager(Executeur executeurInstance) {
     public void utiliserModuleBuitlins() {
         var moduleBuiltins = getModuleBuiltins();
         moduleBuiltins.utiliser((String) null);
-        Scope.getCurrentScope().declarerVariable(new ASConstante("builtins", new ASListe(moduleBuiltins
+        ASScope.getCurrentScope().declarerVariable(new ASConstante("builtins", new ASListe(moduleBuiltins
                 .getNomsConstantesEtFonctions()
                 .stream()
                 .map(ASTexte::new)
@@ -58,7 +58,7 @@ public record ASModuleManager(Executeur executeurInstance) {
         ASModule module = getModule(nomModule);
 
         module.utiliser(nomModule);
-        Scope.getCurrentScope().declarerVariable(new ASConstante(nomModule, new ASListe(module
+        ASScope.getCurrentScope().declarerVariable(new ASConstante(nomModule, new ASListe(module
                 .getNomsConstantesEtFonctions()
                 .stream()
                 .map(e -> nomModule + "." + e)
@@ -89,7 +89,7 @@ public record ASModuleManager(Executeur executeurInstance) {
                     .replaceAll("\\[|]", ""));
 
         module.utiliser(nomsFctEtConstDemandees);
-        Scope.getCurrentScope().declarerVariable(new ASConstante(nomModule, new ASListe(nomsFctEtConstDemandees
+        ASScope.getCurrentScope().declarerVariable(new ASConstante(nomModule, new ASListe(nomsFctEtConstDemandees
                 .stream()
                 .map(ASTexte::new)
                 .toArray(ASTexte[]::new))));
