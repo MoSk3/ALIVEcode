@@ -99,7 +99,7 @@ const GamepadAlive = () => {
 					</button>
 
 					<button
-						className={'button btnY buttonGamepad' + (isYPressed && 'push')}
+						className={'button buttonGamepad btnY ' + (isYPressed && 'push')}
 						id="btnY"
 					>
 						Y

@@ -128,6 +128,7 @@ const LevelAlive = ({ initialCode }: LevelAliveProps) => {
 											//setSketch(s);
 											executor.current?.loadLevelLayout(level?.layout ?? '[]');
 											executor.current?.stop();
+											s.enableCarController();
 										}}
 										onChange={(s: any) => {
 											const newLayout = executor.current?.saveLayout(s);
@@ -147,6 +148,7 @@ const LevelAlive = ({ initialCode }: LevelAliveProps) => {
 							</Row>
 							<Row style={{ height: '40vh' }}>
 								<Cmd ref={cmdRef} />
+								<GamepadAlive></GamepadAlive>
 							</Row>
 						</Col>
 					</Row>
@@ -154,7 +156,6 @@ const LevelAlive = ({ initialCode }: LevelAliveProps) => {
 			) : (
 				<LoadingScreen />
 			)}
-							<GamepadAlive></GamepadAlive>
 		</>
 	);
 };
