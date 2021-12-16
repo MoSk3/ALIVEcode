@@ -2,10 +2,10 @@ package interpreteur.ast.buildingBlocs.expressions;
 
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.as.lang.ASObjet;
-import interpreteur.as.lang.Parametre;
+import interpreteur.as.lang.ASParametre;
 import interpreteur.ast.buildingBlocs.Expression;
 
-public class Argument implements Expression<Parametre> {
+public class Argument implements Expression<ASParametre> {
     private final Var var;
     private final ASObjet<?> valeurParDefaut;
     private final Type type;
@@ -26,8 +26,8 @@ public class Argument implements Expression<Parametre> {
 
 
     @Override
-    public Parametre eval() {
-        return new Parametre(type, var.getNom(), valeurParDefaut);
+    public ASParametre eval() {
+        return new ASParametre(type, var.getNom(), valeurParDefaut);
     }
 
     @Override

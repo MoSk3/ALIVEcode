@@ -2,32 +2,32 @@ package interpreteur.as.lang;
 
 import interpreteur.ast.buildingBlocs.expressions.Type;
 
-public enum TypeBuiltin {
+public enum ASTypeBuiltin {
     tout,
     entier,
     decimal,
-    nombre(TypeBuiltin.entier, TypeBuiltin.decimal),
+    nombre(ASTypeBuiltin.entier, ASTypeBuiltin.decimal),
     texte,
     liste,
     dict,
-    iterable(TypeBuiltin.texte, TypeBuiltin.liste, TypeBuiltin.dict),
+    iterable(ASTypeBuiltin.texte, ASTypeBuiltin.liste, ASTypeBuiltin.dict),
     booleen,
     nulType,
     rien,
     paire,
     fonctionType;
 
-    private final TypeBuiltin[] aliases;
+    private final ASTypeBuiltin[] aliases;
 
-    TypeBuiltin() {
+    ASTypeBuiltin() {
         this.aliases = null;
     }
 
-    TypeBuiltin(TypeBuiltin... alias) {
+    ASTypeBuiltin(ASTypeBuiltin... alias) {
         this.aliases = alias;
     }
 
-    public TypeBuiltin[] getAliases() {
+    public ASTypeBuiltin[] getAliases() {
         return aliases;
     }
 

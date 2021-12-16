@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
 
-public abstract class FonctionModule implements ASObjet<Object> {
+public abstract class ASFonctionModule implements ASObjet<Object> {
     private final Type typeRetour;
-    private final Parametre[] parametres; //String[] de forme {nomDuParam�tre, typeDuParam�tre (ou null s'il n'en poss�de pas)}
+    private final ASParametre[] parametres; //String[] de forme {nomDuParam�tre, typeDuParam�tre (ou null s'il n'en poss�de pas)}
     private final String nom;
     private final Coordonnee coordReprise = null;
     private Hashtable<String, ASObjet<?>> parametres_appel = new Hashtable<>();  // Object[][] de forme {{nom_param, valeur}, {nom_param2, valeur2}}
@@ -32,11 +32,11 @@ public abstract class FonctionModule implements ASObjet<Object> {
      *                   Mettre <b>null</b> si le type du retour n'a pas de type forcee
      *                   </li>
      */
-    public FonctionModule(String nom, Type typeRetour) {
+    public ASFonctionModule(String nom, Type typeRetour) {
         this.nom = nom;
         this.scopeName = "fonc_";
         this.typeRetour = typeRetour;
-        this.parametres = new Parametre[0];
+        this.parametres = new ASParametre[0];
     }
 
     /**
@@ -56,7 +56,7 @@ public abstract class FonctionModule implements ASObjet<Object> {
      *                   Mettre <b>null</b> si le type du retour n'a pas de type forcee
      *                   </li>
      */
-    public FonctionModule(String nom, Parametre[] parametres, Type typeRetour) {
+    public ASFonctionModule(String nom, ASParametre[] parametres, Type typeRetour) {
         this.nom = nom;
         this.scopeName = "fonc_";
         this.parametres = parametres;
@@ -71,7 +71,7 @@ public abstract class FonctionModule implements ASObjet<Object> {
         return this.typeRetour;
     }
 
-    public Parametre[] getParams() {
+    public ASParametre[] getParams() {
         return this.parametres;
     }
 
@@ -103,7 +103,7 @@ public abstract class FonctionModule implements ASObjet<Object> {
 
         }
         for (int i = 0; i < paramsValeurs.size(); i++) {
-            Parametre parametre = this.parametres[i];
+            ASParametre parametre = this.parametres[i];
             if (parametre.getType().noMatch(((ASObjet<?>) paramsValeurs.get(i)).obtenirNomType())) {
                 throw new ASErreur.ErreurType("Le param\u00E8tres '" + parametre.getNom() + "' est de type '" + parametre.getType().nom() +
                         "', mais l'argument pass\u00E9 est de type '" + ((ASObjet<?>) paramsValeurs.get(i)).obtenirNomType() + "'.");
@@ -139,7 +139,7 @@ public abstract class FonctionModule implements ASObjet<Object> {
              * ex: foo(param1=vrai)
              */
             for (ASObjet<?> param : paramsValeurs) {
-                if (param instanceof Parametre parametre) {
+                if (param instanceof ASParametre parametre) {
                     if (Arrays.stream(parametres).noneMatch(p -> p.getNom().equals(parametre.getNom()))) {
                         throw new ASErreur.ErreurAppelFonction("l'argument: " + parametre.getNom() + " pass\u00E9 en param\u00E8tre" +
                                 " ne correspond \u00E0 aucun param\u00E8tre d\u00E9fini dans la fonction '" + this.nom + "'");
@@ -149,7 +149,7 @@ public abstract class FonctionModule implements ASObjet<Object> {
             }
 
             for (int i = 0; i < this.parametres.length; i++) {
-                Parametre param = this.parametres[i];
+                ASParametre param = this.parametres[i];
                 if (i < paramsValeurs.size()) {
                     this.parametres_appel.putIfAbsent(param.getNom(), paramsValeurs.get(i));
 
@@ -162,7 +162,7 @@ public abstract class FonctionModule implements ASObjet<Object> {
                 }
             }
 
-            for (Parametre param : this.parametres) {
+            for (ASParametre param : this.parametres) {
                 this.parametres_appel.computeIfAbsent(param.getNom(), (val) -> {
                     if (param.getValeurParDefaut() == null) {
                         throw new ASErreur.ErreurAppelFonction(this.nom, "l'argument: " + param.getNom() + " n'a pas reçu de valeur" +
@@ -202,7 +202,7 @@ public abstract class FonctionModule implements ASObjet<Object> {
 
     @Override
     public String obtenirNomType() {
-        return TypeBuiltin.fonctionType.toString();
+        return ASTypeBuiltin.fonctionType.toString();
     }
 
 }

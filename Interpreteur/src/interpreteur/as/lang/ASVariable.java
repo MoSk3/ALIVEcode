@@ -7,7 +7,7 @@ import interpreteur.ast.buildingBlocs.expressions.Type;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class Variable implements ASObjet<Object> {
+public class ASVariable implements ASObjet<Object> {
     private final String nom;
     private final Type type;
     private ASObjet<?> valeur;
@@ -17,10 +17,10 @@ public class Variable implements ASObjet<Object> {
     private Function<ASObjet<?>, ASObjet<?>> setter = null;
 
 
-    public Variable(String nom, ASObjet<?> valeur, Type type) {
+    public ASVariable(String nom, ASObjet<?> valeur, Type type) {
         this.type = type == null ? new Type("tout") : type;
         this.nom = FonctionManager.ajouterDansStructure(nom);
-        this.valeur = valeur instanceof interpreteur.as.lang.Variable var ? var.getValeurApresGetter() : valeur;
+        this.valeur = valeur instanceof ASVariable var ? var.getValeurApresGetter() : valeur;
     }
 
     private boolean nouvelleValeurValide(ASObjet<?> nouvelleValeur) {
@@ -52,8 +52,8 @@ public class Variable implements ASObjet<Object> {
     }
 
     @Override
-    public interpreteur.as.lang.Variable clone() {
-        return new interpreteur.as.lang.Variable(nom, this.valeur, this.type).setGetter(this.getter).setSetter(this.setter);
+    public ASVariable clone() {
+        return new ASVariable(nom, this.valeur, this.type).setGetter(this.getter).setSetter(this.setter);
     }
 
     public String obtenirNom() {
@@ -68,17 +68,17 @@ public class Variable implements ASObjet<Object> {
         return this.valeur == null;
     }
 
-    public interpreteur.as.lang.Variable setGetter(Supplier<ASObjet<?>> getter) {
+    public ASVariable setGetter(Supplier<ASObjet<?>> getter) {
         this.getter = getter;
         return this;
     }
 
-    public interpreteur.as.lang.Variable setSetter(Function<ASObjet<?>, ASObjet<?>> setter) {
+    public ASVariable setSetter(Function<ASObjet<?>, ASObjet<?>> setter) {
         this.setter = setter;
         return this;
     }
 
-    public interpreteur.as.lang.Variable setReadOnly() {
+    public ASVariable setReadOnly() {
         this.setter = (valeur) -> {
             throw new ASErreur.ErreurAssignement("Cette variable est en lecture seule: elle ne peut pas \u00EAtre modifi\u00E9e");
         };

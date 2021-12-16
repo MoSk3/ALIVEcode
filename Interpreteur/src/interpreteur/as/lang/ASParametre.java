@@ -5,8 +5,8 @@ import interpreteur.ast.buildingBlocs.expressions.Type;
 /**
  * Classe responsable de definir les proprietes des parametres des fonctions
  */
-public record Parametre(Type type, String nom,
-                        ASObjet<?> valeurParDefaut) implements ASObjet<Object> {
+public record ASParametre(Type type, String nom,
+                          ASObjet<?> valeurParDefaut) implements ASObjet<Object> {
     /**
      * @param type            <li>
      *                        Nom du type du parametre (ex: <i>entier</i>, <i>texte</i>, <i>liste</i>, ect.)
@@ -29,9 +29,9 @@ public record Parametre(Type type, String nom,
      *                        Mettre <b>null</b> pour rendre ce parametre obligatoire lors de l'appel de la fonction
      *                        </li>
      */
-    public Parametre(Type type, String nom, ASObjet<?> valeurParDefaut) {
+    public ASParametre(Type type, String nom, ASObjet<?> valeurParDefaut) {
         this.nom = nom;
-        this.type = type == null ? TypeBuiltin.tout.asType() : type;
+        this.type = type == null ? ASTypeBuiltin.tout.asType() : type;
         this.valeurParDefaut = valeurParDefaut;
     }
 

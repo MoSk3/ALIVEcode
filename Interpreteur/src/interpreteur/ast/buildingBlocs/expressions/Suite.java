@@ -7,14 +7,14 @@ import interpreteur.ast.buildingBlocs.Expression;
 
 public record Suite(Expression<?> debut,
                     Expression<?> fin,
-                    Expression<?> bond) implements Expression<Liste> {
+                    Expression<?> bond) implements Expression<ASListe> {
 
     private static final String alphabet = "abcdefghijklmnopqrstuvwxyz";
 
     public Suite(Expression<?> debut, Expression<?> fin, Expression<?> bond) {
         this.debut = debut;
         this.fin = fin;
-        this.bond = bond == null ? new ValeurConstante(new Entier(1)) : bond;
+        this.bond = bond == null ? new ValeurConstante(new ASEntier(1)) : bond;
     }
 
     private void suiteValideOrThrow(double debutValue, double finValue, double bondValue) {
@@ -38,14 +38,14 @@ public record Suite(Expression<?> debut,
     }
 
     @Override
-    public Liste eval() {
+    public ASListe eval() {
         ASObjet<?> debut = this.debut.eval(), fin = this.fin.eval(), bond = this.bond.eval();
 
-        Liste suite = new Liste();
+        ASListe suite = new ASListe();
 
-        if (debut instanceof Nombre && fin instanceof Nombre && bond instanceof Nombre) {
+        if (debut instanceof ASNombre && fin instanceof ASNombre && bond instanceof ASNombre) {
 
-            boolean asDouble = debut instanceof Decimal || fin instanceof Decimal || bond instanceof Decimal;
+            boolean asDouble = debut instanceof ASDecimal || fin instanceof ASDecimal || bond instanceof ASDecimal;
 
             final double debutValue = ((Number) debut.getValue()).doubleValue(),
                     finValue = ((Number) fin.getValue()).doubleValue(),
@@ -54,19 +54,19 @@ public record Suite(Expression<?> debut,
             suiteValideOrThrow(debutValue, finValue, bondValue);
 
             if (debutValue == finValue) {
-                suite.ajouterElement(Nombre.cast(debutValue));
+                suite.ajouterElement(ASNombre.cast(debutValue));
 
             } else if (asDouble) {
                 for (double i = debutValue; debutValue <= finValue ? i <= finValue : i >= finValue; i += bondValue) {
-                    suite.ajouterElement(new Decimal(i));
+                    suite.ajouterElement(new ASDecimal(i));
                 }
             } else {
                 for (double i = debutValue; debutValue <= finValue ? i <= finValue : i >= finValue; i += bondValue) {
-                    suite.ajouterElement(new Entier(i));
+                    suite.ajouterElement(new ASEntier(i));
                 }
             }
 
-        } else if (debut instanceof Texte && fin instanceof Texte && bond instanceof Entier) {
+        } else if (debut instanceof ASTexte && fin instanceof ASTexte && bond instanceof ASEntier) {
             final int debutValue = alphabet.indexOf(((String) debut.getValue()).toLowerCase()),
                     finValue = alphabet.indexOf(((String) fin.getValue()).toLowerCase()),
                     bondValue = (Integer) bond.getValue();
@@ -85,10 +85,10 @@ public record Suite(Expression<?> debut,
             String alphabet = isUpperCase ? Suite.alphabet.toUpperCase() : Suite.alphabet;
 
             if (((String) debut.getValue()).equalsIgnoreCase(((String) fin.getValue()))) {
-                suite.ajouterElement(new Texte(alphabet.charAt(debutValue)));
+                suite.ajouterElement(new ASTexte(alphabet.charAt(debutValue)));
             } else {
                 for (int s = debutValue; debutValue <= finValue ? s <= finValue : s >= finValue; s += bondValue) {
-                    suite.ajouterElement(new Texte(alphabet.charAt(s)));
+                    suite.ajouterElement(new ASTexte(alphabet.charAt(s)));
                 }
             }
         } else {

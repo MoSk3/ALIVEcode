@@ -6,22 +6,22 @@ import interpreteur.tokens.Token;
 
 import java.util.Objects;
 
-public class Booleen implements ASObjet<Boolean> {
+public class ASBooleen implements ASObjet<Boolean> {
     private final boolean valeur;
 
-    public Booleen(Token valeur) {
+    public ASBooleen(Token valeur) {
         this.valeur = valeur.obtenirValeur().equals("vrai");
     }
 
-    public Booleen(ASObjet<?> valeur) {
+    public ASBooleen(ASObjet<?> valeur) {
         this.valeur = Boolean.parseBoolean(valeur.getValue().toString());
     }
 
-    public Booleen(Boolean valeur) {
+    public ASBooleen(Boolean valeur) {
         this.valeur = valeur;
     }
 
-    public Booleen(String valeur) {
+    public ASBooleen(String valeur) {
         this.valeur = switch (valeur) {
             case "vrai" -> true;
             case "faux" -> false;
@@ -56,7 +56,7 @@ public class Booleen implements ASObjet<Boolean> {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Booleen booleen)) return false;
+        if (!(o instanceof ASBooleen booleen)) return false;
         return valeur == booleen.valeur;
     }
 

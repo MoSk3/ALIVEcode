@@ -1,9 +1,9 @@
 package interpreteur.ast.buildingBlocs.expressions;
 
 import interpreteur.as.lang.ASObjet;
-import interpreteur.as.lang.datatype.Decimal;
-import interpreteur.as.lang.datatype.Entier;
-import interpreteur.as.lang.datatype.Nombre;
+import interpreteur.as.lang.datatype.ASDecimal;
+import interpreteur.as.lang.datatype.ASEntier;
+import interpreteur.as.lang.datatype.ASNombre;
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.ast.buildingBlocs.Expression;
 
@@ -36,17 +36,17 @@ public record UnaryOp(Expression<?> expression,
         /**
          * Gere |x|
          */
-        ABSOLUE(expr -> expr instanceof Decimal decimal ?
-                new Decimal(Math.abs(decimal.getValue())) :
-                new Entier(Math.abs(((Entier) expr).getValue()))
+        ABSOLUE(expr -> expr instanceof ASDecimal decimal ?
+                new ASDecimal(Math.abs(decimal.getValue())) :
+                new ASEntier(Math.abs(((ASEntier) expr).getValue()))
         ),
 
         PLUS(expr -> {
-            if (expr instanceof Nombre) {
+            if (expr instanceof ASNombre) {
                 return expr;
             } else {
                 String nb = expr.getValue().toString();
-                return Nombre.parse(expr);
+                return ASNombre.parse(expr);
                 // obsolete try {
                 //     boolean estDecimal = nb.contains(".");
                 //     if (estDecimal) return new ASObjet.Decimal(Double.parseDouble(nb));
@@ -58,16 +58,16 @@ public record UnaryOp(Expression<?> expression,
         }),
 
         NEGATION(expr -> {
-            if (expr instanceof Decimal decimal) {
-                return new Decimal(-decimal.getValue());
-            } else if (expr instanceof Entier entier) {
-                return new Entier(-entier.getValue());
+            if (expr instanceof ASDecimal decimal) {
+                return new ASDecimal(-decimal.getValue());
+            } else if (expr instanceof ASEntier entier) {
+                return new ASEntier(-entier.getValue());
             } else {
                 String nb = expr.getValue().toString();
                 try {
                     boolean estDecimal = nb.contains(".");
-                    if (estDecimal) return new Decimal(-Double.parseDouble(nb));
-                    else return new Entier(-Integer.parseInt(nb));
+                    if (estDecimal) return new ASDecimal(-Double.parseDouble(nb));
+                    else return new ASEntier(-Integer.parseInt(nb));
                 } catch (NumberFormatException ignored) {
                     throw new ASErreur.ErreurType("impossible de convertir '" + nb + "' en nombre decimal");
                 }

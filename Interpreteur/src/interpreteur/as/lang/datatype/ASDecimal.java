@@ -5,21 +5,21 @@ import interpreteur.tokens.Token;
 
 import java.util.Objects;
 
-public class Decimal implements Nombre {
+public class ASDecimal implements ASNombre {
     private final double valeur;
 
-    public Decimal(Token valeur) {
+    public ASDecimal(Token valeur) {
         String val = valeur.obtenirValeur();
         if (val.startsWith(".")) val = "0" + val;
         else if (val.endsWith(".")) val += "0";
         this.valeur = Double.parseDouble(val);
     }
 
-    public Decimal(Number valeur) {
+    public ASDecimal(Number valeur) {
         this.valeur = valeur.doubleValue();
     }
 
-    public Decimal(String valeur) {
+    public ASDecimal(String valeur) {
         try {
             this.valeur = Double.parseDouble(valeur);
         } catch (NumberFormatException err) {
@@ -50,7 +50,7 @@ public class Decimal implements Nombre {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Decimal decimal)) return false;
+        if (!(o instanceof ASDecimal decimal)) return false;
         return Double.compare(decimal.valeur, valeur) == 0;
     }
 

@@ -6,24 +6,24 @@ import interpreteur.ast.buildingBlocs.expressions.Type;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class Constante extends Variable {
+public class ASConstante extends ASVariable {
 
-    public Constante(String nom, ASObjet<?> valeur) {
+    public ASConstante(String nom, ASObjet<?> valeur) {
         super(nom, valeur, new Type("tout"));
     }
 
     @Override
-    public Variable clone() {
-        return new interpreteur.as.lang.Constante(obtenirNom(), this.getValeur());
+    public ASVariable clone() {
+        return new ASConstante(obtenirNom(), this.getValeur());
     }
 
     @Override
-    public Variable setSetter(Function<ASObjet<?>, ASObjet<?>> setter) {
+    public ASVariable setSetter(Function<ASObjet<?>, ASObjet<?>> setter) {
         throw new ASErreur.ErreurAssignement("Les constantes ne peuvent pas avoir de setter");
     }
 
     @Override
-    public Variable setGetter(Supplier<ASObjet<?>> getter) {
+    public ASVariable setGetter(Supplier<ASObjet<?>> getter) {
         throw new ASErreur.ErreurAssignement("Les constantes ne peuvent pas avoir de getter");
     }
 

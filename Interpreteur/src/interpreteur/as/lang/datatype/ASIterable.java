@@ -6,10 +6,10 @@ import interpreteur.as.lang.ASObjet;
 import java.util.Iterator;
 import java.util.List;
 
-public interface Iterable<T> extends ASObjet<T> {
+public interface ASIterable<T> extends ASObjet<T> {
     boolean contient(ASObjet<?> element);
 
-    Iterable<T> sousSection(int debut, int fin);
+    ASIterable<T> sousSection(int debut, int fin);
 
     ASObjet<?> get(int index);
 

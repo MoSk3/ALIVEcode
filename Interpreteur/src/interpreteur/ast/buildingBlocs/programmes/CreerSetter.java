@@ -34,7 +34,7 @@ public class CreerSetter extends Programme {
     }
 
     public void addSetter() {
-        Variable v =  Scope.getCurrentScope().getVariable(var.getNom());
+        ASVariable v =  Scope.getCurrentScope().getVariable(var.getNom());
 
         if (v == null) {
             Declarer.addWaitingSetter(this);
@@ -45,11 +45,11 @@ public class CreerSetter extends Programme {
             Scope scope = new Scope(this.scope);
             scope.setParent(Scope.getCurrentScopeInstance());
 
-            ASFonction set = new ASFonction(this.var.getNom(), new Parametre[]{
-                    new Parametre(this.type, this.nomArg.getNom(), null)
+            ASFonction set = new ASFonction(this.var.getNom(), new ASParametre[]{
+                    new ASParametre(this.type, this.nomArg.getNom(), null)
             }, this.type, executeurInstance);
 
-            scope.declarerVariable(new Variable(this.nomArg.getNom(), null, this.type));
+            scope.declarerVariable(new ASVariable(this.nomArg.getNom(), null, this.type));
 
             set.setScope(scope);
             set.setCoordBlocName("set_");

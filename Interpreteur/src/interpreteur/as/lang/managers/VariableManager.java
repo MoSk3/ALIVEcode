@@ -1,11 +1,11 @@
 package interpreteur.as.lang.managers;
 
-import interpreteur.as.lang.Variable;
+import interpreteur.as.lang.ASVariable;
 
 import java.util.Stack;
 
 public class VariableManager {
-    Stack<Variable> variableStack = new Stack<>();
+    Stack<ASVariable> variableStack = new Stack<>();
     
 
 

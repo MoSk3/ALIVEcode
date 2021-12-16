@@ -3,7 +3,7 @@ package interpreteur.as.lang.datatype;
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.as.lang.ASObjet;
 
-public interface Nombre extends ASObjet<Number> {
+public interface ASNombre extends ASObjet<Number> {
     static boolean estNumerique(String txt) {
         try {
             var estDecimal = txt.contains(".");
@@ -15,21 +15,21 @@ public interface Nombre extends ASObjet<Number> {
         }
     }
 
-    static Nombre parse(ASObjet<?> nb) {
+    static ASNombre parse(ASObjet<?> nb) {
         String txt = nb.toString();
-        if (!Nombre.estNumerique(txt))
+        if (!ASNombre.estNumerique(txt))
             throw new ASErreur.ErreurType("Impossible de convertir " + txt + " en nombre entier ou d\u00E9cimal.");
 
-        return txt.contains(".") ? new Decimal(Double.parseDouble(txt)) : new Entier(Integer.parseInt(txt));
+        return txt.contains(".") ? new ASDecimal(Double.parseDouble(txt)) : new ASEntier(Integer.parseInt(txt));
     }
 
-    static Nombre cast(Number nb) {
-        return nb.doubleValue() != nb.intValue() ? new Decimal(nb) : new Entier(nb);
+    static ASNombre cast(Number nb) {
+        return nb.doubleValue() != nb.intValue() ? new ASDecimal(nb) : new ASEntier(nb);
     }
 
     static Number asNumber(ASObjet<?> nb) {
         String txt = nb.toString();
-        if (!Nombre.estNumerique(txt))
+        if (!ASNombre.estNumerique(txt))
             throw new ASErreur.ErreurType("Impossible de convertir " + txt + " en nombre entier ou d\u00E9cimal.");
 
         return (Number) nb.getValue();
@@ -37,7 +37,7 @@ public interface Nombre extends ASObjet<Number> {
 
     static Double asDouble(ASObjet<?> nb) {
         String txt = nb.toString();
-        if (!Nombre.estNumerique(txt))
+        if (!ASNombre.estNumerique(txt))
             throw new ASErreur.ErreurType("Impossible de convertir " + txt + " en nombre entier ou d\u00E9cimal.");
 
         return ((Number) nb.getValue()).doubleValue();
@@ -45,7 +45,7 @@ public interface Nombre extends ASObjet<Number> {
 
     static Integer asInteger(ASObjet<?> nb) {
         String txt = nb.toString();
-        if (!Nombre.estNumerique(txt))
+        if (!ASNombre.estNumerique(txt))
             throw new ASErreur.ErreurType("Impossible de convertir " + txt + " en nombre entier ou d\u00E9cimal.");
 
         return ((Number) nb.getValue()).intValue();

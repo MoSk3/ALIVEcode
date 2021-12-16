@@ -11,13 +11,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class Liste implements Iterable<Object> {
+public class ASListe implements ASIterable<Object> {
     private ArrayList<ASObjet<?>> valeur = new ArrayList<>();
 
-    public Liste() {
+    public ASListe() {
     }
 
-    public Liste(ASObjet<?>... valeurs) {
+    public ASListe(ASObjet<?>... valeurs) {
         this.valeur = new ArrayList<>(Arrays.asList(valeurs));
         aucuneClefDuplique();
     }
@@ -27,7 +27,7 @@ public class Liste implements Iterable<Object> {
         this.valeur.add(element);
     }
 
-    public Liste ajouterTout(Liste elements) {
+    public ASListe ajouterTout(ASListe elements) {
         elements.getValue().forEach(this::clefValideOrThrow);
         this.valeur.addAll(elements.getValue());
         return this;
@@ -58,19 +58,19 @@ public class Liste implements Iterable<Object> {
         ASObjet<?> element = this.valeur.remove(idxRelatif(this.valeur, idx));
     }
 
-    public Liste remplacer(int idx, ASObjet<?> valeur) {
+    public ASListe remplacer(int idx, ASObjet<?> valeur) {
         this.valeur.set(idxRelatif(this.valeur, idx), valeur);
         aucuneClefDuplique();
         return this;
     }
 
-    public Liste remplacer(ASObjet<?> valeur, ASObjet<?> remplacement) {
+    public ASListe remplacer(ASObjet<?> valeur, ASObjet<?> remplacement) {
         this.valeur.replaceAll(v -> v.equals(valeur) ? remplacement : v);
         aucuneClefDuplique();
         return this;
     }
 
-    public Liste remplacerRange(int debut, int fin, Liste remplacement) {
+    public ASListe remplacerRange(int debut, int fin, ASListe remplacement) {
         debut = idxRelatif(valeur, debut);
         fin = idxRelatif(valeur, fin);
         this.valeur = this.sousSection(0, debut).ajouterTout(remplacement).ajouterTout(this.sousSection(fin, this.taille())).getValue();
@@ -84,11 +84,11 @@ public class Liste implements Iterable<Object> {
         return result;
     }
 
-    public ASObjet<?> get(Texte texte) {
+    public ASObjet<?> get(ASTexte texte) {
         return valeur.stream()
                 .filter(val -> val instanceof ASPaire pair && pair.clef().equals(texte))
                 .findFirst()
-                .orElse(new ValeurNul());
+                .orElse(new ASNul());
     }
 
     @Override
@@ -110,7 +110,7 @@ public class Liste implements Iterable<Object> {
     public boolean contient(ASObjet<?> element) {
         return this.valeur.contains(element)
                 ||
-                (element instanceof Texte texte && this.valeur.stream().anyMatch(val -> val instanceof ASPaire pair && pair.clef().equals(texte)));
+                (element instanceof ASTexte texte && this.valeur.stream().anyMatch(val -> val instanceof ASPaire pair && pair.clef().equals(texte)));
     }
 
     @Override
@@ -125,7 +125,7 @@ public class Liste implements Iterable<Object> {
         String toString = String.join(", ", this.valeur
                 .stream()
                 .map(e -> {
-                    if (e instanceof Texte) return "\"" + e + "\"";
+                    if (e instanceof ASTexte) return "\"" + e + "\"";
                     else if (e instanceof ASPaire) nbPair.set(nbPair.get() + 1);
                     return e.toString();
                 })
@@ -155,7 +155,7 @@ public class Liste implements Iterable<Object> {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Liste liste)) return false;
+        if (!(o instanceof ASListe liste)) return false;
         return Objects.equals(valeur, liste.valeur);
     }
 
@@ -164,15 +164,15 @@ public class Liste implements Iterable<Object> {
         return Objects.hash(valeur);
     }
 
-    public static class SousListe extends Liste {
-        private final Liste parent;
+    public static class SousListe extends ASListe {
+        private final ASListe parent;
 
-        SousListe(Liste parent, int debut, int fin) {
+        SousListe(ASListe parent, int debut, int fin) {
             super(parent.valeur.subList(debut, fin).toArray(ASObjet<?>[]::new));
             this.parent = parent;
         }
 
-        public Liste getParent() {
+        public ASListe getParent() {
             return parent;
         }
     }

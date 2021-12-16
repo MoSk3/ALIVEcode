@@ -1,29 +1,29 @@
 package interpreteur.as.lang.datatype;
 
 import interpreteur.as.lang.ASObjet;
-import interpreteur.as.lang.TypeBuiltin;
+import interpreteur.as.lang.ASTypeBuiltin;
 import interpreteur.tokens.Token;
 
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Objects;
 
-public class Texte implements Iterable<String> {
+public class ASTexte implements ASIterable<String> {
     private final String valeur;
 
-    public Texte(Token valeur) {
+    public ASTexte(Token valeur) {
         this.valeur = valeur.obtenirValeur().substring(1, valeur.obtenirValeur().length() - 1);
     }
 
-    public Texte(Object valeur) {
+    public ASTexte(Object valeur) {
         this.valeur = String.valueOf(valeur);
     }
 
-    public Texte[] arrayDeLettres() {
-        Texte[] array = new Texte[this.getValue().length()];
+    public ASTexte[] arrayDeLettres() {
+        ASTexte[] array = new ASTexte[this.getValue().length()];
         int i = 0;
         for (char lettre : this.getValue().toCharArray()) {
-            array[i] = new Texte(lettre);
+            array[i] = new ASTexte(lettre);
             i++;
         }
         return array;
@@ -54,13 +54,13 @@ public class Texte implements Iterable<String> {
     }
 
     @Override
-    public Iterable<String> sousSection(int debut, int fin) {
-        return new Texte(this.valeur.substring(debut, idxRelatif(Arrays.asList(this.arrayDeLettres()), fin)));
+    public ASIterable<String> sousSection(int debut, int fin) {
+        return new ASTexte(this.valeur.substring(debut, idxRelatif(Arrays.asList(this.arrayDeLettres()), fin)));
     }
 
     @Override
     public ASObjet<?> get(int index) {
-        return new Texte(this.valeur.charAt(idxRelatif(Arrays.asList(this.arrayDeLettres()), index)));
+        return new ASTexte(this.valeur.charAt(idxRelatif(Arrays.asList(this.arrayDeLettres()), index)));
     }
 
     @Override
@@ -75,13 +75,13 @@ public class Texte implements Iterable<String> {
 
     @Override
     public String obtenirNomType() {
-        return TypeBuiltin.texte.toString();
+        return ASTypeBuiltin.texte.toString();
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Texte texte)) return false;
+        if (!(o instanceof ASTexte texte)) return false;
         return Objects.equals(valeur, texte.valeur);
     }
 

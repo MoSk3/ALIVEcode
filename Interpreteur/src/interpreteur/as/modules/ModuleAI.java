@@ -1,12 +1,12 @@
 package interpreteur.as.modules;
 
-import interpreteur.as.modules.core.Module;
+import interpreteur.as.modules.core.ASModule;
 import interpreteur.as.lang.*;
 import interpreteur.as.erreurs.ASErreur;
-import interpreteur.as.lang.datatype.Decimal;
-import interpreteur.as.lang.datatype.Liste;
-import interpreteur.as.lang.datatype.Nombre;
-import interpreteur.as.lang.datatype.ValeurNul;
+import interpreteur.as.lang.datatype.ASDecimal;
+import interpreteur.as.lang.datatype.ASListe;
+import interpreteur.as.lang.datatype.ASNombre;
+import interpreteur.as.lang.datatype.ASNul;
 import interpreteur.data_manager.Data;
 import interpreteur.executeur.Executeur;
 
@@ -233,41 +233,41 @@ public class ModuleAI {
         return ROUNDING_FACTOR;
     }
 
-    static Module charger(Executeur executeurInstance) {
-        return new Module(new FonctionModule[]{
+    static ASModule charger(Executeur executeurInstance) {
+        return new ASModule(new ASFonctionModule[]{
                 /*
                  Calculates the mean of a list of numbers.
                 */
-                new FonctionModule("moyenne",
-                        new Parametre[]{
-                                new Parametre(
-                                        TypeBuiltin.liste.asType(),
+                new ASFonctionModule("moyenne",
+                        new ASParametre[]{
+                                new ASParametre(
+                                        ASTypeBuiltin.liste.asType(),
                                         "lst",
                                         null
                                 )
                         },
-                        TypeBuiltin.nombre.asType()) {
+                        ASTypeBuiltin.nombre.asType()) {
                     @Override
                     public ASObjet<?> executer() {
-                        Liste liste = (Liste) this.getValeurParam("lst");
+                        ASListe liste = (ASListe) this.getValeurParam("lst");
                         var doubles = liste.getValue().stream().map(e -> ((Number) e.getValue()).doubleValue()).toArray(Double[]::new);
-                        return new Decimal(mean(doubles));
+                        return new ASDecimal(mean(doubles));
                     }
                 },
 
                 /*
                   Calculates the standart deviation of a list of numbers.
                 */
-                new FonctionModule("ecartType", new Parametre[]{
-                        new Parametre(
-                                TypeBuiltin.liste.asType(),
+                new ASFonctionModule("ecartType", new ASParametre[]{
+                        new ASParametre(
+                                ASTypeBuiltin.liste.asType(),
                                 "lst",
                                 null
                         )
-                }, TypeBuiltin.nombre.asType()) {
+                }, ASTypeBuiltin.nombre.asType()) {
                     @Override
                     public ASObjet<?> executer() {
-                        Liste liste = (Liste) this.getValeurParam("lst");
+                        ASListe liste = (ASListe) this.getValeurParam("lst");
                         Double[] doubles;
                         //liste.getValue().stream().map(Object::toString).allMatch(Nombre::estNumerique);
                         try {
@@ -275,7 +275,7 @@ public class ModuleAI {
                         } catch (ClassCastException err) {
                             throw new ASErreur.ErreurType("La fonction ecartType prend une liste de nombre, mais la liste pass\u00E9e en param\u00E8tre n'est pas compos\u00E9e que de nombres.");
                         }
-                        return new Decimal(standardDeviation(doubles));
+                        return new ASDecimal(standardDeviation(doubles));
                     }
                 },
 
@@ -286,22 +286,22 @@ public class ModuleAI {
 
                   If both lists are not the same length, an error will be generated.
                 */
-                new FonctionModule("coefficientCorrelation", new Parametre[]{
-                        new Parametre(
-                                TypeBuiltin.liste.asType(),
+                new ASFonctionModule("coefficientCorrelation", new ASParametre[]{
+                        new ASParametre(
+                                ASTypeBuiltin.liste.asType(),
                                 "lst1",
                                 null
                         ),
-                        new Parametre(
-                                TypeBuiltin.liste.asType(),
+                        new ASParametre(
+                                ASTypeBuiltin.liste.asType(),
                                 "lst2",
                                 null
                         )
-                }, TypeBuiltin.nombre.asType()) {
+                }, ASTypeBuiltin.nombre.asType()) {
                     @Override
                     public ASObjet<?> executer() {
-                        Liste lst1 = (Liste) this.getValeurParam("lst1");
-                        Liste lst2 = (Liste) this.getValeurParam("lst2");
+                        ASListe lst1 = (ASListe) this.getValeurParam("lst1");
+                        ASListe lst2 = (ASListe) this.getValeurParam("lst2");
                         Double[] x;
                         Double[] y;
                         try {
@@ -310,7 +310,7 @@ public class ModuleAI {
                         } catch (ClassCastException err) {
                             throw new ASErreur.ErreurType("La fonction ecartType prend une liste de nombre, mais la liste pass\u00E9e en param\u00E8tre n'est pas compos\u00E9e que de nombres.");
                         }
-                        return new Decimal(correlationCoefficient(x, y));
+                        return new ASDecimal(correlationCoefficient(x, y));
                     }
                 },
 
@@ -321,22 +321,22 @@ public class ModuleAI {
 
                   If both lists are not the same length, an error will be generated.
                 */
-                new FonctionModule("coefficientDetermination", new Parametre[]{
-                        new Parametre(
-                                TypeBuiltin.liste.asType(),
+                new ASFonctionModule("coefficientDetermination", new ASParametre[]{
+                        new ASParametre(
+                                ASTypeBuiltin.liste.asType(),
                                 "lst1",
                                 null
                         ),
-                        new Parametre(
-                                TypeBuiltin.liste.asType(),
+                        new ASParametre(
+                                ASTypeBuiltin.liste.asType(),
                                 "lst2",
                                 null
                         )
-                }, TypeBuiltin.nombre.asType()) {
+                }, ASTypeBuiltin.nombre.asType()) {
                     @Override
                     public ASObjet<?> executer() {
-                        Liste lst1 = (Liste) this.getValeurParam("lst1");
-                        Liste lst2 = (Liste) this.getValeurParam("lst2");
+                        ASListe lst1 = (ASListe) this.getValeurParam("lst1");
+                        ASListe lst2 = (ASListe) this.getValeurParam("lst2");
                         Double[] x;
                         Double[] y;
                         try {
@@ -345,24 +345,24 @@ public class ModuleAI {
                         } catch (ClassCastException err) {
                             throw new ASErreur.ErreurType("La fonction ecartType prend une liste de nombre, mais la liste pass\u00E9e en param\u00E8tre n'est pas compos\u00E9e que de nombres.");
                         }
-                        return new Decimal(determinationCoefficient(x, y));
+                        return new ASDecimal(determinationCoefficient(x, y));
                     }
                 },
 
                 /*
                   Returns the values of the specified column. (ONLY TAKES THE SAME DATASET FOR NOW, WILL BE CHANGED)
                 */
-                new FonctionModule("valeursColonne", new Parametre[]{
-                        new Parametre(
-                                TypeBuiltin.texte.asType(),
+                new ASFonctionModule("valeursColonne", new ASParametre[]{
+                        new ASParametre(
+                                ASTypeBuiltin.texte.asType(),
                                 "col",
                                 null
                         )
-                }, TypeBuiltin.liste.asType()) {
+                }, ASTypeBuiltin.liste.asType()) {
                     @Override
                     public ASObjet<?> executer() {
                         String col = this.getValeurParam("col").getValue().toString();
-                        Liste liste = new Liste();
+                        ASListe liste = new ASListe();
 
                         if (!(col.equalsIgnoreCase("x") || col.equalsIgnoreCase("y"))) {
                             throw new ASErreur.ErreurInputOutput("La fonction valeursColonne() prend en param\u00E8tre le caract\u00E8re \"x\" ou \"y\" seulement.");
@@ -370,11 +370,11 @@ public class ModuleAI {
                         System.out.println(col);
                         if (col.contains("x")) {
                             for (Double el : DATA_X) {
-                                liste.ajouterElement(new Decimal(el));
+                                liste.ajouterElement(new ASDecimal(el));
                             }
                         } else {
                             for (Double el : DATA_Y) {
-                                liste.ajouterElement(new Decimal(el));
+                                liste.ajouterElement(new ASDecimal(el));
                             }
                         }
                         return liste;
@@ -385,27 +385,27 @@ public class ModuleAI {
                 /*
                     Shows the data on the graph as a scatter plot.
                  */
-                new FonctionModule("afficherNuage", new Parametre[]{
-                }, TypeBuiltin.nulType.asType()) {
+                new ASFonctionModule("afficherNuage", new ASParametre[]{
+                }, ASTypeBuiltin.nulType.asType()) {
                     @Override
                     public ASObjet<?> executer() {
                         executeurInstance.addData(new Data(Data.Id.AFFICHER_NUAGE));
-                        return new ValeurNul();
+                        return new ASNul();
                     }
                 },
                 /*
                     Creates a new regression and shows it on the graph,
                  */
-                new FonctionModule("creerRegression", new Parametre[]{
-                        new Parametre(
-                                TypeBuiltin.nombre.asType(), "a", null),
-                        new Parametre(
-                                TypeBuiltin.nombre.asType(), "b", null),
-                        new Parametre(
-                                TypeBuiltin.nombre.asType(), "c", null),
-                        new Parametre(
-                                TypeBuiltin.nombre.asType(), "d", null)
-                }, TypeBuiltin.nulType.asType()) {
+                new ASFonctionModule("creerRegression", new ASParametre[]{
+                        new ASParametre(
+                                ASTypeBuiltin.nombre.asType(), "a", null),
+                        new ASParametre(
+                                ASTypeBuiltin.nombre.asType(), "b", null),
+                        new ASParametre(
+                                ASTypeBuiltin.nombre.asType(), "c", null),
+                        new ASParametre(
+                                ASTypeBuiltin.nombre.asType(), "d", null)
+                }, ASTypeBuiltin.nulType.asType()) {
                     @Override
                     public ASObjet<?> executer() {
                         double a = ((Number) this.getValeurParam("a").getValue()).doubleValue();
@@ -414,51 +414,51 @@ public class ModuleAI {
                         double d = ((Number) this.getValeurParam("d").getValue()).doubleValue();
                         executeurInstance.addData(new Data(Data.Id.CREER_REGRESSION)
                                 .addParam(a).addParam(b).addParam(c).addParam(d));
-                        return new ValeurNul();
+                        return new ASNul();
                     }
                 },
                 /*
                     Applies an algorithm to optimize the regression with the data.
                  */
-                new FonctionModule("optimiserRegression", new Parametre[]{
-                        new Parametre(
-                                TypeBuiltin.nombre.asType(), "lr", null),
-                        new Parametre(
-                                TypeBuiltin.nombre.asType(), "epoch", null)
-                }, TypeBuiltin.nulType.asType()) {
+                new ASFonctionModule("optimiserRegression", new ASParametre[]{
+                        new ASParametre(
+                                ASTypeBuiltin.nombre.asType(), "lr", null),
+                        new ASParametre(
+                                ASTypeBuiltin.nombre.asType(), "epoch", null)
+                }, ASTypeBuiltin.nulType.asType()) {
                     @Override
                     public ASObjet<?> executer() {
                         double lr = ((Number) this.getValeurParam("lr").getValue()).doubleValue();
                         double epoch = ((Number) this.getValeurParam("epoch").getValue()).doubleValue();
                         executeurInstance.addData(new Data(Data.Id.OPTIMISER_REGRESSION).addParam(lr).addParam(epoch));
-                        return new ValeurNul();
+                        return new ASNul();
                     }
                 },
                 /*
                     Evaluates the regression on the graph at a specific x value.
                  */
-                new FonctionModule("evaluer", new Parametre[]{
-                        new Parametre(
-                                TypeBuiltin.nombre.asType(), "x", null)
-                }, TypeBuiltin.nombre.asType()) {
+                new ASFonctionModule("evaluer", new ASParametre[]{
+                        new ASParametre(
+                                ASTypeBuiltin.nombre.asType(), "x", null)
+                }, ASTypeBuiltin.nombre.asType()) {
                     @Override
                     public ASObjet<?> executer() {
                         double x = ((Number) this.getValeurParam("x").getValue()).doubleValue();
-                        return Nombre.cast((Number) executeurInstance.getDataResponseOrAsk("evaluer", x));
+                        return ASNombre.cast((Number) executeurInstance.getDataResponseOrAsk("evaluer", x));
                     }
                 },
                 /*
                     Evaluates the cost function for the regression on the screen.
                  */
-                new FonctionModule("fonctionCout", new Parametre[]{
-                }, TypeBuiltin.nulType.asType()) {
+                new ASFonctionModule("fonctionCout", new ASParametre[]{
+                }, ASTypeBuiltin.nulType.asType()) {
                     @Override
                     public ASObjet<?> executer() {
                         executeurInstance.addData(new Data(Data.Id.FONCTION_COUT));
-                        return new ValeurNul();
+                        return new ASNul();
                     }
                 }
-        }, new Variable[]{});
+        }, new ASVariable[]{});
     }
 
     private static class NoDataException extends ASErreur.ErreurAliveScript {

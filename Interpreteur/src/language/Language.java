@@ -12,12 +12,12 @@ public record Language(JSONObject languageDict) {
      */
     public static void main(String[] args) {
         var Fr = new Language(new JSONObject()
-                .put("error",
-                        new JSONObject()
-                                .put("type-error", "$0 est un type invalide $2: type attendu est $1")
+                .put("error", new JSONObject()
+                        .put("type", new JSONObject()
+                                .put("invalide3", "$0 est un type invalide: $1 ou $2 sont les types autorisés."))
                 )
         );
-        String a = Fr.convert("error.type-error", "entier", "texte", "decimal");
+        String a = Fr.convert("error.type.invalide3", "entier", "texte", "booleen");
         System.out.println(a);
     }
 

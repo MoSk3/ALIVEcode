@@ -4,10 +4,10 @@ import interpreteur.as.lang.ASObjet;
 
 import java.util.Map;
 
-public record ASPaire(Texte clef, ASObjet<?> valeur) implements ASObjet<Map.Entry<Texte, ASObjet<?>>> {
+public record ASPaire(ASTexte clef, ASObjet<?> valeur) implements ASObjet<Map.Entry<ASTexte, ASObjet<?>>> {
 
     @Override
-    public Map.Entry<Texte, ASObjet<?>> getValue() {
+    public Map.Entry<ASTexte, ASObjet<?>> getValue() {
         return Map.entry(clef, valeur);
     }
 
@@ -23,6 +23,6 @@ public record ASPaire(Texte clef, ASObjet<?> valeur) implements ASObjet<Map.Entr
 
     @Override
     public String toString() {
-        return clef + ": " + (valeur instanceof Texte ? "'" + valeur + "'" : valeur);
+        return clef + ": " + (valeur instanceof ASTexte ? "'" + valeur + "'" : valeur);
     }
 }

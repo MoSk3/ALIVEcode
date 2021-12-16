@@ -1,30 +1,30 @@
 package interpreteur.as.modules;
 
-import interpreteur.as.modules.core.Module;
+import interpreteur.as.modules.core.ASModule;
 import interpreteur.as.lang.*;
-import interpreteur.as.lang.datatype.Texte;
+import interpreteur.as.lang.datatype.ASTexte;
 import interpreteur.executeur.Executeur;
 
 public class ModuleTest {
-    public static Module charger(Executeur executeurInstance) {
-        FonctionModule[] fonctionModules = new FonctionModule[]{
-                new FonctionModule("dummy", TypeBuiltin.tout.asType()) {
+    public static ASModule charger(Executeur executeurInstance) {
+        ASFonctionModule[] fonctionModules = new ASFonctionModule[]{
+                new ASFonctionModule("dummy", ASTypeBuiltin.tout.asType()) {
                     @Override
                     public ASObjet<?> executer() {
                         //executeurInstance.addData(new Data(Data.Id.AFFICHER).addParam(executeurInstance.getContext()));
                         var context = executeurInstance.getContext();
                         var iotPayload = context.optString("iotPayload");
-                        return new Texte(iotPayload);
+                        return new ASTexte(iotPayload);
                     }
                 }
         };
 
-        Variable[] variables = new Variable[]{
-                new Variable("sonNom", new Texte("hey!"), TypeBuiltin.texte.asType())
-                        .setGetter(() -> new Texte("oh!")).setReadOnly()
+        ASVariable[] variables = new ASVariable[]{
+                new ASVariable("sonNom", new ASTexte("hey!"), ASTypeBuiltin.texte.asType())
+                        .setGetter(() -> new ASTexte("oh!")).setReadOnly()
         };
 
 
-        return new Module(fonctionModules, variables);
+        return new ASModule(fonctionModules, variables);
     }
 }

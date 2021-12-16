@@ -1,8 +1,8 @@
 package interpreteur.ast.buildingBlocs.programmes;
 
-import interpreteur.as.lang.FonctionModule;
+import interpreteur.as.lang.ASFonctionModule;
 import interpreteur.as.lang.datatype.ASFonction;
-import interpreteur.as.lang.datatype.Texte;
+import interpreteur.as.lang.datatype.ASTexte;
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.as.lang.ASObjet;
 import interpreteur.ast.buildingBlocs.Expression;
@@ -25,7 +25,7 @@ public class Lire extends Programme {
     public Lire(Var var, Expression<?> message, Expression<?> fonction, Executeur executeurInstance) {
         super(executeurInstance);
         this.var = var;
-        this.message = message == null ? new ValeurConstante(new Texte("Entrez un input")) : message;
+        this.message = message == null ? new ValeurConstante(new ASTexte("Entrez un input")) : message;
         //Scope.getCurrentScope().declarerVariable(new ASObjet.Variable(nomVar, null, new Type("tout")));
         this.fonction = fonction;
     }
@@ -36,15 +36,15 @@ public class Lire extends Programme {
         if (executeurInstance.getDataResponse().isEmpty())
             throw new ASErreur.StopGetInfo(new Data(Data.Id.GET).addParam("read").addParam(message.eval().getValue().toString()));
 
-        Texte data = new Texte(executeurInstance.getDataResponse().pop());
+        ASTexte data = new ASTexte(executeurInstance.getDataResponse().pop());
         if (this.fonction == null) {
-            new Assigner(var, new ValeurConstante(new Texte(data)), null).execute();
+            new Assigner(var, new ValeurConstante(new ASTexte(data)), null).execute();
             return null;
         }
         ASObjet<?> exprEval = this.fonction.eval();
         ASObjet<?> valeur;
-        List<Texte> argument = Collections.singletonList(data);
-        if (exprEval instanceof FonctionModule fct) {
+        List<ASTexte> argument = Collections.singletonList(data);
+        if (exprEval instanceof ASFonctionModule fct) {
             valeur = fct.setParamPuisExecute(new ArrayList<>(argument));
         } else if (exprEval instanceof ASFonction fct) {
             valeur = fct.makeInstance().executer(new ArrayList<>(argument));

@@ -28,14 +28,14 @@ public class CreerFonction extends Programme {
         this.args = Arrays.asList(args);
         this.typeRetour = typeRetour;
         // declare fonction
-        Scope.getCurrentScope().declarerVariable(new Variable(var.getNom(), null, new Type("fonctionType")));
+        Scope.getCurrentScope().declarerVariable(new ASVariable(var.getNom(), null, new Type("fonctionType")));
         this.scope = Scope.makeNewCurrentScope();
     }
 
     @Override
     public NullType execute() {
         Scope scope = new Scope(this.scope);
-        ASFonction fonction = new ASFonction(var.getNom(), this.args.stream().map(Argument::eval).toArray(Parametre[]::new), this.typeRetour, executeurInstance);
+        ASFonction fonction = new ASFonction(var.getNom(), this.args.stream().map(Argument::eval).toArray(ASParametre[]::new), this.typeRetour, executeurInstance);
 
         Scope.getCurrentScopeInstance().getVariable(fonction.getNom()).changerValeur(fonction);
         // declare fonction
@@ -43,8 +43,8 @@ public class CreerFonction extends Programme {
 
         // declare params
         for (Argument arg : this.args) {
-            Parametre param = arg.eval();
-            scope.declarerVariable(new Variable(param.getNom(), param.getValeurParDefaut(), param.getType()));
+            ASParametre param = arg.eval();
+            scope.declarerVariable(new ASVariable(param.getNom(), param.getValeurParDefaut(), param.getType()));
             //ASObjet.VariableManager.ajouterVariable(new ASObjet.Variable(param.getNom(), param.getValeurParDefaut(), param.getType()), scopeName);
         }
 

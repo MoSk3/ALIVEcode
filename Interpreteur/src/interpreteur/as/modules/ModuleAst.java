@@ -1,17 +1,17 @@
 package interpreteur.as.modules;
 
-import interpreteur.as.modules.core.Module;
+import interpreteur.as.modules.core.ASModule;
 import interpreteur.as.lang.ASObjet;
-import interpreteur.as.lang.FonctionModule;
-import interpreteur.as.lang.Parametre;
+import interpreteur.as.lang.ASFonctionModule;
+import interpreteur.as.lang.ASParametre;
 import interpreteur.ast.buildingBlocs.expressions.Type;
 import interpreteur.executeur.Executeur;
 
 public class ModuleAst {
-    static Module charger(Executeur executeurInstance) {
-        return new Module(new FonctionModule[]{
-            new FonctionModule("genererArbre", new Parametre[] {
-                    new Parametre(new Type("texte"), "param", null)
+    static ASModule charger(Executeur executeurInstance) {
+        return new ASModule(new ASFonctionModule[]{
+            new ASFonctionModule("genererArbre", new ASParametre[] {
+                    new ASParametre(new Type("texte"), "param", null)
             }, new Type("texte")) {
                 @Override
                 public ASObjet<?> executer() {

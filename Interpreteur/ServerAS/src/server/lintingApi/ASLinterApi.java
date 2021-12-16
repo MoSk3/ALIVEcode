@@ -1,7 +1,7 @@
 package server.lintingApi;
 
 import com.sun.net.httpserver.HttpExchange;
-import interpreteur.as.modules.core.Module;
+import interpreteur.as.modules.core.ASModule;
 import interpreteur.as.modules.core.ASModuleManager;
 import interpreteur.as.modules.EnumModule;
 import interpreteur.generateurs.lexer.LexerLoader;
@@ -108,7 +108,7 @@ public class ASLinterApi extends BaseApi {
 
     private static List<String> getMembersOfModule(String moduleName, boolean includeFunction, boolean includeVariables) {
         ArrayList<String> members = new ArrayList<>();
-        Module module = MODULE_MANAGER.getModule(moduleName);
+        ASModule module = MODULE_MANAGER.getModule(moduleName);
         if (includeFunction)
             members.addAll(module.getNomsFonctions().stream().map(name -> "\\b" + name + "\\b").collect(Collectors.toList()));
         if (includeVariables)

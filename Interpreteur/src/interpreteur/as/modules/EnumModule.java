@@ -1,10 +1,11 @@
 package interpreteur.as.modules;
 
+import interpreteur.as.modules.builtins.ModuleBuiltin;
 import interpreteur.as.modules.core.ASModuleManager;
-import interpreteur.as.modules.core.ModuleFactory;
+import interpreteur.as.modules.core.ASModuleFactory;
 
 public enum EnumModule {
-    builtins(ModuleBuiltins::charger),
+    builtins(ModuleBuiltin::charger),
     Ast(ModuleAst::charger),
     Math(ModuleMath::charger),
     Voiture(ModuleVoiture::charger),
@@ -13,7 +14,7 @@ public enum EnumModule {
     Iot(ModuleIoT::charger)
     ;
 
-    EnumModule(ModuleFactory moduleFactory) {
+    EnumModule(ASModuleFactory moduleFactory) {
         ASModuleManager.enregistrerModule(this, moduleFactory);
     }
 }

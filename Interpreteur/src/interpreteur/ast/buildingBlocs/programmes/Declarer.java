@@ -1,9 +1,9 @@
 package interpreteur.ast.buildingBlocs.programmes;
 
 import interpreteur.as.lang.ASObjet;
-import interpreteur.as.lang.Constante;
+import interpreteur.as.lang.ASConstante;
 import interpreteur.as.lang.Scope;
-import interpreteur.as.lang.Variable;
+import interpreteur.as.lang.ASVariable;
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.ast.buildingBlocs.Expression;
 import interpreteur.ast.buildingBlocs.Programme;
@@ -51,7 +51,7 @@ public class Declarer extends Programme {
 
         // get l'objet variable s'il existe
         // ASObjet.Variable varObj = ASObjet.VariableManager.obtenirVariable(var.getNom(), var.getScope());
-        Variable varObj = Scope.getCurrentScope().getVariable(var.getNom());
+        ASVariable varObj = Scope.getCurrentScope().getVariable(var.getNom());
 
         // si la variable existe déjà et que c'est une constante, lance une erreur, car on ne peut pas modifier une constante
         if (varObj != null)
@@ -59,7 +59,7 @@ public class Declarer extends Programme {
 
         // si le mot "const" est présent dans l'assignement de la variable, on crée la constante
         // sinon si la variable a été déclarée avec "var", on crée la variable
-        varObj = constante ? new Constante(var.getNom(), null) : new Variable(var.getNom(), null, type);
+        varObj = constante ? new ASConstante(var.getNom(), null) : new ASVariable(var.getNom(), null, type);
 
         Scope.getCurrentScope().declarerVariable(varObj);
 
@@ -81,7 +81,7 @@ public class Declarer extends Programme {
     @Override
     public Object execute() {
         //ASObjet.Variable variable = ASObjet.VariableManager.obtenirVariable(var.getNom());
-        Variable variable = Scope.getCurrentScopeInstance().getVariable(var.getNom());
+        ASVariable variable = Scope.getCurrentScopeInstance().getVariable(var.getNom());
         if (this.valeur != null) {
             ASObjet<?> valeur = this.valeur.eval();
             variable.setValeur(valeur);

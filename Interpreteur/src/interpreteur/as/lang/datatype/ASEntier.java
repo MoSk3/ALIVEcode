@@ -5,10 +5,10 @@ import interpreteur.tokens.Token;
 
 import java.util.Objects;
 
-public class Entier implements Nombre {
+public class ASEntier implements ASNombre {
     private final int valeur;
 
-    public Entier(Token valeur) {
+    public ASEntier(Token valeur) {
         try {
             this.valeur = Integer.parseInt(valeur.obtenirValeur());
         } catch (NumberFormatException e) {
@@ -17,7 +17,7 @@ public class Entier implements Nombre {
         }
     }
 
-    public Entier(Number valeur) {
+    public ASEntier(Number valeur) {
         try {
             this.valeur = valeur.intValue();
         } catch (NumberFormatException e) {
@@ -26,7 +26,7 @@ public class Entier implements Nombre {
         }
     }
 
-    public Entier(String valeur) {
+    public ASEntier(String valeur) {
         try {
             this.valeur = Integer.parseInt(valeur);
         } catch (NumberFormatException err) {
@@ -58,7 +58,7 @@ public class Entier implements Nombre {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Entier entier)) return false;
+        if (!(o instanceof ASEntier entier)) return false;
         return valeur == entier.valeur;
     }
 

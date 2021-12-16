@@ -1,11 +1,5 @@
 package interpreteur.generateurs.ast;
 
-import java.util.*;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.ast.Ast;
 import interpreteur.ast.buildingBlocs.Expression;
@@ -15,16 +9,18 @@ import interpreteur.tokens.Token;
 import interpreteur.utils.ArraysUtils;
 import interpreteur.utils.Range;
 
-/**
- * @author Mathis Laroche
- */
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Les explications vont être rajouté quand j'aurai la motivation de les écrire XD
+ *
+ * @author Mathis Laroche
  */
-
-
 public class AstGenerator {
+    // TODO: 2021-12-14 Change Hashtable to LinkedHashMap and remove ArrayLists to keep the order of insertion
     static Hashtable<String, Ast<?>> programmesDict = new Hashtable<>();
     static ArrayList<String> ordreProgrammes = new ArrayList<>();
 
@@ -162,63 +158,17 @@ public class AstGenerator {
                         debut = i;
                         expressionNom = expressionNom.subList(i, expressionNom.size());
 
-
-                        /*
-                         * Check to make sure an expression is not a token
-                         */
-
-
-                        // comment if (nbNotExpr > 0 && i > 0 && expressionNom.get(i - 1).equals("expression")) {
-                        //     i++;
-                        //     continue;
-                        // }
-
-                        /*
-                         * End of the check
-                         */
-
                         String ouv = membresRegleSyntaxe.get(membresRegleSyntaxe.indexOf("#expression") - 1);
                         String ferm = membresRegleSyntaxe.get(membresRegleSyntaxe.size() - 1);
 
+                        // algorithme des parenthèses (), des crochets [] et des accolades {}
                         Range range = ArraysUtils.enclose(expressionNom, ouv, ferm);
                         assert range != null;
-                        //int premier_ouv = expressionNom.indexOf(ouv);
-                        //System.out.println(expressionNom);
-                        // algorithme des parenthèses (), des crochets [] et des accolades {}
-                        //int cptr = 0;
-                        //exprLength = premier_ouv;
-                        //do {
-                        //    String exp = expressionNom.get(exprLength);
-                        //    if (exp.equals(ferm)) {
-                        //        cptr--;
-                        //    } else if (exp.equals(ouv)) {
-                        //        cptr++;
-                        //    }
-                        //    //comment System.out.println("\nexp: " + exp
-                        //    //        + "\nfin: " + exprLength
-                        //    //        + "\ncptr: " + cptr
-                        //    //        + "\n" + "-".repeat(10)
-                        //    //);
-                        //    exprLength++;
-                        //} while (cptr > 0);
-
-                        //comment for (String exp : expressionNom.subList(premier_ouv + 1, expressionNom.size())) {
-                        //    if (exp.equals(ouv)) {
-                        //        cptr++;
-                        //    } else if (exp.equals(ferm)) {
-                        //        cptr--;
-                        //    }
-                        //    idxOrKey++;
-                        //    if (cptr == 0) {
-                        //        break;
-                        //    }
-                        //}
-
 
                         List<Object> expr = expressionArray.subList(debut, debut + range.end());
 
                         // System.out.println("\nregle: " + regleSyntaxe + "\nexpr: " + expr);
-                        //expr.stream().map(Object::toString).forEach(Executeur::printCompiledCode);
+                        // expr.stream().map(Object::toString).forEach(Executeur::printCompiledCode);
 
 
                         Expression<?> capsule = (Expression<?>) expressionsDict.get(regleSyntaxeEtVariante).apply(new ArrayList<>(expr));
@@ -346,11 +296,6 @@ public class AstGenerator {
     }
 
     protected void ajouterProgramme(String pattern, Ast<?> fonction) {
-		/*
-            importance : 0 = plus important
-            si plusieurs programmes ont la mÃªme importance, le dernier ajoutÃ© sera priorisÃ©
-		 */
-
         for (String programme : pattern.split("~")) {
             var sousAstCopy = new Hashtable<>(fonction.getSousAst());
             for (String p : sousAstCopy.keySet()) {
@@ -365,16 +310,13 @@ public class AstGenerator {
     }
 
     protected void ajouterExpression(String pattern, Ast<?> fonction) {
-		/*
-            importance : 0 = plus important
-            si plusieurs expressions ont la mÃªme importance, la derniÃ¨re ajoutÃ©e sera priorisÃ©e
-		 */
         String nouveauPattern = remplacerCategoriesParMembre(pattern);
         fonction.setImportance(cptrExpr++);
         expressionsDict.put(nouveauPattern, fonction);
         ordreExpressions.add(nouveauPattern);
     }
 
+    @Deprecated
     protected void setOrdreProgramme() {
         for (int i = 0; i < programmesDict.size(); ++i) {
             ordreProgrammes.add(null);
@@ -396,6 +338,7 @@ public class AstGenerator {
         //System.out.println(this.ordreProgrammes);
     }
 
+    @Deprecated
     protected void setOrdreExpression() {
         for (int i = 0; i < expressionsDict.size(); ++i) {
             ordreExpressions.add(null);
@@ -417,8 +360,6 @@ public class AstGenerator {
     }
 
     public Programme parse(List<Token> listToken) {
-        //System.out.println("\n");
-
         String programme = obtenirProgramme(listToken);
         if (programme == null) {
             throw new ASErreur.ErreurSyntaxe("Syntaxe invalide: " + listToken.stream().map(Token::obtenirValeur).collect(Collectors.toList()));

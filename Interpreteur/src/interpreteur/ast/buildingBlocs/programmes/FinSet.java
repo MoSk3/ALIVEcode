@@ -1,7 +1,7 @@
 package interpreteur.ast.buildingBlocs.programmes;
 
 import interpreteur.as.lang.Scope;
-import interpreteur.as.lang.datatype.ValeurNul;
+import interpreteur.as.lang.datatype.ASNul;
 import interpreteur.as.erreurs.ASErreur;
 import interpreteur.ast.buildingBlocs.Programme;
 import interpreteur.executeur.Coordonnee;
@@ -18,8 +18,8 @@ public class FinSet extends Programme {
     }
 
     @Override
-    public ValeurNul execute() {
-        return new ValeurNul();
+    public ASNul execute() {
+        return new ASNul();
     }
 
     @Override
