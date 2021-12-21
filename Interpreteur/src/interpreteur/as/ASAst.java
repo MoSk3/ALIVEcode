@@ -20,6 +20,7 @@ import javax.lang.model.type.NullType;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -298,9 +299,9 @@ public class ASAst extends AstGenerator {
         ajouterProgramme("FONCTION expression PARENT_OUV expression PARENT_FERM FLECHE expression~" +
                         "FONCTION expression PARENT_OUV expression PARENT_FERM",
                 new Ast<CreerFonction>(
-                        new Object[]{"expression DEUX_POINTS expression ASSIGNEMENT expression~"
-                                + "expression ASSIGNEMENT expression~"
-                                + "expression DEUX_POINTS expression",
+                        Map.entry("expression DEUX_POINTS expression ASSIGNEMENT expression~"
+                                        + "expression ASSIGNEMENT expression~"
+                                        + "expression DEUX_POINTS expression",
                                 new Ast<Argument>(19) {
                                     @Override
                                     public Argument apply(List<Object> p) {
@@ -338,7 +339,7 @@ public class ASAst extends AstGenerator {
 
                                         return new Argument(var, valParDefaut, type);
                                     }
-                                }}
+                                })
                 ) {
                     @Override
                     public CreerFonction apply(List<Object> p) {
