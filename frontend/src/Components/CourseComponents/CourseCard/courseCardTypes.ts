@@ -1,5 +1,6 @@
 import { Course } from '../../../Models/Course/course.entity';
 import styled from 'styled-components';
+import CourseCardImage from '../../../assets/images/bg/courseCardBg.png';
 
 export type CourseCardProps = {
 	course: Course;
@@ -20,7 +21,9 @@ export const StyledCourseCard = styled.div`
 		width: 100%;
 		height: 95px;
 		position: relative;
-		background: linear-gradient(118.46deg, #3fdfff 0%, #1e6aff 100%);
+		background-image: url(${CourseCardImage});
+		background-size: contain;
+		//background: linear-gradient(118.46deg, #3fdfff 0%, #1e6aff 100%);
 		border-radius: inherit;
 		border-bottom-left-radius: 0;
 		border-bottom-right-radius: 0;
