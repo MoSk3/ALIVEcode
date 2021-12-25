@@ -1,3 +1,13 @@
+# ***Deprecation notice***
+#### This repository is deprecated since the 25th december of 2021
+#### Please access the newest version of this repository at https://github.com/ALIVEcode/ALIVEcode
+
+# ***Avis d'Obsolescence***
+#### Ce repo est obsolet depuis le 25 décembre 2021   
+#### Veuillez s'il vous plaît accédez au nouveau repo à cette adresse https://github.com/ALIVEcode/ALIVEcode  
+.  
+.  
+.  
 # ALIVEcode
 
 Plateforme Web faite par le laboraoire LRIMa du collège Maisonneuve touchant plusieurs facettes scientifiques.
