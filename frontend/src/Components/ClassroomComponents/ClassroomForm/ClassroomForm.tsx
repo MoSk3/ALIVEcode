@@ -9,6 +9,7 @@ import {
 import useRoutes from '../../../state/hooks/useRoutes';
 import { useHistory } from 'react-router-dom';
 import { useAlert } from 'react-alert';
+import { FORM_ACTION } from '../../UtilsComponents/Form/formTypes';
 
 /**
  * Form that creates a new classroom in the db and navigates to it
@@ -31,7 +32,7 @@ const ClassroomForm = (props: ClassroomFormProps) => {
 				}}
 				name="classroom"
 				url="classrooms"
-				action="POST"
+				action={FORM_ACTION.POST}
 				inputGroups={[
 					{
 						name: 'name',

@@ -6,7 +6,6 @@ import useRoutes from '../../../state/hooks/useRoutes';
 import styled from 'styled-components';
 import FillContainer from '../../../Components/UtilsComponents/FillContainer/FillContainer';
 import CardContainer from '../../../Components/UtilsComponents/CardContainer/CardContainer';
-import SmallCard from '../../../Components/UtilsComponents/Cards/SmallCard/SmallCard';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useHistory } from 'react-router';
 import { IoTObject } from '../../../Models/Iot/IoTobject.entity';
@@ -14,6 +13,8 @@ import IoTObjectCreate from '../../../Components/IoTComponents/IoTObject/IotObje
 import FormModal from '../../../Components/UtilsComponents/FormModal/FormModal';
 import { useTranslation } from 'react-i18next';
 import { UserContext } from '../../../state/contexts/UserContext';
+import IoTObjectLargeCard from '../../../Components/IoTComponents/IoTObject/IoTObjectLargeCard/IoTObjectLargeCard';
+import Card from '../../../Components/UtilsComponents/Cards/Card/Card';
 
 const StyledDiv = styled(FillContainer)`
 	padding: 2vw;
@@ -61,7 +62,7 @@ const IoTDashboard = (props: iotDashboardProps) => {
 				>
 					{projects && projects.length > 0 ? (
 						projects.map((p, idx) => (
-							<SmallCard
+							<Card
 								key={idx}
 								title={p.name}
 								to={routes.auth.iot_project.path.replace(':id', p.id)}
@@ -80,11 +81,16 @@ const IoTDashboard = (props: iotDashboardProps) => {
 					title="My connected objects"
 				>
 					{objects && objects.length > 0 ? (
-						objects.map((p, idx) => (
-							<SmallCard
+						objects.map((obj, idx) => (
+							<IoTObjectLargeCard
+								onUpdate={(iotObject: IoTObject) => {
+									setObjects(
+										objects.map(o => (o.id === iotObject.id ? iotObject : o)),
+									);
+									//forceUpdate();
+								}}
 								key={idx}
-								title={p.name}
-								to={routes.auth.iot_project.path.replace(':id', p.id)}
+								object={obj}
 							/>
 						))
 					) : (

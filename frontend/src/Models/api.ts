@@ -6,18 +6,20 @@ import { Course } from './Course/course.entity';
 import { Section } from './Course/section.entity';
 import { Classroom } from './Classroom/classroom.entity';
 import { Professor, Student, User } from './User/user.entity';
-import { IoTProject } from './Iot/IoTproject.entity';
+import { IoTProject, IoTProjectLayout } from './Iot/IoTproject.entity';
 import { IotRoute } from './Iot/IoTroute.entity';
-import { Level } from './Level/level.entity';
+import { Level, LEVEL_TYPE } from './Level/level.entity';
 import { LevelAlive } from './Level/levelAlive.entity';
 import { LevelCode } from './Level/levelCode.entity';
 import { LevelProgression } from './Level/levelProgression';
-import { BrowsingQuery } from '../Components/MainComponents/BrowsingMenu/browsingMenuTypes';
 import { LevelAI } from './Level/levelAI.entity';
 import { IoTObject } from './Iot/IoTobject.entity';
 import { QueryDTO } from '../../../backend/src/models/level/dto/query.dto';
-import { Activity, ActivityContent } from './Course/activity.entity';
+import { Activity } from './Course/activity.entity';
 import { Maintenance } from './Maintenance/maintenance.entity';
+import { CompileDTO } from './ASModels';
+import { AsScript } from './AsScript/as-script.entity';
+import { LevelIoT } from './Level/levelIoT.entity';
 
 type urlArgType<S extends string> = S extends `${infer _}:${infer A}/${infer B}`
 	? A | urlArgType<B>
@@ -130,9 +132,13 @@ const api = {
 			getClassrooms: apiGet('users/:id/classrooms', Classroom, true),
 			getCourses: apiGet('users/:id/courses', Course, true),
 			getLevels: apiGet('users/:id/levels', Level, true, level => {
-				if (level.layout) return plainToClass(LevelAlive, level);
-				else if (level.testCases) return plainToClass(LevelCode, level);
-				return plainToClass(Level, level);
+				if (level.type === LEVEL_TYPE.ALIVE)
+					return plainToClass(LevelAlive, level);
+				if (level.type === LEVEL_TYPE.CODE)
+					return plainToClass(LevelCode, level);
+				if (level.type === LEVEL_TYPE.AI) return plainToClass(LevelAI, level);
+				if (level.type === LEVEL_TYPE.IOT) return plainToClass(LevelIoT, level);
+				return plainToClass(LevelCode, level);
 			}),
 			createProfessor: apiCreate('users/professors', Professor),
 			createStudent: apiCreate('users/students', Student),
@@ -150,7 +156,12 @@ const api = {
 		},
 		courses: {
 			get: apiGet('courses/:id', Course, false),
+			update: apiUpdate('courses/:id', Course),
 			getSections: apiGet('courses/:id/sections', Section, true),
+			deleteSection: apiDelete('courses/:courseId/sections/:sectionId'),
+			deleteActivity: apiDelete(
+				'courses/:courseId/sections/:sectionId/activities/:activityId',
+			),
 			delete: apiDelete('courses/:id'),
 			async getActivities(courseId: string, sectionId: number) {
 				return (
@@ -199,14 +210,22 @@ const api = {
 				save: apiUpdate('levels/:id/progressions/:userId', LevelProgression),
 			},
 			get: apiGet('levels/:id', Level, false, level => {
-				if (level.layout) return plainToClass(LevelAlive, level);
-				else if (level.testCases) return plainToClass(LevelCode, level);
-				return plainToClass(LevelAI, level);
+				if (level.type === LEVEL_TYPE.ALIVE)
+					return plainToClass(LevelAlive, level);
+				if (level.type === LEVEL_TYPE.CODE)
+					return plainToClass(LevelCode, level);
+				if (level.type === LEVEL_TYPE.AI) return plainToClass(LevelAI, level);
+				if (level.type === LEVEL_TYPE.IOT) return plainToClass(LevelIoT, level);
+				return plainToClass(LevelCode, level);
 			}),
 			update: apiUpdate('levels/:id', Level, level => {
-				if (level.layout) return plainToClass(LevelAlive, level);
-				else if (level.testCases) return plainToClass(LevelCode, level);
-				return plainToClass(LevelAI, level);
+				if (level.type === LEVEL_TYPE.ALIVE)
+					return plainToClass(LevelAlive, level);
+				if (level.type === LEVEL_TYPE.CODE)
+					return plainToClass(LevelCode, level);
+				if (level.type === LEVEL_TYPE.AI) return plainToClass(LevelAI, level);
+				if (level.type === LEVEL_TYPE.IOT) return plainToClass(LevelIoT, level);
+				return plainToClass(LevelCode, level);
 			}),
 			async query(body: QueryDTO) {
 				return (await axios.post('levels/query', body)).data.map((d: any) =>
@@ -216,9 +235,50 @@ const api = {
 		},
 		iot: {
 			projects: {
+				delete: apiDelete('iot/projects/:id'),
 				get: apiGet('iot/projects/:id', IoTProject, false),
+				deleteRoute: apiDelete('iot/routes/projects/:projectId/:id'),
 				getRoutes: apiGet('iot/projects/:id/routes', IotRoute, true),
+				getObjects: apiGet('iot/projects/:id/objects', IoTObject, true),
+				async updateLayout(id: string, layout: IoTProjectLayout) {
+					await axios.patch(`iot/projects/${id}/layout`, layout);
+				},
+				async createScriptRoute(
+					projectId: string,
+					routeId: string,
+					asScript: AsScript,
+				) {
+					return (
+						await axios.post(`iot/projects/${projectId}/as/create`, {
+							routeId,
+							script: asScript,
+						})
+					).data;
+				},
 			},
+			objects: {
+				delete: apiDelete('iot/objects/:id'),
+			},
+		},
+		asScript: {
+			async create(asScript: AsScript) {
+				return (await axios.post(`as`, asScript)).data;
+			},
+			async updateContent(asScript: AsScript, newContent: string) {
+				return await axios.patch(`as/${asScript.id}/content`, {
+					content: newContent,
+				});
+			},
+		},
+	},
+	as: {
+		async compile(data: CompileDTO) {
+			return (await axios.post('as/compile', data)).data;
+		},
+		async getLintInfo() {
+			return (
+				await axios.get(`${process.env.REACT_APP_BACKEND_URL}/as/lintinfo`)
+			).data;
 		},
 	},
 };

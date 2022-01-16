@@ -12,6 +12,7 @@ import { Image } from 'react-bootstrap';
 import FormModal from '../../UtilsComponents/FormModal/FormModal';
 import ConnectCarForm from '../ConnectCarForm/ConnectCarForm';
 import { ReactP5Wrapper } from 'react-p5-wrapper';
+import { useForceUpdate } from '../../../state/hooks/useForceUpdate';
 
 /**
  * Simulation component that draws the car and make it functionnal
@@ -36,11 +37,14 @@ const Simulation = ({
 	const [deathGif, setDeathGif] = useState<string>();
 	const sketchRef = useRef<any>(null);
 	const { t } = useTranslation();
+	const forceUpdate = useForceUpdate();
 
 	useEffect(() => {
+		forceUpdate();
 		return () => {
 			sketchRef.current && sketchRef.current.cleanup();
 		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {
